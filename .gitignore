@@ -1,0 +1,15 @@
+# Excluir compilados de Java y Maven
+target/
+*.jar
+*.class
+
+# Excluir configuraciones locales de Eclipse
+.settings/
+.project
+.classpath
+
+# Excluir volumen de la base de datos de Docker (MUY IMPORTANTE)
+db_data/
+
+# Excluir fotos locales
+artikulu_irudiak/

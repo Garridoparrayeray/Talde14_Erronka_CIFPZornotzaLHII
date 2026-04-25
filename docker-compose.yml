@@ -1,0 +1,59 @@
+services:
+  # 1. DATU BASEA
+  db:
+    image: mariadb:11
+    container_name: erronka_db
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: rootpw
+      MARIADB_DATABASE: erronka_galduak
+      MARIADB_USER: bermeo_udaltzain
+      MARIADB_PASSWORD: udaltzainpw
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./db/init:/docker-entrypoint-initdb.d:ro
+      - db_data:/var/lib/mysql
+    networks:
+      - erronka-net
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+#### docker exec erronka_db mariadb-dump -u bermeo_udaltzain -pudaltzainpw erronka_galduak > copia_seguridad.sql PARA HACER COPIA DE SEGURIDAD
+  # 2. JAVA APLIKAZIOA
+  java-app:
+    build: ./java-app
+    container_name: erronka_desktop
+    environment:
+      - DISPLAY=${DISPLAY}
+      - DB_URL=jdbc:mariadb://localhost:3306/erronka_galduak
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+      - ./partekatutako_datuak:/app/exportazioak
+      - ./artikulu_irudiak:/app/irudiak # Artikuluen argazkiak gordetzeko karpeta
+    network_mode: host
+    depends_on:
+      # NUEVO: Java espera a que el healthcheck de la DB esté en estado healthy. Se supone qye ayuda a iniciar la bbdd
+      db:
+        condition: service_healthy
+
+  # 3. WEBGUNEA
+  web:
+    image: nginx:alpine
+    container_name: erronka_web
+    ports:
+      - "8000:80"
+    volumes:
+      - ./frontend:/usr/share/nginx/html
+      - ./partekatutako_datuak:/usr/share/nginx/html/datuak:ro
+    networks:
+      - erronka-net
+
+networks:
+  erronka-net:
+    driver: bridge
+
+volumes:
+  db_data:
