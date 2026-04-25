@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="eu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Katalogo Osoa — Bermeoko Udala · Galduen Kudeaketa</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Montserrat:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --blue-900: #0A1E5E;
+    --blue-800: #1A3A8F;
+    --blue-700: #2850C8;
+    --blue-600: #3B5BDB;
+    --blue-500: #5274E7;
+    --blue-400: #7B96F0;
+    --blue-100: #E8EDFB;
+    --blue-50:  #F2F5FD;
+    --gray-900: #12131A;
+    --gray-700: #2E3040;
+    --gray-500: #6B6F80;
+    --gray-300: #B8BBCA;
+    --gray-100: #EDEEF3;
+    --gray-50:  #F6F7FA;
+    --white:    #FFFFFF;
+    --red:      #E84040;
+    --font-head: 'Montserrat', sans-serif;
+    --font-body: 'Inter', sans-serif;
+    --radius-md: 10px;
+    --radius-lg: 16px;
+    --shadow-md: 0 4px 20px rgba(59,91,219,.12), 0 0 0 1px rgba(59,91,219,.06);
+  }
+
+  body {
+    font-family: var(--font-body);
+    background: var(--white);
+    color: var(--gray-900);
+    padding-top: 80px;
+  }
+
+  /* ─── NAVBAR ─── */
+  .navbar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    background: rgba(255,255,255,0.95);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--gray-100);
+    height: 70px;
+    display: flex;
+    align-items: center;
+  }
+
+  .nav-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 32px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+  }
+
+  .logo-mark {
+    width: 35px;
+    height: 35px;
+    background: var(--blue-600);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .logo-mark svg { width: 18px; height: 18px; fill: none; stroke: #fff; stroke-width: 2.2; }
+
+  .logo-text { display: flex; flex-direction: column; line-height: 1; }
+  .logo-text strong { font-family: var(--font-head); font-size: 15px; color: var(--gray-900); }
+  .logo-text span { font-size: 10px; font-weight: 400; color: var(--gray-500); letter-spacing: .06em; text-transform: uppercase; margin-top: 2px; }
+
+  .btn-back {
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--blue-600);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  /* ─── HEADER SECCIÓN ─── */
+  .catalog-header {
+    background: var(--gray-50);
+    padding: 60px 32px 40px;
+    text-align: left;
+    border-bottom: 1px solid var(--gray-100);
+  }
+
+  .header-inner { max-width: 1200px; margin: 0 auto; }
+
+  .catalog-title {
+    font-family: var(--font-head);
+    font-size: 32px;
+    font-weight: 800;
+    margin-bottom: 10px;
+  }
+
+  .catalog-sub { color: var(--gray-500); max-width: 600px; font-size: 15px; margin-bottom: 32px; }
+
+  /* --- BARRA DE BÚSQUEDA Y FILTRO --- */
+  .filter-bar {
+    display: flex;
+    gap: 16px;
+    background: var(--white);
+    padding: 16px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--gray-200);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    align-items: center;
+  }
+
+  .search-wrapper {
+    flex-grow: 1;
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  .search-wrapper svg {
+    position: absolute;
+    left: 14px;
+    color: var(--gray-400);
+    width: 18px;
+    height: 18px;
+  }
+
+  .search-input {
+    width: 100%;
+    padding: 12px 16px 12px 40px;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-sm);
+    font-family: var(--font-body);
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  
+  .search-input:focus { border-color: var(--blue-500); }
+
+  .category-select {
+    padding: 12px 16px;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-sm);
+    font-family: var(--font-body);
+    font-size: 14px;
+    color: var(--gray-700);
+    outline: none;
+    background: var(--white);
+    cursor: pointer;
+    min-width: 200px;
+  }
+
+  /* ─── GRID DE OBJETOS ─── */
+  .catalog-section { padding: 60px 32px; }
+
+  .catalog-grid {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 30px;
+  }
+
+  .item-card {
+    background: var(--white);
+    border: 1px solid var(--gray-100);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .item-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-md);
+  }
+
+  .item-img {
+    width: 100%;
+    height: 200px;
+    background: var(--blue-50);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  .item-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .img-placeholder {
+    color: var(--blue-300);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .item-info {
+    padding: 20px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .item-cat-badge {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--blue-600);
+    background: var(--blue-50);
+    padding: 4px 8px;
+    border-radius: 4px;
+    align-self: flex-start;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+  }
+
+  .item-name {
+    font-family: var(--font-head);
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--gray-900);
+    margin-bottom: 20px;
+    min-height: 44px;
+  }
+
+  .btn-claim {
+    width: 100%;
+    background: var(--blue-600);
+    color: #fff;
+    border: none;
+    padding: 12px;
+    border-radius: var(--radius-md);
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    text-align: center;
+    transition: background 0.2s;
+  }
+
+  .btn-claim:hover { background: var(--blue-700); }
+  
+  /* Mensaje cuando no hay resultados */
+  .no-results {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 40px;
+    color: var(--gray-500);
+    font-size: 16px;
+    display: none;
+  }
+
+  /* ─── FOOTER ─── */
+  footer {
+    background: var(--gray-900);
+    color: rgba(255,255,255,.6);
+    padding: 64px 32px 32px;
+  }
+
+  .footer-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .footer-top {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 60px;
+    padding-bottom: 48px;
+    border-bottom: 1px solid rgba(255,255,255,.08);
+  }
+
+  .footer-brand .logo-mark { background: var(--blue-600); margin-bottom: 14px; }
+  .footer-brand .logo-text strong { color: #fff; }
+  .footer-brand .logo-text span { color: rgba(255,255,255,.4); }
+
+  .footer-desc {
+    font-size: 14px;
+    line-height: 1.7;
+    color: rgba(255,255,255,.45);
+    margin-top: 16px;
+    max-width: 280px;
+  }
+
+  .footer-contact {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .footer-contact a {
+    font-size: 13px;
+    color: rgba(255,255,255,.5);
+    text-decoration: none;
+    display: flex; align-items: center; gap: 6px;
+    transition: color .2s;
+  }
+
+  .footer-contact a:hover { color: rgba(255,255,255,.9); }
+  .footer-contact a svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; flex-shrink: 0; }
+
+  .footer-col-title {
+    font-family: var(--font-head);
+    font-size: 13px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    margin-bottom: 18px;
+  }
+
+  .footer-links {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .footer-links a {
+    font-size: 14px;
+    color: rgba(255,255,255,.5);
+    text-decoration: none;
+    transition: color .2s;
+    display: flex; align-items: center; gap: 5px;
+  }
+
+  .footer-links a:hover { color: rgba(255,255,255,.9); }
+
+  .footer-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 28px;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+
+  .footer-legal {
+    font-size: 12px;
+    color: rgba(255,255,255,.3);
+  }
+
+  .footer-badges {
+    display: flex;
+    gap: 10px;
+  }
+
+  .f-badge {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 4px;
+    background: rgba(255,255,255,.06);
+    color: rgba(255,255,255,.4);
+    border: 1px solid rgba(255,255,255,.08);
+  }
+
+  @media (max-width: 600px) {
+    .filter-bar { flex-direction: column; align-items: stretch; }
+    .catalog-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <div class="logo-mark">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5l4 4"/><path d="M11 8v6M8 11h6"/></svg>
+      </div>
+      <div class="logo-text">
+        <strong>ERRONKA</strong>
+        <span>Bermeoko Udala</span>
+      </div>
+    </a>
+    <a href="index.html" class="btn-back">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+      Itzuli hasierara
+    </a>
+  </div>
+</nav>
+
+<header class="catalog-header">
+  <div class="header-inner">
+    <h1 class="catalog-title">Inbentario Osoa</h1>
+    <p class="catalog-sub">Hemen aurkituko dituzu Bermeoko Udalaren biltegian dauden objektu guztiak. Zure bat ikusten baduzu, sakatu erreklamatzeko botoia.</p>
+    
+    <div class="filter-bar">
+      <div class="search-wrapper">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="searchInput" class="search-input" placeholder="Bilatu objektuaren izena...">
+      </div>
+      <select id="categorySelect" class="category-select">
+        <option value="all">Kategoria guztiak (Todas)</option>
+        <option value="Jantziak">Jantziak</option>
+        <option value="Gakoak">Gakoak</option>
+        <option value="Elektronika">Elektronika</option>
+        <option value="Dokumentuak">Dokumentazioa</option>
+        <option value="Eguzkitakoak">Eguzkitakoak</option>
+        <option value="Zorroak">Zorroak</option>
+        <option value="Bestelakoak">Bestelakoak</option>
+      </select>
+    </div>
+
+  </div>
+</header>
+
+<main class="catalog-section">
+  <div class="catalog-grid" id="catalogGrid">
+    
+    <div id="noResults" class="no-results">
+      Ez da aurkitu emaitzarik bilaketa honekin. / No se han encontrado resultados.
+    </div>
+
+    <div class="item-card" data-category="Jantziak">
+      <div class="item-img">
+        <div class="img-placeholder">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+          <span style="font-size: 11px;">Argazkirik gabe</span>
+        </div>
+      </div>
+      <div class="item-info">
+        <span class="item-cat-badge">Jantziak</span>
+        <h3 class="item-name">Eskola-motxila urdina</h3>
+        <a href="mailto:galduaurkituak@bermeo.eus?subject=Reclamacion: Eskola-motxila urdina" class="btn-claim">Mezu bat bidali</a>
+      </div>
+    </div>
+
+    <div class="item-card" data-category="Jantziak">
+      <div class="item-img">
+        <div class="img-placeholder">
+           <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 7h-9l-3-3h-5c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2v-9c0-1.1-.9-2-2-2z"/></svg>
+           <span style="font-size: 11px;">Argazkirik gabe</span>
+        </div>
+      </div>
+      <div class="item-info">
+        <span class="item-cat-badge">Jantziak</span>
+        <h3 class="item-name">Haur-bufanda gorria</h3>
+        <a href="mailto:galduaurkituak@bermeo.eus?subject=Reclamacion: Haur-bufanda gorria" class="btn-claim">Mezu bat bidali</a>
+      </div>
+    </div>
+
+    <div class="item-card" data-category="Elektronika">
+      <div class="item-img">
+        <div class="img-placeholder">
+           <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        </div>
+      </div>
+      <div class="item-info">
+        <span class="item-cat-badge">Elektronika</span>
+        <h3 class="item-name">Eskuko ordularia (Casio)</h3>
+        <a href="mailto:galduaurkituak@bermeo.eus?subject=Reclamacion: Eskuko ordularia" class="btn-claim">Mezu bat bidali</a>
+      </div>
+    </div>
+
+    <div class="item-card" data-category="Gakoak">
+      <div class="item-img">
+        <div class="img-placeholder">
+           <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        </div>
+      </div>
+      <div class="item-info">
+        <span class="item-cat-badge">Gakoak</span>
+        <h3 class="item-name">Giltza-multzoa (3 giltza)</h3>
+        <a href="mailto:galduaurkituak@bermeo.eus?subject=Reclamacion: Giltza-multzoa" class="btn-claim">Mezu bat bidali</a>
+      </div>
+    </div>
+
+    <div class="item-card" data-category="Dokumentuak">
+      <div class="item-img">
+        <div class="img-placeholder">
+           <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="16" rx="2"/><line x1="7" y1="8" x2="17" y2="8"/><line x1="7" y1="12" x2="17" y2="12"/><line x1="7" y1="16" x2="12" y2="16"/></svg>
+        </div>
+      </div>
+      <div class="item-info">
+        <span class="item-cat-badge">Dokumentazioa</span>
+        <h3 class="item-name">Nortasun agiria (NAN)</h3>
+        <a href="mailto:galduaurkituak@bermeo.eus?subject=Reclamacion: Nortasun agiria" class="btn-claim">Mezu bat bidali</a>
+      </div>
+    </div>
+
+    <div class="item-card" data-category="Jantziak">
+      <div class="item-img">
+        <div class="img-placeholder">
+           <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+        </div>
+      </div>
+      <div class="item-info">
+        <span class="item-cat-badge">Jantziak</span>
+        <h3 class="item-name">Txapela beltza</h3>
+        <a href="mailto:galduaurkituak@bermeo.eus?subject=Reclamacion: Txapela beltza" class="btn-claim">Mezu bat bidali</a>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<footer id="contact">
+  <div class="footer-inner">
+    <div class="footer-top">
+
+      <div class="footer-brand">
+        <a href="#" class="nav-logo" style="display:inline-flex;">
+          <div class="logo-mark">
+            <svg viewBox="0 0 24 24" style="width:20px;height:20px;fill:none;stroke:#fff;stroke-width:2.2;stroke-linecap:round;"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5l4 4"/><path d="M11 8v6M8 11h6"/></svg>
+          </div>
+          <div class="logo-text">
+            <strong>ERRONKA</strong>
+            <span>Bermeoko Udala</span>
+          </div>
+        </a>
+        <p class="footer-desc">
+          Bermeoko Udaleko galdu eta aurkituen zerbitzu ofiziala. Herritarrei zerbitzuan, gardentasunez eta eraginkortasunez.
+        </p>
+        <div class="footer-contact">
+          <a href="tel:+34946880100">
+            <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2A19.8 19.8 0 0 1 3.08 5.17 2 2 0 0 1 5.07 3h3a2 2 0 0 1 2 1.72c.13 1 .37 1.98.7 2.91a2 2 0 0 1-.45 2.11L9.09 10.91a16 16 0 0 0 6 6l1.17-1.17a2 2 0 0 1 2.11-.45c.93.34 1.91.57 2.91.7A2 2 0 0 1 23 17z"/></svg>
+            +34 946 88 01 00
+          </a>
+          <a href="mailto:galduaurkituak@bermeo.eus">
+            <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            galduaurkituak@bermeo.eus
+          </a>
+          <a href="#">
+            <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            Gernika-Lumo etorbidea 2, Bermeo
+          </a>
+        </div>
+      </div>
+
+      <div>
+        <h3 class="footer-col-title">Zerbitzuak</h3>
+        <ul class="footer-links">
+          <li><a href="#">Inbentarioa bilatu</a></li>
+          <li><a href="#">Erreklamazioa hasi</a></li>
+          <li><a href="#">Nire erreklamazioak</a></li>
+          <li><a href="#">Jakinarazpenak</a></li>
+          <li><a href="#">Galdera ohikoak</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h3 class="footer-col-title">Udala</h3>
+        <ul class="footer-links">
+          <li><a href="#">Bermeoko Udala</a></li>
+          <li><a href="#">Zerbitzu guztiak</a></li>
+          <li><a href="#">Iragarki-taula</a></li>
+          <li><a href="#">Prentsa-kabineta</a></li>
+          <li><a href="#">Kontaktua</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h3 class="footer-col-title">Legala</h3>
+        <ul class="footer-links">
+          <li><a href="#">Pribatutasun-politika</a></li>
+          <li><a href="#">Erabileraren baldintzak</a></li>
+          <li><a href="#">Cookie politika</a></li>
+          <li><a href="#">Irisgarritasuna</a></li>
+          <li><a href="#">RGPD / GDPR</a></li>
+        </ul>
+      </div>
+
+    </div>
+
+    <div class="footer-bottom">
+      <p class="footer-legal">v1.0 · &copy; 2026 Bermeoko Udala · Eskubide guztiak erreserbatuta</p>
+      <div class="footer-badges">
+        <span class="f-badge">GDPR</span>
+        <span class="f-badge">W3C AA</span>
+        <span class="f-badge">ISO 27001</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Logika para el buscador y el filtrado por categorías
+  const searchInput = document.getElementById('searchInput');
+  const categorySelect = document.getElementById('categorySelect');
+  const cards = document.querySelectorAll('.item-card');
+  const noResultsMsg = document.getElementById('noResults');
+
+  function filterItems() {
+    const searchTerm = searchInput.value.toLowerCase();
+    const selectedCategory = categorySelect.value;
+    let visibleCount = 0;
+
+    cards.forEach(card => {
+      const itemName = card.querySelector('.item-name').textContent.toLowerCase();
+      const itemCategory = card.getAttribute('data-category');
+      
+      const matchesSearch = itemName.includes(searchTerm);
+      const matchesCategory = selectedCategory === 'all' || itemCategory === selectedCategory;
+
+      if (matchesSearch && matchesCategory) {
+        card.style.display = 'flex';
+        visibleCount++;
+      } else {
+        card.style.display = 'none';
+      }
+    });
+
+    // Mostrar mensaje si no hay resultados
+    if (visibleCount === 0) {
+      noResultsMsg.style.display = 'block';
+    } else {
+      noResultsMsg.style.display = 'none';
+    }
+  }
+
+  searchInput.addEventListener('input', filterItems);
+  categorySelect.addEventListener('change', filterItems);
+</script>
+
+</body>
+</html>
