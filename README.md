@@ -450,24 +450,17 @@ docker exec erronka_desktop ping -c 2 db
 ## 👥 Egileak
 
 **Erronka taldea** · 1. DAW · 2026
-- [Izen-abizenak]
-- [Izen-abizenak]
-- [Izen-abizenak]
+- [Yeray-Garrido]
+- [Eder-Martin]
 
-**Bezero hipotetikoa:** Bermeoko Udala (LEFPS Zornotza GLHBI)
+**Bezeroa:** Bermeoko Udala (CIFP Zornotza LHII)
 
 ---
 
 ## 📜 Lizentzia
 
 Hezkuntza-proiektua. Kode-zatiak hezkuntza erabilerarako bakarrik.
-© 2026 Erronka taldea — LEFPS Zornotza GLHBI
+© 2026 Erronka taldea — CIFP Zornotza LHII
 ```
 
 ---
-
-## ⚠ Tres cosas que tienes que ajustar a mano
-
-1. **Egileak (línea ~440)**: pon vuestros nombres reales
-2. **Karpeta-egitura (línea ~340)**: ajusta `eus/bermeo/udala/...` a tu paquete real
-3. **Adibidezko kredentzialak (login)**: si quieres listar usuario/contraseña de prueba para el JavaFX, añádelo en la sección "Sarbideak"
