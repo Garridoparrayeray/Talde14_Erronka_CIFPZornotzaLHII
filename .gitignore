@@ -1,15 +1,15 @@
-# Excluir compilados de Java y Maven
+# Java eta Maven bidez konpilatutako fitxategiak baztertu
 target/
 *.jar
 *.class
 
-# Excluir configuraciones locales de Eclipse
+# Eclipseren tokiko konfigurazioak baztertu
 .settings/
 .project
 .classpath
 
-# Excluir volumen de la base de datos de Docker (MUY IMPORTANTE)
+# Docker datu-basearen bolumena baztertu (OSO GARRANTZITSUA)
 db_data/
 
-# Excluir fotos locales
+# Tokiko argazkiak baztertu
 artikulu_irudiak/
