@@ -123,6 +123,7 @@ CREATE TABLE MUGIMENDUA (
 
 
 /* ROL ETA ERABILTZAILEEN TXERTAKETAK */
+/*
 CREATE ROLE IF NOT EXISTS 'admin_rola';
 CREATE ROLE IF NOT EXISTS 'udaltzain_rola';
 
@@ -157,7 +158,7 @@ INSERT INTO LANGILEA (izena, abizena, erabiltzailea, pasahitza_hash, id_rola) VA
 INSERT INTO KATEGORIA (izena) VALUES ('Osagarri pertsonalak'), ('Betaurrekoak'), ('Giltzak'), ('Bestelakoak');
 
 -- bHa_da = Bolumen Handikoen Armairua da
-INSERT INTO KOKALEKUA (armairua, apala, bka_da) VALUES 
+INSERT INTO KOKALEKUA (armairua, apala, bha_da) VALUES 
 ('F', '004', FALSE),
 ('A', '001', FALSE),
 ('BHA', '1', TRUE); 
@@ -165,7 +166,7 @@ INSERT INTO KOKALEKUA (armairua, apala, bka_da) VALUES
 INSERT INTO HARTZAILEA (id_hartzailea, telefonoa) VALUES 
 (1, '688729149'), (2, '664146219');
 
-¡INSERT INTO JABEA (id_hartzailea, nan, izena, abizena) VALUES 
+INSERT INTO JABEA (id_hartzailea, nan, izena, abizena) VALUES 
 (1, '11111111A', 'RAMON', 'INFANTE'),
 (2, '22222222B', 'ISMAEL', 'CORTES');
 
@@ -176,3 +177,4 @@ INSERT INTO ARTIKULUA (id_artikulua, a_izena, a_deskribapena, egoera, sarrera_da
 -- Mugimendu baten adibidea trazabilitaterako, TRIGGER BIDEZ
 INSERT INTO MUGIMENDUA (deskribapena, id_artikulua) VALUES 
 ('Artikulua sisteman erregistratu da F-004 kokalekuan', 'G-092-26');
+*/
