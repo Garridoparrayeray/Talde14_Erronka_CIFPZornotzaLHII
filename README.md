@@ -1,5 +1,5 @@
-```markdown
-# 🔍 ERRONKA · Bermeoko Udala
+
+# ERRONKA · Bermeoko Udala
 ## Galduen eta aurkituen kudeaketa-sistema
 
 > Ekosistema osoa edukiontzietan: datu-basea, JavaFX aplikazioa eta web atari publikoa.
