@@ -438,12 +438,10 @@ docker exec erronka_desktop ping -c 2 db
 ---
 ## Dokumentazio gehigarria (amaitu gabe)
 
-- 📄 `docs/memoria.pdf` — proiektuaren memoria osoa
-- 🎨 `docs/mockup_program.pdf` — JavaFX mockup-a (Miro estiloan)
-- 🎨 `docs/mockup_lmar.pdf` — Web mockup-a
-- 🗄 `docs/eredu_kontzeptuala.pdf` — E-R diagrama
-- 🗄 `docs/eredu_logikoa.pdf` — eskema erlazionala
-- 📘 `docs/erabiltzaile_eskuliburua.pdf` — triptiko formatuan
+- `docs/memoria.pdf` — proiektuaren memoria osoa
+- `docs/mockup.pdf`- Proiektuaren mockup-ak 
+-  `docs/eredu_kontzeptuala.pdf` — E-R diagrama
+-  `docs/eredu_logikoa.pdf` — eskema erlazionala
 
 ---
 
