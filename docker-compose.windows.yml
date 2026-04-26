@@ -21,18 +21,16 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
-  #### docker exec erronka_db mariadb-dump -u bermeo_udaltzain -pudaltzainpw erronka_galduak > copia_seguridad.sql
 
-  # 2. JAVA APLIKAZIOA (JavaFX X11 forwarding-ekin)
+  # 2. JAVA APLIKAZIOA (JavaFX VcXsrv-rekin TCP bidez)
   java-app:
     build: ./java-app
     container_name: erronka_desktop
     environment:
-      - DISPLAY=${DISPLAY}
+      # Windows-en VcXsrv TCP socketean entzuten du
+      - DISPLAY=host.docker.internal:0.0
       - DB_URL=jdbc:mariadb://db:3306/erronka_galduak
     volumes:
-      - /tmp/.X11-unix:/tmp/.X11-unix:rw
-      - ${HOME}/.Xauthority:/root/.Xauthority:rw
       - ./partekatutako_datuak:/app/exportazioak
       - ./artikulu_irudiak:/app/irudiak
     networks:
@@ -55,7 +53,7 @@ services:
     depends_on:
       - db
 
-  # 4. ADMINER (BD UI nabigatzailetik)
+  # 4. ADMINER
   adminer:
     image: adminer:latest
     container_name: erronka_adminer

@@ -5,7 +5,7 @@
 DROP DATABASE IF EXISTS erronka_galduak;
 CREATE DATABASE erronka_galduak CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE erronka_galduak;
-
+/* TAULEN ERAKETA */
 CREATE TABLE ROLA (
     id_rola INT AUTO_INCREMENT PRIMARY KEY,
     deskribapena VARCHAR(100) NOT NULL
@@ -121,30 +121,32 @@ CREATE TABLE MUGIMENDUA (
     FOREIGN KEY (id_artikulua) REFERENCES ARTIKULUA(id_artikulua) ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
-CREATE ROLE IF NOT EXISTS 'admin_role';
-CREATE ROLE IF NOT EXISTS 'udaltzain_role';
 
-GRANT ALL PRIVILEGES ON erronka_galduak.* TO 'admin_role';
-GRANT SELECT, INSERT, UPDATE ON erronka_galduak.* TO 'udaltzain_role';
-REVOKE INSERT, UPDATE, DELETE ON erronka_galduak.LANGILEA FROM 'udaltzain_role';
-REVOKE INSERT, UPDATE, DELETE ON erronka_galduak.ROLA FROM 'udaltzain_role';
+/* ROL ETA ERABILTZAILEEN TXERTAKETAK */
+CREATE ROLE IF NOT EXISTS 'admin_rola';
+CREATE ROLE IF NOT EXISTS 'udaltzain_rola';
 
-CREATE USER IF NOT EXISTS 'admin_user'@'%' IDENTIFIED BY 'admin123';
-GRANT 'admin_role' TO 'admin_user'@'%';
-SET DEFAULT ROLE 'admin_role' FOR 'admin_user'@'%';
+GRANT ALL PRIVILEGES ON erronka_galduak.* TO 'admin_rola';
+GRANT SELECT, INSERT, UPDATE ON erronka_galduak.* TO 'udaltzain_rola';
+REVOKE INSERT, UPDATE, DELETE ON erronka_galduak.LANGILEA FROM 'udaltzain_rola';
+REVOKE INSERT, UPDATE, DELETE ON erronka_galduak.ROLA FROM 'udaltzain_rola';
+
+CREATE USER IF NOT EXISTS 'admin'@'%' IDENTIFIED BY 'admin123';
+GRANT 'admin_rola' TO 'admin'@'%';
+SET DEFAULT ROLE 'admin_rola' FOR 'admin'@'%';
 
 CREATE USER IF NOT EXISTS 'udaltzain1'@'%' IDENTIFIED BY 'udal123';
-GRANT 'udaltzain_role' TO 'udaltzain1'@'%';
-SET DEFAULT ROLE 'udaltzain_role' FOR 'udaltzain1'@'%';
+GRANT 'udaltzain_rola' TO 'udaltzain1'@'%';
+SET DEFAULT ROLE 'udaltzain_rola' FOR 'udaltzain1'@'%';
 
 CREATE USER IF NOT EXISTS 'udaltzain2'@'%' IDENTIFIED BY 'udal123';
-GRANT 'udaltzain_role' TO 'udaltzain2'@'%';
-SET DEFAULT ROLE 'udaltzain_role' FOR 'udaltzain2'@'%';
+GRANT 'udaltzain_rola' TO 'udaltzain2'@'%';
+SET DEFAULT ROLE 'udaltzain_rola' FOR 'udaltzain2'@'%';
 
 FLUSH PRIVILEGES;
 
 -- ========================================== --
---------------.. DATUEN TXERTAKETA -------------
+--------------- DATUEN TXERTAKETA -------------
 -- ========================================== --
 INSERT INTO ROLA (deskribapena) VALUES ('Administratzailea'), ('Udaltzaina');
 

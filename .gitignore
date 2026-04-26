@@ -1,15 +1,37 @@
-# Java eta Maven bidez konpilatutako fitxategiak baztertu
+# Maven
 target/
-*.jar
+dependency-reduced-pom.xml
+java-app/dependency-reduced-pom.xml
 *.class
 
-# Eclipseren tokiko konfigurazioak baztertu
-.settings/
-.project
+# Eclipse
 .classpath
+.project
+.settings/
+bin/
 
-# Docker datu-basearen bolumena baztertu (OSO GARRANTZITSUA)
+# IntelliJ
+.idea/
+*.iml
+
+# VSCode
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker volumes locales
 db_data/
+artikulu_irudiak/*
+!artikulu_irudiak/.gitkeep
+partekatutako_datuak/*.xml
+!partekatutako_datuak/.gitkeep
 
-# Tokiko argazkiak baztertu
-artikulu_irudiak/
+# Logs
+*.log
+logs/
+
+# Backups
+*.sql.bak
+copia_*.sql
