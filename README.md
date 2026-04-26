@@ -7,7 +7,7 @@
 
 ---
 
-## 📋 Aurkibidea
+## Aurkibidea
 
 1. [Proiektuaren deskripzioa](#-proiektuaren-deskripzioa)
 2. [Arkitektura](#-arkitektura)
@@ -24,7 +24,7 @@
 
 ---
 
-## 📖 Proiektuaren deskripzioa
+## Proiektuaren deskripzioa
 
 **Erronka** Bermeoko Udalaren galdu eta aurkitutako objektuak kudeatzeko sistema bat
 da. Bi sarbide ditu:
@@ -53,7 +53,7 @@ ditu.
 
 ---
 
-## 🏛 Arkitektura
+## Arkitektura
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -92,7 +92,7 @@ ditu.
 
 ---
 
-## 🔧 Aurretiko eskakizunak
+## Aurretiko eskakizunak
 
 ### Linux (CachyOS, Arch, Ubuntu, Fedora, etab.)
 
@@ -223,7 +223,7 @@ mariadb -h 127.0.0.1 -P 3306 -ubermeo_udaltzain -pudaltzainpw erronka_galduak
 
 ---
 
-## 🛠 Erabilera arrunta
+## Erabilera arrunta
 
 ### Edukiontzien egoera
 ```bash
@@ -436,31 +436,7 @@ docker exec erronka_desktop ping -c 2 db
 ```
 
 ---
-
-## 🎤 Aurkezpena
-
-Aurkezpen bizian erakusteko bidea:
-
-1. **Linux makinatik aurkeztu** (irakaskuntzakoa edo norberarena):
-   ```bash
-   ./start-linux.sh
-   ```
-2. Bizpahiru segundotan:
-   - JavaFX leihoa irekiko da
-   - Webgunea `http://localhost:8000`-ean atzigarri
-   - Adminer `http://localhost:8081`-ean atzigarri
-3. Aurkeztu bakoitza:
-   - **JavaFX**: erregistro bat sortu, kategoria iragazi, emanaldi bat egin
-   - **Web**: katalogoa erakutsi, erreklamazio-formularioa bete (XML sortzen du)
-   - **Adminer**: datu-baseko taula bat zabaldu, JOIN bat egin
-4. Aurkezpen-bukaeran:
-   ```bash
-   ./stop-linux.sh
-   ```
-
----
-
-## 📚 Dokumentazio gehigarria
+## Dokumentazio gehigarria (amaitu gabe)
 
 - 📄 `docs/memoria.pdf` — proiektuaren memoria osoa
 - 🎨 `docs/mockup_program.pdf` — JavaFX mockup-a (Miro estiloan)
