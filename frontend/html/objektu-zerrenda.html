@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="eu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Katalogo Osoa — Bermeoko Udala · Galduen Kudeaketa</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Montserrat:wght@500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/objektu-zerrenda.css">
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="nav-inner">
+    <a href="../index.html" class="nav-logo">
+      <div class="logo-mark">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5l4 4"/><path d="M11 8v6M8 11h6"/></svg>
+      </div>
+      <div class="logo-text">
+        <strong>ERRONKA</strong>
+        <span>Bermeoko Udala</span>
+      </div>
+    </a>
+    <a href="../index.html" class="btn-back">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+      Itzuli hasierara
+    </a>
+  </div>
+</nav>
+
+<header class="catalog-header">
+  <div class="header-inner">
+    <h1 class="catalog-title">Inbentario Osoa</h1>
+    <p class="catalog-sub">Hemen aurkituko dituzu Bermeoko Udalaren biltegian dauden objektu guztiak. Zure bat ikusten baduzu, sakatu erreklamatzeko botoia.</p>
+    
+    <div class="filter-bar">
+      <div class="search-wrapper">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="searchInput" class="search-input" placeholder="Bilatu objektuaren izena...">
+      </div>
+      <select id="categorySelect" class="category-select">
+        <option value="all">Kategoria guztiak (Todas)</option>
+        <option value="Jantziak">Jantziak</option>
+        <option value="Gakoak">Gakoak</option>
+        <option value="Elektronika">Elektronika</option>
+        <option value="Dokumentuak">Dokumentazioa</option>
+        <option value="Eguzkitakoak">Eguzkitakoak</option>
+        <option value="Zorroak">Zorroak</option>
+        <option value="Bestelakoak">Bestelakoak</option>
+      </select>
+    </div>
+
+  </div>
+</header>
+
+<main class="catalog-section">
+  <div class="catalog-grid" id="catalogGrid">
+    <p id="loadingMsg" style="grid-column: 1/-1; text-align: center; color: var(--gray-500); padding: 40px;">
+      Datuak kargatzen... / Cargando base de datos...
+    </p>
+  </div>
+  
+  <div id="noResults" class="no-results">
+    Ez da aurkitu emaitzarik bilaketa honekin. / No se han encontrado resultados.
+  </div>
+
+  <div id="loadMoreContainer" style="text-align: center; margin-top: 40px; display: none;">
+    <button id="btnLoadMore" class="btn-load-more">
+      Gehiago ikusi / Ver más
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+    </button>
+  </div>
+</main>
+
+<footer id="contact">
+  <div class="footer-inner">
+    <div class="footer-top">
+
+      <div class="footer-brand">
+        <a href="../index.html" class="nav-logo" style="display:inline-flex;">
+          <div class="logo-mark">
+            <svg viewBox="0 0 24 24" style="width:20px;height:20px;fill:none;stroke:#fff;stroke-width:2.2;stroke-linecap:round;"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5l4 4"/><path d="M11 8v6M8 11h6"/></svg>
+          </div>
+          <div class="logo-text">
+            <strong>ERRONKA</strong>
+            <span>Bermeoko Udala</span>
+          </div>
+        </a>
+        <p class="footer-desc">
+          Bermeoko Udaleko galdu eta aurkituen zerbitzu ofiziala. Herritarrei zerbitzuan, gardentasunez eta eraginkortasunez.
+        </p>
+        <div class="footer-contact">
+          <a href="tel:+34946880100">
+            <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2A19.8 19.8 0 0 1 3.08 5.17 2 2 0 0 1 5.07 3h3a2 2 0 0 1 2 1.72c.13 1 .37 1.98.7 2.91a2 2 0 0 1-.45 2.11L9.09 10.91a16 16 0 0 0 6 6l1.17-1.17a2 2 0 0 1 2.11-.45c.93.34 1.91.57 2.91.7A2 2 0 0 1 23 17z"/></svg>
+            +34 946 88 01 00
+          </a>
+          <a href="mailto:galduaurkituak@bermeo.eus">
+            <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            galduaurkituak@bermeo.eus
+          </a>
+          <a href="https://www.google.com/maps?q=Gernika-Lumo+etorbidea+2,+Bermeo" target="_blank" rel="noopener noreferrer">
+            <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            Gernika-Lumo etorbidea 2, Bermeo
+          </a>
+        </div>
+      </div>
+
+      <div>
+        <h3 class="footer-col-title">Zerbitzuak</h3>
+        <ul class="footer-links">
+          <li><a href="#">Inbentarioa bilatu</a></li>
+          <li><a href="../index.html#claim">Erreklamazioa hasi</a></li>
+          <li><a href="mailto:galduaurkituak@bermeo.eus?subject=Nire%20erreklamazioaren%20egoera%20kontsultatu">Nire erreklamazioak</a></li>
+          <li><a href="mailto:galduaurkituak@bermeo.eus?subject=Jakinarazpenak%20jasotzeko%20eskaera">Jakinarazpenak</a></li>
+          <li><a href="../index.html#process">Galdera ohikoak</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h3 class="footer-col-title">Udala</h3>
+        <ul class="footer-links">
+          <li><a href="https://www.bermeo.eus/" target="_blank" rel="noopener noreferrer">Bermeoko Udala</a></li>
+          <li><a href="https://www.bermeo.eus/tramiteak.html" target="_blank" rel="noopener noreferrer">Zerbitzu guztiak</a></li>
+          <li><a href="https://www.bermeo.eus/iragarki-taula.html" target="_blank" rel="noopener noreferrer">Iragarki-taula</a></li>
+          <li><a href="https://www.bermeo.eus/albisteak.html" target="_blank" rel="noopener noreferrer">Prentsa-kabineta</a></li>
+          <li><a href="https://www.bermeo.eus/kontaktua.html" target="_blank" rel="noopener noreferrer">Kontaktua</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h3 class="footer-col-title">Legala</h3>
+        <ul class="footer-links">
+          <li><a href="https://www.bermeo.eus/lege-oharra.html" target="_blank" rel="noopener noreferrer">Pribatutasun-politika</a></li>
+          <li><a href="https://www.bermeo.eus/lege-oharra.html" target="_blank" rel="noopener noreferrer">Erabileraren baldintzak</a></li>
+          <li><a href="https://www.bermeo.eus/cookie-politika.html" target="_blank" rel="noopener noreferrer">Cookie politika</a></li>
+          <li><a href="https://www.bermeo.eus/irisgarritasuna.html" target="_blank" rel="noopener noreferrer">Irisgarritasuna</a></li>
+          <li><a href="https://www.bermeo.eus/lege-oharra.html" target="_blank" rel="noopener noreferrer">RGPD / GDPR</a></li>
+        </ul>
+      </div>
+
+    </div>
+
+    <div class="footer-bottom">
+      <p class="footer-legal">v1.0 · &copy; 2026 Bermeoko Udala · Eskubide guztiak erreserbatuta</p>
+      <div class="footer-badges">
+        <span class="f-badge">GDPR</span>
+        <span class="f-badge">W3C AA</span>
+        <span class="f-badge">ISO 27001</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="../js/objektu-zerrenda.js"></script>
+
+</body>
+</html>

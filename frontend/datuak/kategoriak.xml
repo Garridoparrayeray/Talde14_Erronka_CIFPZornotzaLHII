@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<inbentarioa>
+    <kategoria id="jantziak">
+        <izena>Jantziak</izena>
+        <kopurua>243</kopurua>
+    </kategoria>
+    <kategoria id="gakoak">
+        <izena>Gakoak</izena>
+        <kopurua>187</kopurua>
+    </kategoria>
+    <kategoria id="elektronika">
+        <izena>Elektronika</izena>
+        <kopurua>129</kopurua>
+    </kategoria>
+    <kategoria id="dokumentuak">
+        <izena>Dokumentuak</izena>
+        <kopurua>98</kopurua>
+    </kategoria>
+    <kategoria id="eguzkitakoak">
+        <izena>Eguzkitakoak</izena>
+        <kopurua>76</kopurua>
+    </kategoria>
+    <kategoria id="bestelakoak">
+        <izena>Bestelakoak</izena>
+        <kopurua>62</kopurua>
+    </kategoria>
+</inbentarioa>
