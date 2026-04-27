@@ -1,1 +1,0 @@
-# Repositorio del reto / Erronkaren repostiorioa
