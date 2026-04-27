@@ -31,9 +31,9 @@ INSERT INTO KATEGORIA (izena) VALUES
     ('Bestelakoak');
 
 -- ---------------------------------------------------------------------
--- KOKALEKUA · bka_da = Bolumen Handikoen Armairua
+-- KOKALEKUA · bha_da = Bolumen Handikoen Armairua
 -- ---------------------------------------------------------------------
-INSERT INTO KOKALEKUA (armairua, apala, bka_da) VALUES
+INSERT INTO KOKALEKUA (armairua, apala, bha_da) VALUES
     ('F',   '004', FALSE),
     ('A',   '001', FALSE),
     ('BHA', '1',   TRUE);

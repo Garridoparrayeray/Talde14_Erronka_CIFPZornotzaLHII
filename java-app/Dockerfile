@@ -1,15 +1,29 @@
-FROM maven:3.9.6-eclipse-temurin-21 AS builder
+# 1. ETAPA: Konpilazioa Maven-ekin
+FROM maven:3.9.6-eclipse-temurin-21 AS build
+COPY . /app
 WORKDIR /app
-COPY pom.xml .
-RUN mvn dependency:go-offline -B
-COPY src ./src
+# JavaFX liburutegiak eta aplikazioa paketatu
 RUN mvn clean package -DskipTests
-
+# 2. ETAPA: Exekuzioa
 FROM eclipse-temurin:21-jre
-WORKDIR /app
-# HEMOS CAMBIADO libgl1-mesa-glx POR libgl1
+
+# Windows-en (WSL2) eta Linux-en grafikoak kudeatzeko beharrezkoak
 RUN apt-get update && apt-get install -y \
-    libxext6 libxrender1 libxtst6 libxi6 libgl1 \
+    libgtk-3-0 \
+    libglu1-mesa \
+    libgl1-mesa-dri \
+    libgl1 \
+    libglx0 \
+    libpangocairo-1.0-0 \
+    libatk1.0-0 \
+    libgdk-pixbuf2.0-0 \
+    libcanberra-gtk3-module \
+    xvfb \
     && rm -rf /var/lib/apt/lists/*
-COPY --from=builder /app/target/galdutakoak-1.0-SNAPSHOT.jar app.jar
+
+COPY --from=build /app/target/*.jar /app/app.jar
+WORKDIR /app
+
+ENV JAVA_OPTS="-Djdk.gtk.version=3"
+
 CMD ["java", "-jar", "app.jar"]
