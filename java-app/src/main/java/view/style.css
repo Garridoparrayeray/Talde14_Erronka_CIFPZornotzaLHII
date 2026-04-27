@@ -1,0 +1,415 @@
+/* =========================================================================
+ * OBJETU GALDUAK - THEME
+ * ========================================================================= */
+
+/* --- 1. OROKORRA --- */
+.root {
+    -fx-font-family: "Segoe UI", "Roboto", "Helvetica", sans-serif;
+    -fx-focus-color: transparent;       /* JavaFX-en berezko ertz urdin distiratsua kentzen du */
+    -fx-faint-focus-color: transparent;
+}
+
+/* --- 2. DISEINUA ETA ATZEKO PLANOAK --- */
+.bg-primary {
+    -fx-background-color: #3457D5; /* Urdin korporatiboa */
+}
+
+.bg-light {
+    -fx-background-color: #F4F6F9; /* Gris oso argia atzeko plano orokorretarako */
+}
+
+.bg-white {
+    -fx-background-color: #FFFFFF;
+}
+
+.sidebar {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: transparent #E5E7EB transparent transparent;
+    -fx-border-width: 1px;
+}
+
+/* --- 3. TXARTELAK  --- */
+.card {
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 8px;
+    -fx-border-radius: 8px;
+    -fx-border-color: #E5E7EB;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.04), 10, 0, 0, 2);
+}
+
+/* --- 4. TIPOGRAFIA --- */
+.text-white {
+    -fx-text-fill: #FFFFFF;
+}
+
+.text-primary {
+    -fx-text-fill: #3457D5;
+}
+
+.text-dark {
+    -fx-text-fill: #111827;
+}
+
+.text-muted {
+    -fx-text-fill: #6B7280;
+}
+
+.font-bold {
+    -fx-font-weight: bold;
+}
+
+.font-title {
+    -fx-text-fill: #111827;
+    -fx-font-weight: bold;
+    -fx-font-size: 26px;
+}
+
+.font-subtitle {
+    -fx-text-fill: #6B7280;
+    -fx-font-size: 14px;
+}
+
+/* --- 5. INPRIMAKIAK ETA SARRERAK --- */
+.form-control {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #D1D5DB;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-padding: 10px 12px;
+    -fx-text-fill: #111827;
+}
+
+.form-control:focused {
+    -fx-border-color: #3457D5;
+    -fx-border-width: 2px;
+    -fx-padding: 9px 11px;
+}
+
+/* --- 6. BOTOIAK --- */
+.btn-primary {
+    -fx-background-color: #3457D5;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-weight: bold;
+    -fx-background-radius: 6px;
+    -fx-padding: 12px 20px;
+    -fx-cursor: hand;
+}
+.btn-primary:hover {
+    -fx-background-color: #2744A0;
+}
+
+.btn-outline {
+    -fx-background-color: transparent;
+    -fx-border-color: #D1D5DB;
+    -fx-border-radius: 6px;
+    -fx-text-fill: #374151;
+    -fx-padding: 12px 20px;
+    -fx-cursor: hand;
+}
+.btn-outline:hover {
+    -fx-background-color: #F9FAFB;
+}
+
+/* -------- NABIGAZIO BOTOIAK ------*/
+.nav-item {
+    -fx-background-color: transparent;
+    -fx-text-fill: #4B5563;
+    -fx-alignment: CENTER_LEFT;
+    -fx-padding: 10px 15px;
+    -fx-background-radius: 6px;
+    -fx-cursor: hand;
+}
+.nav-item:hover {
+    -fx-background-color: #F3F4F6;
+}
+
+.nav-item-active {
+    -fx-background-color: #EDF2FF;
+    -fx-text-fill: #3457D5;
+    -fx-font-weight: bold;
+    -fx-alignment: CENTER_LEFT;
+    -fx-padding: 10px 15px;
+    -fx-background-radius: 6px;
+}
+
+/* --- 7. ETIKETAK ------ */
+.badge-primary {
+    -fx-background-color: #EDF2FF;
+    -fx-text-fill: #3457D5;
+    -fx-padding: 4px 10px;
+    -fx-background-radius: 12px;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+}
+
+.badge-success {
+    -fx-background-color: #DEF7EC;
+    -fx-text-fill: #03543F;
+    -fx-padding: 4px 10px;
+    -fx-background-radius: 12px;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+}
+
+.badge-warning {
+    -fx-background-color: #FEF3C7;
+    -fx-text-fill: #92400E;
+    -fx-padding: 4px 10px;
+    -fx-background-radius: 12px;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+}
+
+.badge-neutral {
+    -fx-background-color: #F3F4F6;
+    -fx-text-fill: #4B5563;
+    -fx-padding: 4px 10px;
+    -fx-background-radius: 12px;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+}
+
+/* --- 8. TAULAK --- */
+.table-view {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+.table-view .column-header-background {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent transparent #E5E7EB transparent;
+}
+.table-view .column-header {
+    -fx-background-color: transparent;
+    -fx-padding: 10px 5px;
+}
+.table-view .column-header .label {
+    -fx-text-fill: #6B7280;
+    -fx-font-weight: bold;
+    -fx-font-size: 12px;
+}
+.table-view .table-row-cell {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: transparent transparent #F3F4F6 transparent;
+    -fx-cell-size: 45px;
+}
+.table-view .table-row-cell:hover {
+    -fx-background-color: #F9FAFB;
+}
+.table-view .table-cell {
+    -fx-border-color: transparent;
+    -fx-text-fill: #374151;
+}
+
+/* =========================================================================
+ * 10. INBENTARIOA ETA OSAGAI BEREZIAK (COMBOBOX ETA BOTOI TXIKIAK)
+ * ========================================================================= */
+
+/* --- Goitibeherako menuak (ComboBox) --- */
+.form-select {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #D1D5DB;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-padding: 5px 10px;
+    -fx-text-fill: #111827;
+}
+
+.form-select:focused {
+    -fx-border-color: #3457D5;
+}
+
+/* --- Taulako ekintzetarako botoi txikiak (Ikusi / Editatu) --- */
+.btn-sm {
+    -fx-background-color: transparent;
+    -fx-border-color: #D1D5DB;
+    -fx-border-radius: 6px;
+    -fx-text-fill: #4B5563;
+    -fx-padding: 4px 12px;
+    -fx-cursor: hand;
+    -fx-font-size: 11px;
+}
+
+.btn-sm:hover {
+    -fx-background-color: #F9FAFB;
+}
+/* =========================================================================
+ * 11. FORM ELEMENTS EXTENDED (Erregistroa / Formularios)
+ * ========================================================================= */
+
+/* --- TextArea (Testu-eremu handiak) --- */
+.text-area {
+    -fx-font-family: "Segoe UI", "Roboto", "Helvetica", sans-serif;
+    -fx-text-fill: #111827;
+}
+.text-area .content {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #D1D5DB;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+}
+.text-area:focused .content {
+    -fx-border-color: #3457D5;
+    -fx-border-width: 2px;
+}
+
+/* --- DatePicker (Data-aukeratzailea) --- */
+.date-picker {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #D1D5DB;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+}
+.date-picker .text-field {
+    -fx-background-color: transparent;
+    -fx-padding: 9px 12px;
+    -fx-text-fill: #111827;
+}
+.date-picker:focused {
+    -fx-border-color: #3457D5;
+}
+
+/* --- Upload Zone (Fitxategiak igotzeko eremua) --- */
+.upload-zone {
+    -fx-background-color: #F9FAFB;
+    -fx-border-color: #D1D5DB;
+    -fx-border-style: dashed;
+    -fx-border-width: 2px;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-padding: 30px;
+    -fx-alignment: center;
+}
+.upload-zone:hover {
+    -fx-background-color: #F3F4F6;
+    -fx-border-color: #9CA3AF;
+    -fx-cursor: hand;
+}
+
+
+/* =========================================================================
+ * 12. LISTS & MATCHMAKING CARDS (Erreklamazioak)
+ * ========================================================================= */
+
+/* --- Zerrenda interaktiboak (List Items) --- */
+.list-group {
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 8px;
+    -fx-border-radius: 8px;
+    -fx-border-color: #E5E7EB;
+}
+
+.list-item {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent transparent #E5E7EB transparent;
+    -fx-padding: 15px;
+    -fx-cursor: hand;
+}
+
+.list-item:hover {
+    -fx-background-color: #F9FAFB;
+}
+
+/* Hautatutako elementua (Urdin argia) */
+.list-item-active {
+    -fx-background-color: #EEF2FF;
+    -fx-border-color: transparent transparent #E5E7EB transparent;
+    -fx-padding: 15px;
+    -fx-cursor: default;
+}
+
+/* --- Koadro bereziak (Deskribapena, oharrak) --- */
+.box-muted {
+    -fx-background-color: #F9FAFB;
+    -fx-background-radius: 8px;
+    -fx-padding: 15px;
+}
+
+/* --- Bat-etortze txartelak (Matchmaking Cards) --- */
+.match-card-high {
+    -fx-background-color: #F0FDF4; /* Berde argia */
+    -fx-border-color: #86EFAC; /* Berde ertz gogorragoa */
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-padding: 15px;
+}
+
+.match-card-low {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #D1D5DB;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-padding: 15px;
+}
+
+.text-success {
+    -fx-text-fill: #059669; /* Berde indartsua portzentajearentzat */
+}
+/* =========================================================================
+ * 12. CHECKBOX & RADIO BUTTONS (Aukera-botoiak)
+ * ========================================================================= */
+
+.radio-btn {
+    -fx-text-fill: #374151;
+    -fx-font-size: 13px;
+    -fx-cursor: hand;
+}
+
+.radio-btn .radio {
+    -fx-border-color: #D1D5DB;
+    -fx-border-radius: 50%;
+    -fx-background-color: #FFFFFF;
+}
+
+.radio-btn:selected .radio {
+    -fx-border-color: #3457D5;
+    -fx-border-width: 2px;
+}
+
+.radio-btn:selected .dot {
+    -fx-background-color: #3457D5;
+}
+
+.check-box {
+    -fx-text-fill: #4B5563;
+    -fx-cursor: hand;
+}
+
+/* =========================================================================
+ * 13. ADMIN PANEL (Egoera-zerrendak / Status Rows)
+ * ========================================================================= */
+
+/* --- Sistemaren egoera zerrendako ilarak --- */
+.status-row {
+    -fx-border-color: transparent transparent #E5E7EB transparent;
+    -fx-padding: 12px 0;
+}
+
+/* Azken ilarari ertza kentzeko aukera (aukerakoa) */
+.status-row-last {
+    -fx-padding: 12px 0 0 0;
+}
+/* =========================================================================
+ * 14. PROFILE SWITCHERS (Rol aldaketa)
+ * ========================================================================= */
+
+.admin-switch-box {
+    -fx-background-color: #3457D5;
+    -fx-background-radius: 8px;
+    -fx-padding: 10px 15px;
+    -fx-cursor: hand;
+}
+.admin-switch-box .label {
+    -fx-text-fill: white;
+}
+
+.user-switch-box {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #E5E7EB;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-padding: 10px 15px;
+    -fx-cursor: hand;
+}
+.user-switch-box:hover {
+    -fx-background-color: #F9FAFB;
+}

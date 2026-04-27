@@ -1,0 +1,75 @@
+services:
+  # 1. DATU BASEA
+  db:
+    image: mariadb:11
+    container_name: erronka_db
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: rootpw
+      MARIADB_DATABASE: erronka_galduak
+      MARIADB_USER: bermeo_udaltzain
+      MARIADB_PASSWORD: udaltzainpw
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./db/init:/docker-entrypoint-initdb.d:ro
+      - db_data:/var/lib/mysql
+    networks:
+      - erronka-net
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # 2. JAVA APLIKAZIOA (JavaFX VcXsrv-rekin TCP bidez)
+  java-app:
+    build: ./java-app
+    container_name: erronka_desktop
+    environment:
+      # Windows-en VcXsrv TCP socketean entzuten du
+      - DISPLAY=host.docker.internal:0.0
+      - DB_URL=jdbc:mariadb://db:3306/erronka_galduak
+    volumes:
+      - ./partekatutako_datuak:/app/exportazioak
+      - ./artikulu_irudiak:/app/irudiak
+    networks:
+      - erronka-net
+    depends_on:
+      db:
+        condition: service_healthy
+
+  # 3. WEBGUNEA
+  web:
+    image: nginx:alpine
+    container_name: erronka_web
+    ports:
+      - "8000:80"
+    volumes:
+      - ./frontend:/usr/share/nginx/html
+      - ./partekatutako_datuak:/usr/share/nginx/html/datuak:ro
+    networks:
+      - erronka-net
+    depends_on:
+      - db
+
+  # 4. ADMINER
+  adminer:
+    image: adminer:latest
+    container_name: erronka_adminer
+    restart: unless-stopped
+    ports:
+      - "8081:8080"
+    environment:
+      ADMINER_DEFAULT_SERVER: db
+    depends_on:
+      - db
+    networks:
+      - erronka-net
+
+networks:
+  erronka-net:
+    driver: bridge
+
+volumes:
+  db_data:

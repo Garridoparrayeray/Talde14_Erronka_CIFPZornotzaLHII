@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox styleClass="bg-light" stylesheets="@style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+
+      <HBox alignment="CENTER_LEFT" style="-fx-border-color: transparent transparent #E5E7EB transparent; -fx-padding: 15 30;" styleClass="bg-white">
+         <children>
+            <Label styleClass="font-title" text="Erreklamazioak">
+               <font><Font size="20.0" /></font>
+            </Label>
+            <Region HBox.hgrow="ALWAYS" />
+         </children>
+      </HBox>
+
+      <HBox spacing="20.0" VBox.vgrow="ALWAYS">
+         <children>
+            <ScrollPane HBox.hgrow="NEVER">
+               <content>
+      
+                              <VBox prefWidth="350.0" style="-fx-padding: 0;" styleClass="list-group">
+                     <children>
+                        <HBox style="-fx-padding: 15; -fx-border-color: transparent transparent #E5E7EB transparent;">
+                           <children>
+                              <Label styleClass="font-bold, text-dark" text="Erreklamazioak · " />
+                              <Label styleClass="text-muted" text="3" />
+                           </children>
+                        </HBox>
+            
+                                    <VBox styleClass="list-item-active">
+                           <children>
+                              <HBox alignment="CENTER_LEFT">
+                                 <children>
+                                    <Label style="-fx-font-size: 12px;" styleClass="text-muted" text="E-2026-033" />
+                                    <Region HBox.hgrow="ALWAYS" />
+                                    <Label styleClass="badge-primary" text="Bat-etortzea" />
+                                 </children>
+                              </HBox>
+                              <Label style="-fx-font-size: 16px;" styleClass="font-bold, text-dark" text="Iker Mendia" />
+                              <Label styleClass="text-muted" text="Motxila urdina" />
+                              <Label style="-fx-font-size: 12px;" styleClass="text-muted" text="Jasoa: 2026-04-18">
+                                 <VBox.margin>
+                                    <Insets top="5.0" />
+                                 </VBox.margin>
+                              </Label>
+                           </children>
+                        </VBox>
+            
+                                    <VBox styleClass="list-item">
+                           <children>
+                              <HBox alignment="CENTER_LEFT">
+                                 <children>
+                                    <Label style="-fx-font-size: 12px;" styleClass="text-muted" text="E-2026-032" />
+                                    <Region HBox.hgrow="ALWAYS" />
+                                    <Label styleClass="badge-primary" text="Bat-etortzea" />
+                                 </children>
+                              </HBox>
+                              <Label style="-fx-font-size: 16px;" styleClass="font-bold, text-dark" text="Olatz Urruzola" />
+                              <Label styleClass="text-muted" text="Haur-bufanda gorria" />
+                              <Label style="-fx-font-size: 12px;" styleClass="text-muted" text="Jasoa: 2026-04-17">
+                                 <VBox.margin>
+                                    <Insets top="5.0" />
+                                 </VBox.margin>
+                              </Label>
+                           </children>
+                        </VBox>
+                  
+                                          <VBox styleClass="list-item">
+                           <children>
+                              <HBox alignment="CENTER_LEFT">
+                                 <children>
+                                    <Label style="-fx-font-size: 12px;" styleClass="text-muted" text="E-2026-031" />
+                                    <Region HBox.hgrow="ALWAYS" />
+                                    <Label styleClass="badge-neutral" text="Irekia" />
+                                 </children>
+                              </HBox>
+                              <Label style="-fx-font-size: 16px;" styleClass="font-bold, text-dark" text="Kepa Alberdi" />
+                              <Label styleClass="text-muted" text="Pitxer-giltzak" />
+                              <Label style="-fx-font-size: 12px;" styleClass="text-muted" text="Jasoa: 2026-04-15">
+                                 <VBox.margin>
+                                    <Insets top="5.0" />
+                                 </VBox.margin>
+                              </Label>
+                           </children>
+                        </VBox>
+                     </children>
+                  </VBox>
+               </content>
+            </ScrollPane>
+
+            <VBox spacing="25.0" styleClass="card" HBox.hgrow="ALWAYS">
+               <children>
+
+                  <VBox spacing="5.0">
+                     <children>
+                        <HBox alignment="CENTER_LEFT">
+                           <children>
+                              <Label style="-fx-font-size: 12px;" styleClass="text-muted" text="E-2026-033" />
+                              <Region HBox.hgrow="ALWAYS" />
+                              <Label styleClass="badge-primary" text="Bat-etortzea" />
+                           </children>
+                        </HBox>
+                        <Label style="-fx-font-size: 24px;" styleClass="font-bold, text-dark" text="Iker Mendia" />
+                        <Label styleClass="text-muted" text="666 12 34 56 · i.mendia@mail.eus" />
+                     </children>
+                  </VBox>
+
+                  <VBox styleClass="box-muted">
+                     <children>
+                        <Label style="-fx-text-fill: #374151;" styleClass="font-bold" text="Erreklamazioaren deskribapena:">
+                           <VBox.margin><Insets bottom="5.0" /></VBox.margin>
+                        </Label>
+                        <Label styleClass="text-muted" text="Motxila urdina, Jansport markakoa, Lamerako autobus-geltokian galdua larunbatean. Hezkuntza-liburuak eta gako-sorta bat barruan." wrapText="true" />
+                     </children>
+                  </VBox>
+                  <ScrollPane VBox.vgrow="ALWAYS">
+                     <content>
+      
+                        <VBox spacing="10.0">
+                           <children>
+                              <Label style="-fx-font-size: 16px;" styleClass="font-bold, text-dark" text="Bat-etortze posibleak (2)">
+                                 <VBox.margin>
+                                    <Insets bottom="5.0" />
+                                 </VBox.margin>
+                              </Label>
+      
+                                    <HBox alignment="CENTER_LEFT" spacing="15.0" styleClass="match-card-high">
+                                 <children>
+                                    <AnchorPane prefHeight="60.0" prefWidth="60.0" style="-fx-background-color: #D1D5DB; -fx-background-radius: 6;" />
+                                    
+                                          <VBox alignment="CENTER_LEFT" HBox.hgrow="ALWAYS">
+                                       <children>
+                                          <Label style="-fx-font-size: 14px;" styleClass="font-bold, text-dark" text="Eskola-motxila" />
+                                          <Label style="-fx-font-size: 12px;" styleClass="text-muted" text="Jansport · Urdina · A-01" />
+                                          <Label style="-fx-font-size: 12px;" styleClass="text-muted" text="Sarrera: 2026-04-17" />
+                                       </children>
+                                    </VBox>
+                                    
+                                          <Button mnemonicParsing="false" styleClass="btn-primary" text="Emanaldia">
+                                       <HBox.margin>
+                                          <Insets left="15.0" />
+                                       </HBox.margin>
+                                    </Button>
+                                 </children>
+                              </HBox>
+      
+                              <HBox alignment="CENTER_LEFT" spacing="15.0" styleClass="match-card-low">
+                                 <children>
+                                    <AnchorPane prefHeight="60.0" prefWidth="60.0" style="-fx-background-color: #E5E7EB; -fx-background-radius: 6;" />
+                                    
+                                    <VBox alignment="CENTER_LEFT" HBox.hgrow="ALWAYS">
+                                       <children>
+                                          <Label style="-fx-font-size: 14px;" styleClass="font-bold, text-dark" text="Zorro txikia" />
+                                          <Label style="-fx-font-size: 12px;" styleClass="text-muted" text="— · Beltza · B-01" />
+                                          <Label style="-fx-font-size: 12px;" styleClass="text-muted" text="Sarrera: 2026-04-02" />
+                                       </children>
+                                    </VBox>
+                                    
+                                    <Button mnemonicParsing="false" styleClass="btn-outline" text="Emanaldia">
+                                       <HBox.margin>
+                                          <Insets left="15.0" />
+                                       </HBox.margin>
+                                    </Button>
+                                 </children>
+                              </HBox>
+      
+                           </children>
+                        </VBox>
+                     </content>
+                  </ScrollPane>
+
+               </children>
+               <padding>
+                  <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />
+               </padding>
+            </VBox>
+
+         </children>
+         <padding>
+            <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
+         </padding>
+      </HBox>
+   </children>
+</VBox>

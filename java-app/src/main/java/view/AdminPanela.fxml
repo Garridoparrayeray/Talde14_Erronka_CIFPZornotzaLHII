@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox styleClass="bg-light" stylesheets="@style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+
+      <HBox alignment="CENTER_LEFT" style="-fx-border-color: transparent transparent #E5E7EB transparent; -fx-padding: 15 30;" styleClass="bg-white">
+         <children>
+            <Label styleClass="font-title" text="Administrazio Panela">
+               <font><Font size="20.0" /></font>
+            </Label>
+            <Region HBox.hgrow="ALWAYS" />
+         </children>
+      </HBox>
+
+      <VBox spacing="30.0" VBox.vgrow="ALWAYS">
+         <children>
+
+            <HBox alignment="CENTER_LEFT" spacing="10.0">
+               <children>
+                  <Label styleClass="font-title" text="Administrazio Panela" />
+                  <Label styleClass="badge-primary" text="ADMIN" />
+               </children>
+            </HBox>
+
+            <HBox spacing="20.0">
+               <children>
+                  <VBox styleClass="card" HBox.hgrow="ALWAYS">
+                     <children>
+                        <Label styleClass="kpi-label" text="LANGILEAK" />
+                        <Label styleClass="kpi-value, text-primary" text="6" />
+                     </children>
+                  </VBox>
+                  <VBox styleClass="card" HBox.hgrow="ALWAYS">
+                     <children>
+                        <Label styleClass="kpi-label" text="ARTIKULUAK" />
+                        <Label styleClass="kpi-value, text-dark" text="16" />
+                     </children>
+                  </VBox>
+                  <VBox styleClass="card" HBox.hgrow="ALWAYS">
+                     <children>
+                        <Label styleClass="kpi-label" text="KATEGORIAK" />
+                        <Label styleClass="kpi-value, text-dark" text="9" />
+                     </children>
+                  </VBox>
+                  <VBox styleClass="card" HBox.hgrow="ALWAYS">
+                     <children>
+                        <Label styleClass="kpi-label" text="KOKALEKUAK" />
+                        <Label styleClass="kpi-value, text-dark" text="9" />
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
+
+            <HBox spacing="20.0" VBox.vgrow="ALWAYS">
+               <children>
+
+                  <VBox spacing="10.0" styleClass="card" HBox.hgrow="ALWAYS">
+                     <children>
+                        <Label style="-fx-font-size: 16px;" styleClass="font-bold, text-dark" text="Sistemaren egoera">
+                           <VBox.margin><Insets bottom="10.0" /></VBox.margin>
+                        </Label>
+
+                        <HBox alignment="CENTER_LEFT" styleClass="status-row">
+                           <children>
+                              <Label style="-fx-text-fill: #374151;" styleClass="font-bold" text="Datu-basearen konexioa" />
+                              <Region HBox.hgrow="ALWAYS" />
+                              <Label styleClass="badge-success" text="BAI/EZ" />
+                           </children>
+                        </HBox>
+                        
+                        <HBox alignment="CENTER_LEFT" styleClass="status-row">
+                           <children>
+                              <Label style="-fx-text-fill: #374151;" styleClass="font-bold" text="Azken babes-kopia" />
+                              <Region HBox.hgrow="ALWAYS" />
+                              <Label styleClass="badge-success" text="Gaur 03:00" />
+                           </children>
+                        </HBox>
+                        
+                        <HBox alignment="CENTER_LEFT" styleClass="status-row-last">
+                           <children>
+                              <Label style="-fx-text-fill: #374151;" styleClass="font-bold" text="E-posta (SMTP)" />
+                              <Region HBox.hgrow="ALWAYS" />
+                              <Label styleClass="badge-success" text="Aktibo" />
+                           </children>
+                        </HBox>
+                     </children>
+                     <padding>
+                        <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />
+                     </padding>
+                  </VBox>
+
+                  <VBox spacing="15.0" styleClass="card" HBox.hgrow="ALWAYS">
+                     <children>
+                        <Label style="-fx-font-size: 16px;" styleClass="font-bold, text-dark" text="Sarbide azkarrak">
+                           <VBox.margin><Insets bottom="10.0" /></VBox.margin>
+                        </Label>
+
+                        <HBox spacing="15.0">
+                           <children>
+                              <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="btn-outline" text="+ Langile berria" HBox.hgrow="ALWAYS" />
+                              <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="btn-outline" text="+ Kategoria berria" HBox.hgrow="ALWAYS" />
+                           </children>
+                        </HBox>
+                        
+                        <HBox spacing="15.0">
+                           <children>
+                              <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="btn-outline" text="+ Apal berria" HBox.hgrow="ALWAYS" />
+                              <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="btn-outline" text="↓ Auditoria CSV" HBox.hgrow="ALWAYS" />
+                           </children>
+                        </HBox>
+                     </children>
+                     <padding>
+                        <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />
+                     </padding>
+                  </VBox>
+
+               </children>
+            </HBox>
+
+         </children>
+         <padding>
+            <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
+         </padding>
+      </VBox>
+   </children>
+</VBox>
