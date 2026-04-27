@@ -213,6 +213,116 @@ docker exec -it erronka_db mariadb -ubermeo_udaltzain -pudaltzainpw erronka_gald
 
 # Tokiko makinatik (mariadb-client beharrezkoa)
 mariadb -h 127.0.0.1 -P 3306 -ubermeo_udaltzain -pudaltzainpw erronka_galduak
+
+#Bi pertsona aldi berean:
+
+GitHub + Docker lokala bakoitzarentzat fluxu estandarra da.
+
+- --
+Hasierako setupa
+
+cd/home/ygarrido/Dokumentuak/ERRONKA_ZORNOTZA/erronka/erronka-bermeo
+git init
+git add.
+git commit -m "first commit"
+git remote add origin https://github.com/TU_USUARIO/galdutakoak.git
+git push -u origin main
+
+- --
+Zure lankidea (bere makina)
+
+git clone https://github.com/TU_USUARIO/galdutakoak.git
+cd galdutakoak
+docker compose up -d
+
+Bakoitzak bere Docker propioa du lokalean BD berarekin korrika.
+
+- --
+Eguneroko lan-fluxua
+
+Hasi aurretik beti:
+git pull
+
+Zerbait amaitzean:
+git add.
+git commit – "egin nuenaren deskribapena"
+git push
+
+Besteak aldaketak jasotzen ditu:
+git pull
+
+- --
+Bestearen lana ez zapaltzeko — adarrak
+
+#Zure lankideak bere adarrean lan egiten du
+git checkout -b feature/login-controller
+
+Zu zurean.
+git checkout -b feature/xml-export
+
+Amaitzen duzuenean, jaitsi.
+git checkout main
+git merge feature/login-controller
+git push
+
+- --
+Benetako arazoa: datu-basea
+
+Bakoitzak bere BD dauka Dockerren — datuak ez dira makinen artean sinkronizatzen. Zertarako
+lerrokatuta egotea, schema aldatzen bada:
+
+#Aldatzen duenak 01-schema.sql egiten du:
+git add db/init/01-schema.sql
+git commit -m "schema: gehitu X eremua"
+git push
+
+#Besteak aldaketa jasotzen du eta BD edukiontzia berrabiarazten du:
+git pull
+docker compose down -v #borra bolumena datu zaharrekin
+docker compose up -d #birsortu schema berriarekin
+
+- v flag-ak datuak ezabatzen ditu — abisatu schema aldaketak egiten dituzuenean.
+
+- --
+Laburbilduz: GitHub-ek kodea sinkronizatzen du, Dockerrek bakoitzak lokalean exekutatzen du. Ez da "
+bizirik "milisegundora, baina git pull/push-rekin ohikoa da
+klase-proiektua.
+- --
+Nola funtzionatzen duen
+
+Zure makina ---- Makina kidea
+─────────────────────┐       ┌──────────────────────┐
+  │ docker compose up   │       │ Solo el código Java   │
+  │  ├── MariaDB :3306 ◄├───────┤ DB_URL=TU_IP:3306     │
+  │  ├── Adminer :8081  │       │ git push/pull normal  │
+  │  └── Nginx   :8000  │       └──────────────────────┘
+  └─────────────────────┘
+
+
+Zure lagunak ez du Docker altxatzen — apuntatu zuzenean zure datu-basean.
+
+- --
+1. urratsa — Zure IP lokala
+
+ip addr show | grep "inet" | grep -v 127.0.0.1
+#Adibidea: 192.168.1.45
+
+- --
+2. urratsa — Ireki MariaDB lankideari
+
+3306 portua ikusgai dago jada zure docker-compose.yml. webgunean. Zure firewall-a behar duzu.
+zilegi bekit:
+
+sudo ufw allow 3306
+
+- --
+3. urratsa — Zure lankideak bere .env edo aldagarria aldatzen du
+
+Bere makinan, localhost erabili beharrean, erabili zure IP:
+
+#Zure terminalean Java aplikazioa abiarazi aurretik:
+export DB_URL = jdbc: mariadb:// 192.168.1.45: 3306/erronka
+
 ```
 
 ---
