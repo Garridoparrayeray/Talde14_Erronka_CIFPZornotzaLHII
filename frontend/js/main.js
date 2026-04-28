@@ -91,37 +91,52 @@ mobileLinks.forEach(link => {
     mobileNav.style.display = 'none';
   });
 });
-// --- LÓGICA PARA CARGAR DATOS DESDE EL XML ---
+// --- LÓGICA PARA CARGAR CATEGORÍAS EN PORTADA ---
 document.addEventListener("DOMContentLoaded", () => {
-  const isIndexPage = document.getElementById('kat-jantziak');
+  const categoryGrid = document.getElementById('categoryGrid');
   
-  if (isIndexPage) {
+  if (categoryGrid) {
+    // Diccionario de iconos y colores según el ID de la categoría
+    const katEstiloak = {
+      "jantziak": { bg: "#EEF2FF", color: "#3B5BDB", svg: '<rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>' },
+      "gakoak": { bg: "#FFF3D4", color: "#E09A10", svg: '<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>' },
+      "elektronika": { bg: "#E4F9ED", color: "#2BB673", svg: '<rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/>' },
+      "dokumentuak": { bg: "#FDE8E8", color: "#E84040", svg: '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/>' },
+      "eguzkitakoak": { bg: "#F0EDFF", color: "#7B5FDC", svg: '<circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/>' },
+      "bestelakoak": { bg: "#E6F4F1", color: "#0D9488", svg: '<line x1="12" y1="2" x2="12" y2="6"/><path d="M6.3 6.3l-2.8-2.8M17.7 6.3l2.8-2.8M6 12H2M22 12h-4M6.3 17.7l-2.8 2.8M17.7 17.7l2.8 2.8M12 18v4"/><circle cx="12" cy="12" r="4"/>' }
+    };
+
     fetch('datuak/kategoriak.xml')
-      .then(response => {
-        if (!response.ok) throw new Error("Ezin izan da XML fitxategia kargatu");
-        return response.text();
-      })
+      .then(response => response.text())
       .then(str => new window.DOMParser().parseFromString(str, "text/xml"))
       .then(xmlDoc => {
-        // Obtenemos todas las etiquetas <kategoria>
         const kategoriak = xmlDoc.querySelectorAll("kategoria");
-        
-        // Recorremos cada una
+        categoryGrid.innerHTML = ''; // Limpiamos el texto de carga
+
         kategoriak.forEach(kat => {
-          const id = kat.getAttribute("id"); 
+          const id = kat.getAttribute("id");
+          const izena = kat.querySelector("izena").textContent;
           const kopurua = kat.querySelector("kopurua").textContent;
           
-          // Buscamos la caja en el HTML y le metemos el número
-          const htmlElement = document.getElementById(`kat-${id}`);
-          if (htmlElement) {
-            htmlElement.textContent = `${kopurua} objektu`;
-          }
+          // Si la categoría no está en nuestro diccionario, usamos gris por defecto
+          const estilo = katEstiloak[id] || { bg: "#F2F5FD", color: "#6B6F80", svg: '<circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/>' };
+
+          const card = document.createElement('a');
+          card.href = 'html/objektu-zerrenda.html';
+          card.className = 'cat-card';
+          card.innerHTML = `
+            <div class="cat-icon" style="background:${estilo.bg};">
+              <svg viewBox="0 0 24 24" style="stroke:${estilo.color};"><g>${estilo.svg}</g></svg>
+            </div>
+            <div class="cat-name">${izena}</div>
+            <div class="cat-count">${kopurua} objektu</div>
+          `;
+          categoryGrid.appendChild(card);
         });
       })
       .catch(error => {
         console.error("Errorea:", error);
-        // Si hay error (ej: el xml no existe aún), mostramos un texto por defecto
-        document.querySelectorAll('.cat-count').forEach(el => el.textContent = "Datu barik");
+        categoryGrid.innerHTML = '<p style="color: red;">Errorea datuak kargatzean.</p>';
       });
   }
 });
