@@ -32,7 +32,7 @@ public class Artikulua {
     }
 
     public boolean iraungipenaEgiaztatu() {
-        return new Date().after(iraungitzeData);
+        return iraungitzeData != null && new Date().after(iraungitzeData);
     }
 
     public void aldatuEgoera(EgoeraArtikulua berria) {
@@ -40,6 +40,7 @@ public class Artikulua {
     }
 
     public void kalkulatuIraungitzea() {
+        if (sarreraData == null) return;
         Calendar cal = Calendar.getInstance();
         cal.setTime(sarreraData);
         cal.add(Calendar.DAY_OF_YEAR, 730);

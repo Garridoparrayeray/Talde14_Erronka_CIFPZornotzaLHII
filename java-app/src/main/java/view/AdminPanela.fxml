@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox styleClass="bg-light" stylesheets="@style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
+<VBox styleClass="bg-light" stylesheets="@style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.AdminPanelaController">
    <children>
 
       <HBox alignment="CENTER_LEFT" style="-fx-border-color: transparent transparent #E5E7EB transparent; -fx-padding: 15 30;" styleClass="bg-white">
@@ -30,30 +30,31 @@
                </children>
             </HBox>
 
+            <!-- KPI txartelak -->
             <HBox spacing="20.0">
                <children>
-                  <VBox styleClass="card" HBox.hgrow="ALWAYS">
+                  <VBox style="-fx-padding: 20;" styleClass="card" HBox.hgrow="ALWAYS">
                      <children>
                         <Label styleClass="kpi-label" text="LANGILEAK" />
-                        <Label styleClass="kpi-value, text-primary" text="6" />
+                        <Label fx:id="lblLangileak" styleClass="kpi-value, text-primary" text="..." />
                      </children>
                   </VBox>
-                  <VBox styleClass="card" HBox.hgrow="ALWAYS">
+                  <VBox style="-fx-padding: 20;" styleClass="card" HBox.hgrow="ALWAYS">
                      <children>
                         <Label styleClass="kpi-label" text="ARTIKULUAK" />
-                        <Label styleClass="kpi-value, text-dark" text="16" />
+                        <Label fx:id="lblArtikuluak" styleClass="kpi-value, text-dark" text="..." />
                      </children>
                   </VBox>
-                  <VBox styleClass="card" HBox.hgrow="ALWAYS">
+                  <VBox style="-fx-padding: 20;" styleClass="card" HBox.hgrow="ALWAYS">
                      <children>
                         <Label styleClass="kpi-label" text="KATEGORIAK" />
-                        <Label styleClass="kpi-value, text-dark" text="9" />
+                        <Label fx:id="lblKategoriak" styleClass="kpi-value, text-dark" text="..." />
                      </children>
                   </VBox>
-                  <VBox styleClass="card" HBox.hgrow="ALWAYS">
+                  <VBox style="-fx-padding: 20;" styleClass="card" HBox.hgrow="ALWAYS">
                      <children>
                         <Label styleClass="kpi-label" text="KOKALEKUAK" />
-                        <Label styleClass="kpi-value, text-dark" text="9" />
+                        <Label fx:id="lblKokalekuak" styleClass="kpi-value, text-dark" text="..." />
                      </children>
                   </VBox>
                </children>
@@ -62,6 +63,7 @@
             <HBox spacing="20.0" VBox.vgrow="ALWAYS">
                <children>
 
+                  <!-- Sistemaren egoera -->
                   <VBox spacing="10.0" styleClass="card" HBox.hgrow="ALWAYS">
                      <children>
                         <Label style="-fx-font-size: 16px;" styleClass="font-bold, text-dark" text="Sistemaren egoera">
@@ -72,23 +74,15 @@
                            <children>
                               <Label style="-fx-text-fill: #374151;" styleClass="font-bold" text="Datu-basearen konexioa" />
                               <Region HBox.hgrow="ALWAYS" />
-                              <Label styleClass="badge-success" text="BAI/EZ" />
+                              <Label fx:id="lblDbEgoera" styleClass="badge-success" text="..." />
                            </children>
                         </HBox>
-                        
-                        <HBox alignment="CENTER_LEFT" styleClass="status-row">
+
+                        <HBox alignment="CENTER_LEFT" styleClass="status-row-last">
                            <children>
                               <Label style="-fx-text-fill: #374151;" styleClass="font-bold" text="Azken babes-kopia" />
                               <Region HBox.hgrow="ALWAYS" />
-                              <Label styleClass="badge-success" text="Gaur 03:00" />
-                           </children>
-                        </HBox>
-                        
-                        <HBox alignment="CENTER_LEFT" styleClass="status-row-last">
-                           <children>
-                              <Label style="-fx-text-fill: #374151;" styleClass="font-bold" text="E-posta (SMTP)" />
-                              <Region HBox.hgrow="ALWAYS" />
-                              <Label styleClass="badge-success" text="Aktibo" />
+                              <Label fx:id="lblAzkenKopia" styleClass="badge-neutral" text="..." />
                            </children>
                         </HBox>
                      </children>
@@ -97,6 +91,7 @@
                      </padding>
                   </VBox>
 
+                  <!-- Sarbide azkarrak -->
                   <VBox spacing="15.0" styleClass="card" HBox.hgrow="ALWAYS">
                      <children>
                         <Label style="-fx-font-size: 16px;" styleClass="font-bold, text-dark" text="Sarbide azkarrak">
@@ -109,11 +104,10 @@
                               <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="btn-outline" text="+ Kategoria berria" HBox.hgrow="ALWAYS" />
                            </children>
                         </HBox>
-                        
                         <HBox spacing="15.0">
                            <children>
-                              <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="btn-outline" text="+ Apal berria" HBox.hgrow="ALWAYS" />
-                              <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="btn-outline" text="↓ Auditoria CSV" HBox.hgrow="ALWAYS" />
+                              <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#eginBabesKopia" styleClass="btn-primary" text="↓ Babes-kopia egin" HBox.hgrow="ALWAYS" />
+                              <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#egiaztatuKonexioa" styleClass="btn-outline" text="DB egiaztatu" HBox.hgrow="ALWAYS" />
                            </children>
                         </HBox>
                      </children>

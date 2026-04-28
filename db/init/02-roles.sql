@@ -19,11 +19,19 @@ CREATE ROLE IF NOT EXISTS 'bezero_rola';
 -- Admin: dena
 GRANT ALL PRIVILEGES ON erronka_galduak.* TO 'admin_rola';
 
--- Udaltzaina
-GRANT SELECT, INSERT, UPDATE, DELETE ON erronka_galduak.* TO 'udaltzain_rola';
-
-REVOKE INSERT, UPDATE, DELETE ON erronka_galduak.LANGILEA FROM 'udaltzain_rola';
-REVOKE INSERT, UPDATE, DELETE ON erronka_galduak.ROLA     FROM 'udaltzain_rola';
+-- Udaltzaina: dena LANGILEA eta ROLA izan ezik (irakurketa soilik)
+GRANT SELECT, INSERT, UPDATE, DELETE ON erronka_galduak.ARTIKULUA    TO 'udaltzain_rola';
+GRANT SELECT, INSERT, UPDATE, DELETE ON erronka_galduak.KATEGORIA    TO 'udaltzain_rola';
+GRANT SELECT, INSERT, UPDATE, DELETE ON erronka_galduak.KOKALEKUA    TO 'udaltzain_rola';
+GRANT SELECT, INSERT, UPDATE, DELETE ON erronka_galduak.HARTZAILEA   TO 'udaltzain_rola';
+GRANT SELECT, INSERT, UPDATE, DELETE ON erronka_galduak.JABEA        TO 'udaltzain_rola';
+GRANT SELECT, INSERT, UPDATE, DELETE ON erronka_galduak.ERAKUNDEA    TO 'udaltzain_rola';
+GRANT SELECT, INSERT, UPDATE, DELETE ON erronka_galduak.ERREKLAMAZIOA TO 'udaltzain_rola';
+GRANT SELECT, INSERT, UPDATE, DELETE ON erronka_galduak.EMANALDIA    TO 'udaltzain_rola';
+GRANT SELECT, INSERT, UPDATE, DELETE ON erronka_galduak.MUGIMENDUA   TO 'udaltzain_rola';
+GRANT SELECT, INSERT, UPDATE, DELETE ON erronka_galduak.JAKINARAZPENA TO 'udaltzain_rola';
+GRANT SELECT ON erronka_galduak.LANGILEA TO 'udaltzain_rola';
+GRANT SELECT ON erronka_galduak.ROLA     TO 'udaltzain_rola';
 
 -- Bezeroa: web atari publikoa 
 GRANT SELECT ON erronka_galduak.ARTIKULUA  TO 'bezero_rola';

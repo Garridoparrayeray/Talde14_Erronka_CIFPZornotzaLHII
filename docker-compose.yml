@@ -10,7 +10,7 @@ services:
       MARIADB_USER: bermeo_udaltzain
       MARIADB_PASSWORD: udaltzainpw
     ports:
-      - "3306:3306"
+      - "0.0.0.0:3306:3306"
     volumes:
       - ./db/init:/docker-entrypoint-initdb.d:ro
       - db_data:/var/lib/mysql
@@ -30,6 +30,8 @@ services:
     environment:
       - DISPLAY=${DISPLAY}
       - DB_URL=jdbc:mariadb://db:3306/erronka_galduak
+      - DB_USER=bermeo_udaltzain
+      - DB_PASS=udaltzainpw
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix:rw
       - ${HOME}/.Xauthority:/root/.Xauthority:rw

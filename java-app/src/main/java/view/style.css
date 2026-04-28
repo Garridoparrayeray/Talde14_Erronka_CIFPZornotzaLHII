@@ -37,6 +37,18 @@
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.04), 10, 0, 0, 2);
 }
 
+/* --- 3b. KPI TXARTELAK --- */
+.kpi-label {
+    -fx-text-fill: #6B7280;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+}
+.kpi-value {
+    -fx-font-size: 36px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #111827;
+}
+
 /* --- 4. TIPOGRAFIA --- */
 .text-white {
     -fx-text-fill: #FFFFFF;
