@@ -193,7 +193,7 @@ erronka-bermeo/
 
 ## Abiaraztea Linux-en
 
-### Linux
+### Behin egin behar dena (lehen aldiz)
 
 ```bash
 # Lehen aldiz

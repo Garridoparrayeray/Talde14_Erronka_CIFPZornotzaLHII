@@ -14,7 +14,11 @@ public class Kokalekua {
     }
 
     public String getKokalekuOsoa() {
-        return armairua + " - " + apala + (bhaDa ? " [BHA]" : "");
+        if (bhaDa) {
+            return armairua + " - " + apala + " [BHA]";
+        } else {
+            return armairua + " - " + apala;
+        }
     }
 
     // Getters

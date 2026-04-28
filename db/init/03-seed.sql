@@ -15,11 +15,12 @@ INSERT INTO ROLA (deskribapena) VALUES
 -- ---------------------------------------------------------------------
 -- LANGILEA
 -- ---------------------------------------------------------------------
+-- Pasahitza: '1234' (BCrypt cost 10)
 INSERT INTO LANGILEA (izena, abizena, erabiltzailea, pasahitza_hash, id_rola) VALUES
     ('Miren', 'Agirre', 'admin',
-     '1234', 1),
+     '$2a$10$oFl.yJsTOmztwUCT0ov7K.VoNDHioYD/wGpqbNP2U3kTwgB4B7Ica', 1),
     ('Jon',   'Zabala', 'udaltzain1',
-     '1234', 2);
+     '$2a$10$oFl.yJsTOmztwUCT0ov7K.VoNDHioYD/wGpqbNP2U3kTwgB4B7Ica', 2);
 
 -- ---------------------------------------------------------------------
 -- KATEGORIA
@@ -33,7 +34,7 @@ INSERT INTO KATEGORIA (izena) VALUES
 -- ---------------------------------------------------------------------
 -- KOKALEKUA · bka_da = Bolumen Handikoen Armairua
 -- ---------------------------------------------------------------------
-INSERT INTO KOKALEKUA (armairua, apala, bka_da) VALUES
+INSERT INTO KOKALEKUA (armairua, apala, bha_da) VALUES
     ('F',   '004', FALSE),
     ('A',   '001', FALSE),
     ('BHA', '1',   TRUE);
