@@ -3,7 +3,7 @@
 ## Galduen eta aurkituen kudeaketa-sistema
 
 > Ekosistema osoa edukiontzietan: datu-basea, JavaFX aplikazioa eta web atari publikoa.
-> Komando bakar batekin abiarazten da.
+> Komando bakar batekin abiarazten da: `git clone [url] && docker compose up`
 
 ---
 
@@ -36,7 +36,7 @@ Datu-base bat partekatzen dute (MariaDB), eta XML fitxategien bidez ere komunika
 
 - Galdutako objektuen CRUD osoa (sortu, ikusi, editatu, ezabatu)
 - Kokalekuak gehi BHA (bolumen handikoak) kudeatu
-- Jabe eta erakundeen (udala, bankua, Izenpe, Osakidetza...) kudeaketa
+- Jabe eta erakundeen kudeaketa
 - Emanaldien sinadurak eta dokumentuak gorde
 - XML inportazio/esportazioa, XSD eta DTD bidez balioztatuta
 - Web atari responsive-a (mugikorra, tableta, mahaigaina)
@@ -66,16 +66,13 @@ Datu-base bat partekatzen dute (MariaDB), eta XML fitxategien bidez ere komunika
                   └──────┬───────┘
                          │
                   ┌──────▼───────┐
-                  │   Adminer    │================================
-                  |              | LOCALHOST ATARIA. Pisu txikikoa
-                  │  Port: 8081  │================================
+                  │   Adminer    │
+                  │  Port: 8081  │
                   └──────────────┘
 
   Fitxategi-trukea:  ./partekatutako_datuak/*.xml
                      (Java idatzi → Web irakurri)
 ```
-
-### Edukiontziak
 
 | Zerbitzua | Irudia | Portua | Funtzioa |
 |-----------|--------|--------|----------|
@@ -86,106 +83,139 @@ Datu-base bat partekatzen dute (MariaDB), eta XML fitxategien bidez ere komunika
 
 ---
 
-## Aurretiko eskakizunak
+## Karpeta-egitura eta Errubrika
 
-### Linux (CachyOS, Arch, Ubuntu, Fedora, etab.)
+```
+erronka-bermeo/
+│
+├── 📁 db/                          ← DATU_BASEAK: Script-ak
+│   └── init/
+│       ├── 01-schema.sql           ← Diseinu fisikoa + Triggerrak + Prozedurak
+│       ├── 02-roles.sql            ← Rolak eta erabiltzaileak (segurtasuna)
+│       └── 03-seed.sql             ← Datu-lagin adierazgarriak
+│
+├── 📁 java-app/                    ← PROGRAMAZIOA: JavaFX aplikazioa
+│   ├── Dockerfile
+│   ├── pom.xml
+│   └── src/main/java/
+│       ├── app/                    ← Launcher, Main
+│       ├── controller/             ← MVC: kontrolatzaileak
+│       ├── DAO/                    ← Datu-basera sarbidea (CRUD)
+│       ├── model/                  ← MVC: eredu-klaseak (herentzia, abstraktoa)
+│       ├── utils/                  ← DB konexioa, XML, log laguntzaileak
+│       └── view/                   ← MVC: FXML leihoak + style.css
+│
+├── 📁 frontend/                    ← MARKA_LENGOAIA: Web ataria
+│   ├── index.html                  ← Orri nagusia (responsive, Bootstrap)
+│   ├── css/                        ← Estilo-orriak
+│   ├── js/                         ← JavaScript funtzioak (balidazioa)
+│   ├── html/                       ← Orri osagarriak
+│   ├── datuak/                     ← Java-tik jasotako XML-ak
+│   ├── xml/                        ← XML fitxategiak + XSD + DTD
+│   ├── xslt/                       ← XSLT eraldaketak (XML → XHTML)
+│   ├── xpath/                      ← XPath kontsultak (web scraping)
+│   └── xquery/                     ← XQuery kontsultak
+│
+├── 📁 dokumentazioa/               ← Dokumentazio guztia moduluz modul
+│   ├── GarapenIngurunea/           ← GARAPEN_INGURUNEA: Diagramak
+│   │   ├── KlaseDiagrama.cld       ← Klase-diagrama
+│   │   ├── UseCaseDiagrama.ucd     ← Erabilera-kasuen diagrama
+│   │   └── SekuentziaDiagrama.sqd  ← Sekuentzi-diagrama
+│   ├── DatuBaseak/                 ← DATU_BASEAK: Diseinu dokumentazioa
+│   │   ├── diseinu_kontzeptuala/   ← E-R diagramak (banakakoak + taldekoa)
+│   │   └── diseinu_logikoa/        ← Eskema erlazionala (banakakoak + taldekoa)
+│   ├── Programazioa/               ← Mockup-a, eskuliburua
+│   ├── MarkaLengoaia/              ← Web mockup-a, eskuliburua, Bootstrap zerrenda
+│   ├── Digitalizazioa/             ← Dashboard, datuen bizi-zikloa
+│   └── Jasangarritasuna/           ← Auditoretza eta jasangarritasun txostena
+│
+├── 📁 Eranskinak/                  ← Taldeko dokumentuak
+│   ├── ERANSKIN1_TaldearenKontratoa.pdf
+│   ├── ERANSKIN2_Parametroak.pdf
+│   ├── ERANSKIN3_Proposamena.docx
+│   └── ERANSKIN4_PlanifikazioaEtaKontrolPuntuak.docx
+│
+├── 📁 partekatutako_datuak/        ← XML fitxategiak (Java → Web)
+├── 📁 artikulu_irudiak/            ← Objektuen argazkiak
+│
+├── docker-compose.yml              ← DIGITALIZAZIOA: Linux orkestrazioa
+├── docker-compose.windows.yml      ← Windows orkestrazioa
+├── start-linux.sh / stop-linux.sh
+└── start-windows.bat / stop-windows.bat
+```
 
-- **Docker** eta **Docker Compose**:
-  ```bash
-  # CachyOS / Arch
-  sudo pacman -S docker docker-compose
+### Errubrika-mapa
 
-  # Ubuntu / Debian
-  sudo apt install docker.io docker-compose-plugin
-  ```
-- **xhost** (X11 baimenetarako):
-  ```bash
-  sudo pacman -S xorg-xhost     # Arch / CachyOS
-  sudo apt install x11-xserver-utils   # Ubuntu
-  ```
-- Erabiltzailea `docker` taldean egon behar da:
-  ```bash
-  sudo usermod -aG docker $USER
-  # Ondoren saioa itxi eta ireki berriro
-  ```
-
-### Windows 11
-
-- **Docker Desktop** instalatuta eta martxan
-  → https://www.docker.com/products/docker-desktop/
-- **VcXsrv** (X server JavaFX-erako)
-  → https://sourceforge.net/projects/vcxsrv/
+| Modulua | Errubrika-irizpidea | Kokalekua |
+|---------|---------------------|-----------|
+| **GARAPEN_INGURUNEA** | GitHub biltegia + commit historia | Repo osoa |
+| | Test unitarioak (≥4 mota) | `java-app/src/test/` |
+| | Log fitxategiak (saio + errore) | `java-app/src/main/java/utils/` |
+| | Javadoc | `java-app/src/main/java/**` |
+| | Klase-diagrama | `dokumentazioa/GarapenIngurunea/KlaseDiagrama.cld` |
+| | Erabilera-kasuen diagrama | `dokumentazioa/GarapenIngurunea/UseCaseDiagrama.ucd` |
+| | Sekuentzi-diagrama | `dokumentazioa/GarapenIngurunea/SekuentziaDiagrama.sqd` |
+| **DATU_BASEAK** | Diseinu fisikoa (SQL script-a) | `db/init/01-schema.sql` |
+| | SELECT / INSERT / UPDATE / DELETE | `db/init/01-schema.sql` |
+| | Trigger-ak (DELETE + UPDATE) | `db/init/01-schema.sql` |
+| | Prozedura gordea | `db/init/01-schema.sql` |
+| | Diseinu kontzeptuala (banakakoa + taldekoa) | `dokumentazioa/DatuBaseak/diseinu_kontzeptuala/` |
+| | Diseinu logikoa (banakakoa + taldekoa) | `dokumentazioa/DatuBaseak/diseinu_logikoa/` |
+| | Rolak eta erabiltzaileak | `db/init/02-roles.sql` |
+| | Urruneko atzigarritasuna (Docker) | `docker-compose.yml` |
+| **PROGRAMAZIOA** | CRUD + DB konexioa | `java-app/src/main/java/DAO/` |
+| | MVC patroia | `java-app/src/main/java/{controller,model,view}/` |
+| | Herentzia + klase abstraktoa | `java-app/src/main/java/model/` |
+| | Salbuespenak (ohikoa + pertsonalizatua) | `java-app/src/main/java/` |
+| | ArrayList + datu-egitura dinamikoak | `java-app/src/main/java/` |
+| | XML fitxategien kudeaketa | `java-app/src/main/java/utils/` |
+| | Fitxategi bitarrak (backup) | `java-app/src/main/java/utils/` |
+| | Swing/JavaFX leihoak | `java-app/src/main/java/view/` |
+| | Aplikazioaren mockup-a | `dokumentazioa/Programazioa/` |
+| | Erabiltzailearen eskuliburua | `dokumentazioa/Programazioa/` |
+| **MARKA_LENGOAIA** | HTML + CSS + JS (responsive) | `frontend/` |
+| | Bootstrap osagaiak | `frontend/index.html` |
+| | XML fitxategiak + XSD + DTD | `frontend/xml/` |
+| | XSLT eraldaketa (XML → XHTML) | `frontend/xslt/` |
+| | XPath kontsultak (web scraping) | `frontend/xpath/` |
+| | XQuery kontsultak | `frontend/xquery/` |
+| | Web mockup-a (mugikorra) | `dokumentazioa/MarkaLengoaia/` |
+| | Erabiltzailearen eskuliburua | `dokumentazioa/MarkaLengoaia/` |
+| **DIGITALIZAZIOA** | Dockerizazioa (3 edukiontzi) | `docker-compose.yml` |
+| | Dashboard | `dokumentazioa/Digitalizazioa/` |
+| | Datuen bizi-zikloaren analisia | `dokumentazioa/Digitalizazioa/` |
+| | Teknologia proposamena | `dokumentazioa/Digitalizazioa/` |
+| **JASANGARRITASUNA** | Ekodiseinu-estrategiak (web) | `frontend/` |
+| | Jasangarritasun-auditoretza | `dokumentazioa/Jasangarritasuna/` |
+| | Kodearen mantentze-erraztasuna | `dokumentazioa/Jasangarritasuna/` |
 
 ---
 
 ## Abiaraztea Linux-en
 
-### Behin egin behar dena (lehen aldiz)
+### Linux
 
 ```bash
+# Lehen aldiz
 chmod +x start-linux.sh stop-linux.sh
-```
 
-### Abiarazi (klik bakarra)
-
-```bash
+# Abiarazi
 ./start-linux.sh
-```
 
-Script-ak hau egiten du automatikoki:
-
-1. `xhost +local:docker` exekutatzen du (X11 baimena Docker-i)
-2. Edukiontzi guztiak eraikitzen eta abiarazten ditu (`docker compose up --build -d`)
-3. Egoera erakusten du
-
-### Geldiarazi
-
-```bash
+# Geldiarazi
 ./stop-linux.sh
 ```
 
-Datuak gordeta gelditzen dira `db_data` volume-an. Dena garbitzeko (BD ezabatuz):
+### Windows
 
-```bash
-docker compose down -v
-```
+1. **Docker Desktop** ireki eta itxaron prest egon arte
+2. **VcXsrv (XLaunch)** ireki → *Disable access control* aktibatu
+3. `start-windows.bat` exekutatu (bi klik)
 
----
+### Aurretiko eskakizunak
 
-## Abiaraztea Windows-en
-
-### Behin egin behar dena (lehen aldiz)
-
-#### 1. VcXsrv konfiguratu
-
-1. Ireki **XLaunch** (Hasiera menutik)
-2. Aukerak:
-   - **Multiple windows** → Hurrengoa
-   - **Start no client** → Hurrengoa
-   - **Disable access control** ← *ezinbestekoa*
-   - Hurrengoa → Bukatu
-3. Konfigurazioa gorde dezakezu fitxategi batean (`config.xlaunch`) berriz erabiltzeko
-
-#### 2. Docker Desktop ireki
-
-Itxaron prest egon arte (sistemako tray-ko ikonoak berdez egon behar du).
-
-### Abiarazi (klik bakarra)
-
-1. Ziurtatu VcXsrv martxan dagoela (XLaunch erabilita)
-2. Ziurtatu Docker Desktop martxan dagoela
-3. **Bi klik** `start-windows.bat`-en
-
-Script-ak hau egiaztatzen du:
-
-1. Docker Desktop martxan dagoen
-2. VcXsrv martxan dagoen
-3. Edukiontzi guztiak eraikitzen eta abiarazten ditu
-4. Egoera erakusten du
-
-### Geldiarazi
-
-**Bi klik** `stop-windows.bat`-en.
+**Linux:** `docker`, `docker-compose`, `xorg-xhost`
+**Windows:** [Docker Desktop](https://www.docker.com/products/docker-desktop/) + [VcXsrv](https://sourceforge.net/projects/vcxsrv/)
 
 ---
 
@@ -202,9 +232,7 @@ Script-ak hau egiaztatzen du:
 - **Server:** `db`
 - **Datu-basea:** `erronka_galduak`
 
-### JavaFX aplikazioa (back-office)
-- Leiho gisa agertuko da (X11/VcXsrv bidez)
-- Hasierako kredentzialak `db/init/03-seed.sql` fitxategian daude
+> Hasierako datu-baseko erabiltzaileak `db/init/03-seed.sql` fitxategian daude.
 
 ### Datu-basea zuzenean (terminala)
 ```bash
