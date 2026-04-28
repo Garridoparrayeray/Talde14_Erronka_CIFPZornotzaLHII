@@ -46,6 +46,9 @@ CREATE TABLE JABEA (
     nan VARCHAR(15) UNIQUE NOT NULL,
     izena VARCHAR(100) NOT NULL,
     abizena VARCHAR(100) NOT NULL,
+    herria VARCHAR(100),
+    pk VARCHAR(10),
+    probintzia VARCHAR(100),
     FOREIGN KEY (id_hartzailea) REFERENCES HARTZAILEA(id_hartzailea) ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
@@ -64,6 +67,7 @@ CREATE TABLE ARTIKULUA (
     a_izena VARCHAR(200) NOT NULL,
     a_deskribapena TEXT NOT NULL,
     egoera ENUM('aurkitua', 'bueltatua', 'artxibatua', 'iraungita') NOT NULL DEFAULT 'aurkitua',
+    iragankorra BOOLEAN DEFAULT FALSE,
     sarrera_data DATE NOT NULL,
     iraungitze_data DATE, -- 2 urte igarota abisua emateko
     argazkia VARCHAR(255),
@@ -118,7 +122,9 @@ CREATE TABLE MUGIMENDUA (
     data DATETIME DEFAULT CURRENT_TIMESTAMP,
     deskribapena TEXT NOT NULL,
     id_artikulua VARCHAR(15),
-    FOREIGN KEY (id_artikulua) REFERENCES ARTIKULUA(id_artikulua) ON DELETE CASCADE
+    id_langile INT,
+    FOREIGN KEY (id_artikulua) REFERENCES ARTIKULUA(id_artikulua) ON DELETE CASCADE,
+    FOREIGN KEY (id_langile) REFERENCES LANGILEA(id_langile) ON DELETE SET NULL
 ) ENGINE=InnoDB;
 
 

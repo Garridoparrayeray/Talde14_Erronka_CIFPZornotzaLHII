@@ -11,10 +11,15 @@
 
 1. [Proiektuaren deskripzioa](#proiektuaren-deskripzioa)
 2. [Arkitektura](#arkitektura)
-3. [Karpeta-egitura eta Errubrika](#karpeta-egitura-eta-errubrika)
-4. [Abiaraztea](#abiaraztea)
-5. [Sarbideak eta kredentzialak](#sarbideak-eta-kredentzialak)
-6. [Egileak](#egileak)
+3. [Aurretiko eskakizunak](#aurretiko-eskakizunak)
+4. [Abiaraztea Linux-en](#abiaraztea-linux-en)
+5. [Abiaraztea Windows-en](#abiaraztea-windows-en)
+6. [Sarbideak eta kredentzialak](#sarbideak-eta-kredentzialak)
+7. [Erabilera arrunta](#erabilera-arrunta)
+8. [Datu-basea](#datu-basea)
+9. [Karpeta-egitura eta Errubrika](#karpeta-egitura-eta-errubrika)
+10. [Arazoen ebazpena](#arazoen-ebazpena)
+11. [Egileak](#egileak)
 
 ---
 
@@ -78,6 +83,179 @@ Datu-base bat partekatzen dute (MariaDB), eta XML fitxategien bidez ere komunika
 
 ---
 
+## Aurretiko eskakizunak
+
+### Linux (CachyOS, Arch, Ubuntu, Fedora, etab.)
+
+- **Docker** eta **Docker Compose**:
+  ```bash
+  # CachyOS / Arch
+  sudo pacman -S docker docker-compose
+
+  # Ubuntu / Debian
+  sudo apt install docker.io docker-compose-plugin
+  ```
+- **xhost** (X11 baimenetarako):
+  ```bash
+  sudo pacman -S xorg-xhost     # Arch / CachyOS
+  sudo apt install x11-xserver-utils   # Ubuntu
+  ```
+- Erabiltzailea `docker` taldean egon behar da:
+  ```bash
+  sudo usermod -aG docker $USER
+  # Ondoren saioa itxi eta ireki berriro
+  ```
+
+### Windows 11
+
+- **Docker Desktop** instalatuta eta martxan
+  → https://www.docker.com/products/docker-desktop/
+- **VcXsrv** (X server JavaFX-erako)
+  → https://sourceforge.net/projects/vcxsrv/
+
+---
+
+## Abiaraztea Linux-en
+
+### Behin egin behar dena (lehen aldiz)
+
+```bash
+# Lehen aldiz
+chmod +x start-linux.sh stop-linux.sh
+
+# Abiarazi
+./start-linux.sh
+
+# Geldiarazi
+./stop-linux.sh
+```
+
+### Windows
+
+1. **Docker Desktop** ireki eta itxaron prest egon arte
+2. **VcXsrv (XLaunch)** ireki → *Disable access control* aktibatu
+3. `start-windows.bat` exekutatu (bi klik)
+
+### Aurretiko eskakizunak
+
+**Linux:** `docker`, `docker-compose`, `xorg-xhost`
+**Windows:** [Docker Desktop](https://www.docker.com/products/docker-desktop/) + [VcXsrv](https://sourceforge.net/projects/vcxsrv/)
+
+---
+
+## Sarbideak eta kredentzialak
+
+| Zerbitzua | URL | Erabiltzailea | Pasahitza |
+|-----------|-----|---------------|-----------|
+| Web ataria | http://localhost:8000 | — | — |
+| Adminer (BD UI) | http://localhost:8081 | `bermeo_udaltzain` | `udaltzainpw` |
+| BD zuzena | localhost:3306 | `bermeo_udaltzain` | `udaltzainpw` |
+
+**Adminer konfigurazioa:**
+- **Sistema:** MySQL
+- **Server:** `db`
+- **Datu-basea:** `erronka_galduak`
+
+### JavaFX aplikazioa (back-office)
+- Leiho gisa agertuko da (X11/VcXsrv bidez)
+- Hasierako kredentzialak `db/init/03-seed.sql` fitxategian daude
+
+### Datu-basea zuzenean (terminala)
+```bash
+# Edukiontzi barrutik
+docker exec -it erronka_db mariadb -ubermeo_udaltzain -pudaltzainpw erronka_galduak
+
+# Tokiko makinatik (mariadb-client beharrezkoa)
+mariadb -h 127.0.0.1 -P 3306 -ubermeo_udaltzain -pudaltzainpw erronka_galduak
+```
+
+---
+
+## Erabilera arrunta
+
+### Edukiontzien egoera
+```bash
+docker compose ps
+```
+
+### Logak ikusi (denak)
+```bash
+docker compose logs -f
+```
+
+### Logak ikusi (zerbitzu bat)
+```bash
+docker compose logs -f java-app
+docker compose logs -f db
+docker compose logs -f web
+```
+
+### Zerbitzu bat berreraiki (kodea aldatu ondoren)
+```bash
+docker compose up --build java-app
+```
+
+### Datu-basearen segurtasun-kopia (backup)
+```bash
+docker exec erronka_db mariadb-dump \
+  -ubermeo_udaltzain -pudaltzainpw erronka_galduak \
+  > kopia_$(date +%Y%m%d).sql
+```
+
+### Backup-a kargatu
+```bash
+docker exec -i erronka_db mariadb \
+  -ubermeo_udaltzain -pudaltzainpw erronka_galduak \
+  < kopia_20260421.sql
+```
+
+### Edukiontzi baten barrura sartu
+```bash
+docker exec -it erronka_db bash
+docker exec -it erronka_desktop bash
+```
+
+---
+
+## Datu-basea
+
+### Taula nagusiak
+
+| Taula | Deskripzioa |
+|-------|-------------|
+| `rola` | Erabiltzaile-rolak (admin, langilea, bezeroa) |
+| `langilea` | Udaltzaingoko langileak |
+| `kategoria` | Objektuen sailkapena |
+| `kokalekua` | Biltegiko kokapenak (A-001 ... G-006 + BHA) |
+| `hartzailea` | Jabea/erakundearen super-entitatea |
+| `jabea` | Pertsona fisikoa (espezializazioa) |
+| `erakundea` | Erakunde juridikoa (espezializazioa) |
+| `artikulua` | Galdutako objektua |
+| `erreklamazioa` | Herritarren erreklamazioak |
+| `emanaldia` | Objektuaren entrega |
+| `mugimendua` | Audit trail |
+| `jakinarazpena` | Abisuak jabeei |
+
+### Rolak (segurtasuna)
+
+| Rola | Eskumenak | Erabiltzailea |
+|------|-----------|---------------|
+| `rol_admin` | Guztia | `bermeo_admin` |
+| `rol_udaltzain` | CRUD osoa | `bermeo_udaltzain` |
+| `rol_bezeroa` | Irakurtze + erreklamazioa sartu | `bermeo_bezeroa` |
+
+### Hasieratze-fitxategiak
+
+`db/init/` karpetan dauden `.sql` fitxategi guztiak automatikoki exekutatzen dira edukiontzia LEHEN aldiz abiaraztean (alfabetiko ordenan):
+
+- `01-schema.sql` — taulen egitura
+- `02-roles.sql` — rolak eta erabiltzaileak
+- `03-seed.sql` — adibidezko datuak
+
+> **Garrantzitsua:** Schema aldatu ondoren, datu-basea berrabiarazi behar da hutsetik. `docker compose down -v` exekutatu eta gero `./start-linux.sh`.
+
+---
+
 ## Karpeta-egitura eta Errubrika
 
 ```
@@ -115,7 +293,8 @@ erronka-bermeo/
 │   ├── GarapenIngurunea/           ← GARAPEN_INGURUNEA: Diagramak
 │   │   ├── KlaseDiagrama.cld       ← Klase-diagrama
 │   │   ├── UseCaseDiagrama.ucd     ← Erabilera-kasuen diagrama
-│   │   └── SekuentziaDiagrama.sqd  ← Sekuentzi-diagrama
+│   │   ├── SekuentziaDiagrama.sqd  ← Sekuentzi-diagrama
+│   │   └── Mock-Up-ak.pdf          ← Mockup-ak
 │   ├── DatuBaseak/                 ← DATU_BASEAK: Diseinu dokumentazioa
 │   │   ├── diseinu_kontzeptuala/   ← E-R diagramak (banakakoak + taldekoa)
 │   │   └── diseinu_logikoa/        ← Eskema erlazionala (banakakoak + taldekoa)
@@ -186,51 +365,68 @@ erronka-bermeo/
 
 ---
 
-## Abiaraztea
+## Arazoen ebazpena
 
-### Linux
-
+### Linux: `xhost: command not found`
 ```bash
-# Lehen aldiz
-chmod +x start-linux.sh stop-linux.sh
-
-# Abiarazi
-./start-linux.sh
-
-# Geldiarazi
-./stop-linux.sh
+sudo pacman -S xorg-xhost   # Arch / CachyOS
+sudo apt install x11-xserver-utils   # Ubuntu
 ```
 
-### Windows
+### Linux: `cannot open display`
+1. Egiaztatu `$DISPLAY` aldagaia ezarrita dagoen:
+   ```bash
+   echo $DISPLAY     # `:0` edo `:1` agertu beharko luke
+   ```
+2. Wayland erabiltzen baduzu, XWayland behar duzu:
+   ```bash
+   sudo pacman -S xorg-xwayland
+   ```
+3. `xhost +local:docker` exekutatu saio grafikoaren barruan (ez SSH bidez).
 
-1. **Docker Desktop** ireki eta itxaron prest egon arte
-2. **VcXsrv (XLaunch)** ireki → *Disable access control* aktibatu
-3. `start-windows.bat` exekutatu (bi klik)
+### Windows: JavaFX leihoa ez agertu
+1. Egiaztatu **VcXsrv** martxan dagoela (sistemako tray-an X-aren ikonoa).
+2. Egiaztatu **Disable access control** aktibatuta egon zela XLaunch konfiguratzean.
+3. Suebakia (firewall) `vcxsrv.exe`-ri konexioak baimentzen ari zaion.
+4. Edukiontzia berrabiarazi:
+   ```bat
+   docker compose -f docker-compose.windows.yml restart java-app
+   ```
 
-### Aurretiko eskakizunak
+### `port is already allocated`
+Beste prozesu batek portua erabiltzen du. Egiaztatu zer:
+```bash
+# Linux
+sudo lsof -i :3306
+# Windows
+netstat -ano | findstr :3306
+```
 
-**Linux:** `docker`, `docker-compose`, `xorg-xhost`
-**Windows:** [Docker Desktop](https://www.docker.com/products/docker-desktop/) + [VcXsrv](https://sourceforge.net/projects/vcxsrv/)
+Geldiarazi tokiko MariaDB/MySQL-a, edo aldatu portua compose-an (`"3307:3306"` jarri).
 
----
+### Datu-basea ez da abiarazten
+```bash
+docker compose logs db
+```
 
-## Sarbideak eta kredentzialak
+Errore ohikoenak:
+- **`db_data` volume-an datu zaharrak** → `docker compose down -v` (kontuz, datuak galtzen dira)
+- **Sintaxi-errorea SQL fitxategi batean** → log-ek lerroa adieraziko dute
 
-| Zerbitzua | URL | Erabiltzailea | Pasahitza |
-|-----------|-----|---------------|-----------|
-| Web ataria | http://localhost:8000 | — | — |
-| Adminer (BD UI) | http://localhost:8081 | `bermeo_udaltzain` | `udaltzainpw` |
-| BD zuzena | localhost:3306 | `bermeo_udaltzain` | `udaltzainpw` |
+### Datu-basea hutsetik berrabiarazi (datuak galduz)
+```bash
+docker compose down -v
+./start-linux.sh
+```
 
-> Hasierako datu-baseko erabiltzaileak `db/init/03-seed.sql` fitxategian daude.
+### JavaFX ezin da konektatu BD-ra
+```bash
+docker exec erronka_desktop env | grep DB_URL
+# Hau atera beharko luke:
+# DB_URL=jdbc:mariadb://db:3306/erronka_galduak
 
-### Rolak
-
-| Rola | Eskumenak | Erabiltzailea |
-|------|-----------|---------------|
-| `rol_admin` | Guztia | `bermeo_admin` |
-| `rol_udaltzain` | CRUD osoa | `bermeo_udaltzain` |
-| `rol_bezeroa` | Irakurtze + erreklamazioa | `bermeo_bezeroa` |
+docker exec erronka_desktop ping -c 2 db
+```
 
 ---
 

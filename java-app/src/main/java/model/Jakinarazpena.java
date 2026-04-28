@@ -40,6 +40,10 @@ public class Jakinarazpena {
 
     @Override
     public String toString() {
-        return kanala + " | " + mezua + " | " + (irakurrita ? "IRAKURRITA" : "IRAKURRI GABE");
+        if (irakurrita) {
+            return kanala + " | " + mezua + " | " + "IRAKURRITA";
+        } else {
+            return kanala + " | " + mezua + " | " + "IRAKURRI GABE";
+        }
     }
 }

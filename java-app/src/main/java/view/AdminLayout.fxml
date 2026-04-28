@@ -5,16 +5,17 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<HBox prefHeight="900.0" prefWidth="1440.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="AdminController">
+<HBox prefHeight="900.0" prefWidth="1440.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.AdminController">
    <children>
 
       <VBox prefWidth="260.0" spacing="20.0" styleClass="sidebar, bg-white" HBox.hgrow="NEVER">
          <children>
+
+            <!-- Logo -->
             <HBox alignment="CENTER_LEFT" spacing="12.0">
                <children>
                   <AnchorPane prefHeight="35.0" prefWidth="35.0" style="-fx-background-radius: 6;" styleClass="bg-primary">
@@ -33,57 +34,62 @@
                      </children>
                   </VBox>
                </children>
-               <VBox.margin>
-                  <Insets bottom="10.0" />
-               </VBox.margin>
+               <VBox.margin><Insets bottom="10.0" /></VBox.margin>
             </HBox>
 
+            <!-- Nabigazio botoiak -->
             <VBox spacing="5.0" VBox.vgrow="ALWAYS">
                <children>
                   <Label styleClass="text-muted, font-bold" text="ADMINISTRAZIOA">
                      <font><Font size="11.0" /></font>
                      <VBox.margin><Insets bottom="5.0" left="10.0" /></VBox.margin>
                   </Label>
-
                   <Button fx:id="btnAdminPanela" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#loadAdminPanela" styleClass="nav-item-active" text="Panel Nagusia" />
-                  <Button fx:id="btnLangileak" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#loadLangileak" styleClass="nav-item" text="Langileak" />
-                  <Button fx:id="btnKategoriak" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#loadKategoriak" styleClass="nav-item" text="Kategoriak" />
-                  <Button fx:id="btnKokalekuak" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#loadKokalekuak" styleClass="nav-item" text="Kokalekuak" />
-                  <Button fx:id="btnAuditoria" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#loadAuditoria" styleClass="nav-item" text="Auditoria" />
+                  <Button fx:id="btnLangileak"   maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#loadLangileak"   styleClass="nav-item" text="Langileak" />
+                  <Button fx:id="btnKategoriak"  maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#loadKategoriak"  styleClass="nav-item" text="Kategoriak" />
+                  <Button fx:id="btnKokalekuak"  maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#loadKokalekuak"  styleClass="nav-item" text="Kokalekuak" />
+                  <Button fx:id="btnAuditoria"   maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#loadAuditoria"   styleClass="nav-item" text="Auditoria" />
                </children>
             </VBox>
 
-            <VBox spacing="15.0">
+            <!-- Erabiltzaile eremua -->
+            <VBox spacing="10.0">
                <children>
+
+                  <!-- Langile-ra aldatu -->
                   <HBox alignment="CENTER_LEFT" spacing="10.0" styleClass="admin-switch-box" onMouseClicked="#volverAUser">
                      <children>
-                        <Label style="-fx-font-size: 20px;" text="👤" />
+                        <Label style="-fx-font-size: 18px;" text="👤" />
                         <VBox>
                            <children>
-                              <Label style="-fx-font-size: 10px; font-weight: bold;" text="ADMIN" />
-                              <Label style="-fx-font-weight: bold;" text="Langilera aldatu" />
+                              <Label style="-fx-font-size: 10px;" styleClass="text-white" text="ADMIN" />
+                              <Label styleClass="text-white" style="-fx-font-weight: bold;" text="Langilera aldatu" />
                            </children>
                         </VBox>
                      </children>
                   </HBox>
 
+                  <!-- Erabiltzaile info -->
                   <HBox alignment="CENTER_LEFT" spacing="10.0">
                      <children>
                         <AnchorPane prefHeight="35.0" prefWidth="35.0" style="-fx-background-radius: 50;" styleClass="bg-primary">
                            <children>
-                              <Label layoutX="9.0" layoutY="9.0" styleClass="text-white, font-bold" text="AG" />
+                              <Label fx:id="lblInitialak" layoutX="9.0" layoutY="9.0" styleClass="text-white, font-bold" text="??" />
                            </children>
                         </AnchorPane>
-                        <VBox>
+                        <VBox HBox.hgrow="ALWAYS">
                            <children>
-                              <Label styleClass="text-dark, font-bold" text="Aitor Goikoetxea" />
-                              <Label style="-fx-font-size: 11px;" styleClass="text-muted" text="Administratzailea" />
+                              <Label fx:id="lblLangileIzena" styleClass="text-dark, font-bold" text="..." />
+                              <Label fx:id="lblLangileRola" style="-fx-font-size: 11px;" styleClass="text-muted" text="Administratzailea" />
                            </children>
                         </VBox>
+                        <Button mnemonicParsing="false" onAction="#itxiSaioa" styleClass="btn-outline" text="Irten" style="-fx-padding: 6 12; -fx-font-size: 11px;" />
                      </children>
                   </HBox>
+
                </children>
             </VBox>
+
          </children>
          <padding>
             <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />

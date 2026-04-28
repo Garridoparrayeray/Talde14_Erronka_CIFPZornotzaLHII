@@ -326,4 +326,3 @@ INSERT INTO MUGIMENDUA (mota, deskribapena, id_artikulua) VALUES
 SELECT '[INIT] Probetarako datuak txertatuta' AS mezua;
 SELECT COUNT(*) AS langile_kop  FROM LANGILEA;
 SELECT COUNT(*) AS artikulu_kop FROM ARTIKULUA;
-
