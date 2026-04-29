@@ -4,18 +4,23 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ERRONKA — Bermeoko Udala · Galduen eta Aurkituen Kudeaketa</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Montserrat:wght@500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css">
+
+<link rel="preload" href="fonts/inter-v13-latin-regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/montserrat-v26-latin-800.woff2" as="font" type="font/woff2" crossorigin>
+
+<link rel="stylesheet" href="css/style.min.css">
+
+<link rel="icon" href="data:,">
+
+<script src="js/main.js" defer></script>
 </head>
 <body>
 
 <nav class="navbar" id="navbar">
   <div class="nav-inner">
-    <a href="index.html" class="nav-logo">
+    <a href="index.html" class="nav-logo" aria-label="Bermeoko Udala Hasiera">
       <div class="logo-mark">
-        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5l4 4"/><path d="M11 8v6M8 11h6"/></svg>
+        <svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5l4 4"/><path d="M11 8v6M8 11h6"/></svg>
       </div>
       <div class="logo-text">
         <strong>ERRONKA</strong>
@@ -24,11 +29,11 @@
     </a>
 
     <ul class="nav-links">
-      <li><a href="index.html" class="active">Hasiera</a></li>
-      <li><a href="#claim">Erreklamazioa</a></li>
-      <li><a href="#process">Prozesua</a></li>
-      <li><a href="#categories">Kategoriak</a></li>
-      <li><a href="#contact">Laguntza</a></li>
+      <li><a href="index.html" class="active" data-i18n="nav_home">Hasiera</a></li>
+      <li><a href="#claim" data-i18n="nav_claim">Erreklamazioa</a></li>
+      <li><a href="#process" data-i18n="nav_process">Prozesua</a></li>
+      <li><a href="#categories" data-i18n="nav_cats">Kategoriak</a></li>
+      <li><a href="#contact" data-i18n="nav_help">Laguntza</a></li>
     </ul>
 
     <div class="nav-right">
@@ -36,294 +41,295 @@
         <button class="lang-btn active" onclick="setLang('EU')" aria-pressed="true">EU</button>
         <button class="lang-btn" onclick="setLang('ES')" aria-pressed="false">ES</button>
       </div>
-      <a href="#claim" class="nav-cta">Erreklamatu</a>
+      <a href="#claim" class="nav-cta" data-i18n="nav_btn_claim">Erreklamatu</a>
       
-      <button class="menu-toggle" id="menuToggle" aria-label="Menu">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      <button class="menu-toggle" id="menuToggle" aria-label="Ireki menua" aria-expanded="false">
+        <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
       </button>
     </div>
   </div>
 </nav>
 
 <div class="mobile-nav" id="mobileNav">
-  <a href="#">Hasiera</a>
-  <a href="#claim">Erreklamazioa</a>
-  <a href="#process">Prozesua</a>
-  <a href="#categories">Kategoriak</a>
-  <a href="#contact">Laguntza</a>
+  <a href="#" data-i18n="nav_home">Hasiera</a>
+  <a href="#claim" data-i18n="nav_claim">Erreklamazioa</a>
+  <a href="#process" data-i18n="nav_process">Prozesua</a>
+  <a href="#categories" data-i18n="nav_cats">Kategoriak</a>
+  <a href="#contact" data-i18n="nav_help">Laguntza</a>
 </div>
 
-<section class="hero">
-  <div class="hero-bg-dots" aria-hidden="true"></div>
-  <div class="hero-ring" aria-hidden="true"></div>
-  <div class="hero-ring2" aria-hidden="true"></div>
+<main>
+  <section class="hero">
+    <div class="hero-bg-dots" aria-hidden="true"></div>
+    <div class="hero-ring" aria-hidden="true"></div>
+    <div class="hero-ring2" aria-hidden="true"></div>
 
-  <div class="hero-inner">
-    <div class="hero-content">
-      <h1 class="hero-title">
-        Galdutakoa<br>
-        berriro <span class="accent">aurkitu</span>
-      </h1>
+    <div class="hero-inner">
+      <div class="hero-content">
+        <h1 class="hero-title" data-i18n="hero_title">
+          Galdutakoa<br>
+          berriro <span class="accent">aurkitu</span>
+        </h1>
 
-      <p class="hero-sub">
-        Bermeoko Udalaren galdu eta aurkituen zerbitzu digitala. Galdu duzuna bilatzen laguntzeko eta aurkitutakoa erreklamatzeko plataforma bakarra.
-      </p>
+        <p class="hero-sub" data-i18n="hero_sub">
+          Bermeoko Udalaren galdu eta aurkituen zerbitzu digitala. Galdu duzuna bilatzen laguntzeko eta aurkitutakoa erreklamatzeko plataforma bakarra.
+        </p>
 
-      <div class="hero-actions">
-        <a href="#claim" class="btn-secondary">
-          <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
-          Erreklamazioa hasi
-        </a>
-      </div>
-    </div>
-
-    <div class="hero-visual" aria-hidden="true">
-      <div style="position: relative; padding: 30px 40px 20px 40px;">
-
-        <div class="mockup-card">
-          <div class="mc-header">
-            <div class="mc-icon">
-              <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><path d="M12 12v4M10 14h4"/></svg>
-            </div>
-            <div>
-              <div class="mc-title">A-2024-0417</div>
-              <div class="mc-sub">Eskola-motxila · Jantsiak</div>
-            </div>
-          </div>
-
-          <div class="mc-row">
-            <div class="mc-field">
-              <div class="mc-label">Marka</div>
-              <div class="mc-value">Jantsport</div>
-            </div>
-            <div class="mc-field">
-              <div class="mc-label">Kolorea</div>
-              <div class="mc-value">Urdina</div>
-            </div>
-          </div>
-
-          <div class="mc-divider"></div>
-
-          <div style="display:flex;justify-content:space-between;align-items:center;">
-            <div style="display:flex;gap:6px;flex-wrap:wrap;">
-              <span class="mc-tag">Jantziak</span>
-            </div>
-          </div>
+        <div class="hero-actions">
+          <a href="#claim" class="btn-secondary">
+            <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+            <span data-i18n="hero_btn">Erreklamazioa hasi</span>
+          </a>
         </div>
       </div>
+
+      <div class="hero-visual" aria-hidden="true">
+        <div style="position: relative; padding: 30px 40px 20px 40px;">
+          <div class="mockup-card">
+            <div class="mc-header">
+              <div class="mc-icon">
+                <svg aria-hidden="true" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><path d="M12 12v4M10 14h4"/></svg>
+              </div>
+              <div>
+                <div class="mc-title">A-2024-0417</div>
+                <div class="mc-sub">Eskola-motxila · Jantziak</div>
+              </div>
+            </div>
+
+            <div class="mc-row">
+              <div class="mc-field">
+                <div class="mc-label" data-i18n="mc_brand">Marka</div>
+                <div class="mc-value">Jansport</div>
+              </div>
+              <div class="mc-field">
+                <div class="mc-label" data-i18n="mc_color">Kolorea</div>
+                <div class="mc-value">Urdina</div>
+              </div>
+            </div>
+
+            <div class="mc-divider"></div>
+
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <div style="display:flex;gap:6px;flex-wrap:wrap;">
+                <span class="mc-tag">Jantziak</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<section class="section" id="claim" style="border-bottom: 1px solid var(--gray-100);">
-  <div class="section-inner">
-    <span class="section-tag">Erreklamazioa</span>
-    <h2 class="section-title">Galdutako objektua erreklamatu</h2>
-    <p class="section-subtitle" style="margin-bottom: 48px;">Bete inprimakia galdutako objektuaren xehetasunekin.</p>
-    
-    <div style="max-width: 860px;">
-      <form action="#" method="POST">
-        <h3 class="form-section-title" style="margin-top: 0;">1. Eskatzailearen Datuak</h3>
-        <div class="form-row">
-          <div class="form-group">
-            <label class="form-label">Izena<span>*</span></label>
-            <input type="text" class="form-control" required placeholder="Sartu zure izena">
+  <section class="section" id="claim" style="border-bottom: 1px solid var(--gray-100);">
+    <div class="section-inner">
+      <span class="section-tag" data-i18n="form_tag">Erreklamazioa</span>
+      <h2 class="section-title" data-i18n="form_title">Galdutako objektua erreklamatu</h2>
+      <p class="section-subtitle" style="margin-bottom: 48px;" data-i18n="form_sub">Bete inprimakia galdutako objektuaren xehetasunekin.</p>
+      
+      <div style="max-width: 860px;">
+        <form action="#" method="POST">
+          <h3 class="form-section-title" style="margin-top: 0;" data-i18n="form_sec1">1. Eskatzailearen Datuak</h3>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="izena" class="form-label" data-i18n="form_name">Izena<span>*</span></label>
+              <input type="text" id="izena" name="izena" class="form-control" required placeholder="Sartu zure izena" data-i18n="form_place_name" autocomplete="given-name">
+            </div>
+            <div class="form-group">
+              <label for="abizenak" class="form-label" data-i18n="form_surname">Abizenak<span>*</span></label>
+              <input type="text" id="abizenak" name="abizenak" class="form-control" required placeholder="Sartu zure abizenak" data-i18n="form_place_surname" autocomplete="family-name">
+            </div>
           </div>
-          <div class="form-group">
-            <label class="form-label">Abizenak<span>*</span></label>
-            <input type="text" class="form-control" required placeholder="Sartu zure abizenak">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="telefonoa" class="form-label" data-i18n="form_phone">Telefonoa<span>*</span></label>
+              <input type="tel" id="telefonoa" name="telefonoa" class="form-control" required placeholder="adib. 600 000 000" data-i18n="form_place_phone" autocomplete="tel">
+            </div>
+            <div class="form-group">
+              <label for="emaila" class="form-label" data-i18n="form_email">Posta elektronikoa<span>*</span></label>
+              <input type="email" id="emaila" name="emaila" class="form-control" required placeholder="adib. izena@email.com" data-i18n="form_place_email" autocomplete="email">
+            </div>
           </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label class="form-label">Telefonoa<span>*</span></label>
-            <input type="tel" class="form-control" required placeholder="adib. 600 000 000">
-          </div>
-          <div class="form-group">
-            <label class="form-label">Posta elektronikoa<span>*</span></label>
-            <input type="email" class="form-control" required placeholder="adib. izena@email.com">
-          </div>
-        </div>
 
-        <h3 class="form-section-title">2. Galdutako Objektuaren Deskribapena</h3>
-        <div class="form-group">
-          <label class="form-label">Deskribapena (kolorea, marka, materiala...)<span>*</span></label>
-          <textarea class="form-control" required placeholder="Eman xehetasun guztiak (marka, kolorea, edukia...)"></textarea>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Argazkia erantsi (Aukerakoa)</label>
-          <div style="display: flex; flex-direction: column; align-items: flex-start;">
-            <input type="file" id="claim-file" class="form-control" style="background:transparent; border: 2px dashed var(--gray-300); padding: 20px; cursor: pointer; width: 100%;">
-            <button type="button" id="remove-file-btn" style="display: none; margin-top: 10px; padding: 8px 14px; background: #FEF2F2; border: 1.5px solid #FCA5A5; color: var(--red); border-radius: var(--radius-sm); font-family: var(--font-body); font-size: 13px; font-weight: 600; cursor: pointer; align-items: center; gap: 6px; transition: all 0.2s;">
-              <svg viewBox="0 0 24 24" style="width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round;"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-              Artxiboa ezabatu
+          <h3 class="form-section-title" data-i18n="form_sec2">2. Galdutako Objektuaren Deskribapena</h3>
+          <div class="form-group">
+            <label for="deskribapena" class="form-label" data-i18n="form_desc">Deskribapena (kolorea, marka, materiala...)<span>*</span></label>
+            <textarea id="deskribapena" name="deskribapena" class="form-control" required placeholder="Eman xehetasun guztiak (marka, kolorea, edukia...)" data-i18n="form_place_desc"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="claim-file" class="form-label" data-i18n="form_photo">Argazkia erantsi (Aukerakoa)</label>
+            <div style="display: flex; flex-direction: column; align-items: flex-start;">
+              <input type="file" id="claim-file" name="claim-file" class="form-control" style="background:transparent; border: 2px dashed var(--gray-300); padding: 20px; cursor: pointer; width: 100%;">
+              <button type="button" id="remove-file-btn" style="display: none; margin-top: 10px; padding: 8px 14px; background: #FEF2F2; border: 1.5px solid #FCA5A5; color: var(--red); border-radius: var(--radius-sm); font-family: var(--font-body); font-size: 13px; font-weight: 600; cursor: pointer; align-items: center; gap: 6px; transition: all 0.2s;">
+                <svg aria-hidden="true" viewBox="0 0 24 24" style="width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round;"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                <span data-i18n="form_remove_btn">Artxiboa ezabatu</span>
+              </button>
+            </div>
+          </div>
+
+          <h3 class="form-section-title" data-i18n="form_sec3">3. Noiz eta Non</h3>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="galtze-data" class="form-label" data-i18n="form_date">Galtze-data<span>*</span></label>
+              <input type="date" id="galtze-data" name="galtze-data" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label for="kokalekua" class="form-label" data-i18n="form_loc">Kokalekua<span>*</span></label>
+              <select id="kokalekua" name="kokalekua" class="form-control" required>
+                <option value="" disabled selected data-i18n="form_opt_choose">Aukeratu bat</option>
+                <option value="portua" data-i18n="form_opt_port">Bermeoko Portua</option>
+                <option value="gaztelugatxe" data-i18n="form_opt_gazt">San Juan de Gaztelugatxe</option>
+                <option value="kalea" data-i18n="form_opt_street">Bide publikoa</option>
+                <option value="garraioa" data-i18n="form_opt_trans">Garraio publikoa (Bizkaibus, Euskotren)</option>
+                <option value="udaletxea" data-i18n="form_opt_hall">Udaletxea</option>
+                <option value="bestelakoa" data-i18n="form_opt_other">Bestelakoak</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="oharrak" class="form-label" data-i18n="form_notes">Oharrak</label>
+            <textarea id="oharrak" name="oharrak" class="form-control" style="min-height: 80px;" placeholder="Informazio gehigarria..." data-i18n="form_place_notes"></textarea>
+          </div>
+
+          <div class="form-check">
+            <input type="checkbox" id="privacy" name="privacy" required>
+            <label for="privacy" data-i18n="form_privacy">Datu pertsonalen babesari buruzko informazioa irakurri eta onartzen dut.<span>*</span></label>
+          </div>
+
+          <div class="form-submit">
+            <button type="submit" class="btn-primary">
+              <svg aria-hidden="true" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+              <span data-i18n="form_submit">Bidali erreklamazioa</span>
             </button>
           </div>
-        </div>
+        </form>
+      </div>
+    </div>
+  </section>
 
-        <h3 class="form-section-title">3. Noiz eta Non</h3>
-        <div class="form-row">
-          <div class="form-group">
-            <label class="form-label">Galtze-data<span>*</span></label>
-            <input type="date" class="form-control" required>
+  <section class="section" id="process">
+    <div class="section-inner">
+      <span class="section-tag" data-i18n="proc_tag">Nola funtzionatzen du</span>
+      <h2 class="section-title" data-i18n="proc_title">Hiru urrats,<br>itzulera bat</h2>
+      <p class="section-subtitle" data-i18n="proc_sub">Prozesu erraza, gardena eta bizkorra. Bermeoko Udaleko langileek lagundu egingo dizute urrats guztietan.</p>
+
+      <div class="steps-grid">
+        <div class="step-card" tabindex="0">
+          <div class="step-num">01</div>
+          <div class="step-icon-wrap">
+            <svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
           </div>
-          <div class="form-group">
-            <label class="form-label">Kokalekua<span>*</span></label>
-            <select class="form-control" required>
-              <option value="" disabled selected>Aukeratu bat</option>
-              <option value="portua">Bermeoko Portua</option>
-              <option value="gaztelugatxe">San Juan de Gaztelugatxe</option>
-              <option value="kalea">Bide publikoa</option>
-              <option value="garraioa">Garraio publikoa (Bizkaibus, Euskotren)</option>
-              <option value="udaletxea">Udaletxea</option>
-              <option value="bestelakoa">Bestelakoak</option>
-            </select>
+          <h3 class="step-title" data-i18n="step1_title">Bilatu inbentarioan</h3>
+          <p class="step-desc" data-i18n="step1_desc">Bilaketa aurreratua erabili galdu duzuna aurkitzeko. Kategoria, kolorea, data eta kokalaguntzak iragazki gisa erabil ditzakezu.</p>
+        </div>
+
+        <div class="step-card" tabindex="0">
+          <div class="step-num">02</div>
+          <div class="step-icon-wrap">
+            <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10,9 9,9 8,9"/></svg>
           </div>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Oharrak</label>
-          <textarea class="form-control" style="min-height: 80px;" placeholder="Informazio gehigarria..."></textarea>
+          <h3 class="step-title" data-i18n="step2_title">Erreklamazioa bidali</h3>
+          <p class="step-desc" data-i18n="step2_desc">Objektua aurkitu baduzu, erreklamazioformen bidez zure datuak bidali. Txartel nazionala edo NAN zenbakia behar duzu egiaztatzeko.</p>
         </div>
 
-        <div class="form-check">
-          <input type="checkbox" id="privacy" required>
-          <label for="privacy">Datu pertsonalen babesari buruzko informazioa irakurri eta onartzen dut.<span>*</span></label>
+        <div class="step-card" tabindex="0">
+          <div class="step-num">03</div>
+          <div class="step-icon-wrap">
+            <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22,4 12,14.01 9,11.01"/></svg>
+          </div>
+          <h3 class="step-title" data-i18n="step3_title">Jaso udaletxean</h3>
+          <p class="step-desc" data-i18n="step3_desc">Zure erreklamazioa onartu ondoren, hitzordua eskatu Bermeoko Udaletxean objektua pertsonalki jasotzeko. Hau da hain sinplea!</p>
         </div>
-
-        <div class="form-submit">
-          <button type="submit" class="btn-primary">
-            <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-            Bidali erreklamazioa
-          </button>
-        </div>
-      </form>
-    </div>
-  </div>
-</section>
-
-<section class="section" id="process">
-  <div class="section-inner">
-    <span class="section-tag">Nola funtzionatzen du</span>
-    <h2 class="section-title">Hiru urrats,<br>itzulera bat</h2>
-    <p class="section-subtitle">Prozesu erraza, gardena eta bizkorra. Bermeoko Udaleko langileek lagundu egingo dizute urrats guztietan.</p>
-
-    <div class="steps-grid">
-      <div class="step-card" tabindex="0">
-        <div class="step-num">01</div>
-        <div class="step-icon-wrap">
-          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-        </div>
-        <h3 class="step-title">Bilatu inbentarioan</h3>
-        <p class="step-desc">Bilaketa aurreratua erabili galdu duzuna aurkitzeko. Kategoria, kolorea, data eta kokalaguntzak iragazki gisa erabil ditzakezu.</p>
-      </div>
-
-      <div class="step-card" tabindex="0">
-        <div class="step-num">02</div>
-        <div class="step-icon-wrap">
-          <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10,9 9,9 8,9"/></svg>
-        </div>
-        <h3 class="step-title">Erreklamazioa bidali</h3>
-        <p class="step-desc">Objektua aurkitu baduzu, erreklamazioformen bidez zure datuak bidali. Txartel nazionala edo NAN zenbakia behar duzu egiaztatzeko.</p>
-      </div>
-
-      <div class="step-card" tabindex="0">
-        <div class="step-num">03</div>
-        <div class="step-icon-wrap">
-          <svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22,4 12,14.01 9,11.01"/></svg>
-        </div>
-        <h3 class="step-title">Jaso udaletxean</h3>
-        <p class="step-desc">Zure erreklamazioa onartu ondoren, hitzordua eskatu Bermeoko Udaletxean objektua pertsonalki jasotzeko. Hau da hain sinplea!</p>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<section class="cat-section" id="categories" style="background:var(--gray-50); border-top:1px solid var(--gray-100); border-bottom:1px solid var(--gray-100);">
-  <div class="cat-inner">
-    <span class="section-tag">Katalogoa</span>
-    <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex-wrap:wrap;margin-bottom:8px;">
-      <h2 class="section-title" style="margin-bottom:0;">Kategoriak</h2>
-      <a href="html/objektu-zerrenda.html" style="font-size:14px;color:var(--blue-600);text-decoration:none;font-weight:500;display:flex;align-items:center;gap:4px;margin-bottom:6px;">
-        Denak ikusi
-        <svg style="width:14px;height:14px;stroke:var(--blue-600);fill:none;stroke-width:2.2;stroke-linecap:round;" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-      </a>
-    </div>
+  <section class="cat-section" id="categories" style="background:var(--gray-50); border-top:1px solid var(--gray-100); border-bottom:1px solid var(--gray-100);">
+    <div class="cat-inner">
+      <span class="section-tag" data-i18n="cats_tag">Katalogoa</span>
+      <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex-wrap:wrap;margin-bottom:8px;">
+        <h2 class="section-title" style="margin-bottom:0;" data-i18n="cats_title">Kategoriak</h2>
+        <a href="html/objektu-zerrenda.html" style="font-size:14px;color:var(--blue-600);text-decoration:none;font-weight:500;display:flex;align-items:center;gap:4px;margin-bottom:6px;">
+          <span data-i18n="cats_see_all">Denak ikusi</span>
+          <svg aria-hidden="true" style="width:14px;height:14px;stroke:var(--blue-600);fill:none;stroke-width:2.2;stroke-linecap:round;" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+      </div>
 
-    <div class="cat-grid" id="categoryGrid">
-      <p style="grid-column: 1/-1; text-align: center; color: var(--gray-500);">Kategoriak kargatzen...</p>
+      <div class="cat-grid" id="categoryGrid">
+        <p style="grid-column: 1/-1; text-align: center; color: var(--gray-500);" data-i18n="cats_loading">Kategoriak kargatzen...</p>
+      </div>
     </div>
-  </div>
-</section>
+  </section>
+</main>
 
 <footer id="contact">
   <div class="footer-inner">
     <div class="footer-top">
 
       <div class="footer-brand">
-        <a href="index.html" class="nav-logo" style="display:inline-flex;">
+        <a href="index.html" class="nav-logo" style="display:inline-flex;" aria-label="Bermeoko Udala Hasiera">
           <div class="logo-mark">
-            <svg viewBox="0 0 24 24" style="width:20px;height:20px;fill:none;stroke:#fff;stroke-width:2.2;stroke-linecap:round;"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5l4 4"/><path d="M11 8v6M8 11h6"/></svg>
+            <svg aria-hidden="true" viewBox="0 0 24 24" style="width:20px;height:20px;fill:none;stroke:#fff;stroke-width:2.2;stroke-linecap:round;"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5l4 4"/><path d="M11 8v6M8 11h6"/></svg>
           </div>
           <div class="logo-text">
             <strong>ERRONKA</strong>
             <span>Bermeoko Udala</span>
           </div>
         </a>
-        <p class="footer-desc">
+        <p class="footer-desc" data-i18n="foot_desc">
           Bermeoko Udaleko galdu eta aurkituen zerbitzu ofiziala. Herritarrei zerbitzuan, gardentasunez eta eraginkortasunez.
         </p>
         <div class="footer-contact">
           <a href="tel:+34946880100">
-            <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2A19.8 19.8 0 0 1 3.08 5.17 2 2 0 0 1 5.07 3h3a2 2 0 0 1 2 1.72c.13 1 .37 1.98.7 2.91a2 2 0 0 1-.45 2.11L9.09 10.91a16 16 0 0 0 6 6l1.17-1.17a2 2 0 0 1 2.11-.45c.93.34 1.91.57 2.91.7A2 2 0 0 1 23 17z"/></svg>
+            <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2A19.8 19.8 0 0 1 3.08 5.17 2 2 0 0 1 5.07 3h3a2 2 0 0 1 2 1.72c.13 1 .37 1.98.7 2.91a2 2 0 0 1-.45 2.11L9.09 10.91a16 16 0 0 0 6 6l1.17-1.17a2 2 0 0 1 2.11-.45c.93.34 1.91.57 2.91.7A2 2 0 0 1 23 17z"/></svg>
             +34 946 88 01 00
           </a>
           <a href="mailto:galduaurkituak@bermeo.eus">
-            <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
             galduaurkituak@bermeo.eus
           </a>
           <a href="https://www.google.com/maps?q=Gernika-Lumo+etorbidea+2,+Bermeo" target="_blank" rel="noopener noreferrer">
-            <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
             Gernika-Lumo etorbidea 2, Bermeo
           </a>
         </div>
       </div>
 
       <div>
-        <h3 class="footer-col-title">Zerbitzuak</h3>
+        <h3 class="footer-col-title" data-i18n="foot_col1">Zerbitzuak</h3>
         <ul class="footer-links">
-          <li><a href="html/objektu-zerrenda.html">Inbentarioa bilatu</a></li>
-          <li><a href="#claim">Erreklamazioa hasi</a></li>
-          <li><a href="mailto:galduaurkituak@bermeo.eus?subject=Nire%20erreklamazioaren%20egoera%20kontsultatu">Nire erreklamazioak</a></li>
-          <li><a href="mailto:galduaurkituak@bermeo.eus?subject=Jakinarazpenak%20jasotzeko%20eskaera">Jakinarazpenak</a></li>
-          <li><a href="#process">Galdera ohikoak</a></li>
+          <li><a href="html/objektu-zerrenda.html" data-i18n="foot_link_inv">Inbentarioa bilatu</a></li>
+          <li><a href="#claim" data-i18n="foot_link_claim">Erreklamazioa hasi</a></li>
+          <li><a href="mailto:galduaurkituak@bermeo.eus?subject=Nire%20erreklamazioaren%20egoera%20kontsultatu" data-i18n="foot_link_my">Nire erreklamazioak</a></li>
+          <li><a href="mailto:galduaurkituak@bermeo.eus?subject=Jakinarazpenak%20jasotzeko%20eskaera" data-i18n="foot_link_not">Jakinarazpenak</a></li>
+          <li><a href="#process" data-i18n="foot_link_faq">Galdera ohikoak</a></li>
         </ul>
       </div>
 
       <div>
-        <h3 class="footer-col-title">Udala</h3>
+        <h3 class="footer-col-title" data-i18n="foot_col2">Udala</h3>
         <ul class="footer-links">
-          <li><a href="https://www.bermeo.eus/" target="_blank" rel="noopener noreferrer">Bermeoko Udala</a></li>
-          <li><a href="https://www.bermeo.eus/tramiteak.html" target="_blank" rel="noopener noreferrer">Zerbitzu guztiak</a></li>
-          <li><a href="https://www.bermeo.eus/iragarki-taula.html" target="_blank" rel="noopener noreferrer">Iragarki-taula</a></li>
-          <li><a href="https://www.bermeo.eus/albisteak.html" target="_blank" rel="noopener noreferrer">Prentsa-kabineta</a></li>
-          <li><a href="https://www.bermeo.eus/kontaktua.html" target="_blank" rel="noopener noreferrer">Kontaktua</a></li>
+          <li><a href="https://www.bermeo.eus/" target="_blank" rel="noopener noreferrer" data-i18n="foot_link_town">Bermeoko Udala</a></li>
+          <li><a href="https://www.bermeo.eus/tramiteak.html" target="_blank" rel="noopener noreferrer" data-i18n="foot_link_serv">Zerbitzu guztiak</a></li>
+          <li><a href="https://www.bermeo.eus/iragarki-taula.html" target="_blank" rel="noopener noreferrer" data-i18n="foot_link_board">Iragarki-taula</a></li>
+          <li><a href="https://www.bermeo.eus/albisteak.html" target="_blank" rel="noopener noreferrer" data-i18n="foot_link_press">Prentsa-kabineta</a></li>
+          <li><a href="https://www.bermeo.eus/kontaktua.html" target="_blank" rel="noopener noreferrer" data-i18n="foot_link_contact">Kontaktua</a></li>
         </ul>
       </div>
 
       <div>
-        <h3 class="footer-col-title">Legala</h3>
+        <h3 class="footer-col-title" data-i18n="foot_col3">Legala</h3>
         <ul class="footer-links">
-          <li><a href="https://www.bermeo.eus/lege-oharra.html" target="_blank" rel="noopener noreferrer">Pribatutasun-politika</a></li>
-          <li><a href="https://www.bermeo.eus/lege-oharra.html" target="_blank" rel="noopener noreferrer">Erabileraren baldintzak</a></li>
-          <li><a href="https://www.bermeo.eus/cookie-politika.html" target="_blank" rel="noopener noreferrer">Cookie politika</a></li>
-          <li><a href="https://www.bermeo.eus/irisgarritasuna.html" target="_blank" rel="noopener noreferrer">Irisgarritasuna</a></li>
+          <li><a href="https://www.bermeo.eus/lege-oharra.html" target="_blank" rel="noopener noreferrer" data-i18n="foot_link_priv">Pribatutasun-politika</a></li>
+          <li><a href="https://www.bermeo.eus/lege-oharra.html" target="_blank" rel="noopener noreferrer" data-i18n="foot_link_terms">Erabileraren baldintzak</a></li>
+          <li><a href="https://www.bermeo.eus/cookie-politika.html" target="_blank" rel="noopener noreferrer" data-i18n="foot_link_cook">Cookie politika</a></li>
+          <li><a href="https://www.bermeo.eus/irisgarritasuna.html" target="_blank" rel="noopener noreferrer" data-i18n="foot_link_acc">Irisgarritasuna</a></li>
           <li><a href="https://www.bermeo.eus/lege-oharra.html" target="_blank" rel="noopener noreferrer">RGPD / GDPR</a></li>
         </ul>
       </div>
     </div>
 
     <div class="footer-bottom">
-      <p class="footer-legal">v1.0 · &copy; 2026 Bermeoko Udala · Eskubide guztiak erreserbatuta</p>
+      <p class="footer-legal" data-i18n="foot_legal_text">v1.0 · © 2026 Bermeoko Udala · Eskubide guztiak erreserbatuta</p>
       <div class="footer-badges">
         <span class="f-badge">GDPR</span>
         <span class="f-badge">W3C AA</span>
@@ -332,8 +338,6 @@
     </div>
   </div>
 </footer>
-
-<script src="js/main.js"></script>
 
 </body>
 </html>

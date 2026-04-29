@@ -1,3 +1,59 @@
+const dictCatalog = {
+  "EU": {
+    "nav_back": "Itzuli hasierara",
+    "cat_title": "Inbentario Osoa",
+    "cat_sub": "Hemen aurkituko dituzu Bermeoko Udalaren biltegian dauden objektu guztiak. Zure bat ikusten baduzu, sakatu erreklamatzeko botoia.",
+    "cat_search_place": "Bilatu objektuaren izena...",
+    "cat_all_opt": "Kategoria guztiak (Todas)",
+    "cat_h2_results": "Katalogoaren emaitzak",
+    "cat_loading": "Datuak kargatzen... / Cargando base de datos...",
+    "cat_no_res": "Ez da aurkitu emaitzarik bilaketa honekin. / No se han encontrado resultados.",
+    "cat_load_more": "Gehiago ikusi / Ver más",
+    "btn_claim_card": "Mezu bat bidali",
+    "foot_desc": "Bermeoko Udaleko galdu eta aurkituen zerbitzu ofiziala. Herritarrei zerbitzuan, gardentasunez eta eraginkortasunez.", "foot_col1": "Zerbitzuak", "foot_link_inv": "Inbentarioa bilatu", "foot_link_claim": "Erreklamazioa hasi", "foot_link_my": "Nire erreklamazioak", "foot_link_not": "Jakinarazpenak", "foot_link_faq": "Galdera ohikoak", "foot_col2": "Udala", "foot_link_town": "Bermeoko Udala", "foot_link_serv": "Zerbitzu guztiak", "foot_link_board": "Iragarki-taula", "foot_link_press": "Prentsa-kabineta", "foot_link_contact": "Contacto", "foot_col3": "Legala", "foot_link_priv": "Pribatutasun-politika", "foot_link_terms": "Erabileraren baldintzak", "foot_link_cook": "Cookie politika", "foot_link_acc": "Irisgarritasuna", "foot_legal_text": "v1.0 · © 2026 Bermeoko Udala · Eskubide guztiak erreserbatuta"
+  },
+  "ES": {
+    "nav_back": "Volver al inicio",
+    "cat_title": "Inventario Completo",
+    "cat_sub": "Aquí encontrarás todos los objetos almacenados por el Ayuntamiento de Bermeo. Si reconoces el tuyo, pulsa en el botón para reclamarlo.",
+    "cat_search_place": "Buscar nombre del objeto...",
+    "cat_all_opt": "Todas las categorías",
+    "cat_h2_results": "Resultados del catálogo",
+    "cat_loading": "Cargando datos...",
+    "cat_no_res": "No se han encontrado resultados para esta búsqueda.",
+    "cat_load_more": "Ver más",
+    "btn_claim_card": "Enviar mensaje",
+    "foot_desc": "Servicio oficial de objetos perdidos del Ayuntamiento de Bermeo. Al servicio de los ciudadanos con transparencia y eficacia.", "foot_col1": "Servicios", "foot_link_inv": "Buscar en inventario", "foot_link_claim": "Iniciar reclamación", "foot_link_my": "Mis reclamaciones", "foot_link_not": "Notificaciones", "foot_link_faq": "Preguntas frecuentes", "foot_col2": "Ayuntamiento", "foot_link_town": "Ayuntamiento de Bermeo", "foot_link_serv": "Todos los servicios", "foot_link_board": "Tablón de anuncios", "foot_link_press": "Gabinete de prensa", "foot_link_contact": "Contacto", "foot_col3": "Legal", "foot_link_priv": "Política de privacidad", "foot_link_terms": "Condiciones de uso", "foot_link_cook": "Política de cookies", "foot_link_acc": "Accesibilidad", "foot_legal_text": "v1.0 · © 2026 Ayuntamiento de Bermeo · Todos los derechos reservados"
+  }
+};
+
+function setLang(idioma) {
+  localStorage.setItem('appLang', idioma);
+  document.querySelectorAll('.lang-btn').forEach(btn => {
+    const isActive = btn.textContent === idioma;
+    btn.classList.toggle('active', isActive);
+    btn.setAttribute('aria-pressed', isActive);
+  });
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const clave = el.getAttribute('data-i18n');
+    if (dictCatalog[idioma] && dictCatalog[idioma][clave]) {
+      if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+        el.placeholder = dictCatalog[idioma][clave];
+      } else {
+        el.textContent = dictCatalog[idioma][clave];
+      }
+    }
+  });
+  
+  // Traducir los botones inyectados desde XML en el catálogo
+  document.querySelectorAll('.btn-claim').forEach(btn => {
+    btn.textContent = dictCatalog[idioma]["btn_claim_card"];
+  });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  setLang(localStorage.getItem('appLang') || 'EU');
+});
 document.addEventListener("DOMContentLoaded", () => {
   // 1. VARIABLES DEL DOM
   const catalogGrid = document.getElementById('catalogGrid');
@@ -156,4 +212,56 @@ document.addEventListener("DOMContentLoaded", () => {
       filterItems(); 
     });
   }
+});
+// 1. EL DICCIONARIO DE TRADUCCIONES
+const traducciones = {
+  "EU": {
+    "nav_back": "Itzuli hasierara",
+    "cat_title": "Inbentario Osoa",
+    "cat_sub": "Hemen aurkituko dituzu Bermeoko Udalaren biltegian dauden objektu guztiak. Zure bat ikusten baduzu, sakatu erreklamatzeko botoia.",
+    "search_place": "Bilatu objektuaren izena...",
+    "btn_claim": "Mezu bat bidali"
+  },
+  "ES": {
+    "nav_back": "Volver al inicio",
+    "cat_title": "Inventario Completo",
+    "cat_sub": "Aquí encontrarás todos los objetos almacenados por el Ayuntamiento de Bermeo. Si reconoces el tuyo, pulsa en el botón para reclamarlo.",
+    "search_place": "Buscar nombre del objeto...",
+    "btn_claim": "Enviar mensaje"
+  }
+};
+
+// 2. LA FUNCIÓN QUE CAMBIA EL IDIOMA
+function setLang(idioma) {
+  // A) Guardamos el idioma en el navegador para que no se borre al cambiar de página
+  localStorage.setItem('appLang', idioma);
+
+  // B) Cambiamos el color de los botones (Fondo azul al seleccionado)
+  document.querySelectorAll('.lang-btn').forEach(btn => {
+    const isActive = btn.textContent === idioma;
+    btn.classList.toggle('active', isActive);
+    btn.setAttribute('aria-pressed', isActive);
+  });
+
+  // C) Traducimos los textos
+  document.querySelectorAll('[data-i18n]').forEach(elemento => {
+    const clave = elemento.getAttribute('data-i18n');
+    
+    if (traducciones[idioma] && traducciones[idioma][clave]) {
+      // Si es un input de texto, le cambiamos el 'placeholder'
+      if (elemento.tagName === 'INPUT' || elemento.tagName === 'TEXTAREA') {
+        elemento.placeholder = traducciones[idioma][clave];
+      } else {
+        // Si es texto normal, cambiamos el contenido
+        elemento.textContent = traducciones[idioma][clave];
+      }
+    }
+  });
+}
+
+// 3. AL CARGAR LA PÁGINA, RECORDAR EL IDIOMA
+document.addEventListener('DOMContentLoaded', () => {
+  // Miramos si el usuario ya había elegido un idioma antes. Si no, ponemos 'EU' por defecto.
+  const idiomaGuardado = localStorage.getItem('appLang') || 'EU';
+  setLang(idiomaGuardado);
 });

@@ -1,102 +1,157 @@
-const navbar = document.getElementById('navbar');
-const navLinks = document.querySelectorAll('.nav-links a');
+// ==========================================================================
+// 1. DICCIONARIO DE TRADUCCIONES (PÁGINA DE INICIO)
+// ==========================================================================
+const dictIndex = {
+  "EU": {
+    "nav_home": "Hasiera", "nav_claim": "Erreklamazioa", "nav_process": "Prozesua", "nav_cats": "Kategoriak", "nav_help": "Laguntza", "nav_btn_claim": "Erreklamatu",
+    "hero_title": "Galdutakoa berriro aurkitu", "hero_sub": "Bermeoko Udalaren galdu eta aurkituen zerbitzu digitala. Galdu duzuna bilatzen laguntzeko eta aurkitutakoa erreklamatzeko plataforma bakarra.", "hero_btn": "Erreklamazioa hasi",
+    "mc_brand": "Marka", "mc_color": "Kolorea",
+    "form_tag": "Erreklamazioa", "form_title": "Galdutako objektua erreklamatu", "form_sub": "Bete inprimakia galdutako objektuaren xehetasunekin.", "form_sec1": "1. Eskatzailearen Datuak", "form_name": "Izena", "form_place_name": "Sartu zure izena", "form_surname": "Abizenak", "form_place_surname": "Sartu zure abizenak", "form_phone": "Telefonoa", "form_place_phone": "adib. 600 000 000", "form_email": "Posta elektronikoa", "form_place_email": "adib. izena@email.com",
+    "form_sec2": "2. Galdutako Objektuaren Deskribapena", "form_desc": "Deskribapena (kolorea, marka, materiala...)", "form_place_desc": "Eman xehetasun guztiak (marka, kolorea, edukia...)", "form_photo": "Argazkia erantsi (Aukerakoa)", "form_remove_btn": "Artxiboa ezabatu",
+    "form_sec3": "3. Noiz eta Non", "form_date": "Galtze-data", "form_loc": "Kokalekua", "form_opt_choose": "Aukeratu bat", "form_opt_port": "Bermeoko Portua", "form_opt_gazt": "San Juan de Gaztelugatxe", "form_opt_street": "Bide publikoa", "form_opt_trans": "Garraio publikoa (Bizkaibus, Euskotren)", "form_opt_hall": "Udaletxea", "form_opt_other": "Bestelakoak", "form_notes": "Oharrak", "form_place_notes": "Informazio gehigarria...", "form_privacy": "Datu pertsonalen babesari buruzko informazioa irakurri eta onartzen dut.", "form_submit": "Bidali erreklamazioa",
+    "proc_tag": "Nola funtzionatzen du", "proc_title": "Hiru urrats, itzulera bat", "proc_sub": "Prozesu erraza, gardena eta bizkorra. Bermeoko Udaleko langileek lagundu egingo dizute urrats guztietan.", "step1_title": "Bilatu inbentarioan", "step1_desc": "Bilaketa aurreratua erabili galdu duzuna aurkitzeko. Kategoria, kolorea, data eta kokalaguntzak iragazki gisa erabil ditzakezu.", "step2_title": "Erreklamazioa bidali", "step2_desc": "Objektua aurkitu baduzu, erreklamazioformen bidez zure datuak bidali. Txartel nazionala edo NAN zenbakia behar duzu egiaztatzeko.", "step3_title": "Jaso udaletxean", "step3_desc": "Zure erreklamazioa onartu ondoren, hitzordua eskatu Bermeoko Udaletxean objektua pertsonalki jasotzeko. Hau da hain sinplea!",
+    "cats_tag": "Katalogoa", "cats_title": "Kategoriak", "cats_see_all": "Denak ikusi", "cats_loading": "Kategoriak kargatzen...",
+    "foot_desc": "Bermeoko Udaleko galdu eta aurkituen zerbitzu ofiziala. Herritarrei zerbitzuan, gardentasunez eta eraginkortasunez.", "foot_col1": "Zerbitzuak", "foot_link_inv": "Inbentarioa bilatu", "foot_link_claim": "Erreklamazioa hasi", "foot_link_my": "Nire erreklamazioak", "foot_link_not": "Jakinarazpenak", "foot_link_faq": "Galdera ohikoak", "foot_col2": "Udala", "foot_link_town": "Bermeoko Udala", "foot_link_serv": "Zerbitzu guztiak", "foot_link_board": "Iragarki-taula", "foot_link_press": "Prentsa-kabineta", "foot_link_contact": "Kontaktua", "foot_col3": "Legala", "foot_link_priv": "Pribatutasun-politika", "foot_link_terms": "Erabileraren baldintzak", "foot_link_cook": "Cookie politika", "foot_link_acc": "Irisgarritasuna", "foot_legal_text": "v1.0 · © 2026 Bermeoko Udala · Eskubide guztiak erreserbatuta"
+  },
+  "ES": {
+    "nav_home": "Inicio", "nav_claim": "Reclamación", "nav_process": "Proceso", "nav_cats": "Categorías", "nav_help": "Ayuda", "nav_btn_claim": "Reclamar",
+    "hero_title": "Encuentra de nuevo lo perdido", "hero_sub": "Servicio digital de objetos perdidos del Ayuntamiento de Bermeo. La plataforma única para ayudarte a buscar lo que has perdido y reclamar lo encontrado.", "hero_btn": "Iniciar reclamación",
+    "mc_brand": "Marca", "mc_color": "Color",
+    "form_tag": "Reclamación", "form_title": "Reclamar objeto perdido", "form_sub": "Rellena el formulario con los detalles del objeto perdido.", "form_sec1": "1. Datos del Solicitante", "form_name": "Nombre", "form_place_name": "Introduce tu nombre", "form_surname": "Apellidos", "form_place_surname": "Introduce tus apellidos", "form_phone": "Teléfono", "form_place_phone": "ej. 600 000 000", "form_email": "Correo electrónico", "form_place_email": "ej. nombre@email.com",
+    "form_sec2": "2. Descripción del Objeto Perdido", "form_desc": "Descripción (color, marca, material...)", "form_place_desc": "Da todos los detalles (marca, color, contenido...)", "form_photo": "Adjuntar foto (Opcional)", "form_remove_btn": "Borrar archivo",
+    "form_sec3": "3. Cuándo y Dónde", "form_date": "Fecha de pérdida", "form_loc": "Ubicación", "form_opt_choose": "Elige una", "form_opt_port": "Puerto de Bermeo", "form_opt_gazt": "San Juan de Gaztelugatxe", "form_opt_street": "Vía pública", "form_opt_trans": "Transporte público (Bizkaibus, Euskotren)", "form_opt_hall": "Ayuntamiento", "form_opt_other": "Otros", "form_notes": "Notas", "form_place_notes": "Información adicional...", "form_privacy": "He leído y acepto la información sobre protección de datos personales.", "form_submit": "Enviar reclamación",
+    "proc_tag": "Cómo funciona", "proc_title": "Tres pasos, una devolución", "proc_sub": "Proceso fácil, transparente y rápido. Los trabajadores del Ayuntamiento de Bermeo te ayudarán en todos los pasos.", "step1_title": "Busca en el inventario", "step1_desc": "Usa la búsqueda avanzada para encontrar lo que has perdido. Puedes usar categoría, color y fecha como filtros.", "step2_title": "Envía una reclamación", "step2_desc": "Si has encontrado el objeto, envía tus datos mediante el formulario. Necesitarás tu DNI para verificarlo.", "step3_title": "Recoge en el ayuntamiento", "step3_desc": "Una vez aceptada tu reclamación, pide cita para recoger el objeto personalmente en el Ayuntamiento de Bermeo.",
+    "cats_tag": "Catálogo", "cats_title": "Categorías", "cats_see_all": "Ver todas", "cats_loading": "Cargando categorías...",
+    "foot_desc": "Servicio oficial de objetos perdidos del Ayuntamiento de Bermeo. Al servicio de los ciudadanos con transparencia y eficacia.", "foot_col1": "Servicios", "foot_link_inv": "Buscar en inventario", "foot_link_claim": "Iniciar reclamación", "foot_link_my": "Mis reclamaciones", "foot_link_not": "Notificaciones", "foot_link_faq": "Preguntas frecuentes", "foot_col2": "Ayuntamiento", "foot_link_town": "Ayuntamiento de Bermeo", "foot_link_serv": "Todos los servicios", "foot_link_board": "Tablón de anuncios", "foot_link_press": "Gabinete de prensa", "foot_link_contact": "Contacto", "foot_col3": "Legal", "foot_link_priv": "Política de privacidad", "foot_link_terms": "Condiciones de uso", "foot_link_cook": "Política de cookies", "foot_link_acc": "Accesibilidad", "foot_legal_text": "v1.0 · © 2026 Ayuntamiento de Bermeo · Todos los derechos reservados"
+  }
+};
 
-const sectionsToTrack = [
-  { id: '#', element: document.querySelector('.hero') },
-  { id: '#claim', element: document.getElementById('claim') },
-  { id: '#process', element: document.getElementById('process') },
-  { id: '#categories', element: document.getElementById('categories') },
-  { id: '#contact', element: document.getElementById('contact') }
-];
-
-window.addEventListener('scroll', () => {
-  navbar.classList.toggle('scrolled', window.scrollY > 20);
-
-  let current = '#'; 
-  sectionsToTrack.forEach(sec => {
-    if (sec.element) {
-      const sectionTop = sec.element.offsetTop;
-      if (window.scrollY >= sectionTop - 200) {
-        current = sec.id;
+// Función para cambiar idioma
+function setLang(idioma) {
+  localStorage.setItem('appLang', idioma);
+  
+  // Cambiar botones visuales
+  document.querySelectorAll('.lang-btn').forEach(btn => {
+    const isActive = btn.textContent === idioma;
+    btn.classList.toggle('active', isActive);
+    btn.setAttribute('aria-pressed', isActive);
+  });
+  
+  // Traducir textos
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const clave = el.getAttribute('data-i18n');
+    if (dictIndex[idioma] && dictIndex[idioma][clave]) {
+      if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+        el.placeholder = dictIndex[idioma][clave];
+      } else {
+        el.textContent = dictIndex[idioma][clave];
       }
     }
   });
 
-  if ((window.innerHeight + Math.round(window.scrollY)) >= document.body.offsetHeight - 50) {
-    current = '#contact';
+  // Traducir dinámicamente la palabra "objetos/objektu" en las categorías si ya están cargadas
+  document.querySelectorAll('.cat-count').forEach(count => {
+    const num = count.textContent.replace(/[^0-9]/g, ''); // Saca solo el número
+    if(num) {
+      count.textContent = idioma === 'ES' ? `${num} objetos` : `${num} objektu`;
+    }
+  });
+}
+
+
+// ==========================================================================
+// 2. LÓGICA DE LA PÁGINA (Scroll, XML, Formulario...)
+// ==========================================
+document.addEventListener('DOMContentLoaded', () => {
+  // 1. Inicializar idioma
+  setLang(localStorage.getItem('appLang') || 'EU');
+
+  // 2. Lógica del menú Navbar (Scroll)
+  const navbar = document.getElementById("navbar");
+  const navLinks = document.querySelectorAll(".nav-links a");
+  const sectionsToTrack = [
+    { id: "index.html", element: document.querySelector(".hero") }, // <-- ¡Cambiado aquí!
+    { id: "#claim", element: document.getElementById("claim") },
+    { id: "#process", element: document.getElementById("process") },
+    { id: "#categories", element: document.getElementById("categories") },
+    { id: "#contact", element: document.getElementById("contact") }
+  ];
+
+  if(navbar) {
+      window.addEventListener("scroll", () => {
+        navbar.classList.toggle("scrolled", window.scrollY > 20);
+        
+        let currentSectionId = "index.html"; // <-- ¡Cambiado aquí!
+        sectionsToTrack.forEach(section => {
+          if (section.element) {
+            const offsetTop = section.element.offsetTop;
+            if (window.scrollY >= offsetTop - 200) {
+              currentSectionId = section.id;
+            }
+          }
+        });
+
+        if (window.innerHeight + Math.round(window.scrollY) >= document.body.offsetHeight - 50) {
+          currentSectionId = "#contact";
+        }
+
+        navLinks.forEach(link => {
+          link.classList.remove("active");
+          if (link.getAttribute("href") === currentSectionId) {
+            link.classList.add("active");
+          }
+        });
+      });
   }
 
-  navLinks.forEach(a => {
-    a.classList.remove('active');
-    if (a.getAttribute('href') === current) {
-      a.classList.add('active');
-    }
+  // 3. Menú Móvil
+  const menuToggle = document.getElementById('menuToggle');
+  const mobileNav = document.getElementById('mobileNav');
+  if(menuToggle && mobileNav) {
+      menuToggle.addEventListener('click', () => {
+          const isExpanded = menuToggle.getAttribute('aria-expanded') === 'true';
+          menuToggle.setAttribute('aria-expanded', !isExpanded);
+          mobileNav.style.display = isExpanded ? 'none' : 'flex';
+      });
+  }
+
+  // 4. Scroll Suave para los links del menú
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener("click", function (e) {
+      const targetId = this.getAttribute("href");
+      if ("#" === targetId) {
+        e.preventDefault();
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        return;
+      }
+      const targetElement = document.querySelector(targetId);
+      if (targetElement) {
+        e.preventDefault();
+        targetElement.scrollIntoView({ behavior: "smooth" });
+      }
+    });
   });
-});
-
-function setLang(lang) {
-  document.querySelectorAll('.lang-btn').forEach(btn => {
-    btn.classList.toggle('active', btn.textContent === lang);
-    btn.setAttribute('aria-pressed', btn.textContent === lang);
-  });
-}
-
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-  anchor.addEventListener('click', function(e) {
-    const targetId = this.getAttribute('href');
-    if (targetId === '#') {
-      e.preventDefault();
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      return;
-    }
-    const target = document.querySelector(targetId);
-    if (target) { 
-      e.preventDefault(); 
-      target.scrollIntoView({ behavior: 'smooth' }); 
-    }
-  });
-});
-
-const fileInput = document.getElementById('claim-file');
-const removeFileBtn = document.getElementById('remove-file-btn');
-
-if (fileInput && removeFileBtn) {
-  fileInput.addEventListener('change', function() {
-    if (this.files && this.files.length > 0) {
-      removeFileBtn.style.display = 'inline-flex';
-    } else {
-      removeFileBtn.style.display = 'none';
-    }
-  });
-
-  removeFileBtn.addEventListener('click', function() {
-    fileInput.value = '';
-    removeFileBtn.style.display = 'none';
-  });
-}
-
-// --- LÓGICA MENÚ MÓVIL ---
-const menuToggle = document.getElementById('menuToggle');
-const mobileNav = document.getElementById('mobileNav');
-const mobileLinks = document.querySelectorAll('.mobile-nav a');
-
-menuToggle.addEventListener('click', () => {
-  const isVisible = mobileNav.style.display === 'flex';
-  mobileNav.style.display = isVisible ? 'none' : 'flex';
-});
-
-// Cerrar el menú al hacer clic en cualquier enlace
-mobileLinks.forEach(link => {
-  link.addEventListener('click', () => {
-    mobileNav.style.display = 'none';
-  });
-});
-// --- LÓGICA PARA CARGAR CATEGORÍAS EN PORTADA ---
-document.addEventListener("DOMContentLoaded", () => {
-  const categoryGrid = document.getElementById('categoryGrid');
   
+  // 5. Botón de archivo del formulario
+  const fileInput = document.getElementById("claim-file");
+  const removeFileBtn = document.getElementById("remove-file-btn");
+  if (fileInput && removeFileBtn) {
+      fileInput.addEventListener('change', () => {
+          if(fileInput.files.length > 0) {
+              removeFileBtn.style.display = 'flex';
+          } else {
+              removeFileBtn.style.display = 'none';
+          }
+      });
+      removeFileBtn.addEventListener('click', () => {
+          fileInput.value = '';
+          removeFileBtn.style.display = 'none';
+      });
+  }
+
+  // 6. Cargar categorías XML dinámicamente
+  const categoryGrid = document.getElementById('categoryGrid');
   if (categoryGrid) {
-    // Diccionario de iconos y colores según el ID de la categoría
     const katEstiloak = {
       "jantziak": { bg: "#EEF2FF", color: "#3B5BDB", svg: '<rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>' },
       "gakoak": { bg: "#FFF3D4", color: "#E09A10", svg: '<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>' },
@@ -111,25 +166,29 @@ document.addEventListener("DOMContentLoaded", () => {
       .then(str => new window.DOMParser().parseFromString(str, "text/xml"))
       .then(xmlDoc => {
         const kategoriak = xmlDoc.querySelectorAll("kategoria");
-        categoryGrid.innerHTML = ''; // Limpiamos el texto de carga
+        categoryGrid.innerHTML = ''; 
 
         kategoriak.forEach(kat => {
           const id = kat.getAttribute("id");
           const izena = kat.querySelector("izena").textContent;
           const kopurua = kat.querySelector("kopurua").textContent;
           
-          // Si la categoría no está en nuestro diccionario, usamos gris por defecto
           const estilo = katEstiloak[id] || { bg: "#F2F5FD", color: "#6B6F80", svg: '<circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/>' };
 
           const card = document.createElement('a');
           card.href = 'html/objektu-zerrenda.html';
           card.className = 'cat-card';
+          
+          // Lógica bilingüe para la palabra "objetos" al cargar el XML
+          const currentLang = localStorage.getItem('appLang') || 'EU';
+          const textObj = currentLang === 'ES' ? 'objetos' : 'objektu';
+
           card.innerHTML = `
             <div class="cat-icon" style="background:${estilo.bg};">
               <svg viewBox="0 0 24 24" style="stroke:${estilo.color};"><g>${estilo.svg}</g></svg>
             </div>
             <div class="cat-name">${izena}</div>
-            <div class="cat-count">${kopurua} objektu</div>
+            <div class="cat-count">${kopurua} ${textObj}</div>
           `;
           categoryGrid.appendChild(card);
         });
