@@ -1,21 +1,17 @@
 package controller;
 
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.layout.StackPane;
-import javafx.stage.Stage;
-import model.Langilea;
-import utils.Sesio;
-
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
+
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.layout.StackPane;
+import model.Langilea;
+import utils.Sesio;
+import utils.UIKudeatzailea;
 
 public class AdminController implements Initializable {
 
@@ -41,29 +37,37 @@ public class AdminController implements Initializable {
         if (l != null) {
             lblLangileIzena.setText(l.getIzena() + " " + l.getAbizena());
             lblLangileRola.setText("Administratzailea");
-            String ini = String.valueOf(l.getIzena().charAt(0)) + l.getAbizena().charAt(0);
+            
+            String ini = "";
+            if (l.getIzena() != null && !l.getIzena().isEmpty()) {
+                ini = ini + l.getIzena().charAt(0);
+            }
+            if (l.getAbizena() != null && !l.getAbizena().isEmpty()) {
+                ini = ini + l.getAbizena().charAt(0);
+            }
+            
             lblInitialak.setText(ini.toUpperCase());
         }
 
         setAktibo(btnAdminPanela);
-        kargatu("/view/AdminPanela.fxml");
+        UIKudeatzailea.kargatuPanela(adminContentArea, "/view/AdminPanela.fxml");
     }
 
-    @FXML public void loadAdminPanela() { setAktibo(btnAdminPanela); kargatu("/view/AdminPanela.fxml"); }
-    @FXML public void loadLangileak()   { setAktibo(btnLangileak);   kargatu("/view/Langileak.fxml"); }
-    @FXML public void loadKategoriak()  { setAktibo(btnKategoriak);  kargatu("/view/Kategoriak.fxml"); }
-    @FXML public void loadKokalekuak()  { setAktibo(btnKokalekuak);  kargatu("/view/Kokalekuak.fxml"); }
-    @FXML public void loadAuditoria()   { setAktibo(btnAuditoria);   kargatu("/view/Auditoria.fxml"); }
+    @FXML public void loadAdminPanela() { setAktibo(btnAdminPanela); UIKudeatzailea.kargatuPanela(adminContentArea, "/view/AdminPanela.fxml"); }
+    @FXML public void loadLangileak()   { setAktibo(btnLangileak);   UIKudeatzailea.kargatuPanela(adminContentArea, "/view/Langileak.fxml"); }
+    @FXML public void loadKategoriak()  { setAktibo(btnKategoriak);  UIKudeatzailea.kargatuPanela(adminContentArea, "/view/Kategoriak.fxml"); }
+    @FXML public void loadKokalekuak()  { setAktibo(btnKokalekuak);  UIKudeatzailea.kargatuPanela(adminContentArea, "/view/Kokalekuak.fxml"); }
+    @FXML public void loadAuditoria()   { setAktibo(btnAuditoria);   UIKudeatzailea.kargatuPanela(adminContentArea, "/view/Auditoria.fxml"); }
 
     @FXML
     public void volverAUser() {
-        kargatuLeihoa("/view/MainLayout.fxml");
+        UIKudeatzailea.aldatuLeihoa(adminContentArea, "/view/MainLayout.fxml", true);
     }
 
     @FXML
     public void itxiSaioa() {
         Sesio.itxi();
-        kargatuLeihoa("/view/login.fxml");
+        UIKudeatzailea.aldatuLeihoa(adminContentArea, "/view/login.fxml", true);
     }
 
     // ---- helpers ----
@@ -75,24 +79,5 @@ public class AdminController implements Initializable {
         }
         aktibo.getStyleClass().removeAll("nav-item");
         aktibo.getStyleClass().add("nav-item-active");
-    }
-
-    private void kargatu(String fxmlBidea) {
-        try {
-            Node node = FXMLLoader.load(getClass().getResource(fxmlBidea));
-            adminContentArea.getChildren().setAll(node);
-        } catch (Exception e) {
-            System.err.println("AdminController.kargatu (" + fxmlBidea + "): " + e.getMessage());
-        }
-    }
-
-    private void kargatuLeihoa(String fxmlBidea) {
-        try {
-            Parent root = FXMLLoader.load(getClass().getResource(fxmlBidea));
-            Stage stage = (Stage) adminContentArea.getScene().getWindow();
-            stage.setScene(new Scene(root));
-        } catch (Exception e) {
-            System.err.println("AdminController.kargatuLeihoa (" + fxmlBidea + "): " + e.getMessage());
-        }
     }
 }

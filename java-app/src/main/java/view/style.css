@@ -203,6 +203,7 @@
     -fx-background-color: #FFFFFF;
     -fx-border-color: transparent transparent #F3F4F6 transparent;
     -fx-cell-size: 45px;
+    
 }
 .table-view .table-row-cell:hover {
     -fx-background-color: #F9FAFB;

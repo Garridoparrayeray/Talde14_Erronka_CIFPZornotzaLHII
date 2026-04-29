@@ -1,23 +1,23 @@
 package controller;
 
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
-import model.Langilea;
-import utils.Sesio;
-
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import model.Langilea;
+import utils.Sesio;
+import utils.UIKudeatzailea;
+
+/**
+ * Aplikazioaren lehio nagusia kudeatzen duen kontroladorea.
+ * @author Yeray Garrido
+ */
 public class MainController implements Initializable {
 
     @FXML private StackPane contentArea;
@@ -36,6 +36,11 @@ public class MainController implements Initializable {
 
     private List<Button> navBotoiak;
 
+    /**
+     * Kontroladorea hasieratzen du. Langilearen datuak kargatzen ditu eta hasierako panela ezartzen du.
+     * @param url Hasierako URLa
+     * @param rb Baliabideen sorta
+     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         navBotoiak = List.of(btnPanela, btnInbentarioa, btnErregistroa, btnErreklamazioak, btnEmanaldia, btnGalduDabenak);
@@ -48,7 +53,15 @@ public class MainController implements Initializable {
             } else {
                 lblLangileRola.setText("Udaltzaingoa");
             }
-            String ini = String.valueOf(l.getIzena().charAt(0)) + l.getAbizena().charAt(0);
+            
+            String ini = "";
+            if (l.getIzena() != null && !l.getIzena().isEmpty()) {
+                ini = ini + l.getIzena().charAt(0);
+            }
+            if (l.getAbizena() != null && !l.getAbizena().isEmpty()) {
+                ini = ini + l.getAbizena().charAt(0);
+            }
+            
             lblInitialak.setText(ini.toUpperCase());
         }
 
@@ -59,30 +72,59 @@ public class MainController implements Initializable {
         }
 
         setAktibo(btnPanela);
-        kargatu("/view/Panela.fxml");
+        UIKudeatzailea.kargatuPanela(contentArea, "/view/Panela.fxml");
     }
 
-    @FXML public void loadPanela()         { setAktibo(btnPanela);         kargatu("/view/Panela.fxml"); }
-    @FXML public void loadInbentarioa()    { setAktibo(btnInbentarioa);    kargatu("/view/Inbentario.fxml"); }
-    @FXML public void loadErregistroa()    { setAktibo(btnErregistroa);    kargatu("/view/Erregistroa.fxml"); }
-    @FXML public void loadErreklamazioak() { setAktibo(btnErreklamazioak); kargatu("/view/Erreklamazioak.fxml"); }
-    @FXML public void loadEmanaldia()      { setAktibo(btnEmanaldia);      kargatu("/view/Emanaldia.fxml"); }
-    @FXML public void loadGalduDabenak()   { setAktibo(btnGalduDabenak);   kargatu("/view/GalduDabenak.fxml"); }
+    /**
+     * Panela bista kargatzen du.
+     */
+    @FXML public void loadPanela()         { setAktibo(btnPanela);         UIKudeatzailea.kargatuPanela(contentArea, "/view/Panela.fxml"); }
+    /**
+     * Inbentarioa bista kargatzen du.
+     */
+    @FXML public void loadInbentarioa()    { setAktibo(btnInbentarioa);    UIKudeatzailea.kargatuPanela(contentArea, "/view/Inbentario.fxml"); }
+    /**
+     * Erregistroa bista kargatzen du.
+     */
+    @FXML public void loadErregistroa()    { setAktibo(btnErregistroa);    UIKudeatzailea.kargatuPanela(contentArea, "/view/Erregistroa.fxml"); }
+    /**
+     * Erreklamazioak bista kargatzen du.
+     */
+    @FXML public void loadErreklamazioak() { setAktibo(btnErreklamazioak); UIKudeatzailea.kargatuPanela(contentArea, "/view/Erreklamazioak.fxml"); }
+    /**
+     * Emanaldia bista kargatzen du.
+     */
+    @FXML public void loadEmanaldia()      { setAktibo(btnEmanaldia);      UIKudeatzailea.kargatuPanela(contentArea, "/view/Emanaldia.fxml"); }
+    /**
+     * Galdu Dabenak bista kargatzen du.
+     */
+    @FXML public void loadGalduDabenak()   { setAktibo(btnGalduDabenak);   UIKudeatzailea.kargatuPanela(contentArea, "/view/GalduDabenak.fxml"); }
 
+    /**
+     * Administratzailearen panelera nabigatzen du baimena badu.
+     */
     @FXML
     public void irAAdmin() {
-        if (!Sesio.isAdmin()) return;
-        kargatuLeihoa("/view/AdminLayout.fxml");
+        if (Sesio.isAdmin()) {
+            UIKudeatzailea.aldatuLeihoa(contentArea, "/view/AdminLayout.fxml", true);
+        }
     }
 
+    /**
+     * Saioa ixten du eta login pantailara itzultzen da.
+     */
     @FXML
     public void itxiSaioa() {
         Sesio.itxi();
-        kargatuLeihoa("/view/login.fxml");
+        UIKudeatzailea.aldatuLeihoa(contentArea, "/view/login.fxml", true);
     }
 
-    // ---- helpers ----
+    // ── Laguntzaileak ────────────────────────────────────────────────────────
 
+    /**
+     * Nabigazio menuko botoi bat aktibo gisa markatzen du estiloz.
+     * @param aktibo Aktibatu beharreko botoia
+     */
     private void setAktibo(Button aktibo) {
         for (Button b : navBotoiak) {
             b.getStyleClass().removeAll("nav-item-active", "nav-item");
@@ -90,24 +132,5 @@ public class MainController implements Initializable {
         }
         aktibo.getStyleClass().removeAll("nav-item");
         aktibo.getStyleClass().add("nav-item-active");
-    }
-
-    private void kargatu(String fxmlBidea) {
-        try {
-            Node node = FXMLLoader.load(getClass().getResource(fxmlBidea));
-            contentArea.getChildren().setAll(node);
-        } catch (Exception e) {
-            System.err.println("MainController.kargatu (" + fxmlBidea + "): " + e.getMessage());
-        }
-    }
-
-    private void kargatuLeihoa(String fxmlBidea) {
-        try {
-            Parent root = FXMLLoader.load(getClass().getResource(fxmlBidea));
-            Stage stage = (Stage) contentArea.getScene().getWindow();
-            stage.setScene(new Scene(root));
-        } catch (Exception e) {
-            System.err.println("MainController.kargatuLeihoa (" + fxmlBidea + "): " + e.getMessage());
-        }
     }
 }

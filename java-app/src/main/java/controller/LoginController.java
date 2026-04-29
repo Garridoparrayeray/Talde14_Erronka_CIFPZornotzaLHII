@@ -2,16 +2,13 @@ package controller;
 
 import dao.LangileaDAO;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.stage.Stage;
 import model.Administratzailea;
 import model.Langilea;
 import utils.Sesio;
+import utils.UIKudeatzailea;
 
 public class LoginController {
 
@@ -45,18 +42,6 @@ public class LoginController {
         } else {
             fxml = "/view/MainLayout.fxml";
         }
-        kargatu(fxml);
-    }
-
-    private void kargatu(String fxmlBidea) {
-        try {
-            Parent root = FXMLLoader.load(getClass().getResource(fxmlBidea));
-            Stage stage = (Stage) txtErabiltzailea.getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.setMaximized(true);
-        } catch (Exception e) {
-            lblErrorea.setText("Pantaila kargatzeko errorea.");
-            System.err.println("LoginController kargatu errorea: " + e.getMessage());
-        }
+        UIKudeatzailea.aldatuLeihoa(txtErabiltzailea, fxml, true);
     }
 }

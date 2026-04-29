@@ -1,5 +1,7 @@
 package model;
 
+import java.util.Objects;
+
 public abstract class Hartzailea {
 
     private int hartzaileId;
@@ -26,4 +28,23 @@ public abstract class Hartzailea {
     public String toString() {
         return getIdentifikazioa() + " - " + telefonoa;
     }
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(emaila, hartzaileId, helbidea, telefonoa);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Hartzailea other = (Hartzailea) obj;
+		return Objects.equals(emaila, other.emaila) && hartzaileId == other.hartzaileId
+				&& Objects.equals(helbidea, other.helbidea) && Objects.equals(telefonoa, other.telefonoa);
+	}
+    
 }

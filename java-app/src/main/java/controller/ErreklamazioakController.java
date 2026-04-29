@@ -1,5 +1,9 @@
 package controller;
 
+import java.net.URL;
+import java.util.List;
+import java.util.ResourceBundle;
+
 import dao.ErreklamazioaDAO;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -14,10 +18,7 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-
-import java.net.URL;
-import java.util.List;
-import java.util.ResourceBundle;
+import model.Erreklamazioa;
 
 public class ErreklamazioakController implements Initializable {
 
@@ -35,8 +36,8 @@ public class ErreklamazioakController implements Initializable {
     @FXML private Button btnBaztertu;
     @FXML private Button btnIrekiBerriz;
 
-    private List<String[]> erreklamazioak;
-    private String[]       hautatua;
+    private List<Erreklamazioa> erreklamazioak;
+    private Erreklamazioa       hautatua;
     private VBox           itemHautatua;
 
     @Override
@@ -55,7 +56,7 @@ public class ErreklamazioakController implements Initializable {
         hautatua = null;
 
         int i = 0;
-        for (String[] err : erreklamazioak) {
+        for (Erreklamazioa err : erreklamazioak) {
             VBox item = sortuListaItem(err, i == 0);
             listVBox.getChildren().add(item);
             i++;
@@ -71,14 +72,20 @@ public class ErreklamazioakController implements Initializable {
 
     // ── Lista item sortu ──────────────────────────────────────────────────────
 
-    private VBox sortuListaItem(String[] err, boolean aktiboa) {
-        // ID + egoera badge
-        Label lblId = new Label("E-" + err[0]);
+    private VBox sortuListaItem(Erreklamazioa err, boolean aktiboa) {
+        // ID + egoera 
+        Label lblId = new Label("E-" + err.getErreklamazioId());
         lblId.getStyleClass().addAll("text-muted");
         lblId.setStyle("-fx-font-size: 12px;");
 
-        Label badge = new Label(egoeraBadgeTestua(err[8]));
-        badge.getStyleClass().add(egoeraBadgeKlasea(err[8]));
+        String egoeraStr;
+        if (err.getEgoera() != null) {
+            egoeraStr = err.getEgoera().toString().toLowerCase();
+        } else {
+            egoeraStr = "irekita";
+        }
+        Label badge = new Label(egoeraBadgeTestua(egoeraStr));
+        badge.getStyleClass().add(egoeraBadgeKlasea(egoeraStr));
 
         Region spacer = new Region();
         HBox.setHgrow(spacer, javafx.scene.layout.Priority.ALWAYS);
@@ -86,23 +93,54 @@ public class ErreklamazioakController implements Initializable {
         HBox header = new HBox(lblId, spacer, badge);
         header.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
 
-        Label lblIzena = new Label(err[2] + " " + err[3]);
+        String izena;
+        String abizena;
+        if (err.getHartzailea() != null) {
+            if (err.getHartzailea() instanceof model.Jabea) {
+                model.Jabea j = (model.Jabea) err.getHartzailea();
+                izena = j.getIzena();
+                abizena = j.getAbizena();
+            } else {
+                izena = "Erakundea";
+                abizena = "";
+            }
+        } else {
+            izena = "";
+            abizena = "";
+        }
+        Label lblIzena = new Label(izena + " " + abizena);
         lblIzena.getStyleClass().addAll("font-bold", "text-dark");
         lblIzena.setStyle("-fx-font-size: 15px;");
 
-        Label lblDesk = new Label(err[7] != null ? err[7] : "");
+        String deskribapena;
+        if (err.getDeskribapenBilatua() != null) {
+            deskribapena = err.getDeskribapenBilatua();
+        } else {
+            deskribapena = "";
+        }
+        Label lblDesk = new Label(deskribapena);
         lblDesk.getStyleClass().add("text-muted");
         lblDesk.setMaxWidth(240);
         lblDesk.setWrapText(false);
         lblDesk.setEllipsisString("...");
 
-        Label lblData = new Label("Jasoa: " + (err[1] != null ? err[1] : ""));
+        String dataStr;
+        if (err.getErreklamazioData() != null) {
+            dataStr = err.getErreklamazioData().toString();
+        } else {
+            dataStr = "";
+        }
+        Label lblData = new Label("Jasoa: " + dataStr);
         lblData.getStyleClass().add("text-muted");
         lblData.setStyle("-fx-font-size: 12px;");
         VBox.setMargin(lblData, new Insets(4, 0, 0, 0));
 
         VBox item = new VBox(header, lblIzena, lblDesk, lblData);
-        item.getStyleClass().add(aktiboa ? "list-item-active" : "list-item");
+        if (aktiboa) {
+            item.getStyleClass().add("list-item-active");
+        } else {
+            item.getStyleClass().add("list-item");
+        }
 
         item.setOnMouseClicked(e -> hautatu(err, item));
         return item;
@@ -110,7 +148,7 @@ public class ErreklamazioakController implements Initializable {
 
     // ── Elementua hautatu ────────────────────────────────────────────────────
 
-    private void hautatu(String[] err, VBox item) {
+    private void hautatu(Erreklamazioa err, VBox item) {
         if (itemHautatua != null) {
             itemHautatua.getStyleClass().removeAll("list-item-active");
             itemHautatua.getStyleClass().add("list-item");
@@ -121,16 +159,57 @@ public class ErreklamazioakController implements Initializable {
 
         hautatua = err;
 
-        lblIdErreklam.setText("E-" + err[0]);
+        lblIdErreklam.setText("E-" + err.getErreklamazioId());
 
-        String egoera = err[8] != null ? err[8] : "irekita";
+        String egoera;
+        if (err.getEgoera() != null) {
+            egoera = err.getEgoera().toString().toLowerCase();
+        } else {
+            egoera = "irekita";
+        }
         lblEgoeraBadge.setText(egoeraBadgeTestua(egoera));
         lblEgoeraBadge.getStyleClass().setAll(egoeraBadgeKlasea(egoera));
 
-        lblJabeIzena.setText(err[2] + " " + err[3]);
-        lblKontaktua.setText(err[4] + " · " + err[5]);
-        lblDeskribapenaTestua.setText(err[7] != null ? err[7] : "");
-        lblBatEtortzeInfo.setText("Kategoria: " + (err[6] != null ? err[6] : "—"));
+        String izena;
+        String abizena;
+        String tel;
+        String email;
+        if (err.getHartzailea() != null) {
+            if (err.getHartzailea() instanceof model.Jabea) {
+                model.Jabea jabea = (model.Jabea) err.getHartzailea();
+                izena = jabea.getIzena();
+                abizena = jabea.getAbizena();
+                tel = jabea.getTelefonoa();
+                email = jabea.getEmaila();
+            } else {
+                izena = "Erakundea";
+                abizena = "";
+                tel = "";
+                email = "";
+            }
+        } else {
+            izena = "";
+            abizena = "";
+            tel = "";
+            email = "";
+        }
+        lblJabeIzena.setText(izena + " " + abizena);
+        
+        lblKontaktua.setText(tel + " · " + email);
+        
+        if (err.getDeskribapenBilatua() != null) {
+            lblDeskribapenaTestua.setText(err.getDeskribapenBilatua());
+        } else {
+            lblDeskribapenaTestua.setText("");
+        }
+
+        String katIzena;
+        if (err.getKategoria() != null) {
+            katIzena = err.getKategoria().getIzena();
+        } else {
+            katIzena = "—";
+        }
+        lblBatEtortzeInfo.setText("Kategoria: " + katIzena);
 
         boolean irekita = "irekita".equals(egoera);
         btnEbatzi.setVisible(irekita);
@@ -174,7 +253,7 @@ public class ErreklamazioakController implements Initializable {
         if (hautatua == null) {
             return;
         }
-        boolean ok = ErreklamazioaDAO.updateEgoera(hautatua[0], egoera);
+        boolean ok = ErreklamazioaDAO.updateEgoera(String.valueOf(hautatua.getErreklamazioId()), egoera);
         if (ok) {
             kargatu();
         }

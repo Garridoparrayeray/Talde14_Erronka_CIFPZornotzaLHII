@@ -1,149 +1,204 @@
 package dao;
 
-import utils.DBConexioa;
-
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import model.EgoeraErreklamazioa;
+import model.Erreklamazioa;
+
+/**
+ * Erreklamazioen datu-baseko eragiketak kudeatzen dituen DAO klasea.
+ * @author Yeray Garrido
+ */
 public class ErreklamazioaDAO {
 
     /**
-     * Erreklamazio guztiak itzultzen ditu jabeen datuekin batera.
-     * Itzultzen den String[] bakoitzaren indizeak:
-     * [0] id_erreklamazio
-     * [1] erreklamazio_data
-     * [2] jabe_izena
-     * [3] jabe_abizena
-     * [4] telefonoa
-     * [5] emaila
-     * [6] kategoria
-     * [7] deskribapen_bilatua
-     * [8] errek_egoera
+     * Datu-basetik erreklamazio guztiak lortzen ditu objektu bidez mapatuta.
+     * @return Erreklamazioen zerrenda
      */
-    public static List<String[]> getGuztiak() {
-        List<String[]> zerrenda = new ArrayList<>();
+    public static List<Erreklamazioa> getGuztiak() {
+        List<Erreklamazioa> erreklamazioak = new ArrayList<>();
+        
+        String sql = "SELECT e.id_erreklamazio, e.erreklamazio_data, e.deskribapen_bilatua, e.errek_egoera, " +
+                     "j.nan, j.izena AS jabe_izena, j.abizena AS jabe_abizena, h.telefonoa, h.emaila, " +
+                     "k.id_kategoria, k.izena AS kategoria_izena " +
+                     "FROM ERREKLAMAZIOA e " +
+                     "LEFT JOIN HARTZAILEA h ON e.id_hartzailea = h.id_hartzailea " +
+                     "LEFT JOIN JABEA j ON h.id_hartzailea = j.id_hartzailea " +
+                     "LEFT JOIN KATEGORIA k ON e.id_kategoria = k.id_kategoria";
 
-        String sql = "SELECT r.id_erreklamazio, r.erreklamazio_data, " +
-                     "j.izena AS jabe_izena, j.abizena AS jabe_abizena, " +
-                     "h.telefonoa, h.emaila, " +
-                     "k.izena AS kategoria, r.deskribapen_bilatua, r.errek_egoera " +
-                     "FROM ERREKLAMAZIOA r " +
-                     "LEFT JOIN HARTZAILEA h  ON r.id_hartzailea = h.id_hartzailea " +
-                     "LEFT JOIN JABEA j       ON h.id_hartzailea = j.id_hartzailea " +
-                     "LEFT JOIN KATEGORIA k   ON r.id_kategoria  = k.id_kategoria " +
-                     "ORDER BY r.erreklamazio_data DESC";
-
-        try (Connection con = DBConexioa.getKonexioa();
-             PreparedStatement ps = con.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
+        try (Connection conn = utils.DBConexioa.getKonexioa();
+             PreparedStatement pstmt = conn.prepareStatement(sql);
+             ResultSet rs = pstmt.executeQuery()) {
 
             while (rs.next()) {
-                String[] fila = new String[9];
-                fila[0] = rs.getString("id_erreklamazio");
-                fila[1] = rs.getString("erreklamazio_data");
-                fila[2] = rs.getString("jabe_izena")    != null ? rs.getString("jabe_izena")    : "—";
-                fila[3] = rs.getString("jabe_abizena")  != null ? rs.getString("jabe_abizena")  : "—";
-                fila[4] = rs.getString("telefonoa")     != null ? rs.getString("telefonoa")     : "—";
-                fila[5] = rs.getString("emaila")        != null ? rs.getString("emaila")        : "—";
-                fila[6] = rs.getString("kategoria")     != null ? rs.getString("kategoria")     : "—";
-                fila[7] = rs.getString("deskribapen_bilatua");
-                fila[8] = rs.getString("errek_egoera");
-                zerrenda.add(fila);
+                String nan = rs.getString("nan");
+                if (nan == null) {
+                    nan = "";
+                }
+                
+                String jabeIzena = rs.getString("jabe_izena");
+                if (jabeIzena == null) {
+                    jabeIzena = "";
+                }
+                
+                String jabeAbizena = rs.getString("jabe_abizena");
+                if (jabeAbizena == null) {
+                    jabeAbizena = "";
+                }
+                
+                String telefonoa = rs.getString("telefonoa");
+                if (telefonoa == null) {
+                    telefonoa = "";
+                }
+                
+                String emaila = rs.getString("emaila");
+                if (emaila == null) {
+                    emaila = "";
+                }
+
+                // 1. Hartzailea objektua sortu polimorfismoa eta eraikitzaile zuzena erabiliz.
+                model.Jabea jabea = new model.Jabea(
+                    nan, 
+                    jabeIzena, 
+                    jabeAbizena, 
+                    telefonoa, 
+                    emaila
+                );
+
+                // 2. Kategoria objektua sortu eraikitzaile zuzena erabiliz
+                model.Kategoria kategoria = new model.Kategoria(
+                    rs.getInt("id_kategoria"), 
+                    rs.getString("kategoria_izena")
+                );
+
+                // 3. Erreklamazioa objektu nagusia sortu
+                Erreklamazioa erreklamazioa = new Erreklamazioa(jabea, rs.getString("deskribapen_bilatua"), rs.getDate("erreklamazio_data"));
+                erreklamazioa.setErreklamazioId(rs.getInt("id_erreklamazio"));
+                erreklamazioa.setKategoria(kategoria);
+                
+                // Egoera bihurtu eta esleitu
+                String egoeraStr = rs.getString("errek_egoera");
+                if (egoeraStr != null) {
+                    if (!egoeraStr.isEmpty()) {
+                        try {
+                            erreklamazioa.setEgoera(EgoeraErreklamazioa.valueOf(egoeraStr.toUpperCase()));
+                        } catch (IllegalArgumentException ex) {
+                            erreklamazioa.setEgoera(EgoeraErreklamazioa.IREKITA);
+                        }
+                    }
+                }
+
+                erreklamazioak.add(erreklamazioa);
             }
         } catch (SQLException e) {
-            System.err.println("ErreklamazioaDAO.getGuztiak errorea: " + e.getMessage());
+            System.err.println("Errorea ErreklamazioaDAO.getGuztiak exekutatzean: " + e.getMessage());
         }
-        return zerrenda;
+
+        return erreklamazioak;
     }
 
     /**
-     * Erreklamazino berria gordetzen du.
-     * NAN dagoeneko badago, hartzaile existentea erabiltzen du.
-     * Bestela, HARTZAILEA eta JABEA berria sortzen ditu.
-     * @return true arrakastaz gorde bada
+     * Erreklamazio baten egoera eguneratzen du datu-basean.
+     * @param id Erreklamazioaren IDa
+     * @param egoera Egoera berria
+     * @return Eguneraketa ondo joan den ala ez
      */
-    public static boolean gorde(String nan, String izena, String abizena,
-                                 String telefonoa, String emaila,
-                                 int idKategoria, String deskribapena,
-                                 int idLangile) {
-        try (Connection con = DBConexioa.getKonexioa()) {
-            con.setAutoCommit(false);
+    public static boolean updateEgoera(String id, String egoera) {
+        String sql = "UPDATE ERREKLAMAZIOA SET errek_egoera = ? WHERE id_erreklamazio = ?";
+        try (Connection con = utils.DBConexioa.getKonexioa();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, egoera);
+            ps.setInt(2, Integer.parseInt(id));
+            if (ps.executeUpdate() > 0) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (SQLException | NumberFormatException e) {
+            System.err.println("Errorea ErreklamazioaDAO.updateEgoera exekutatzean: " + e.getMessage());
+            return false;
+        }
+    }
 
-            // 1. Egiaztatu NAN badagoen
-            int idHartzailea = -1;
-            String sqlBilatu = "SELECT id_hartzailea FROM JABEA WHERE nan = ?";
-            try (PreparedStatement ps = con.prepareStatement(sqlBilatu)) {
-                ps.setString(1, nan);
-                try (ResultSet rs = ps.executeQuery()) {
+    /**
+     * Erreklamazio berri bat gordetzen du datu-basean.
+     * @return Ondo gorde den
+     */
+    public static boolean gorde(String nan, String izena, String abizena, String telefonoa, String emaila, int kategoriaId, String deskribapena, int idLangile) {
+        int idHartzailea = -1;
+
+        try (Connection con = utils.DBConexioa.getKonexioa()) {
+            
+            // 1. Egiaztatu Jabea existitzen den datu-basean bere NANaren bidez
+            String checkSql = "SELECT id_hartzailea FROM JABEA WHERE nan = ?";
+            try (PreparedStatement psCheck = con.prepareStatement(checkSql)) {
+                psCheck.setString(1, nan);
+                try (ResultSet rs = psCheck.executeQuery()) {
                     if (rs.next()) {
                         idHartzailea = rs.getInt("id_hartzailea");
                     }
                 }
             }
 
-            // 2. Pertsona berria bada, HARTZAILEA eta JABEA sortu
+            // 2. Ez bada existitzen, Hartzailea taulan eta ostean Jabea taulan erregistratu
             if (idHartzailea == -1) {
-                String sqlH = "INSERT INTO HARTZAILEA (telefonoa, emaila) VALUES (?, ?)";
-                try (PreparedStatement ps = con.prepareStatement(sqlH, Statement.RETURN_GENERATED_KEYS)) {
-                    ps.setString(1, telefonoa.isBlank() ? null : telefonoa);
-                    ps.setString(2, emaila.isBlank() ? null : emaila);
-                    ps.executeUpdate();
-                    try (ResultSet rs = ps.getGeneratedKeys()) {
-                        if (rs.next()) {
-                            idHartzailea = rs.getInt(1);
+                String insertH = "INSERT INTO HARTZAILEA (telefonoa, emaila) VALUES (?, ?)";
+                try (PreparedStatement psH = con.prepareStatement(insertH, Statement.RETURN_GENERATED_KEYS)) {
+                    psH.setString(1, telefonoa);
+                    psH.setString(2, emaila);
+                    psH.executeUpdate();
+                    
+                    try (ResultSet rsH = psH.getGeneratedKeys()) {
+                        if (rsH.next()) {
+                            idHartzailea = rsH.getInt(1);
                         }
                     }
                 }
 
-                String sqlJ = "INSERT INTO JABEA (nan, izena, abizena, id_hartzailea) VALUES (?, ?, ?, ?)";
-                try (PreparedStatement ps = con.prepareStatement(sqlJ)) {
-                    ps.setString(1, nan);
-                    ps.setString(2, izena);
-                    ps.setString(3, abizena);
-                    ps.setInt(4, idHartzailea);
-                    ps.executeUpdate();
+                if (idHartzailea != -1) {
+                    String insertJ = "INSERT INTO JABEA (id_hartzailea, nan, izena, abizena) VALUES (?, ?, ?, ?)";
+                    try (PreparedStatement psJ = con.prepareStatement(insertJ)) {
+                        psJ.setInt(1, idHartzailea);
+                        psJ.setString(2, nan);
+                        psJ.setString(3, izena);
+                        psJ.setString(4, abizena);
+                        psJ.executeUpdate();
+                    }
                 }
             }
 
-            // 3. ERREKLAMAZIOA sortu
-            String sqlE = "INSERT INTO ERREKLAMAZIOA " +
-                          "(erreklamazio_data, errek_egoera, deskribapen_bilatua, id_hartzailea, id_langile, id_kategoria) " +
-                          "VALUES (?, 'irekita', ?, ?, ?, ?)";
-            try (PreparedStatement ps = con.prepareStatement(sqlE)) {
-                ps.setDate(1, Date.valueOf(LocalDate.now()));
-                ps.setString(2, deskribapena);
-                ps.setInt(3, idHartzailea);
-                ps.setInt(4, idLangile);
-                ps.setInt(5, idKategoria);
-                ps.executeUpdate();
+            // 3. Azkenik, Erreklamazioa taulan gordetzen dugu eskuratutako hartzaile_id erabiliz
+            if (idHartzailea != -1) {
+                String insertE = "INSERT INTO ERREKLAMAZIOA (erreklamazio_data, errek_egoera, deskribapen_bilatua, id_hartzailea, id_kategoria, id_langile) VALUES (CURDATE(), 'irekita', ?, ?, ?, ?)";
+                try (PreparedStatement psE = con.prepareStatement(insertE)) {
+                    psE.setString(1, deskribapena);
+                    psE.setInt(2, idHartzailea);
+                    psE.setInt(3, kategoriaId);
+                    
+                    if (idLangile > 0) {
+                        psE.setInt(4, idLangile);
+                    } else {
+                        psE.setNull(4, java.sql.Types.INTEGER);
+                    }
+                    
+                    if (psE.executeUpdate() > 0) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+            } else {
+                return false;
             }
 
-            con.commit();
-            return true;
-
         } catch (SQLException e) {
-            System.err.println("ErreklamazioaDAO.gorde errorea: " + e.getMessage());
-            return false;
-        }
-    }
-
-    public static boolean updateEgoera(String idErreklamazio, String egoera) {
-        String sql = "UPDATE ERREKLAMAZIOA SET errek_egoera = ? WHERE id_erreklamazio = ?";
-        try (Connection con = DBConexioa.getKonexioa();
-             PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setString(1, egoera);
-            ps.setString(2, idErreklamazio);
-            ps.executeUpdate();
-            return true;
-        } catch (SQLException e) {
-            System.err.println("ErreklamazioaDAO.updateEgoera errorea: " + e.getMessage());
+            System.err.println("Errorea ErreklamazioaDAO.gorde exekutatzean: " + e.getMessage());
             return false;
         }
     }

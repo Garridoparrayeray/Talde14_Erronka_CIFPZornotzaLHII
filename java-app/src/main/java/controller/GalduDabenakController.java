@@ -12,38 +12,112 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import model.Erreklamazioa;
 
 public class GalduDabenakController implements Initializable {
 
-    @FXML private TableView<String[]>            taulaNagusia;
-    @FXML private TableColumn<String[], String>  colZbk;
-    @FXML private TableColumn<String[], String>  colData;
-    @FXML private TableColumn<String[], String>  colIzena;
-    @FXML private TableColumn<String[], String>  colAbizena;
-    @FXML private TableColumn<String[], String>  colTelefonoa;
-    @FXML private TableColumn<String[], String>  colEmaila;
-    @FXML private TableColumn<String[], String>  colKategoria;
-    @FXML private TableColumn<String[], String>  colDeskribapena;
-    @FXML private TableColumn<String[], String>  colEgoera;
+    @FXML private TableView<Erreklamazioa>            taulaNagusia;
+    @FXML private TableColumn<Erreklamazioa, String>  colZbk;
+    @FXML private TableColumn<Erreklamazioa, String>  colData;
+    @FXML private TableColumn<Erreklamazioa, String>  colIzena;
+    @FXML private TableColumn<Erreklamazioa, String>  colAbizena;
+    @FXML private TableColumn<Erreklamazioa, String>  colTelefonoa;
+    @FXML private TableColumn<Erreklamazioa, String>  colEmaila;
+    @FXML private TableColumn<Erreklamazioa, String>  colKategoria;
+    @FXML private TableColumn<Erreklamazioa, String>  colDeskribapena;
+    @FXML private TableColumn<Erreklamazioa, String>  colEgoera;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        colZbk.setCellValueFactory(        data -> new SimpleStringProperty(String.valueOf(taulaNagusia.getItems().indexOf(data.getValue()) + 1)));
-        colData.setCellValueFactory(       data -> new SimpleStringProperty(data.getValue()[1]));
-        colIzena.setCellValueFactory(      data -> new SimpleStringProperty(data.getValue()[2]));
-        colAbizena.setCellValueFactory(    data -> new SimpleStringProperty(data.getValue()[3]));
-        colTelefonoa.setCellValueFactory(  data -> new SimpleStringProperty(data.getValue()[4]));
-        colEmaila.setCellValueFactory(     data -> new SimpleStringProperty(data.getValue()[5]));
-        colKategoria.setCellValueFactory(  data -> new SimpleStringProperty(data.getValue()[6]));
-        colDeskribapena.setCellValueFactory(data -> new SimpleStringProperty(data.getValue()[7]));
-        colEgoera.setCellValueFactory(     data -> new SimpleStringProperty(data.getValue()[8]));
+        colZbk.setCellValueFactory(data -> new SimpleStringProperty(String.valueOf(taulaNagusia.getItems().indexOf(data.getValue()) + 1)));
+        
+        colData.setCellValueFactory(data -> {
+            java.util.Date date = data.getValue().getErreklamazioData();
+            if (date != null) {
+                return new SimpleStringProperty(date.toString());
+            } else {
+                return new SimpleStringProperty("—");
+            }
+        });
+        
+        colIzena.setCellValueFactory(data -> {
+            if (data.getValue().getHartzailea() != null) {
+                if (data.getValue().getHartzailea() instanceof model.Jabea) {
+                    return new SimpleStringProperty(((model.Jabea) data.getValue().getHartzailea()).getIzena());
+                } else {
+                    return new SimpleStringProperty("Erakundea");
+                }
+            } else {
+                return new SimpleStringProperty("—");
+            }
+        });
+            
+        colAbizena.setCellValueFactory(data -> {
+            if (data.getValue().getHartzailea() != null) {
+                if (data.getValue().getHartzailea() instanceof model.Jabea) {
+                    return new SimpleStringProperty(((model.Jabea) data.getValue().getHartzailea()).getAbizena());
+                } else {
+                    return new SimpleStringProperty("—");
+                }
+            } else {
+                return new SimpleStringProperty("—");
+            }
+        });
+            
+        colTelefonoa.setCellValueFactory(data -> {
+            if (data.getValue().getHartzailea() != null) {
+                if (data.getValue().getHartzailea() instanceof model.Jabea) {
+                    return new SimpleStringProperty(((model.Jabea) data.getValue().getHartzailea()).getTelefonoa());
+                } else {
+                    return new SimpleStringProperty("—");
+                }
+            } else {
+                return new SimpleStringProperty("—");
+            }
+        });
+            
+        colEmaila.setCellValueFactory(data -> {
+            if (data.getValue().getHartzailea() != null) {
+                if (data.getValue().getHartzailea() instanceof model.Jabea) {
+                    return new SimpleStringProperty(((model.Jabea) data.getValue().getHartzailea()).getEmaila());
+                } else {
+                    return new SimpleStringProperty("—");
+                }
+            } else {
+                return new SimpleStringProperty("—");
+            }
+        });
+            
+        colKategoria.setCellValueFactory(data -> {
+            if (data.getValue().getKategoria() != null) {
+                return new SimpleStringProperty(data.getValue().getKategoria().getIzena());
+            } else {
+                return new SimpleStringProperty("—");
+            }
+        });
+            
+        colDeskribapena.setCellValueFactory(data -> {
+            if (data.getValue().getDeskribapenBilatua() != null) {
+                return new SimpleStringProperty(data.getValue().getDeskribapenBilatua());
+            } else {
+                return new SimpleStringProperty("—");
+            }
+        });
+            
+        colEgoera.setCellValueFactory(data -> {
+            if (data.getValue().getEgoera() != null) {
+                return new SimpleStringProperty(data.getValue().getEgoera().toString().toLowerCase());
+            } else {
+                return new SimpleStringProperty("irekita");
+            }
+        });
 
         kargatu();
     }
 
     private void kargatu() {
-        List<String[]> datuak = ErreklamazioaDAO.getGuztiak();
-        ObservableList<String[]> lista = FXCollections.observableArrayList(datuak);
+        List<Erreklamazioa> datuak = ErreklamazioaDAO.getGuztiak();
+        ObservableList<Erreklamazioa> lista = FXCollections.observableArrayList(datuak);
         taulaNagusia.setItems(lista);
     }
 
