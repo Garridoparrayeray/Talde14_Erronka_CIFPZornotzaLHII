@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox styleClass="bg-light" stylesheets="@style.css"
+      xmlns="http://javafx.com/javafx/21"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="controller.GalduDabenakController">
+
+   <children>
+
+      <!-- Cabecera -->
+      <HBox alignment="CENTER_LEFT"
+            style="-fx-border-color: transparent transparent #E5E7EB transparent; -fx-padding: 15 30;"
+            styleClass="bg-white">
+         <children>
+            <Label styleClass="font-title" text="Galdu dabenak">
+               <font><Font size="20.0" /></font>
+            </Label>
+            <Region HBox.hgrow="ALWAYS" />
+            <Button text="Freskatu" mnemonicParsing="false"
+                    styleClass="btn-outline" onAction="#freskatu" />
+         </children>
+      </HBox>
+
+      <!-- Taula ScrollPane barruan -->
+      <ScrollPane fitToWidth="true" fitToHeight="true" VBox.vgrow="ALWAYS"
+                  style="-fx-padding: 20;">
+         <content>
+            <VBox styleClass="card" style="-fx-min-width: 900;">
+               <children>
+                  <TableView fx:id="taulaNagusia"
+                             VBox.vgrow="ALWAYS"
+                             style="-fx-pref-height: 600;">
+                     <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                     </columnResizePolicy>
+                     <columns>
+                        <TableColumn fx:id="colZbk"          text="Zbk"          minWidth="45"  maxWidth="55"  />
+                        <TableColumn fx:id="colData"          text="Data"         minWidth="90"  maxWidth="110" />
+                        <TableColumn fx:id="colIzena"         text="Izena"        minWidth="90"  />
+                        <TableColumn fx:id="colAbizena"       text="Abizena"      minWidth="110" />
+                        <TableColumn fx:id="colTelefonoa"     text="Telefonoa"    minWidth="100" maxWidth="130" />
+                        <TableColumn fx:id="colEmaila"        text="E-maila"      minWidth="140" />
+                        <TableColumn fx:id="colKategoria"     text="Kategoria"    minWidth="110" maxWidth="160" />
+                        <TableColumn fx:id="colDeskribapena"  text="Deskribapena" minWidth="200" />
+                        <TableColumn fx:id="colEgoera"        text="Egoera"       minWidth="90"  maxWidth="120" />
+                     </columns>
+                  </TableView>
+               </children>
+               <padding>
+                  <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />
+               </padding>
+            </VBox>
+         </content>
+      </ScrollPane>
+
+   </children>
+</VBox>

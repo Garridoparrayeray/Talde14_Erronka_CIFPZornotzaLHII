@@ -50,6 +50,7 @@
                   <Button fx:id="btnErregistroa"     onAction="#loadErregistroa"    maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="nav-item" text="Erregistroa" />
                   <Button fx:id="btnErreklamazioak"  onAction="#loadErreklamazioak" maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="nav-item" text="Erreklamazioak" />
                   <Button fx:id="btnEmanaldia"       onAction="#loadEmanaldia"      maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="nav-item" text="Emanaldia" />
+                  <Button fx:id="btnGalduDabenak"   onAction="#loadGalduDabenak"   maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="nav-item" text="Galdu dabenak" />
                </children>
             </VBox>
 
