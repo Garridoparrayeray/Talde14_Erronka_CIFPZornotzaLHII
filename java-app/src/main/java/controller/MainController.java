@@ -27,6 +27,7 @@ public class MainController implements Initializable {
     @FXML private Button btnErregistroa;
     @FXML private Button btnErreklamazioak;
     @FXML private Button btnEmanaldia;
+    @FXML private Button btnGalduDabenak;
 
     @FXML private Label  lblLangileIzena;
     @FXML private Label  lblLangileRola;
@@ -37,7 +38,7 @@ public class MainController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        navBotoiak = List.of(btnPanela, btnInbentarioa, btnErregistroa, btnErreklamazioak, btnEmanaldia);
+        navBotoiak = List.of(btnPanela, btnInbentarioa, btnErregistroa, btnErreklamazioak, btnEmanaldia, btnGalduDabenak);
 
         Langilea l = Sesio.getLangilea();
         if (l != null) {
@@ -66,6 +67,7 @@ public class MainController implements Initializable {
     @FXML public void loadErregistroa()    { setAktibo(btnErregistroa);    kargatu("/view/Erregistroa.fxml"); }
     @FXML public void loadErreklamazioak() { setAktibo(btnErreklamazioak); kargatu("/view/Erreklamazioak.fxml"); }
     @FXML public void loadEmanaldia()      { setAktibo(btnEmanaldia);      kargatu("/view/Emanaldia.fxml"); }
+    @FXML public void loadGalduDabenak()   { setAktibo(btnGalduDabenak);   kargatu("/view/GalduDabenak.fxml"); }
 
     @FXML
     public void irAAdmin() {

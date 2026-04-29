@@ -354,7 +354,11 @@
 }
 
 .text-success {
-    -fx-text-fill: #059669; /* Berde indartsua portzentajearentzat */
+    -fx-text-fill: #059669;
+}
+
+.text-danger {
+    -fx-text-fill: #DC2626;
 }
 /* =========================================================================
  * 12. CHECKBOX & RADIO BUTTONS (Aukera-botoiak)

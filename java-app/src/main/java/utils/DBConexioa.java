@@ -1,8 +1,10 @@
 package utils;
 
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Properties;
 
 public class DBConexioa {
 
@@ -11,20 +13,29 @@ public class DBConexioa {
     private static final String PASS;
 
     static {
+        // 1. Lehentasuna: ingurune-aldagaiak (Docker / produkzioa)
+        // 2. Bigarren aukera: application.properties (.env-tik eratorria, garapen lokala)
+        Properties props = new Properties();
+        try (InputStream is = DBConexioa.class.getResourceAsStream("/application.properties")) {
+            if (is != null) {
+                props.load(is);
+            }
+        } catch (Exception ignored) {}
+
         if (System.getenv("DB_URL") != null) {
             URL = System.getenv("DB_URL");
         } else {
-            URL = "jdbc:mariadb://localhost:3306/erronka_galduak";
+            URL = props.getProperty("DB_URL", "jdbc:mariadb://localhost:3306/erronka_galduak");
         }
         if (System.getenv("DB_USER") != null) {
             USER = System.getenv("DB_USER");
         } else {
-            USER = "bermeo_udaltzain";
+            USER = props.getProperty("DB_USER", "root");
         }
         if (System.getenv("DB_PASS") != null) {
             PASS = System.getenv("DB_PASS");
         } else {
-            PASS = "udaltzainpw";
+            PASS = props.getProperty("DB_PASS", "");
         }
     }
 
