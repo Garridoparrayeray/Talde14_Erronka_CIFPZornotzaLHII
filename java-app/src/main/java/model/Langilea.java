@@ -9,6 +9,7 @@ public class Langilea {
     private String abizena;
     private String erabiltzailea;
     private String pasahitzaHash;
+    private String rola;
 
     public Langilea(int langileId, String izena, String abizena, String erabiltzailea, String pasahitza) {
         this.langileId = langileId;
@@ -16,6 +17,7 @@ public class Langilea {
         this.abizena = abizena;
         this.erabiltzailea = erabiltzailea;
         this.pasahitzaHash = pasahitza;
+        this.rola = "";
     }
 
     public boolean erregistratuArtikulua(Artikulua a) {
@@ -39,6 +41,8 @@ public class Langilea {
     public String getIzena() { return izena; }
     public String getAbizena() { return abizena; }
     public String getErabiltzailea() { return erabiltzailea; }
+    public String getRola() { return rola; }
+    public void setRola(String rola) { this.rola = rola; }
 
     @Override
     public String toString() {

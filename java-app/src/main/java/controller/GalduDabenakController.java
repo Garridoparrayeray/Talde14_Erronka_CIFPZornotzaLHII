@@ -1,13 +1,12 @@
 package controller;
 
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.ResourceBundle;
 
 import dao.ErreklamazioaDAO;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TableColumn;
@@ -16,109 +15,64 @@ import model.Erreklamazioa;
 
 public class GalduDabenakController implements Initializable {
 
-    @FXML private TableView<Erreklamazioa>            taulaNagusia;
-    @FXML private TableColumn<Erreklamazioa, String>  colZbk;
-    @FXML private TableColumn<Erreklamazioa, String>  colData;
-    @FXML private TableColumn<Erreklamazioa, String>  colIzena;
-    @FXML private TableColumn<Erreklamazioa, String>  colAbizena;
-    @FXML private TableColumn<Erreklamazioa, String>  colTelefonoa;
-    @FXML private TableColumn<Erreklamazioa, String>  colEmaila;
-    @FXML private TableColumn<Erreklamazioa, String>  colKategoria;
-    @FXML private TableColumn<Erreklamazioa, String>  colDeskribapena;
-    @FXML private TableColumn<Erreklamazioa, String>  colEgoera;
+    private static final SimpleDateFormat SDF = new SimpleDateFormat("dd/MM/yyyy");
+
+    @FXML private TableView<String[]>           taula;
+    @FXML private TableColumn<String[], String> colZbk;
+    @FXML private TableColumn<String[], String> colData;
+    @FXML private TableColumn<String[], String> colIzena;
+    @FXML private TableColumn<String[], String> colAbizena;
+    @FXML private TableColumn<String[], String> colTelefonoa;
+    @FXML private TableColumn<String[], String> colEmaila;
+    @FXML private TableColumn<String[], String> colKategoria;
+    @FXML private TableColumn<String[], String> colDeskribapena;
+    @FXML private TableColumn<String[], String> colEgoera;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        colZbk.setCellValueFactory(data -> new SimpleStringProperty(String.valueOf(taulaNagusia.getItems().indexOf(data.getValue()) + 1)));
-        
-        colData.setCellValueFactory(data -> {
-            java.util.Date date = data.getValue().getErreklamazioData();
-            if (date != null) {
-                return new SimpleStringProperty(date.toString());
-            } else {
-                return new SimpleStringProperty("—");
-            }
-        });
-        
-        colIzena.setCellValueFactory(data -> {
-            if (data.getValue().getHartzailea() != null) {
-                if (data.getValue().getHartzailea() instanceof model.Jabea) {
-                    return new SimpleStringProperty(((model.Jabea) data.getValue().getHartzailea()).getIzena());
-                } else {
-                    return new SimpleStringProperty("Erakundea");
-                }
-            } else {
-                return new SimpleStringProperty("—");
-            }
-        });
-            
-        colAbizena.setCellValueFactory(data -> {
-            if (data.getValue().getHartzailea() != null) {
-                if (data.getValue().getHartzailea() instanceof model.Jabea) {
-                    return new SimpleStringProperty(((model.Jabea) data.getValue().getHartzailea()).getAbizena());
-                } else {
-                    return new SimpleStringProperty("—");
-                }
-            } else {
-                return new SimpleStringProperty("—");
-            }
-        });
-            
-        colTelefonoa.setCellValueFactory(data -> {
-            if (data.getValue().getHartzailea() != null) {
-                if (data.getValue().getHartzailea() instanceof model.Jabea) {
-                    return new SimpleStringProperty(((model.Jabea) data.getValue().getHartzailea()).getTelefonoa());
-                } else {
-                    return new SimpleStringProperty("—");
-                }
-            } else {
-                return new SimpleStringProperty("—");
-            }
-        });
-            
-        colEmaila.setCellValueFactory(data -> {
-            if (data.getValue().getHartzailea() != null) {
-                if (data.getValue().getHartzailea() instanceof model.Jabea) {
-                    return new SimpleStringProperty(((model.Jabea) data.getValue().getHartzailea()).getEmaila());
-                } else {
-                    return new SimpleStringProperty("—");
-                }
-            } else {
-                return new SimpleStringProperty("—");
-            }
-        });
-            
-        colKategoria.setCellValueFactory(data -> {
-            if (data.getValue().getKategoria() != null) {
-                return new SimpleStringProperty(data.getValue().getKategoria().getIzena());
-            } else {
-                return new SimpleStringProperty("—");
-            }
-        });
-            
-        colDeskribapena.setCellValueFactory(data -> {
-            if (data.getValue().getDeskribapenBilatua() != null) {
-                return new SimpleStringProperty(data.getValue().getDeskribapenBilatua());
-            } else {
-                return new SimpleStringProperty("—");
-            }
-        });
-            
-        colEgoera.setCellValueFactory(data -> {
-            if (data.getValue().getEgoera() != null) {
-                return new SimpleStringProperty(data.getValue().getEgoera().toString().toLowerCase());
-            } else {
-                return new SimpleStringProperty("irekita");
-            }
-        });
+        colZbk.setCellValueFactory(c         -> new SimpleStringProperty(c.getValue()[0]));
+        colData.setCellValueFactory(c        -> new SimpleStringProperty(c.getValue()[1]));
+        colIzena.setCellValueFactory(c       -> new SimpleStringProperty(c.getValue()[2]));
+        colAbizena.setCellValueFactory(c     -> new SimpleStringProperty(c.getValue()[3]));
+        colTelefonoa.setCellValueFactory(c   -> new SimpleStringProperty(c.getValue()[4]));
+        colEmaila.setCellValueFactory(c      -> new SimpleStringProperty(c.getValue()[5]));
+        colKategoria.setCellValueFactory(c   -> new SimpleStringProperty(c.getValue()[6]));
+        colDeskribapena.setCellValueFactory(c-> new SimpleStringProperty(c.getValue()[7]));
+        colEgoera.setCellValueFactory(c      -> new SimpleStringProperty(c.getValue()[8]));
 
         kargatu();
     }
 
+    private String[][] lortuDatuakDimentsioBitan() {
+        List<Erreklamazioa> lista = ErreklamazioaDAO.getGuztiak();
+        String[][] datuak = new String[lista.size()][9];
+
+        for (int i = 0; i < lista.size(); i++) {
+            Erreklamazioa e = lista.get(i);
+            String data = "—";
+            if (e.getErreklamazioData() != null) {
+                data = SDF.format(e.getErreklamazioData());
+            }
+            datuak[i][0] = String.valueOf(e.getErreklamazioId());
+            datuak[i][1] = data;
+            datuak[i][2] = e.getJabeIzena();
+            datuak[i][3] = e.getJabeAbizena();
+            datuak[i][4] = e.getJabeTelefonoa();
+            datuak[i][5] = e.getJabeEmaila();
+            datuak[i][6] = e.getKategoriaIzena();
+            datuak[i][7] = e.getDeskribapenBilatua() != null ? e.getDeskribapenBilatua() : "—";
+            datuak[i][8] = e.getEgoeraTestua();
+        }
+
+        return datuak;
+    }
+
     private void kargatu() {
-        List<Erreklamazioa> datuak = ErreklamazioaDAO.getGuztiak();
-        ObservableList<Erreklamazioa> lista = FXCollections.observableArrayList(datuak);
-        taulaNagusia.setItems(lista);
+        String[][] datuak = lortuDatuakDimentsioBitan();
+        taula.getItems().clear();
+        for (String[] fila : datuak) {
+            taula.getItems().add(fila);
+        }
     }
 
     @FXML

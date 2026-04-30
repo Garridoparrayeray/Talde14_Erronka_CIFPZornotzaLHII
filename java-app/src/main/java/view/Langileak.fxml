@@ -12,7 +12,8 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox styleClass="bg-light" stylesheets="@style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+<VBox styleClass="bg-light" stylesheets="@style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="controller.LangileakController">
    <children>
 
       <HBox alignment="CENTER_LEFT" style="-fx-border-color: transparent transparent #E5E7EB transparent; -fx-padding: 15 30;" styleClass="bg-white">
@@ -32,23 +33,20 @@
                   
                   <HBox alignment="CENTER_LEFT" spacing="15.0">
                      <children>
-                        <TextField prefWidth="350.0" promptText="Bilatu langilea..." styleClass="form-control" HBox.hgrow="ALWAYS" />
-                        <ComboBox prefWidth="180.0" promptText="Rol guztiak" styleClass="form-select" />
-                        
-                        <Button mnemonicParsing="false" styleClass="btn-outline" text="CSV inportatu" />
-                        <Button mnemonicParsing="false" styleClass="btn-primary" text="+ Langilea gehitu" />
+                        <TextField fx:id="txtBilaketa" prefWidth="350.0" promptText="Bilatu langilea..." styleClass="form-control" HBox.hgrow="ALWAYS" onAction="#bilatu" />
+                        <ComboBox fx:id="cbRola" prefWidth="180.0" promptText="Rol guztiak" styleClass="form-select" onAction="#bilatu" />
+                        <Button mnemonicParsing="false" styleClass="btn-primary" text="+ Langilea gehitu" onAction="#langileaBerria" />
                      </children>
                   </HBox>
 
-                  <TableView styleClass="table-view" VBox.vgrow="ALWAYS">
+                  <TableView fx:id="taula" styleClass="table-view" VBox.vgrow="ALWAYS">
                     <columns>
-                      <TableColumn prefWidth="200.0" text="LANGILEA" />
-                      <TableColumn prefWidth="150.0" text="ERABILTZAILEA" />
-                      <TableColumn prefWidth="150.0" text="SAILA" />
-                      <TableColumn prefWidth="120.0" text="ROLA" />
-                      <TableColumn prefWidth="100.0" text="EGOERA" />
-                      <TableColumn prefWidth="150.0" text="AZKEN SARRERA" />
-                      <TableColumn prefWidth="100.0" text="EKINTZAK" />
+                      <TableColumn fx:id="colLangilea"      prefWidth="200.0" text="LANGILEA" />
+                      <TableColumn fx:id="colErabiltzailea" prefWidth="150.0" text="ERABILTZAILEA" />
+                      <TableColumn fx:id="colSaila"         prefWidth="150.0" text="SAILA" />
+                      <TableColumn fx:id="colRola"          prefWidth="120.0" text="ROLA" />
+                      <TableColumn fx:id="colEgoera"        prefWidth="100.0" text="EGOERA" />
+                      <TableColumn fx:id="colAzkenSarrera"  prefWidth="150.0" text="AZKEN SARRERA" />
                     </columns>
                      <columnResizePolicy>
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />

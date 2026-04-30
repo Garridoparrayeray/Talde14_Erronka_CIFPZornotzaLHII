@@ -69,6 +69,55 @@ public class Erreklamazioa {
         this.egoera = egoera;
     }
 
+    // Helpers para la vista (evitan instanceof en el controller)
+    public String getJabeIzena() {
+        if (hartzailea instanceof Jabea) {
+            return ((Jabea) hartzailea).getIzena();
+        } else {
+            return "—";
+        }
+    }
+
+    public String getJabeAbizena() {
+        if (hartzailea instanceof Jabea) {
+            return ((Jabea) hartzailea).getAbizena();
+        } else {
+            return "—";
+        }
+    }
+
+    public String getJabeTelefonoa() {
+        if (hartzailea instanceof Jabea) {
+            return ((Jabea) hartzailea).getTelefonoa();
+        } else {
+            return "—";
+        }
+    }
+
+    public String getJabeEmaila() {
+        if (hartzailea instanceof Jabea) {
+            return ((Jabea) hartzailea).getEmaila();
+        } else {
+            return "—";
+        }
+    }
+
+    public String getKategoriaIzena() {
+        if (kategoria != null) {
+            return kategoria.getIzena();
+        } else {
+            return "—";
+        }
+    }
+
+    public String getEgoeraTestua() {
+        if (egoera != null) {
+            return egoera.toString().toLowerCase();
+        } else {
+            return "irekita";
+        }
+    }
+
     // Getters
     public int getErreklamazioId() { return erreklamazioId; }
     public void setErreklamazioId(int erreklamazioId) { this.erreklamazioId = erreklamazioId; }

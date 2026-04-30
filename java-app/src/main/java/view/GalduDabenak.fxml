@@ -38,7 +38,7 @@
          <content>
             <VBox styleClass="card" style="-fx-min-width: 900;">
                <children>
-                  <TableView fx:id="taulaNagusia"
+                  <TableView fx:id="taula"
                              VBox.vgrow="ALWAYS"
                              style="-fx-pref-height: 600;">
                      <columnResizePolicy>

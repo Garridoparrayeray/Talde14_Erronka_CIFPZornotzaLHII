@@ -9,8 +9,84 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
+/**
+ * Langileen datu-baseko eragiketak kudeatzen dituen DAO klasea.
+ * @author Yeray Garrido
+ * Langileak datu-basetik lortzeko, langile berriak gehitzeko eta autentifikatzeko metodoak ditu.
+ */
 public class LangileaDAO {
+
+    /**
+     * Langile guztiak itzultzen ditu datu-basetik (taulan erakusteko).
+     * @return String[][] matrizea: [langilea, erabiltzailea, saila, rola, egoera]
+     */
+    public static List<String[]> getGuztiak() {
+        List<String[]> zerrenda = new ArrayList<String[]>();
+        String sql = "SELECT l.izena, l.abizena, l.erabiltzailea, r.deskribapena AS rola " +
+                     "FROM LANGILEA l JOIN ROLA r ON l.id_rola = r.id_rola " +
+                     "ORDER BY l.id_langile";
+        try (Connection con = DBConexioa.getKonexioa();
+             PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                zerrenda.add(new String[]{
+                    rs.getString("izena") + " " + rs.getString("abizena"),
+                    rs.getString("erabiltzailea"),
+                    "—",
+                    rs.getString("rola"),
+                    "Aktibo",
+                    "—"
+                });
+            }
+        } catch (SQLException e) {
+            System.err.println("LangileaDAO.getGuztiak: " + e.getMessage());
+        }
+        return zerrenda;
+    }
+
+    /**
+     * Rol guztiak itzultzen ditu [id, deskribapena] gisa.
+     */
+    public static ArrayList<String[]> getRolak() {
+        ArrayList<String[]> zerrenda = new ArrayList<>();
+        String sql = "SELECT id_rola, deskribapena FROM ROLA ORDER BY id_rola";
+        try (Connection con = DBConexioa.getKonexioa();
+             PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                zerrenda.add(new String[]{
+                    rs.getString("id_rola"),
+                    rs.getString("deskribapena")
+                });
+            }
+        } catch (SQLException e) {
+            System.err.println("LangileaDAO.getRolak: " + e.getMessage());
+        }
+        return zerrenda;
+    }
+
+    /**
+     * Langile berria gordetzen du datu-basean pasahitza BCrypt bidez zifratuta.
+     */
+    public static boolean gehitu(String izena, String abizena, String erabiltzailea, String pasahitza, int idRola) {
+        String hash = BCrypt.hashpw(pasahitza, BCrypt.gensalt(10));
+        String sql = "INSERT INTO LANGILEA (izena, abizena, erabiltzailea, pasahitza_hash, id_rola) VALUES (?, ?, ?, ?, ?)";
+        try (Connection con = DBConexioa.getKonexioa();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, izena);
+            ps.setString(2, abizena);
+            ps.setString(3, erabiltzailea);
+            ps.setString(4, hash);
+            ps.setInt(5, idRola);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.err.println("LangileaDAO.gehitu: " + e.getMessage());
+            return false;
+        }
+    }
 
     /**
      * Erabiltzailea eta pasahitza egiaztatzen du.
@@ -30,7 +106,11 @@ public class LangileaDAO {
             if (rs.next()) {
                 String hashGordea = rs.getString("pasahitza_hash");
 
-                if (!BCrypt.checkpw(pasahitza, hashGordea)) return null;
+                // Pasahitza egiaztatu BCrypt-ekin
+                boolean pasahitzaZuzena = BCrypt.checkpw(pasahitza, hashGordea);
+                if (!pasahitzaZuzena) {
+                    return null;
+                }
 
                 int id     = rs.getInt("id_langile");
                 String iz  = rs.getString("izena");
@@ -38,11 +118,16 @@ public class LangileaDAO {
                 String er  = rs.getString("erabiltzailea");
                 String rol = rs.getString("rola");
 
+                // Rola egiaztatu eta langile mota egokia itzuli
+                Langilea langilea;
                 if ("Administratzailea".equals(rol)) {
-                    return new Administratzailea(id, iz, ab, er, hashGordea);
+                    langilea = new Administratzailea(id, iz, ab, er, hashGordea);
                 } else {
-                    return new Langilea(id, iz, ab, er, hashGordea);
+                    langilea = new Langilea(id, iz, ab, er, hashGordea);
                 }
+                // DB-ko rola objektuan gorde (ez hardcodeatu kontroladorean)
+                langilea.setRola(rol);
+                return langilea;
             }
         } catch (SQLException e) {
             System.err.println("LangileaDAO.login errorea: " + e.getMessage());

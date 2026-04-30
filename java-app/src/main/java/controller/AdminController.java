@@ -1,7 +1,7 @@
 package controller;
 
 import java.net.URL;
-import java.util.List;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 import javafx.fxml.FXML;
@@ -27,16 +27,21 @@ public class AdminController implements Initializable {
     @FXML private Label lblLangileRola;
     @FXML private Label lblInitialak;
 
-    private List<Button> navBotoiak;
+    private ArrayList<Button> navBotoiak;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        navBotoiak = List.of(btnAdminPanela, btnLangileak, btnKategoriak, btnKokalekuak, btnAuditoria);
+        navBotoiak = new ArrayList<Button>();
+        navBotoiak.add(btnAdminPanela);
+        navBotoiak.add(btnLangileak);
+        navBotoiak.add(btnKategoriak);
+        navBotoiak.add(btnKokalekuak);
+        navBotoiak.add(btnAuditoria);
 
         Langilea l = Sesio.getLangilea();
         if (l != null) {
             lblLangileIzena.setText(l.getIzena() + " " + l.getAbizena());
-            lblLangileRola.setText("Administratzailea");
+            lblLangileRola.setText(l.getRola());
             
             String ini = "";
             if (l.getIzena() != null && !l.getIzena().isEmpty()) {
@@ -73,7 +78,7 @@ public class AdminController implements Initializable {
     // ---- helpers ----
 
     private void setAktibo(Button aktibo) {
-        for (Button b : navBotoiak) {
+        for (Button b : navBotoiak) {  // botoi guztiak berrezarri
             b.getStyleClass().removeAll("nav-item-active", "nav-item");
             b.getStyleClass().add("nav-item");
         }

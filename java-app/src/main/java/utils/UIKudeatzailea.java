@@ -5,6 +5,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
@@ -35,7 +36,24 @@ public class UIKudeatzailea {
      */
     public static void kargatuPanela(StackPane contentArea, String fxmlBidea) {
         try {
+            // Aurreko panelaren size-binding askatu
+            for (Node child : contentArea.getChildren()) {
+                if (child instanceof Region) {
+                    ((Region) child).prefWidthProperty().unbind();
+                    ((Region) child).prefHeightProperty().unbind();
+                }
+            }
+
             Node node = FXMLLoader.load(UIKudeatzailea.class.getResource(fxmlBidea));
+
+            // Panel berria beti contentArea-ren tamaina bete dezan lotu
+            if (node instanceof Region) {
+                Region r = (Region) node;
+                StackPane.setAlignment(r, javafx.geometry.Pos.TOP_LEFT);
+                r.prefWidthProperty().bind(contentArea.widthProperty());
+                r.prefHeightProperty().bind(contentArea.heightProperty());
+            }
+
             contentArea.getChildren().setAll(node);
         } catch (Exception e) {
             erakutsiErrorea("Errorea bista kargatzean", "Ezin izan da kargatu: " + fxmlBidea + "\n\nArrazoia: " + e.getMessage());
@@ -52,9 +70,17 @@ public class UIKudeatzailea {
         try {
             Parent root = FXMLLoader.load(UIKudeatzailea.class.getResource(fxmlBidea));
             Stage stage = (Stage) egungoNodoa.getScene().getWindow();
-            stage.setScene(new Scene(root));
-            
-            if (maximizatu) {
+
+            // Uneko dimentsioak gorde — Scene berria sortzean leihoa ez jauzi dadin
+            boolean zenMaximizatua = stage.isMaximized();
+            double w = stage.getScene().getWidth();
+            double h = stage.getScene().getHeight();
+
+            // Maximizazioa kendu Scene aldatu aurretik (Windows-en beharrezkoa)
+            stage.setMaximized(false);
+            stage.setScene(new Scene(root, w, h));
+
+            if (maximizatu || zenMaximizatua) {
                 stage.setMaximized(true);
             }
         } catch (Exception e) {

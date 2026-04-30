@@ -14,7 +14,9 @@ public class Main extends Application {
         Parent root = loader.load();
 
         primaryStage.setTitle("Bermeoko Udala - Galdutakoak");
-        primaryStage.setScene(new Scene(root));
+        primaryStage.setMinWidth(900);
+        primaryStage.setMinHeight(600);
+        primaryStage.setScene(new Scene(root, 1100, 700));
         primaryStage.show();
     }
 

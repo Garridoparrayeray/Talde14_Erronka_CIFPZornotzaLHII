@@ -1,7 +1,7 @@
 package controller;
 
 import java.net.URL;
-import java.util.List;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 import javafx.fxml.FXML;
@@ -34,7 +34,7 @@ public class MainController implements Initializable {
     @FXML private Label  lblInitialak;
     @FXML private VBox   boxAdminSwitch;
 
-    private List<Button> navBotoiak;
+    private ArrayList<Button> navBotoiak;
 
     /**
      * Kontroladorea hasieratzen du. Langilearen datuak kargatzen ditu eta hasierako panela ezartzen du.
@@ -43,16 +43,18 @@ public class MainController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        navBotoiak = List.of(btnPanela, btnInbentarioa, btnErregistroa, btnErreklamazioak, btnEmanaldia, btnGalduDabenak);
+        navBotoiak = new ArrayList<Button>();
+        navBotoiak.add(btnPanela);
+        navBotoiak.add(btnInbentarioa);
+        navBotoiak.add(btnErregistroa);
+        navBotoiak.add(btnErreklamazioak);
+        navBotoiak.add(btnEmanaldia);
+        navBotoiak.add(btnGalduDabenak);
 
         Langilea l = Sesio.getLangilea();
         if (l != null) {
             lblLangileIzena.setText(l.getIzena() + " " + l.getAbizena());
-            if (Sesio.isAdmin()) {
-                lblLangileRola.setText("Administratzailea");
-            } else {
-                lblLangileRola.setText("Udaltzaingoa");
-            }
+            lblLangileRola.setText(l.getRola());
             
             String ini = "";
             if (l.getIzena() != null && !l.getIzena().isEmpty()) {
@@ -126,7 +128,7 @@ public class MainController implements Initializable {
      * @param aktibo Aktibatu beharreko botoia
      */
     private void setAktibo(Button aktibo) {
-        for (Button b : navBotoiak) {
+        for (Button b : navBotoiak) {  // botoi guztiak berrezarri
             b.getStyleClass().removeAll("nav-item-active", "nav-item");
             b.getStyleClass().add("nav-item");
         }

@@ -102,14 +102,13 @@
                         <!-- Bat-etortze posibleak (scroll) -->
                         <ScrollPane VBox.vgrow="ALWAYS" fitToWidth="true">
                            <content>
-                              <VBox spacing="10.0">
+                              <VBox spacing="8.0">
                                  <children>
                                     <Label style="-fx-font-size: 14px;" styleClass="font-bold, text-dark"
                                            text="Bat-etortze posibleak">
                                        <VBox.margin><Insets bottom="2.0" /></VBox.margin>
                                     </Label>
-                                    <Label fx:id="lblBatEtortzeInfo" styleClass="text-muted"
-                                           text="Hautatu erreklamazino bat ikusteko." />
+                                    <VBox fx:id="vboxBateragarriak" spacing="6.0" />
                                  </children>
                               </VBox>
                            </content>
