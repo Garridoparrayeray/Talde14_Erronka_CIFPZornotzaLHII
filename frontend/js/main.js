@@ -199,3 +199,42 @@ document.addEventListener('DOMContentLoaded', () => {
       });
   }
 });
+// ==========================================================================
+// MODO OSCURO (DARK MODE)
+// ==========================================================================
+function initTheme() {
+  const themeToggle = document.getElementById('themeToggle');
+  const moonIcon = document.getElementById('moonIcon');
+  const sunIcon = document.getElementById('sunIcon');
+  
+  const isDark = localStorage.getItem('appTheme') === 'dark';
+  
+  if (isDark) {
+    document.body.classList.add('dark-theme');
+    if (moonIcon && sunIcon) {
+      moonIcon.style.display = 'none';
+      sunIcon.style.display = 'block';
+    }
+  }
+
+  if (themeToggle) {
+    themeToggle.addEventListener('click', () => {
+      document.body.classList.toggle('dark-theme');
+      
+      const currentTheme = document.body.classList.contains('dark-theme') ? 'dark' : 'light';
+      localStorage.setItem('appTheme', currentTheme);
+      
+      if (currentTheme === 'dark') {
+        moonIcon.style.display = 'none';
+        sunIcon.style.display = 'block';
+      } else {
+        moonIcon.style.display = 'block';
+        sunIcon.style.display = 'none';
+      }
+    });
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  initTheme();
+});

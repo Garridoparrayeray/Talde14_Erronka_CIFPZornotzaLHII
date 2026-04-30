@@ -984,7 +984,7 @@ textarea.form-control {
   gap: 8px;
   background: var(--white);
   color: var(--blue-600);
-  font-family: var(--font-body);
+  font-family: var(--font-body);  
   font-size: 14px;
   font-weight: 600;
   padding: 12px 28px;
@@ -1004,7 +1004,7 @@ textarea.form-control {
    6. FOOTER (COMÚN)
    ========================================================================== */
 footer {
-  background: var(--gray-900);
+  background: #12131A;
   color: rgba(255,255,255,.6);
   padding: 64px 32px 32px;
 }
@@ -1203,4 +1203,70 @@ footer {
 .mobile-nav a:hover, .mobile-nav a.active {
   background: var(--blue-50);
   color: var(--blue-600);
+}
+/* ==========================================================================
+   8. MODO OSCURO (DARK THEME)
+   ========================================================================== */
+.theme-toggle {
+  background: none;
+  border: none;
+  color: var(--gray-700);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  border-radius: 50%;
+  transition: background 0.2s, color 0.2s;
+  margin-right: 10px;
+}
+.theme-toggle:hover {
+  background: var(--gray-100);
+  color: var(--blue-600);
+}
+
+/* Variables de color para el modo oscuro */
+body.dark-theme {
+  --blue-900: #E8EDFB;
+  --blue-800: #7B96F0;
+  --blue-700: #5274E7;
+  --blue-600: #3B5BDB;
+  --blue-500: #2850C8;
+  --blue-400: #1A3A8F;
+  --blue-100: #1A2235;
+  --blue-50:  #121826;
+  --gray-900: #F6F7FA;
+  --gray-700: #B8BBCA;
+  --gray-500: #8E94A8;
+  --gray-300: #3F4458;
+  --gray-100: #222635;
+  --gray-50:  #181B26;
+  --white:    #0E1117;
+}
+
+body.dark-theme .navbar {
+  background: rgba(14, 17, 23, 0.88);
+}
+body.dark-theme .navbar.scrolled {
+  background: rgba(14, 17, 23, 0.97);
+}
+body.dark-theme .hero {
+  background: linear-gradient(160deg, var(--blue-50) 0%, var(--white) 55%);
+}
+body.dark-theme .mockup-card,
+body.dark-theme .step-card,
+body.dark-theme .cat-card,
+body.dark-theme .mobile-nav {
+  background: var(--gray-50);
+  border-color: var(--gray-100);
+}
+body.dark-theme .form-control {
+  background: var(--white);
+  color: var(--gray-900);
+}
+body.dark-theme .theme-toggle {
+  color: var(--gray-900);
+}
+body.dark-theme .theme-toggle:hover {
+  background: var(--gray-100);
 }

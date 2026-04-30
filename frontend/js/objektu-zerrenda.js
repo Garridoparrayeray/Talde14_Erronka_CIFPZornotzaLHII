@@ -1,3 +1,6 @@
+// ==========================================================================
+// 1. DICCIONARIO DE TRADUCCIONES (PÁGINA CATÁLOGO)
+// ==========================================================================
 const dictCatalog = {
   "EU": {
     "nav_back": "Itzuli hasierara",
@@ -10,7 +13,25 @@ const dictCatalog = {
     "cat_no_res": "Ez da aurkitu emaitzarik bilaketa honekin. / No se han encontrado resultados.",
     "cat_load_more": "Gehiago ikusi / Ver más",
     "btn_claim_card": "Mezu bat bidali",
-    "foot_desc": "Bermeoko Udaleko galdu eta aurkituen zerbitzu ofiziala. Herritarrei zerbitzuan, gardentasunez eta eraginkortasunez.", "foot_col1": "Zerbitzuak", "foot_link_inv": "Inbentarioa bilatu", "foot_link_claim": "Erreklamazioa hasi", "foot_link_my": "Nire erreklamazioak", "foot_link_not": "Jakinarazpenak", "foot_link_faq": "Galdera ohikoak", "foot_col2": "Udala", "foot_link_town": "Bermeoko Udala", "foot_link_serv": "Zerbitzu guztiak", "foot_link_board": "Iragarki-taula", "foot_link_press": "Prentsa-kabineta", "foot_link_contact": "Contacto", "foot_col3": "Legala", "foot_link_priv": "Pribatutasun-politika", "foot_link_terms": "Erabileraren baldintzak", "foot_link_cook": "Cookie politika", "foot_link_acc": "Irisgarritasuna", "foot_legal_text": "v1.0 · © 2026 Bermeoko Udala · Eskubide guztiak erreserbatuta"
+    "foot_desc": "Bermeoko Udaleko galdu eta aurkituen zerbitzu ofiziala. Herritarrei zerbitzuan, gardentasunez eta eraginkortasunez.", 
+    "foot_col1": "Zerbitzuak", 
+    "foot_link_inv": "Inbentarioa bilatu", 
+    "foot_link_claim": "Erreklamazioa hasi", 
+    "foot_link_my": "Nire erreklamazioak", 
+    "foot_link_not": "Jakinarazpenak", 
+    "foot_link_faq": "Galdera ohikoak", 
+    "foot_col2": "Udala", 
+    "foot_link_town": "Bermeoko Udala", 
+    "foot_link_serv": "Zerbitzu guztiak", 
+    "foot_link_board": "Iragarki-taula", 
+    "foot_link_press": "Prentsa-kabineta", 
+    "foot_link_contact": "Kontaktua", 
+    "foot_col3": "Legala", 
+    "foot_link_priv": "Pribatutasun-politika", 
+    "foot_link_terms": "Erabileraren baldintzak", 
+    "foot_link_cook": "Cookie politika", 
+    "foot_link_acc": "Irisgarritasuna", 
+    "foot_legal_text": "v1.0 · © 2026 Bermeoko Udala · Eskubide guztiak erreserbatuta"
   },
   "ES": {
     "nav_back": "Volver al inicio",
@@ -23,10 +44,31 @@ const dictCatalog = {
     "cat_no_res": "No se han encontrado resultados para esta búsqueda.",
     "cat_load_more": "Ver más",
     "btn_claim_card": "Enviar mensaje",
-    "foot_desc": "Servicio oficial de objetos perdidos del Ayuntamiento de Bermeo. Al servicio de los ciudadanos con transparencia y eficacia.", "foot_col1": "Servicios", "foot_link_inv": "Buscar en inventario", "foot_link_claim": "Iniciar reclamación", "foot_link_my": "Mis reclamaciones", "foot_link_not": "Notificaciones", "foot_link_faq": "Preguntas frecuentes", "foot_col2": "Ayuntamiento", "foot_link_town": "Ayuntamiento de Bermeo", "foot_link_serv": "Todos los servicios", "foot_link_board": "Tablón de anuncios", "foot_link_press": "Gabinete de prensa", "foot_link_contact": "Contacto", "foot_col3": "Legal", "foot_link_priv": "Política de privacidad", "foot_link_terms": "Condiciones de uso", "foot_link_cook": "Política de cookies", "foot_link_acc": "Accesibilidad", "foot_legal_text": "v1.0 · © 2026 Ayuntamiento de Bermeo · Todos los derechos reservados"
+    "foot_desc": "Servicio oficial de objetos perdidos del Ayuntamiento de Bermeo. Al servicio de los ciudadanos con transparencia y eficacia.", 
+    "foot_col1": "Servicios", 
+    "foot_link_inv": "Buscar en inventario", 
+    "foot_link_claim": "Iniciar reclamación", 
+    "foot_link_my": "Mis reclamaciones", 
+    "foot_link_not": "Notificaciones", 
+    "foot_link_faq": "Preguntas frecuentes", 
+    "foot_col2": "Ayuntamiento", 
+    "foot_link_town": "Ayuntamiento de Bermeo", 
+    "foot_link_serv": "Todos los servicios", 
+    "foot_link_board": "Tablón de anuncios", 
+    "foot_link_press": "Gabinete de prensa", 
+    "foot_link_contact": "Contacto", 
+    "foot_col3": "Legal", 
+    "foot_link_priv": "Política de privacidad", 
+    "foot_link_terms": "Condiciones de uso", 
+    "foot_link_cook": "Política de cookies", 
+    "foot_link_acc": "Accesibilidad", 
+    "foot_legal_text": "v1.0 · © 2026 Ayuntamiento de Bermeo · Todos los derechos reservados"
   }
 };
 
+// ==========================================================================
+// 2. FUNCIÓN DE CAMBIO DE IDIOMA Y TEMA
+// ==========================================================================
 function setLang(idioma) {
   localStorage.setItem('appLang', idioma);
   document.querySelectorAll('.lang-btn').forEach(btn => {
@@ -45,30 +87,60 @@ function setLang(idioma) {
     }
   });
   
-  // Traducir los botones inyectados desde XML en el catálogo
   document.querySelectorAll('.btn-claim').forEach(btn => {
     btn.textContent = dictCatalog[idioma]["btn_claim_card"];
   });
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  setLang(localStorage.getItem('appLang') || 'EU');
-});
+function initTheme() {
+  const themeToggle = document.getElementById('themeToggle');
+  const moonIcon = document.getElementById('moonIcon');
+  const sunIcon = document.getElementById('sunIcon');
+  const isDark = localStorage.getItem('appTheme') === 'dark';
+  
+  if (isDark) {
+    document.body.classList.add('dark-theme');
+    if (moonIcon && sunIcon) {
+      moonIcon.style.display = 'none';
+      sunIcon.style.display = 'block';
+    }
+  }
+
+  if (themeToggle) {
+    themeToggle.addEventListener('click', () => {
+      document.body.classList.toggle('dark-theme');
+      const currentTheme = document.body.classList.contains('dark-theme') ? 'dark' : 'light';
+      localStorage.setItem('appTheme', currentTheme);
+      if (currentTheme === 'dark') {
+        moonIcon.style.display = 'none';
+        sunIcon.style.display = 'block';
+      } else {
+        moonIcon.style.display = 'block';
+        sunIcon.style.display = 'none';
+      }
+    });
+  }
+}
+
+// ==========================================================================
+// 3. LÓGICA PRINCIPAL (XML Y EVENTOS)
+// ==========================================================================
 document.addEventListener("DOMContentLoaded", () => {
-  // 1. VARIABLES DEL DOM
+  // Inicializamos idiomas y tema
+  setLang(localStorage.getItem('appLang') || 'EU');
+  initTheme();
+
   const catalogGrid = document.getElementById('catalogGrid');
   const searchInput = document.getElementById('searchInput');
   const categorySelect = document.getElementById('categorySelect');
   const noResultsMsg = document.getElementById('noResults');
   const loadingMsg = document.getElementById('loadingMsg');
-  
   const loadMoreContainer = document.getElementById('loadMoreContainer');
   const btnLoadMore = document.getElementById('btnLoadMore');
   
   let cards = []; 
   let visibleLimit = 6; 
 
-  // 2. CARGAR EL DESPLEGABLE DE CATEGORÍAS (Desde kategoriak.xml)
   if (categorySelect) {
     fetch('../datuak/kategoriak.xml')
       .then(response => {
@@ -89,7 +161,6 @@ document.addEventListener("DOMContentLoaded", () => {
       .catch(error => console.error("Errorea kategoriak kargatzean:", error));
   }
 
-  // 3. CARGAR LAS TARJETAS DE OBJETOS (Desde artikuluak.xml)
   if (catalogGrid) {
     fetch('../datuak/artikuluak.xml')
       .then(response => {
@@ -99,11 +170,9 @@ document.addEventListener("DOMContentLoaded", () => {
       .then(str => new window.DOMParser().parseFromString(str, "text/xml"))
       .then(xmlDoc => {
         const artikuluak = xmlDoc.querySelectorAll("artikulua");
-        catalogGrid.innerHTML = ''; // Limpiar "Kargatzen..."
+        catalogGrid.innerHTML = ''; 
 
-        // CREAR LAS TARJETAS DINÁMICAMENTE
         artikuluak.forEach(art => {
-          // Extraer datos con el NUEVO FORMATO XML
           const id = art.querySelector("id") ? art.querySelector("id").textContent : '?';
           const izena = art.querySelector("izena") ? art.querySelector("izena").textContent : 'Izen gabea';
           const kategoria = art.querySelector("kategoria") ? art.querySelector("kategoria").textContent : 'Bestelakoak';
@@ -111,7 +180,6 @@ document.addEventListener("DOMContentLoaded", () => {
           const sarreraData = art.querySelector("sarreraData") ? art.querySelector("sarreraData").textContent.trim() : '';
           const argazkia = art.querySelector("argazkia") ? art.querySelector("argazkia").textContent.trim() : '';
           
-          // Lógica de la imagen
           let visualContent = '';
           if (argazkia !== '') {
             visualContent = `<img src="../datuak/img/${argazkia}" alt="${izena}" style="width:100%; height:100%; object-fit:cover;">`;
@@ -123,13 +191,11 @@ document.addEventListener("DOMContentLoaded", () => {
               </div>`;
           }
 
-          // Crear la tarjeta HTML
           const card = document.createElement('div');
           card.className = 'item-card';
           card.setAttribute('data-category', kategoria);
-          card.style.display = 'none'; // Se crean ocultas
+          card.style.display = 'none'; 
           
-          // Si hay fecha de entrada, preparamos un HTML pequeñito para mostrarlo
           let dataHTML = '';
           if (sarreraData !== '') {
             dataHTML = `<span style="font-size: 11px; color: var(--gray-500); display: block; margin-bottom: 8px;">Aurkituta: ${sarreraData}</span>`;
@@ -149,6 +215,13 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         cards = Array.from(document.querySelectorAll('.item-card'));
+        
+        // Traducimos los botones justo después de crearlos
+        const currentLang = localStorage.getItem('appLang') || 'EU';
+        document.querySelectorAll('.btn-claim').forEach(btn => {
+          btn.textContent = dictCatalog[currentLang]["btn_claim_card"];
+        });
+
         filterItems(); 
       })
       .catch(error => {
@@ -159,20 +232,16 @@ document.addEventListener("DOMContentLoaded", () => {
       });
   }
 
-  // 4. LÓGICA DE FILTRADO Y LÍMITES
   function filterItems() {
     if (!searchInput || !categorySelect) return;
-
     const searchTerm = searchInput.value.toLowerCase();
     const selectedCategory = categorySelect.value;
 
     let matchedCards = cards.filter(card => {
       const itemName = card.querySelector('.item-name').textContent.toLowerCase();
       const itemCategory = card.getAttribute('data-category');
-      
       const matchesSearch = itemName.includes(searchTerm);
       const matchesCategory = selectedCategory === 'all' || itemCategory === selectedCategory;
-      
       return matchesSearch && matchesCategory;
     });
 
@@ -197,7 +266,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // 5. EVENTOS DE BÚSQUEDA Y BOTÓN "VER MÁS"
   function onFilterChange() {
     visibleLimit = 6; 
     filterItems();
@@ -205,63 +273,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (searchInput) searchInput.addEventListener('input', onFilterChange);
   if (categorySelect) categorySelect.addEventListener('change', onFilterChange);
-
   if (btnLoadMore) {
     btnLoadMore.addEventListener('click', () => {
       visibleLimit += 1000; 
       filterItems(); 
     });
   }
-});
-// 1. EL DICCIONARIO DE TRADUCCIONES
-const traducciones = {
-  "EU": {
-    "nav_back": "Itzuli hasierara",
-    "cat_title": "Inbentario Osoa",
-    "cat_sub": "Hemen aurkituko dituzu Bermeoko Udalaren biltegian dauden objektu guztiak. Zure bat ikusten baduzu, sakatu erreklamatzeko botoia.",
-    "search_place": "Bilatu objektuaren izena...",
-    "btn_claim": "Mezu bat bidali"
-  },
-  "ES": {
-    "nav_back": "Volver al inicio",
-    "cat_title": "Inventario Completo",
-    "cat_sub": "Aquí encontrarás todos los objetos almacenados por el Ayuntamiento de Bermeo. Si reconoces el tuyo, pulsa en el botón para reclamarlo.",
-    "search_place": "Buscar nombre del objeto...",
-    "btn_claim": "Enviar mensaje"
-  }
-};
-
-// 2. LA FUNCIÓN QUE CAMBIA EL IDIOMA
-function setLang(idioma) {
-  // A) Guardamos el idioma en el navegador para que no se borre al cambiar de página
-  localStorage.setItem('appLang', idioma);
-
-  // B) Cambiamos el color de los botones (Fondo azul al seleccionado)
-  document.querySelectorAll('.lang-btn').forEach(btn => {
-    const isActive = btn.textContent === idioma;
-    btn.classList.toggle('active', isActive);
-    btn.setAttribute('aria-pressed', isActive);
-  });
-
-  // C) Traducimos los textos
-  document.querySelectorAll('[data-i18n]').forEach(elemento => {
-    const clave = elemento.getAttribute('data-i18n');
-    
-    if (traducciones[idioma] && traducciones[idioma][clave]) {
-      // Si es un input de texto, le cambiamos el 'placeholder'
-      if (elemento.tagName === 'INPUT' || elemento.tagName === 'TEXTAREA') {
-        elemento.placeholder = traducciones[idioma][clave];
-      } else {
-        // Si es texto normal, cambiamos el contenido
-        elemento.textContent = traducciones[idioma][clave];
-      }
-    }
-  });
-}
-
-// 3. AL CARGAR LA PÁGINA, RECORDAR EL IDIOMA
-document.addEventListener('DOMContentLoaded', () => {
-  // Miramos si el usuario ya había elegido un idioma antes. Si no, ponemos 'EU' por defecto.
-  const idiomaGuardado = localStorage.getItem('appLang') || 'EU';
-  setLang(idiomaGuardado);
 });
