@@ -21,8 +21,9 @@ public class Kokalekua {
         }
     }
 
-    // Getters
+    // Getters & Setters
     public int getKokalekuId() { return kokalekuId; }
+    public void setKokalekuId(int id) { this.kokalekuId = id; }
     public String getArmairua() { return armairua; }
     public String getApala() { return apala; }
     public boolean isBhaDa() { return bhaDa; }

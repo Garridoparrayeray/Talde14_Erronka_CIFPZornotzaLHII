@@ -13,7 +13,8 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox styleClass="bg-light" stylesheets="@style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+<VBox styleClass="bg-light" stylesheets="@style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="controller.ErregistroaController">
    <children>
       <HBox alignment="CENTER_LEFT" style="-fx-border-color: transparent transparent #E5E7EB transparent; -fx-padding: 15 30;" styleClass="bg-white">
          <children>
@@ -34,7 +35,7 @@
                   <VBox spacing="8.0">
                      <children>
                         <Label style="-fx-text-fill: #374151;" styleClass="font-bold" text="Izena *" />
-                        <TextField promptText="Adib.: Eskola-motxila" styleClass="form-control" />
+                        <TextField fx:id="txtIzena" promptText="Adib.: Eskola-motxila" styleClass="form-control" />
                      </children>
                   </VBox>
 
@@ -47,14 +48,14 @@
                   <VBox spacing="8.0">
                      <children>
                         <Label style="-fx-text-fill: #374151;" styleClass="font-bold" text="Kategoria *" />
-                        <ComboBox maxWidth="1.7976931348623157E308" promptText="— Hautatu —" styleClass="form-select" />
+                        <ComboBox fx:id="cbKategoria" maxWidth="1.7976931348623157E308" promptText="— Hautatu —" styleClass="form-select" />
                      </children>
                   </VBox>
 
                   <VBox spacing="8.0" VBox.vgrow="ALWAYS">
                      <children>
                         <Label style="-fx-text-fill: #374151;" styleClass="font-bold" text="Deskribapena" />
-                        <TextArea prefHeight="100.0" promptText="Ezaugarri bereizgarriak, etiketak, edukia..." styleClass="text-area" VBox.vgrow="ALWAYS" />
+                        <TextArea fx:id="txtDeskribapena" prefHeight="100.0" promptText="Ezaugarri bereizgarriak, etiketak, edukia..." styleClass="text-area" VBox.vgrow="ALWAYS" />
                      </children>
                   </VBox>
 
@@ -63,19 +64,19 @@
                         <VBox spacing="8.0" HBox.hgrow="ALWAYS">
                            <children>
                               <Label style="-fx-text-fill: #374151;" styleClass="font-bold" text="Aurkipen-lekua" />
-                              <TextField promptText="Adib.: Portua" styleClass="form-control" />
+                              <TextField fx:id="txtAurkipenLekua" promptText="Adib.: Portua" styleClass="form-control" />
                            </children>
                         </VBox>
                         <VBox spacing="8.0" HBox.hgrow="ALWAYS">
                            <children>
                               <Label style="-fx-text-fill: #374151;" styleClass="font-bold" text="Sarrera-data" />
-                              <DatePicker maxWidth="1.7976931348623157E308" promptText="19/04/2026" styleClass="date-picker" />
+                              <DatePicker fx:id="dpSarreraData" maxWidth="1.7976931348623157E308" promptText="19/04/2026" styleClass="date-picker" />
                            </children>
                         </VBox>
                      </children>
                   </HBox>
 
-                  <CheckBox mnemonicParsing="false" styleClass="check-box" text="Iragankorra" /><!-- iragankorra bada, bakarrik mostradorean usten da eta ez da biltegian usten-->
+                  <CheckBox fx:id="chkIragankorra" mnemonicParsing="false" styleClass="check-box" text="Iragankorra" />
                </children>
                <padding>
                   <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />
@@ -89,7 +90,7 @@
                   <VBox spacing="8.0">
                      <children>
                         <Label style="-fx-text-fill: #374151;" styleClass="font-bold" text="Biltegiko kokalekua" />
-                        <ComboBox maxWidth="1.7976931348623157E308" promptText="A-01 · Armairua A, apala 01" styleClass="form-select" />
+                        <ComboBox fx:id="cbKokalekua" maxWidth="1.7976931348623157E308" promptText="A-01 · Armairua A, apala 01" styleClass="form-select" />
                      </children>
                   </VBox>
 
@@ -110,10 +111,12 @@
                      </children>
                   </VBox>
 
+                  <Label fx:id="lblErrorea" styleClass="text-danger" wrapText="true" managed="false" visible="false" />
+
                   <HBox alignment="BOTTOM_RIGHT" spacing="15.0">
                      <children>
-                        <Button mnemonicParsing="false" styleClass="btn-outline" text="Utzi" />
-                        <Button mnemonicParsing="false" styleClass="btn-primary" text="Erregistratu" />
+                        <Button mnemonicParsing="false" styleClass="btn-outline" text="Utzi" onAction="#utzi" />
+                        <Button mnemonicParsing="false" styleClass="btn-primary" text="Erregistratu" onAction="#erregistratu" />
                      </children>
                      <VBox.margin>
                         <Insets top="10.0" />

@@ -2,6 +2,10 @@ package model;
 
 import java.util.Date;
 
+/**
+ * Inbentarioko edozein mugimendu erregistratzeko modelo klasea.
+ * @author Yeray Garrido
+ */
 public class Mugimendua {
 
     private int mugimenduId;
@@ -11,6 +15,14 @@ public class Mugimendua {
     private Langilea langilea;
     private Artikulua artikulua;
 
+    /**
+     * Mugimenduaren eraikitzailea.
+     * 
+     * @param langilea Eragiketa burutu duen langilea
+     * @param artikulua Mugitu den artikulua
+     * @param mota Mugimendu mota (sarrera, irteera, etab.)
+     * @param deskribapena Mugimenduaren azalpen laburra
+     */
     public Mugimendua(Langilea langilea, Artikulua artikulua,
                       MugimenduMota mota, String deskribapena) {
         this.langilea = langilea;
@@ -20,10 +32,13 @@ public class Mugimendua {
         this.dataOrdua = new Date();
     }
 
+    /**
+     * Mugimendua sistemaren erregistroan (log) idazten du.
+     */
     public void erregistratuLoga() {
     }
 
-    // Getters
+    // ── Getterrak ────────────────────────────────────────────────────────────
     public int getMugimenduId() { return mugimenduId; }
     public Date getDataOrdua() { return dataOrdua; }
     public MugimenduMota getMota() { return mota; }
