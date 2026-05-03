@@ -1,5 +1,6 @@
 package dao;
 
+import model.MugimenduLerroa;
 import utils.DBConexioa;
 
 import java.sql.Connection;
@@ -11,15 +12,15 @@ import java.util.List;
 
 /**
  * Mugimenduen (auditoria) datu-baseko eragiketak kudeatzen dituen DAO klasea.
+ * @author Yeray Garrido
  */
 public class MugimenduDAO {
 
     /**
      * Mugimenduen erregistro guztiak itzultzen ditu auditoria taulako ordena deszendentearekin.
-     * @return String[][] matrizea: [data, langilea, ekintza, artikulua]
      */
-    public static List<String[]> getGuztiak() {
-        List<String[]> zerrenda = new ArrayList<String[]>();
+    public static List<MugimenduLerroa> getGuztiak() {
+        List<MugimenduLerroa> zerrenda = new ArrayList<>();
         String sql = "SELECT m.data, " +
                      "COALESCE(CONCAT(l.izena, ' ', l.abizena), '—') AS langilea, " +
                      "m.deskribapena, " +
@@ -31,12 +32,12 @@ public class MugimenduDAO {
              PreparedStatement ps = con.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
-                zerrenda.add(new String[]{
+                zerrenda.add(new MugimenduLerroa(
                     rs.getString("data"),
                     rs.getString("langilea"),
                     rs.getString("deskribapena"),
                     rs.getString("artikulua")
-                });
+                ));
             }
         } catch (SQLException e) {
             System.err.println("MugimenduDAO.getGuztiak: " + e.getMessage());

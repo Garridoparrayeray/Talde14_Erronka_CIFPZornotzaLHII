@@ -1,5 +1,6 @@
 package model;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -13,7 +14,6 @@ public class Erreklamazioa {
     private int erreklamazioId;
     private Date erreklamazioData;
     private String deskribapenBilatua;
-    private String markaBilatua;
     private EgoeraErreklamazioa egoera;
     private Hartzailea hartzailea;
     private Kategoria kategoria;
@@ -69,38 +69,30 @@ public class Erreklamazioa {
         this.egoera = egoera;
     }
 
-    // Helpers para la vista (evitan instanceof en el controller)
-    public String getJabeIzena() {
-        if (hartzailea instanceof Jabea) {
-            return ((Jabea) hartzailea).getIzena();
-        } else {
-            return "—";
-        }
+   public String getJabeIzena() {
+    return hartzailea.getIzena();        
+}
+public String getJabeAbizena() {
+    return hartzailea.getAbizena();
+}
+public String getJabeTelefonoa() {
+    if (hartzailea.getTelefonoa() == null) {
+        return "—";
+    } else {
+        return hartzailea.getTelefonoa();
     }
+}
 
-    public String getJabeAbizena() {
-        if (hartzailea instanceof Jabea) {
-            return ((Jabea) hartzailea).getAbizena();
-        } else {
-            return "—";
-        }
+public String getJabeEmaila() {
+    if (hartzailea.getEmaila() == null) {
+        return "—";
+    } else {
+        return hartzailea.getEmaila();
     }
-
-    public String getJabeTelefonoa() {
-        if (hartzailea instanceof Jabea) {
-            return ((Jabea) hartzailea).getTelefonoa();
-        } else {
-            return "—";
-        }
-    }
-
-    public String getJabeEmaila() {
-        if (hartzailea instanceof Jabea) {
-            return ((Jabea) hartzailea).getEmaila();
-        } else {
-            return "—";
-        }
-    }
+}
+public String getJabeNan() {
+    return hartzailea.getNan();
+}
 
     public String getKategoriaIzena() {
         if (kategoria != null) {
@@ -125,8 +117,6 @@ public class Erreklamazioa {
     public void setErreklamazioData(Date erreklamazioData) { this.erreklamazioData = erreklamazioData; }
     public String getDeskribapenBilatua() { return deskribapenBilatua; }
     public void setDeskribapenBilatua(String deskribapenBilatua) { this.deskribapenBilatua = deskribapenBilatua; }
-    public String getMarkaBilatua() { return markaBilatua; }
-    public void setMarkaBilatua(String markaBilatua) { this.markaBilatua = markaBilatua; }
     public EgoeraErreklamazioa getEgoera() { return egoera; }
     public void setEgoera(EgoeraErreklamazioa egoera) { this.egoera = egoera; }
     public Hartzailea getHartzailea() { return hartzailea; }
@@ -136,6 +126,24 @@ public class Erreklamazioa {
     public Langilea getLangilea() { return langilea; }
     public void setLangilea(Langilea langilea) { this.langilea = langilea; }
 
+    public String getIdString() {
+    return String.valueOf(this.erreklamazioId);
+}
+
+public String getDataFormatua() {
+    if (this.erreklamazioData == null) {
+        return "—";
+    }
+    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+    return sdf.format(this.erreklamazioData);
+}
+
+public String getDeskribapena() {
+    if (this.deskribapenBilatua != null) {
+        return this.deskribapenBilatua;
+    }
+    return "—";
+}
     @Override
     public String toString() {
         return erreklamazioId + " | " + deskribapenBilatua + " | " + egoera;

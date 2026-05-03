@@ -1,17 +1,17 @@
 package dao;
 
-import model.Artikulua;
-import model.EgoeraArtikulua;
-import model.Kategoria;
-import model.Kokalekua;
-import utils.DBConexioa;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import model.Artikulua;
+import model.EgoeraArtikulua;
+import model.Kategoria;
+import model.Kokalekua;
+import utils.DBConexioa;
 
 /**
  * Artikuluen datu-baseko eragiketak kudeatzen dituen DAO klasea.
@@ -21,6 +21,16 @@ public class ArtikuluaDAO {
 
     /**
      * Artikulua berria gordetzen du datu-basean, kode automatikoa sortuz.
+     * @return Ondo gorde bada true
+     */
+    /**
+     * Artikulu berria gordetzen du datu-basean, kode automatikoa sortuz eta mugimendua erregistratuz.
+     * @param izena Artikuluaren izenburua
+     * @param deskribapena Artikuluaren deskripzio osoa
+     * @param iragankorra Iragankorra bada true
+     * @param idKategoria Kategoriaaren identifikagailua (0 bada ez da lotzen)
+     * @param idKokalekua Kokalekuaren identifikagailua (0 bada ez da lotzen)
+     * @param sarreraData Biltegira sartu zen data
      * @return Ondo gorde bada true
      */
     public static boolean gehitu(String izena, String deskribapena, boolean iragankorra,
@@ -77,6 +87,11 @@ public class ArtikuluaDAO {
         }
     }
 
+    /**
+     * Hurrengo artikulu-kode sekuentziala sortzen du urtearen arabera (G-NNN-AA formatua).
+     * @param sarreraData Sarrera-data (urte-atzizkia ateratzeko)
+     * @return Kode berria, edo null errorea bada
+     */
     private static String sortuKodea(java.sql.Date sarreraData) {
         String urteStr = String.format("%02d", java.util.Calendar.getInstance().get(java.util.Calendar.YEAR) % 100);
         if (sarreraData != null) {
@@ -100,7 +115,9 @@ public class ArtikuluaDAO {
     }
 
     /**
-     * Artikulua bat kodearen bidez bilatzen du.
+     * Artikulua bat kodearen bidez bilatzen du datu-basetik.
+     * @param kodea Artikuluaren kode bakarra
+     * @return Artikulua objektua, edo null ez badago
      */
     public static Artikulua getByKodea(String kodea) {
         String sql = "SELECT a.id_artikulua, a.a_izena, a.a_deskribapena, a.egoera, " +

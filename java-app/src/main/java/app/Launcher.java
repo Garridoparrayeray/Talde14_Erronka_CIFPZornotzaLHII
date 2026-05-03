@@ -1,7 +1,15 @@
 package app;
+
+/**
+ * Aplikazioaren sarrera-puntua. JavaFX moduluen arazorik saihesteko Main-etik bereizita.
+ * @author Yeray Garrido
+ */
 public class Launcher {
+    /**
+     * Aplikazioa abiarazten du.
+     * @param args Komando-lerroko argumentuak
+     */
     public static void main(String[] args) {
-        // Llama al main de la clase que hereda de App
         Main.main(args);
     }
 }

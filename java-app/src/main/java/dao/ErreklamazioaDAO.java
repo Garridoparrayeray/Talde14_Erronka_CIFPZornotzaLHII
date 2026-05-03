@@ -71,16 +71,15 @@ public class ErreklamazioaDAO {
                     emaila
                 );
 
-                // 2. Kategoria objektua sortu eraikitzaile zuzena erabiliz
-                model.Kategoria kategoria = new model.Kategoria(
-                    rs.getInt("id_kategoria"), 
-                    rs.getString("kategoria_izena")
-                );
-
-                // 3. Erreklamazioa objektu nagusia sortu
+                // 2. Erreklamazioa objektu nagusia sortu
                 Erreklamazioa erreklamazioa = new Erreklamazioa(jabea, rs.getString("deskribapen_bilatua"), rs.getDate("erreklamazio_data"));
                 erreklamazioa.setErreklamazioId(rs.getInt("id_erreklamazio"));
-                erreklamazioa.setKategoria(kategoria);
+
+                // 3. Kategoria soilik badago
+                int idKat = rs.getInt("id_kategoria");
+                if (idKat != 0) {
+                    erreklamazioa.setKategoria(new model.Kategoria(idKat, rs.getString("kategoria_izena")));
+                }
                 
                 // Egoera bihurtu eta esleitu
                 String egoeraStr = rs.getString("errek_egoera");
@@ -115,11 +114,8 @@ public class ErreklamazioaDAO {
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, egoera);
             ps.setInt(2, Integer.parseInt(id));
-            if (ps.executeUpdate() > 0) {
-                return true;
-            } else {
-                return false;
-            }
+            ps.executeUpdate();
+            return true;
         } catch (SQLException | NumberFormatException e) {
             System.err.println("Errorea ErreklamazioaDAO.updateEgoera exekutatzean: " + e.getMessage());
             return false;
@@ -187,11 +183,8 @@ public class ErreklamazioaDAO {
                         psE.setNull(4, java.sql.Types.INTEGER);
                     }
                     
-                    if (psE.executeUpdate() > 0) {
+                        psE.executeUpdate();
                         return true;
-                    } else {
-                        return false;
-                    }
                 }
             } else {
                 return false;

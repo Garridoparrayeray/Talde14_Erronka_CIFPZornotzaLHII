@@ -5,17 +5,24 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import model.Administratzailea;
 import model.Langilea;
 import utils.Sesio;
 import utils.UIKudeatzailea;
 
+/**
+ * Login formularioa kudeatzen duen kontroladorea.
+ * Erabiltzaile-izena eta pasahitza egiaztatzen ditu eta dagokion bista kargatzen du.
+ * @author Yeray Garrido
+ */
 public class LoginController {
 
     @FXML private TextField     txtErabiltzailea;
     @FXML private PasswordField txtPasahitza;
     @FXML private Label         lblErrorea;
 
+    /**
+     * Saioa hasteko saiakera egiten du. Arrakasta izanez gero dagokion bista irekitzen du.
+     */
     @FXML
     private void sartu() {
         String erabiltzailea = txtErabiltzailea.getText().trim();
@@ -33,7 +40,7 @@ public class LoginController {
             return;
         }
 
-        boolean adminDa = langilea instanceof Administratzailea;
+        boolean adminDa = langilea.isAdmin();
         Sesio.hasiera(langilea, adminDa);
 
         String fxml;

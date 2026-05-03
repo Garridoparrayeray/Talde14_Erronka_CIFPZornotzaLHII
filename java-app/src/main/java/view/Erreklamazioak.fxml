@@ -16,7 +16,7 @@
    <children>
 
       <!-- Cabecera -->
-      <HBox alignment="CENTER_LEFT"
+      <HBox alignment="CENTER_LEFT" spacing="10"
             style="-fx-border-color: transparent transparent #E5E7EB transparent; -fx-padding: 15 30;"
             styleClass="bg-white">
          <children>
@@ -24,7 +24,10 @@
                <font><Font size="20.0" /></font>
             </Label>
             <Region HBox.hgrow="ALWAYS" />
-            <Button text="+ Erreklamazino berria" mnemonicParsing="false"
+            <Button fx:id="btnFiltroIrekiak"   text="Irekiak"     mnemonicParsing="false" styleClass="btn-primary" onAction="#filtroIrekiak" />
+            <Button fx:id="btnFiltroBaztertuak" text="Baztertutak" mnemonicParsing="false" styleClass="btn-outline" onAction="#filtroBaztertutak" />
+            <Button fx:id="btnFiltroEgindak"   text="Egindak"     mnemonicParsing="false" styleClass="btn-outline" onAction="#filtroEgindak" />
+            <Button text="+ Berria" mnemonicParsing="false"
                     styleClass="btn-primary" onAction="#erreklamazioaBerria" />
          </children>
       </HBox>

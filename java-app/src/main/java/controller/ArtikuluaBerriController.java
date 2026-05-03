@@ -23,6 +23,7 @@ import model.Kokalekua;
 
 /**
  * Artikulu berri bat gehitzeko elkarrizketa-koadroaren kontroladorea.
+ * @author Yeray Garrido
  */
 public class ArtikuluaBerriController implements Initializable {
 
@@ -37,6 +38,10 @@ public class ArtikuluaBerriController implements Initializable {
 
     private Runnable onGordeCb;
 
+    /**
+     * Gordetzean exekutatu beharreko callback ezartzen du.
+     * @param cb Gordetzean dei beharreko Runnable
+     */
     public void setOnGorde(Runnable cb) {
         this.onGordeCb = cb;
     }
@@ -53,6 +58,7 @@ public class ArtikuluaBerriController implements Initializable {
         ezkutuErrorea();
     }
 
+    /** Formularioko datuak egiaztatzen ditu eta artikulua datu-basean gordetzen du. */
     @FXML
     private void gorde() {
         String izena = txtIzena.getText().trim();
@@ -94,6 +100,7 @@ public class ArtikuluaBerriController implements Initializable {
         }
     }
 
+    /** Aldaketak gorde gabe leihoa ixten du. */
     @FXML
     private void utzi() {
         itxi();

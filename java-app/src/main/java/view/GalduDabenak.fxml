@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.Button?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
@@ -19,7 +21,7 @@
    <children>
 
       <!-- Cabecera -->
-      <HBox alignment="CENTER_LEFT"
+      <HBox alignment="CENTER_LEFT" spacing="10"
             style="-fx-border-color: transparent transparent #E5E7EB transparent; -fx-padding: 15 30;"
             styleClass="bg-white">
          <children>
@@ -29,6 +31,34 @@
             <Region HBox.hgrow="ALWAYS" />
             <Button text="Freskatu" mnemonicParsing="false"
                     styleClass="btn-outline" onAction="#freskatu" />
+         </children>
+      </HBox>
+
+      <!-- Barra de filtros -->
+      <HBox alignment="CENTER_LEFT" spacing="12"
+            style="-fx-border-color: transparent transparent #E5E7EB transparent; -fx-padding: 10 30;"
+            styleClass="bg-white">
+         <children>
+            <CheckBox fx:id="cbBaztertuak" text="Baztertuak erakutsi"
+                      onAction="#aldatuBaztertuak" />
+            <CheckBox fx:id="cbEgindak" text="Egindak erakutsi"
+                      onAction="#aldatuEgindak" />
+            <!-- Date filter - hidden until checkbox checked -->
+            <HBox fx:id="hboxDateFilter" alignment="CENTER_LEFT" spacing="8">
+               <children>
+                  <Label text="Nondik:" styleClass="text-muted">
+                     <font><Font size="12.0" /></font>
+                  </Label>
+                  <DatePicker fx:id="dpHasiera" promptText="Hasiera data"
+                              prefWidth="140" onAction="#iragaziDataBidez" />
+                  <Label text="Nora:" styleClass="text-muted">
+                     <font><Font size="12.0" /></font>
+                  </Label>
+                  <DatePicker fx:id="dpAmaiera" promptText="Amaiera data"
+                              prefWidth="140" onAction="#iragaziDataBidez" />
+               </children>
+            </HBox>
+            <Region HBox.hgrow="ALWAYS" />
          </children>
       </HBox>
 

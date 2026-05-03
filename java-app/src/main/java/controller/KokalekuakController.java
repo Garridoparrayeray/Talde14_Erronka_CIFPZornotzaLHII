@@ -15,46 +15,37 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import model.Kokalekua;
 
 /**
- * Kokalekuen taula kudeatzen duen kontroladorea.
+ * Kokalekuen zerrenda eta kokaleku berria gehitzeko kontroladorea.
+ * @author Yeray Garrido
  */
 public class KokalekuakController implements Initializable {
 
-    @FXML private TableView<String[]>           taula;
-    @FXML private TableColumn<String[], String> colId;
-    @FXML private TableColumn<String[], String> colArmairua;
-    @FXML private TableColumn<String[], String> colApala;
-    @FXML private TableColumn<String[], String> colArtikuluak;
-    @FXML private TableColumn<String[], String> colMota;
+    @FXML private TableView<Kokalekua>           taula;
+    @FXML private TableColumn<Kokalekua, String> colId;
+    @FXML private TableColumn<Kokalekua, String> colArmairua;
+    @FXML private TableColumn<Kokalekua, String> colApala;
+    @FXML private TableColumn<Kokalekua, String> colArtikuluak;
+    @FXML private TableColumn<Kokalekua, String> colMota;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        colId.setCellValueFactory(c           -> new SimpleStringProperty(c.getValue()[0]));
-        colArmairua.setCellValueFactory(c     -> new SimpleStringProperty(c.getValue()[1]));
-        colApala.setCellValueFactory(c        -> new SimpleStringProperty(c.getValue()[2]));
-        colArtikuluak.setCellValueFactory(c   -> new SimpleStringProperty(c.getValue()[3]));
-        colMota.setCellValueFactory(c         -> new SimpleStringProperty(c.getValue()[4]));
+        colId.setCellValueFactory(c         -> new SimpleStringProperty(String.valueOf(c.getValue().getKokalekuId())));
+        colArmairua.setCellValueFactory(c   -> new SimpleStringProperty(c.getValue().getArmairua()));
+        colApala.setCellValueFactory(c      -> new SimpleStringProperty(c.getValue().getApala()));
+        colArtikuluak.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getArtikuluKopuruaStr()));
+        colMota.setCellValueFactory(c       -> new SimpleStringProperty(c.getValue().getMota()));
         kargatu();
     }
 
-    private String[][] lortuDatuakDimentsioBitan() {
-        List<String[]> lista = KokalekuaDAO.getGuztiak();
-        String[][] datuak = new String[lista.size()][5];
-        for (int i = 0; i < lista.size(); i++) {
-            datuak[i] = lista.get(i);
-        }
-        return datuak;
-    }
-
     private void kargatu() {
-        String[][] datuak = lortuDatuakDimentsioBitan();
-        taula.getItems().clear();
-        for (String[] fila : datuak) {
-            taula.getItems().add(fila);
-        }
+        List<Kokalekua> datuak = KokalekuaDAO.getGuztiak();
+        taula.getItems().setAll(datuak);
     }
 
+    /** Kokaleku berri bat gehitzeko elkarrizketa-koadroa irekitzen du. */
     @FXML
     public void kokalekuaBerria() {
         try {

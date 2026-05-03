@@ -12,6 +12,10 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
+/**
+ * Kokaleku berri bat gehitzeko elkarrizketa-koadroaren kontroladorea.
+ * @author Yeray Garrido
+ */
 public class KokalekuaBerriController implements Initializable {
 
     @FXML private TextField txtArmairua;
@@ -22,6 +26,10 @@ public class KokalekuaBerriController implements Initializable {
 
     private Runnable onGordeCb;
 
+    /**
+     * Gordetzean exekutatu beharreko callback ezartzen du.
+     * @param cb Gordetzean dei beharreko Runnable
+     */
     public void setOnGorde(Runnable cb) {
         this.onGordeCb = cb;
     }
@@ -31,6 +39,7 @@ public class KokalekuaBerriController implements Initializable {
         ezkutuErrorea();
     }
 
+    /** Formularioko datuak egiaztatzen ditu eta kokalekua datu-basean gordetzen du. */
     @FXML
     private void gorde() {
         String armairua = txtArmairua.getText().trim().toUpperCase();
@@ -51,6 +60,7 @@ public class KokalekuaBerriController implements Initializable {
         }
     }
 
+    /** Aldaketak gorde gabe leihoa ixten du. */
     @FXML
     private void utzi() {
         itxi();

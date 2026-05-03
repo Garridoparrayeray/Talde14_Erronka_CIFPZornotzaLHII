@@ -11,6 +11,10 @@ import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * Datu-basearen babes-kopiak kudeatzeko DAO klasea.
+ * @author Yeray Garrido
+ */
 public class BackupDAO {
 
     private static final String[] TAULAK = {
@@ -45,25 +49,26 @@ public class BackupDAO {
                 fw.write("-- " + taula + "\n");
                 fw.write("DELETE FROM " + taula + ";\n");
 
-                ResultSet rs = st.executeQuery("SELECT * FROM " + taula);
-                ResultSetMetaData meta = rs.getMetaData();
-                int cols = meta.getColumnCount();
+                try (ResultSet rs = st.executeQuery("SELECT * FROM " + taula)) {
+                    ResultSetMetaData meta = rs.getMetaData();
+                    int cols = meta.getColumnCount();
 
-                while (rs.next()) {
-                    StringBuilder sb = new StringBuilder("INSERT INTO " + taula + " VALUES (");
-                    for (int i = 1; i <= cols; i++) {
-                        String val = rs.getString(i);
-                        if (val == null) {
-                            sb.append("NULL");
-                        } else {
-                            sb.append("'").append(val.replace("'", "\\'")).append("'");
+                    while (rs.next()) {
+                        StringBuilder sb = new StringBuilder("INSERT INTO " + taula + " VALUES (");
+                        for (int i = 1; i <= cols; i++) {
+                            String val = rs.getString(i);
+                            if (val == null) {
+                                sb.append("NULL");
+                            } else {
+                                sb.append("'").append(val.replace("'", "\\'")).append("'");
+                            }
+                            if (i < cols) {
+                                sb.append(", ");
+                            }
                         }
-                        if (i < cols) {
-                            sb.append(", ");
-                        }
+                        sb.append(");\n");
+                        fw.write(sb.toString());
                     }
-                    sb.append(");\n");
-                    fw.write(sb.toString());
                 }
                 fw.write("\n");
             }

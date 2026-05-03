@@ -25,12 +25,12 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.Window;
 import model.Kategoria;
 import model.KategoriaKopurua;
 
 /**
  * Kategorien ikuspegi dinamikoa kudeatzen duen kontroladorea.
+ * @author Yeray Garrido
  */
 public class KategoriakController implements Initializable {
 
@@ -47,7 +47,6 @@ public class KategoriakController implements Initializable {
         List<Kategoria> kategoriak = KategoriaDAO.getGuztiak();
         List<KategoriaKopurua> kopuruak = EstadistikaDAO.kategoriaKopuruak();
 
-        // 3 txartel lerro bakoitzeko
         HBox row = null;
         int idx = 0;
         for (Kategoria k : kategoriak) {
@@ -57,10 +56,9 @@ public class KategoriakController implements Initializable {
                 vboxKategoriak.getChildren().add(row);
             }
 
-            // Artikulu kopurua bilatu
             int kop = 0;
             for (KategoriaKopurua kk : kopuruak) {
-                if (kk.getKategoriaIzena().equals(k.getIzena())) {
+                if (k.getIzena().equals(kk.getKategoriaIzena())) {
                     kop = kk.getKopurua();
                     break;
                 }
@@ -72,7 +70,6 @@ public class KategoriakController implements Initializable {
             idx++;
         }
 
-        // Azken errenkadan hutsuneak bete
         if (row != null && kategoriak.size() % 3 != 0) {
             int falta = 3 - (kategoriak.size() % 3);
             for (int i = 0; i < falta; i++) {
@@ -83,6 +80,12 @@ public class KategoriakController implements Initializable {
         }
     }
 
+    /**
+     * Kategoria baten txartela sortzen du, editatu eta ezabatu botoiekin.
+     * @param k Erakutsi beharreko kategoria
+     * @param kopurua Kategoria horretan dauden artikulu kopurua
+     * @return Txartelaren HBox nodoa
+     */
     private HBox sortuTxartela(Kategoria k, int kopurua) {
         VBox info = new VBox(4);
         Label lblIzena = new Label(k.getIzena());
@@ -121,6 +124,10 @@ public class KategoriakController implements Initializable {
         return txartela;
     }
 
+    /**
+     * Kategoria baten izena aldatzeko elkarrizketa-koadroa irekitzen du.
+     * @param k Editatu beharreko kategoria
+     */
     private void editatuKategoria(Kategoria k) {
         TextInputDialog dlg = new TextInputDialog(k.getIzena());
         dlg.setTitle("Kategoria editatu");
@@ -137,6 +144,10 @@ public class KategoriakController implements Initializable {
         });
     }
 
+    /**
+     * Baieztapen-alerta erakutsi eta kategoria ezabatzen du onartu bada.
+     * @param k Ezabatu beharreko kategoria
+     */
     private void ezabatuKategoria(Kategoria k) {
         Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
         confirm.setTitle("Kategoria ezabatu");
@@ -151,6 +162,7 @@ public class KategoriakController implements Initializable {
         });
     }
 
+    /** Kategoria berri bat gehitzeko elkarrizketa-koadroa irekitzen du. */
     @FXML
     public void kategoriaBerria() {
         try {

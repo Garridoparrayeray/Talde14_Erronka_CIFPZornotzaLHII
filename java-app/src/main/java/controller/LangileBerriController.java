@@ -14,6 +14,10 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
+/**
+ * Langile berri bat erregistratzeko elkarrizketa-koadroaren kontroladorea.
+ * @author Yeray Garrido
+ */
 public class LangileBerriController implements Initializable {
 
     @FXML private TextField             txtIzena;
@@ -28,6 +32,10 @@ public class LangileBerriController implements Initializable {
     private Runnable onGordeCb;
     private List<String[]> rolak;
 
+    /**
+     * Gordetzean exekutatu beharreko callback ezartzen du.
+     * @param cb Gordetzean dei beharreko Runnable
+     */
     public void setOnGorde(Runnable cb) {
         this.onGordeCb = cb;
     }
@@ -44,6 +52,7 @@ public class LangileBerriController implements Initializable {
         }
     }
 
+    /** Formularioko datuak egiaztatzen ditu eta langile berria datu-basean gordetzen du. */
     @FXML
     private void gorde() {
         String izena           = txtIzena.getText().trim();
@@ -76,6 +85,7 @@ public class LangileBerriController implements Initializable {
         }
     }
 
+    /** Aldaketak gorde gabe leihoa ixten du. */
     @FXML
     private void utzi() {
         itxi();

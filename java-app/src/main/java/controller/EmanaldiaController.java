@@ -23,6 +23,7 @@ import utils.Sesio;
 
 /**
  * Emanaldien formularioa kudeatzen duen kontroladorea.
+ * @author Yeray Garrido
  */
 public class EmanaldiaController implements Initializable {
 
@@ -63,6 +64,7 @@ public class EmanaldiaController implements Initializable {
         archivoSinadura = null;
     }
 
+    /** Sinadura-dokumentua aukeratzeko fitxategi-hautatzailea irekitzen du. */
     @FXML
     private void hautaketaSinadura() {
         FileChooser fc = new FileChooser();
@@ -79,6 +81,7 @@ public class EmanaldiaController implements Initializable {
         }
     }
 
+    /** ComboBox-a biltegiko artikuluekin betetzen du. */
     private void beteteArtikuluCombo() {
         cbArtikulua.getItems().clear();
         artikuluak.clear();
@@ -92,6 +95,7 @@ public class EmanaldiaController implements Initializable {
         }
     }
 
+    /** ComboBox-ean artikulua hautatzean xehetasunak erakusten ditu. */
     @FXML
     private void artikuluaHautatu() {
         int idx = cbArtikulua.getSelectionModel().getSelectedIndex();
@@ -119,6 +123,7 @@ public class EmanaldiaController implements Initializable {
         ezkutuErrorea();
     }
 
+    /** Formularioa egiaztatzen du eta emanaldia datu-basean gordetzen du. */
     @FXML
     private void formalizatu() {
         int idx = cbArtikulua.getSelectionModel().getSelectedIndex();
@@ -161,11 +166,13 @@ public class EmanaldiaController implements Initializable {
         }
     }
 
+    /** Aldaketak gorde gabe formularioa garbitzen du. */
     @FXML
     private void utzi() {
         garbitu();
     }
 
+    /** Formularioko eremu guztiak hasierako egoerara itzultzen ditu. */
     private void garbitu() {
         beteteArtikuluCombo();
         cbArtikulua.setValue(null);
@@ -192,6 +199,7 @@ public class EmanaldiaController implements Initializable {
         ezkutuErrorea();
     }
 
+    /** Hautaturiko artikuluaren informazio-etiketa guztiak erakusten ditu. */
     private void erakutsiArtikuluInfo() {
         lblArtikuluKodea.setVisible(true);    lblArtikuluKodea.setManaged(true);
         lblArtikuluIzena.setVisible(true);    lblArtikuluIzena.setManaged(true);
@@ -200,6 +208,7 @@ public class EmanaldiaController implements Initializable {
         lblArtikuluEgoera.setVisible(true);   lblArtikuluEgoera.setManaged(true);
     }
 
+    /** Artikuluaren informazio-etiketa guztiak ezkutatzen ditu. */
     private void ezkutuArtikuluInfo() {
         lblArtikuluKodea.setVisible(false);    lblArtikuluKodea.setManaged(false);
         lblArtikuluIzena.setVisible(false);    lblArtikuluIzena.setManaged(false);

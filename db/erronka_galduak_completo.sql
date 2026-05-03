@@ -1,7 +1,6 @@
 -- =====================================================================
 -- BERMEOKO UDALA - OBJEKTU GALDUAK
 -- Script osoa - 5. Mugarria
--- Diseinuarekin (kontzeptuala + logikoa) eta Java aplikazioarekin bat
 -- =====================================================================
 
 DROP DATABASE IF EXISTS erronka_galduak;
@@ -37,7 +36,7 @@ CREATE TABLE LANGILEA (
 ) ENGINE=InnoDB;
 
 -- ---------------------------------------------------------------------
--- LANGILEA_ROLA  (diseinu logikotik: asignazio_data gordetzeko)
+-- LANGILEA_ROLA 
 -- ---------------------------------------------------------------------
 CREATE TABLE LANGILEA_ROLA (
     id_langile     INT  NOT NULL,
@@ -77,20 +76,19 @@ CREATE TABLE HARTZAILEA (
     emaila        VARCHAR(100)
 ) ENGINE=InnoDB;
 
--- JABEA: PK = nan (diseinu logikotik), id_hartzailea FK HARTZAILEA-ra
+-- JABEA: id_hartzailea PK, HARTZAILEA-ra FK (ErreklamazioaDAO: j.izena, j.abizena)
 CREATE TABLE JABEA (
-    nan           VARCHAR(15)  PRIMARY KEY,
-    jabe_izena    VARCHAR(100) NOT NULL,
-    jabe_abizena  VARCHAR(100) NOT NULL,
+    id_hartzailea INT          PRIMARY KEY,
+    nan           VARCHAR(15)  UNIQUE NOT NULL,
+    izena         VARCHAR(100) NOT NULL,
+    abizena       VARCHAR(100) NOT NULL,
     herria        VARCHAR(100),
     pk            VARCHAR(10),
     probintzia    VARCHAR(100),
-    id_hartzailea INT          UNIQUE NOT NULL,
     FOREIGN KEY (id_hartzailea) REFERENCES HARTZAILEA(id_hartzailea) ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
 -- ERAKUNDEA: PK = ifz (diseinu logikotik), id_hartzailea FK HARTZAILEA-ra
--- Oharra: zutabe izena 'ift' → 'ifz' (Erakundea.java: getIfz())
 CREATE TABLE ERAKUNDEA (
     ifz                  VARCHAR(20)  PRIMARY KEY,
     erakunde_izen_fiskala VARCHAR(150) NOT NULL,
@@ -124,7 +122,7 @@ CREATE TABLE ARTIKULUA (
 
 -- ---------------------------------------------------------------------
 -- ERREKLAMAZIOA
--- Oharra: 'errek_egoera' (EstadistikaDAO: errek_egoera = 'irekita')
+-- Oharra: 'errek_egoera' (erreklamazio_egoera) (EstadistikaDAO: errek_egoera = 'irekita'//abiarazia)
 -- ---------------------------------------------------------------------
 CREATE TABLE ERREKLAMAZIOA (
     id_erreklamazio     INT  AUTO_INCREMENT PRIMARY KEY,
@@ -249,7 +247,7 @@ SELECT User, Host FROM mysql.user
 
 
 -- =====================================================================
--- 3. DATU HASIERAKOAK (seed)
+-- 3. DATU HASIERAKOAK
 -- =====================================================================
 
 -- ---------------------------------------------------------------------
@@ -261,7 +259,7 @@ INSERT INTO ROLA (deskribapena) VALUES
 
 -- ---------------------------------------------------------------------
 -- LANGILEA
--- Pasahitza: '1234' (BCrypt cost 10)
+-- Pasahitza: '1234' (baina enkriptatuta)
 -- ---------------------------------------------------------------------
 INSERT INTO LANGILEA (izena, abizena, erabiltzailea, pasahitza_hash, id_rola) VALUES
     ('Miren', 'Agirre',  'admin',
@@ -298,9 +296,9 @@ INSERT INTO HARTZAILEA (id_hartzailea, telefonoa) VALUES
     (1, '688729149'),
     (2, '664146219');
 
-INSERT INTO JABEA (nan, jabe_izena, jabe_abizena, id_hartzailea) VALUES
-    ('11111111A', 'RAMON',  'INFANTE', 1),
-    ('22222222B', 'ISMAEL', 'CORTES',  2);
+INSERT INTO JABEA (id_hartzailea, nan, izena, abizena) VALUES
+    (1, '11111111A', 'RAMON',  'INFANTE'),
+    (2, '22222222B', 'ISMAEL', 'CORTES');
 
 -- ---------------------------------------------------------------------
 -- ARTIKULUA

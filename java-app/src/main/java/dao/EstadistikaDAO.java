@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import model.AzkenMugimendua;
 import model.KategoriaKopurua;
 import utils.DBConexioa;
 
@@ -90,12 +91,11 @@ public class EstadistikaDAO {
         return kontatuSql("SELECT COUNT(*) FROM KOKALEKUA");
     }
 
-    /** 
+    /**
      * Azken 10 mugimenduak lortzen ditu datu-basetik.
-     * @return Azken mugimenduen zerrenda
      */
-    public static List<String[]> azkenMugimenduak() {
-        List<String[]> zerrenda = new ArrayList<>();
+    public static List<AzkenMugimendua> azkenMugimenduak() {
+        List<AzkenMugimendua> zerrenda = new ArrayList<>();
         String sql = "SELECT m.id_artikulua, m.deskribapena, m.data, " +
                      "COALESCE(CONCAT(l.izena,' ',l.abizena), '—') AS langilea " +
                      "FROM MUGIMENDUA m LEFT JOIN LANGILEA l ON m.id_langile = l.id_langile " +
@@ -104,12 +104,12 @@ public class EstadistikaDAO {
              PreparedStatement ps = con.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
-                zerrenda.add(new String[]{
+                zerrenda.add(new AzkenMugimendua(
                     rs.getString("id_artikulua"),
                     rs.getString("deskribapena"),
                     rs.getString("data"),
                     rs.getString("langilea")
-                });
+                ));
             }
         } catch (SQLException e) {
             System.err.println("EstadistikaDAO.azkenMugimenduak: " + e.getMessage());
@@ -176,6 +176,11 @@ public class EstadistikaDAO {
         return 0;
     }
 
+    /**
+     * SQL COUNT kontsulta bat exekutatzen du eta emaitza itzultzen du.
+     * @param sql Exekutatu beharreko SQL COUNT kontsulta
+     * @return Kontatutako kopurua, edo 0 errorea bada
+     */
     private static int kontatuSql(String sql) {
         try (Connection con = DBConexioa.getKonexioa();
              PreparedStatement ps = con.prepareStatement(sql);

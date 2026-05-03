@@ -10,6 +10,7 @@ import java.sql.Statement;
 
 /**
  * Emanaldien datu-baseko eragiketak kudeatzen dituen DAO klasea.
+ * @author Yeray Garrido
  */
 public class EmanaldiaDAO {
 
@@ -96,6 +97,10 @@ public class EmanaldiaDAO {
         }
     }
 
+    /**
+     * NAN bidez jabea bilatzen du edo, ez badago, sortu egiten du HARTZAILEA eta JABEA tauletan.
+     * @return Jaberen id_hartzailea, edo -1 errorea bada
+     */
     private static int lortuEdoSortuJabea(Connection con, String nan, String izena,
                                             String abizena, String telefonoa,
                                             String emaila, String helbidea) throws SQLException {

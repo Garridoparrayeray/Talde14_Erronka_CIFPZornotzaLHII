@@ -10,6 +10,10 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import utils.Sesio;
 
+/**
+ * Administrazio-paneleko estatistikak, konexio-egoera eta babes-kopiak kudeatzen dituen kontroladorea.
+ * @author Yeray Garrido
+ */
 public class AdminPanelaController implements Initializable {
 
     @FXML private Label lblLangileak;
@@ -39,12 +43,14 @@ public class AdminPanelaController implements Initializable {
         lblAzkenKopia.setText(azkenKopiaDatea);
     }
 
+    /** Datu-basearekin konexioa egiaztatzen du eta etiketa eguneratzen du. */
     @FXML
     public void egiaztatuKonexioa() {
         boolean ok = EstadistikaDAO.dbKonexioaEgiaztatu();
         ezarriDbEgoera(ok);
     }
 
+    /** Datu-basearen babes-kopia SQL fitxategi batean gordetzen du. */
     @FXML
     public void eginBabesKopia() {
         try {
@@ -63,6 +69,10 @@ public class AdminPanelaController implements Initializable {
 
     // ── Laguntzaileak ────────────────────────────────────────────────────────
 
+    /**
+     * DB konexio-egoeraren etiketa eguneratzen du kolore eta testuarekin.
+     * @param konektatuta Konektatuta badago true
+     */
     private void ezarriDbEgoera(boolean konektatuta) {
         lblDbEgoera.getStyleClass().removeAll("text-success", "text-danger");
         if (konektatuta) {

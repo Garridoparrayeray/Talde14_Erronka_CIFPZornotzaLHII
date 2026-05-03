@@ -6,6 +6,11 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
+/**
+ * Datu-basearekin konexio bakarra mantentzen duen singleton klasea.
+ * Konfigurazioaren lehentasuna: ingurune-aldagaiak > application.properties.
+ * @author Yeray Garrido
+ */
 public class DBConexioa {
 
     private static final String URL;
@@ -43,6 +48,11 @@ public class DBConexioa {
 
     private DBConexioa() {}
 
+    /**
+     * Datu-basearekin konexioa itzultzen du, beharrezkoa bada berria sortuz.
+     * @return Konexio aktiboa
+     * @throws SQLException Konexio-errorea bada
+     */
     public static Connection getKonexioa() throws SQLException {
         if (konexioa == null || konexioa.isClosed()) {
             konexioa = DriverManager.getConnection(URL, USER, PASS);
@@ -50,6 +60,9 @@ public class DBConexioa {
         return konexioa;
     }
 
+    /**
+     * Datu-basearekin konexioa ixten du.
+     */
     public static void itxi() {
         try {
             if (konexioa != null && !konexioa.isClosed()) {

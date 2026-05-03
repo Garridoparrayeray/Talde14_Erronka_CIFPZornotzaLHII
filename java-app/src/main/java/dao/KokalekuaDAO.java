@@ -12,15 +12,15 @@ import java.util.List;
 
 /**
  * Kokalekuen datu-baseko eragiketak kudeatzen dituen DAO klasea.
+ * @author Yeray Garrido
  */
 public class KokalekuaDAO {
 
     /**
      * Datu-basetik kokaleku guztiak lortzen ditu, bakoitzeko artikulu kopuruarekin.
-     * @return String[][] matrizea: [id, armairua, apala, artikulu_kop, mota]
      */
-    public static List<String[]> getGuztiak() {
-        List<String[]> zerrenda = new ArrayList<String[]>();
+    public static List<Kokalekua> getGuztiak() {
+        List<Kokalekua> zerrenda = new ArrayList<>();
         String sql = "SELECT k.id_kokalekua, k.armairua, k.apala, k.bha_da, " +
                      "COUNT(a.id_artikulua) AS kop " +
                      "FROM KOKALEKUA k " +
@@ -31,19 +31,14 @@ public class KokalekuaDAO {
              PreparedStatement ps = con.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
-                String mota;
-                if (rs.getBoolean("bha_da")) {
-                    mota = "BHA";
-                } else {
-                    mota = "Arrunta";
-                }
-                zerrenda.add(new String[]{
-                    rs.getString("id_kokalekua"),
+                Kokalekua k = new Kokalekua(
                     rs.getString("armairua"),
                     rs.getString("apala"),
-                    rs.getString("kop"),
-                    mota
-                });
+                    rs.getBoolean("bha_da")
+                );
+                k.setKokalekuId(rs.getInt("id_kokalekua"));
+                k.setArtikuluKopurua(rs.getInt("kop"));
+                zerrenda.add(k);
             }
         } catch (SQLException e) {
             System.err.println("KokalekuaDAO.getGuztiak: " + e.getMessage());

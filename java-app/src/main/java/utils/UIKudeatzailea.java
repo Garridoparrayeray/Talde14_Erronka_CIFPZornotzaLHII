@@ -5,9 +5,11 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Interfaze grafikoaren kudeaketa errazteko klase laguntzailea.
@@ -15,6 +17,8 @@ import javafx.stage.Stage;
  * @author Yeray Garrido
  */
 public class UIKudeatzailea {
+
+    private static final Map<StackPane, StackPane> wrapperrak = new HashMap<>();
 
     /**
      * Errore mezu bat erakusten du pantailan Alert leiho baten bidez.
@@ -36,27 +40,23 @@ public class UIKudeatzailea {
      */
     public static void kargatuPanela(StackPane contentArea, String fxmlBidea) {
         try {
-            // Aurreko panelaren size-binding askatu
-            for (Node child : contentArea.getChildren()) {
-                if (child instanceof Region) {
-                    ((Region) child).prefWidthProperty().unbind();
-                    ((Region) child).prefHeightProperty().unbind();
-                }
+            StackPane aurrekoa = wrapperrak.remove(contentArea);
+            if (aurrekoa != null) {
+                aurrekoa.prefWidthProperty().unbind();
+                aurrekoa.prefHeightProperty().unbind();
             }
 
-            Node node = FXMLLoader.load(UIKudeatzailea.class.getResource(fxmlBidea));
+            Node nodoa = FXMLLoader.load(UIKudeatzailea.class.getResource(fxmlBidea));
+            StackPane envoltorio = new StackPane(nodoa);
+            StackPane.setAlignment(nodoa, javafx.geometry.Pos.TOP_LEFT);
+            envoltorio.prefWidthProperty().bind(contentArea.widthProperty());
+            envoltorio.prefHeightProperty().bind(contentArea.heightProperty());
 
-            // Panel berria beti contentArea-ren tamaina bete dezan lotu
-            if (node instanceof Region) {
-                Region r = (Region) node;
-                StackPane.setAlignment(r, javafx.geometry.Pos.TOP_LEFT);
-                r.prefWidthProperty().bind(contentArea.widthProperty());
-                r.prefHeightProperty().bind(contentArea.heightProperty());
-            }
-
-            contentArea.getChildren().setAll(node);
+            wrapperrak.put(contentArea, envoltorio);
+            contentArea.getChildren().setAll(envoltorio);
         } catch (Exception e) {
-            erakutsiErrorea("Errorea bista kargatzean", "Ezin izan da kargatu: " + fxmlBidea + "\n\nArrazoia: " + e.getMessage());
+            erakutsiErrorea("Errorea bista kargatzean",
+                    "Ezin izan da kargatu: " + fxmlBidea + "\n\nArrazoia: " + e.getMessage());
         }
     }
 
@@ -84,7 +84,9 @@ public class UIKudeatzailea {
                 stage.setMaximized(true);
             }
         } catch (Exception e) {
-            erakutsiErrorea("Errorea leihoa aldatzean", "Ezin izan da kargatu: " + fxmlBidea + "\n\nArrazoia: " + e.getMessage());
+            erakutsiErrorea("Errorea leihoa aldatzean",
+                    "Ezin izan da kargatu: " + fxmlBidea + "\n\nArrazoia: " + e.getMessage());
         }
     }
 }
+

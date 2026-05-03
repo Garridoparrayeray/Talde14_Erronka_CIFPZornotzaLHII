@@ -35,20 +35,23 @@ public class ErreklamazioaBerriController implements Initializable {
 
     private Runnable onGordeCb;
 
+    /**
+     * Gordetzean exekutatu beharreko callback ezartzen du.
+     * @param cb Gordetzean dei beharreko Runnable
+     */
     public void setOnGorde(Runnable cb) {
         this.onGordeCb = cb;
     }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // Kategoria zerrenda kargatu ComboBox-era
         ArrayList<Kategoria> kategoriak = new ArrayList<Kategoria>(KategoriaDAO.getGuztiak());
         cbKategoria.getItems().setAll(kategoriak);
     }
 
+    /** Formularioko datuak egiaztatzen ditu eta erreklamazioa datu-basean gordetzen du. */
     @FXML
     private void gorde() {
-        // Formularioko balioak lortu
         String nan          = txtNan.getText().trim();
         String izena        = txtIzena.getText().trim();
         String abizena      = txtAbizena.getText().trim();
@@ -57,23 +60,19 @@ public class ErreklamazioaBerriController implements Initializable {
         String deskribapena = txtDeskribapena.getText().trim();
         Kategoria kategoria = cbKategoria.getValue();
 
-        // Derrigorrezko eremuak egiaztatu
         if (nan.isEmpty() || izena.isEmpty() || abizena.isEmpty() || deskribapena.isEmpty() || kategoria == null) {
             mostrarErrorea("(*) eremuak bete behar dira.");
             return;
         }
 
-        // Saioaren langile IDa lortu
         int idLangile = 0;
         if (Sesio.getLangilea() != null) {
             idLangile = Sesio.getLangilea().getLangileId();
         }
 
-        // Datu-basean gorde
         boolean ok = ErreklamazioaDAO.gorde(nan, izena, abizena, telefonoa, emaila,
                                              kategoria.getKategoriaId(), deskribapena, idLangile);
         if (ok) {
-            // Ondo gorde bada, callback exekutatu eta leihoa itxi
             if (onGordeCb != null) {
                 onGordeCb.run();
             }
@@ -83,6 +82,7 @@ public class ErreklamazioaBerriController implements Initializable {
         }
     }
 
+    /** Aldaketak gorde gabe leihoa ixten du. */
     @FXML
     private void utzi() {
         itxi();

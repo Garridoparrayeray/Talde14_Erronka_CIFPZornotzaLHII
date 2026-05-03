@@ -11,6 +11,10 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
+/**
+ * Kategoria berri bat gehitzeko elkarrizketa-koadroaren kontroladorea.
+ * @author Yeray Garrido
+ */
 public class KategoriaBerriController implements Initializable {
 
     @FXML private TextField txtIzena;
@@ -19,6 +23,10 @@ public class KategoriaBerriController implements Initializable {
 
     private Runnable onGordeCb;
 
+    /**
+     * Gordetzean exekutatu beharreko callback ezartzen du.
+     * @param cb Gordetzean dei beharreko Runnable
+     */
     public void setOnGorde(Runnable cb) {
         this.onGordeCb = cb;
     }
@@ -28,6 +36,7 @@ public class KategoriaBerriController implements Initializable {
         ezkutuErrorea();
     }
 
+    /** Formularioko datuak egiaztatzen ditu eta kategoria datu-basean gordetzen du. */
     @FXML
     private void gorde() {
         String izena = txtIzena.getText().trim();
@@ -45,6 +54,7 @@ public class KategoriaBerriController implements Initializable {
         }
     }
 
+    /** Aldaketak gorde gabe leihoa ixten du. */
     @FXML
     private void utzi() {
         itxi();

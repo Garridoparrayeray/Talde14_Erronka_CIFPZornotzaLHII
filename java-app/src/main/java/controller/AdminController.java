@@ -13,6 +13,10 @@ import model.Langilea;
 import utils.Sesio;
 import utils.UIKudeatzailea;
 
+/**
+ * Administrazio-atalaren nabigazio-menua eta edukia kudeatzen duen kontroladorea.
+ * @author Yeray Garrido
+ */
 public class AdminController implements Initializable {
 
     @FXML private StackPane adminContentArea;
@@ -31,7 +35,7 @@ public class AdminController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        navBotoiak = new ArrayList<Button>();
+        navBotoiak = new ArrayList<>();
         navBotoiak.add(btnAdminPanela);
         navBotoiak.add(btnLangileak);
         navBotoiak.add(btnKategoriak);
@@ -58,17 +62,20 @@ public class AdminController implements Initializable {
         UIKudeatzailea.kargatuPanela(adminContentArea, "/view/AdminPanela.fxml");
     }
 
+    /** Admin panelaren bista kargatzen du. */
     @FXML public void loadAdminPanela() { setAktibo(btnAdminPanela); UIKudeatzailea.kargatuPanela(adminContentArea, "/view/AdminPanela.fxml"); }
     @FXML public void loadLangileak()   { setAktibo(btnLangileak);   UIKudeatzailea.kargatuPanela(adminContentArea, "/view/Langileak.fxml"); }
     @FXML public void loadKategoriak()  { setAktibo(btnKategoriak);  UIKudeatzailea.kargatuPanela(adminContentArea, "/view/Kategoriak.fxml"); }
     @FXML public void loadKokalekuak()  { setAktibo(btnKokalekuak);  UIKudeatzailea.kargatuPanela(adminContentArea, "/view/Kokalekuak.fxml"); }
     @FXML public void loadAuditoria()   { setAktibo(btnAuditoria);   UIKudeatzailea.kargatuPanela(adminContentArea, "/view/Auditoria.fxml"); }
 
+    /** Langile-ikuspegira itzultzen da admin modutik. */
     @FXML
     public void volverAUser() {
         UIKudeatzailea.aldatuLeihoa(adminContentArea, "/view/MainLayout.fxml", true);
     }
 
+    /** Saioa ixten du eta login pantailara itzultzen da. */
     @FXML
     public void itxiSaioa() {
         Sesio.itxi();
@@ -77,6 +84,10 @@ public class AdminController implements Initializable {
 
     // ---- helpers ----
 
+    /**
+     * Nabigazio menuko botoi bat aktibo gisa markatzen du estiloz.
+     * @param aktibo Aktibatu beharreko botoia
+     */
     private void setAktibo(Button aktibo) {
         for (Button b : navBotoiak) {  // botoi guztiak berrezarri
             b.getStyleClass().removeAll("nav-item-active", "nav-item");
