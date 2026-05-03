@@ -8,16 +8,11 @@ import java.util.ResourceBundle;
 import dao.ArtikuluaDAO;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
 import model.Artikulua;
 
 /**
@@ -92,9 +87,6 @@ public class InbentarioController implements Initializable {
         String katSel = cbKategoria.getValue();
         String egSel = cbEgoera.getValue();
 
-        if (katSel == null) katSel = "Kategoria guztiak";
-        if (egSel == null)  egSel  = "Egoera guztiak";
-
         List<Artikulua> iragaziak = new ArrayList<>();
         for (Artikulua a : guztiak) {
             boolean testPasa = testua.isEmpty()
@@ -117,27 +109,5 @@ public class InbentarioController implements Initializable {
         cbKategoria.getSelectionModel().selectFirst();
         cbEgoera.getSelectionModel().selectFirst();
         erakutsiDatuak(guztiak);
-    }
-
-    /** Artikulu berri bat gehitzeko elkarrizketa-koadroa irekitzen du. */
-    @FXML
-    public void artikuluBerria() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/ArtikuluaBerria.fxml"));
-            Parent root = loader.load();
-            ArtikuluaBerriController ctrl = loader.getController();
-
-            Stage dialog = new Stage();
-            dialog.initOwner(taula.getScene().getWindow());
-            dialog.initModality(Modality.WINDOW_MODAL);
-            dialog.setTitle("Artikulu berria");
-            dialog.setScene(new Scene(root, 480, 520));
-            dialog.setResizable(false);
-
-            ctrl.setOnGorde(this::kargatu);
-            dialog.showAndWait();
-        } catch (Exception e) {
-            System.err.println("InbentarioController.artikuluBerria: " + e.getMessage());
-        }
     }
 }

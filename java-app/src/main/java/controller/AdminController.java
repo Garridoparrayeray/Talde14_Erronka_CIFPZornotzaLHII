@@ -71,7 +71,7 @@ public class AdminController implements Initializable {
 
     /** Langile-ikuspegira itzultzen da admin modutik. */
     @FXML
-    public void volverAUser() {
+    public void ErabiltzaileaItzuli() {
         UIKudeatzailea.aldatuLeihoa(adminContentArea, "/view/MainLayout.fxml", true);
     }
 

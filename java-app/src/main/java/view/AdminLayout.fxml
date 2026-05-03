@@ -57,7 +57,7 @@
                <children>
 
                   <!-- Langile-ra aldatu -->
-                  <HBox alignment="CENTER_LEFT" spacing="10.0" styleClass="admin-switch-box" onMouseClicked="#volverAUser">
+                  <HBox alignment="CENTER_LEFT" spacing="10.0" styleClass="admin-switch-box" onMouseClicked="#ErabiltzaileaItzuli">
                      <children>
                         <Label style="-fx-font-size: 18px;" text="👤" />
                         <VBox>
