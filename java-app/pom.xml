@@ -112,7 +112,6 @@
                         <configuration>
                             <useDefaultValues>true</useDefaultValues>
                             <files>
-                                <file>${project.basedir}/../.env</file>
                                 <file>${project.basedir}/src/main/resources/application.properties</file>
                             </files>
                         </configuration>
