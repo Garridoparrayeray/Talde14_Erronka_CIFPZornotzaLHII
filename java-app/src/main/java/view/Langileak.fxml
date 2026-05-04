@@ -9,62 +9,66 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox styleClass="bg-light" stylesheets="@style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+<StackPane fx:id="contentArea" styleClass="bg-light" stylesheets="@style.css"
+      xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="controller.LangileakController">
    <children>
-
-      <HBox alignment="CENTER_LEFT" style="-fx-border-color: transparent transparent #E5E7EB transparent; -fx-padding: 15 30;" styleClass="bg-white">
+      <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
          <children>
-            <Label styleClass="font-title" text="Langileak">
-               <font><Font size="20.0" /></font>
-            </Label>
-            <Region HBox.hgrow="ALWAYS" />
-         </children>
-      </HBox>
 
-      <VBox spacing="20.0" VBox.vgrow="ALWAYS">
-         <children>
-            
-            <VBox spacing="20.0" styleClass="card" VBox.vgrow="ALWAYS">
+            <HBox alignment="CENTER_LEFT" style="-fx-border-color: transparent transparent #E5E7EB transparent; -fx-padding: 15 30;" styleClass="bg-white">
                <children>
-                  
-                  <HBox alignment="CENTER_LEFT" spacing="15.0">
-                     <children>
-                        <TextField prefWidth="350.0" promptText="Bilatu langilea..." styleClass="form-control" HBox.hgrow="ALWAYS" />
-                        <ComboBox prefWidth="180.0" promptText="Rol guztiak" styleClass="form-select" />
-                        
-                        <Button mnemonicParsing="false" styleClass="btn-outline" text="CSV inportatu" />
-                        <Button mnemonicParsing="false" styleClass="btn-primary" text="+ Langilea gehitu" />
-                     </children>
-                  </HBox>
+                  <Label styleClass="font-title" text="Langileak">
+                     <font><Font size="20.0" /></font>
+                  </Label>
+                  <Region HBox.hgrow="ALWAYS" />
+               </children>
+            </HBox>
 
-                  <TableView styleClass="table-view" VBox.vgrow="ALWAYS">
-                    <columns>
-                      <TableColumn prefWidth="200.0" text="LANGILEA" />
-                      <TableColumn prefWidth="150.0" text="ERABILTZAILEA" />
-                      <TableColumn prefWidth="150.0" text="SAILA" />
-                      <TableColumn prefWidth="120.0" text="ROLA" />
-                      <TableColumn prefWidth="100.0" text="EGOERA" />
-                      <TableColumn prefWidth="150.0" text="AZKEN SARRERA" />
-                      <TableColumn prefWidth="100.0" text="EKINTZAK" />
-                    </columns>
-                     <columnResizePolicy>
-                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                     </columnResizePolicy>
-                  </TableView>
-                  
+            <VBox spacing="20.0" VBox.vgrow="ALWAYS">
+               <children>
+
+                  <VBox spacing="20.0" styleClass="card" VBox.vgrow="ALWAYS">
+                     <children>
+
+                        <HBox alignment="CENTER_LEFT" spacing="15.0">
+                           <children>
+                              <TextField fx:id="txtBilaketa" prefWidth="350.0" promptText="Bilatu langilea..." styleClass="form-control" HBox.hgrow="ALWAYS" onAction="#bilatu" />
+                              <ComboBox fx:id="cbRola" prefWidth="180.0" promptText="Rol guztiak" styleClass="form-select" onAction="#bilatu" />
+                              <Button mnemonicParsing="false" styleClass="btn-primary" text="+ Langilea gehitu" onAction="#langileaBerria" />
+                           </children>
+                        </HBox>
+
+                        <TableView fx:id="taula" styleClass="table-view" VBox.vgrow="ALWAYS">
+                          <columns>
+                            <TableColumn fx:id="colLangilea"      prefWidth="200.0" text="LANGILEA" />
+                            <TableColumn fx:id="colErabiltzailea" prefWidth="150.0" text="ERABILTZAILEA" />
+                            <TableColumn fx:id="colSaila"         prefWidth="150.0" text="SAILA" />
+                            <TableColumn fx:id="colRola"          prefWidth="120.0" text="ROLA" />
+                            <TableColumn fx:id="colEgoera"        prefWidth="100.0" text="EGOERA" />
+                            <TableColumn fx:id="colAzkenSarrera"  prefWidth="150.0" text="AZKEN SARRERA" />
+                          </columns>
+                           <columnResizePolicy>
+                              <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                           </columnResizePolicy>
+                        </TableView>
+
+                     </children>
+                     <padding>
+                        <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />
+                     </padding>
+                  </VBox>
+
                </children>
                <padding>
-                  <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />
+                  <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
                </padding>
             </VBox>
-
          </children>
-         <padding>
-            <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
-         </padding>
       </VBox>
    </children>
-</VBox>
+</StackPane>

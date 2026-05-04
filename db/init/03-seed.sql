@@ -71,6 +71,15 @@ INSERT INTO MUGIMENDUA (deskribapena, id_artikulua) VALUES
     ('Artikulua sisteman erregistratu da F-004 kokalekuan', 'G-092-26'),
     ('Artikulua sisteman erregistratu da A-001 kokalekuan', 'G-093-26');
 
+-- ---------------------------------------------------------------------
+-- ERREKLAMAZIOA (probetarako datuak)
+-- ---------------------------------------------------------------------
+INSERT INTO ERREKLAMAZIOA (erreklamazio_data, errek_egoera, deskribapen_bilatua, id_hartzailea, id_kategoria) VALUES
+    ('2026-04-10', 'irekita',   'Kartera beltza, txartelak eta diru pixka batekin', 1, 4),
+    ('2026-04-15', 'irekita',   'Giltzak, etxekoak eta Honda auto giltza bat',      2, 3),
+    ('2026-04-20', 'ebatzita',  'Betaurrekoak graduatuak, urrezko markoa',           1, 2);
+
 SELECT '[INIT] Probetarako datuak txertatuta' AS mezua;
-SELECT COUNT(*) AS langile_kop FROM LANGILEA;
-SELECT COUNT(*) AS artikulu_kop FROM ARTIKULUA;
+SELECT COUNT(*) AS langile_kop      FROM LANGILEA;
+SELECT COUNT(*) AS artikulu_kop     FROM ARTIKULUA;
+SELECT COUNT(*) AS erreklamazio_kop FROM ERREKLAMAZIOA;

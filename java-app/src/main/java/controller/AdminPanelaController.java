@@ -1,5 +1,8 @@
 package controller;
 
+import java.net.URL;
+import java.util.ResourceBundle;
+
 import dao.BackupDAO;
 import dao.EstadistikaDAO;
 import javafx.fxml.FXML;
@@ -7,18 +10,28 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import utils.Sesio;
 
-import java.net.URL;
-import java.util.ResourceBundle;
-
+/**
+ * Administrazio-paneleko estatistikak, konexio-egoera eta babes-kopiak
+ * kudeatzen dituen kontroladorea.
+ *
+ * @author Yeray Garrido
+ */
 public class AdminPanelaController implements Initializable {
 
-    @FXML private Label lblLangileak;
-    @FXML private Label lblArtikuluak;
-    @FXML private Label lblKategoriak;
-    @FXML private Label lblKokalekuak;
-    @FXML private Label lblDbEgoera;
-    @FXML private Label lblAzkenKopia;
-    @FXML private Label lblIzena;
+    @FXML
+    private Label lblLangileak;
+    @FXML
+    private Label lblArtikuluak;
+    @FXML
+    private Label lblKategoriak;
+    @FXML
+    private Label lblKokalekuak;
+    @FXML
+    private Label lblDbEgoera;
+    @FXML
+    private Label lblAzkenKopia;
+    @FXML
+    private Label lblIzena;
 
     private static String azkenKopiaDatea = "Inoiz ez";
 
@@ -39,18 +52,24 @@ public class AdminPanelaController implements Initializable {
         lblAzkenKopia.setText(azkenKopiaDatea);
     }
 
+    /**
+     * Datu-basearekin konexioa egiaztatzen du eta etiketa eguneratzen du.
+     */
     @FXML
     public void egiaztatuKonexioa() {
         boolean ok = EstadistikaDAO.dbKonexioaEgiaztatu();
         ezarriDbEgoera(ok);
     }
 
+    /**
+     * Datu-basearen babes-kopia SQL fitxategi batean gordetzen du.
+     */
     @FXML
     public void eginBabesKopia() {
         try {
             BackupDAO.eginBabesKopia();
             azkenKopiaDatea = java.time.LocalDateTime.now()
-                .format(java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
+                    .format(java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
             lblAzkenKopia.setText(azkenKopiaDatea);
             lblAzkenKopia.getStyleClass().removeAll("text-danger", "text-success");
             lblAzkenKopia.getStyleClass().add("text-success");
@@ -62,7 +81,11 @@ public class AdminPanelaController implements Initializable {
     }
 
     // ── Laguntzaileak ────────────────────────────────────────────────────────
-
+    /**
+     * DB konexio-egoeraren etiketa eguneratzen du kolore eta testuarekin.
+     *
+     * @param konektatuta Konektatuta badago true
+     */
     private void ezarriDbEgoera(boolean konektatuta) {
         lblDbEgoera.getStyleClass().removeAll("text-success", "text-danger");
         if (konektatuta) {
