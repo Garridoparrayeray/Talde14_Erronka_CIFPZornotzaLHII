@@ -209,8 +209,12 @@ chmod +x start-linux.sh stop-linux.sh
 ### Windows
 
 1. **Docker Desktop** ireki eta itxaron prest egon arte
-2. **VcXsrv (XLaunch)** ireki → *Disable access control* aktibatu
-3. `start-windows.bat` exekutatu (bi klik)
+2. **VcXsrv (XLaunch)** ireki (XLaunch dehitzen da)
+3. DISPLAY SETTINGS -> ONE LARGE WINDOW
+4. Dispaly number -> 0
+5. Start no client
+6. Disable access control* aktibatu
+7. `start-windows.bat` exekutatu (bi klik)
 
 ### Aurretiko eskakizunak
 
