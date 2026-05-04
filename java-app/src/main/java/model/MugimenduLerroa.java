@@ -2,6 +2,7 @@ package model;
 
 /**
  * Auditoria-taulako mugimenduen errenkada bat adierazten duen DTO klasea.
+ *
  * @author Yeray Garrido
  */
 public class MugimenduLerroa {
@@ -13,6 +14,7 @@ public class MugimenduLerroa {
 
     /**
      * MugimenduLerroa-ren eraikitzailea.
+     *
      * @param data Mugimenduaren data eta ordua
      * @param langilea Eragiketa burutu duen langilearen izena
      * @param ekintza Eginikako ekintzaren deskribapena
@@ -25,8 +27,19 @@ public class MugimenduLerroa {
         this.artikuluId = artikuluId;
     }
 
-    public String getData() { return data; }
-    public String getLangilea() { return langilea; }
-    public String getEkintza() { return ekintza; }
-    public String getArtikuluId() { return artikuluId; }
+    public String getData() {
+        return data;
+    }
+
+    public String getLangilea() {
+        return langilea;
+    }
+
+    public String getEkintza() {
+        return ekintza;
+    }
+
+    public String getArtikuluId() {
+        return artikuluId;
+    }
 }

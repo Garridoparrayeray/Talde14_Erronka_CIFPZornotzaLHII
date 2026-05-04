@@ -16,34 +16,47 @@ import javafx.scene.control.TextField;
 import model.Artikulua;
 
 /**
- * Inbentarioko artikuluen zerrenda eta bilaketa-filtroak kudeatzen dituen kontroladorea.
+ * Inbentarioko artikuluen zerrenda eta bilaketa-filtroak kudeatzen dituen
+ * kontroladorea.
+ *
  * @author Yeray Garrido
  */
 public class InbentarioController implements Initializable {
 
-    @FXML private TableView<Artikulua>           taula;
-    @FXML private TableColumn<Artikulua, String> colKodea;
-    @FXML private TableColumn<Artikulua, String> colIzena;
-    @FXML private TableColumn<Artikulua, String> colDeskribapena;
-    @FXML private TableColumn<Artikulua, String> colKategoria;
-    @FXML private TableColumn<Artikulua, String> colKokalekua;
-    @FXML private TableColumn<Artikulua, String> colSarrera;
-    @FXML private TableColumn<Artikulua, String> colEgoera;
-    @FXML private TextField    txtBilaketa;
-    @FXML private ComboBox<String> cbKategoria;
-    @FXML private ComboBox<String> cbEgoera;
+    @FXML
+    private TableView<Artikulua> taula;
+    @FXML
+    private TableColumn<Artikulua, String> colKodea;
+    @FXML
+    private TableColumn<Artikulua, String> colIzena;
+    @FXML
+    private TableColumn<Artikulua, String> colDeskribapena;
+    @FXML
+    private TableColumn<Artikulua, String> colKategoria;
+    @FXML
+    private TableColumn<Artikulua, String> colKokalekua;
+    @FXML
+    private TableColumn<Artikulua, String> colSarrera;
+    @FXML
+    private TableColumn<Artikulua, String> colEgoera;
+    @FXML
+    private TextField txtBilaketa;
+    @FXML
+    private ComboBox<String> cbKategoria;
+    @FXML
+    private ComboBox<String> cbEgoera;
 
     private List<Artikulua> guztiak;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        colKodea.setCellValueFactory(c        -> new SimpleStringProperty(c.getValue().getArtikuluKodea()));
-        colIzena.setCellValueFactory(c        -> new SimpleStringProperty(c.getValue().getIzenburua()));
+        colKodea.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getArtikuluKodea()));
+        colIzena.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getIzenburua()));
         colDeskribapena.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getDeskribapenaSegurua()));
-        colKategoria.setCellValueFactory(c    -> new SimpleStringProperty(c.getValue().getKategoriaIzena()));
-        colKokalekua.setCellValueFactory(c    -> new SimpleStringProperty(c.getValue().getKokalekuaIzena()));
-        colSarrera.setCellValueFactory(c      -> new SimpleStringProperty(c.getValue().getSarreraDataFormatua()));
-        colEgoera.setCellValueFactory(c       -> new SimpleStringProperty(c.getValue().getEgoeraTestua()));
+        colKategoria.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getKategoriaIzena()));
+        colKokalekua.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getKokalekuaIzena()));
+        colSarrera.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getSarreraDataFormatua()));
+        colEgoera.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getEgoeraTestua()));
 
         cbEgoera.getItems().add("Egoera guztiak");
         cbEgoera.getItems().add("Biltegian");
@@ -54,7 +67,9 @@ public class InbentarioController implements Initializable {
         kargatu();
     }
 
-    /** Kategoria-combo betetzen du inbentarioan dauden kategoriekin. */
+    /**
+     * Kategoria-combo betetzen du inbentarioan dauden kategoriekin.
+     */
     private void beteteKategoriaCombo() {
         cbKategoria.getItems().clear();
         cbKategoria.getItems().add("Kategoria guztiak");
@@ -77,7 +92,9 @@ public class InbentarioController implements Initializable {
         taula.getItems().setAll(datuak);
     }
 
-    /** Testua, kategoria eta egoeraren araberako bilaketa-filtroa aplikatzen du. */
+    /**
+     * Testua, kategoria eta egoeraren araberako bilaketa-filtroa aplikatzen du.
+     */
     @FXML
     private void bilatu() {
         if (guztiak == null) {
@@ -90,11 +107,11 @@ public class InbentarioController implements Initializable {
         List<Artikulua> iragaziak = new ArrayList<>();
         for (Artikulua a : guztiak) {
             boolean testPasa = testua.isEmpty()
-                || a.getArtikuluKodea().toLowerCase().contains(testua)
-                || a.getIzenburua().toLowerCase().contains(testua)
-                || a.getDeskribapenaSegurua().toLowerCase().contains(testua);
+                    || a.getArtikuluKodea().toLowerCase().contains(testua)
+                    || a.getIzenburua().toLowerCase().contains(testua)
+                    || a.getDeskribapenaSegurua().toLowerCase().contains(testua);
             boolean katPasa = katSel.equals("Kategoria guztiak") || a.getKategoriaIzena().equals(katSel);
-            boolean egPasa  = egSel.equals("Egoera guztiak")     || a.getEgoeraTestua().equalsIgnoreCase(egSel);
+            boolean egPasa = egSel.equals("Egoera guztiak") || a.getEgoeraTestua().equalsIgnoreCase(egSel);
             if (testPasa && katPasa && egPasa) {
                 iragaziak.add(a);
             }
@@ -102,7 +119,10 @@ public class InbentarioController implements Initializable {
         erakutsiDatuak(iragaziak);
     }
 
-    /** Bilaketa-eremuak eta filtroak garbitzen ditu eta zerrenda osoa erakusten du. */
+    /**
+     * Bilaketa-eremuak eta filtroak garbitzen ditu eta zerrenda osoa erakusten
+     * du.
+     */
     @FXML
     private void garbitu() {
         txtBilaketa.clear();

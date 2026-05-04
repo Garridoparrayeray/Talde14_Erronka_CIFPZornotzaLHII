@@ -1,15 +1,16 @@
 package dao;
 
-import utils.DBConexioa;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import utils.DBConexioa;
+
 /**
  * Emanaldien datu-baseko eragiketak kudeatzen dituen DAO klasea.
+ *
  * @author Yeray Garrido
  */
 public class EmanaldiaDAO {
@@ -17,12 +18,13 @@ public class EmanaldiaDAO {
     /**
      * Emanaldia formalizatzen du: hartzailea sortu/bilatu, emanaldia gorde,
      * artikuluaren egoera eguneratu eta mugimendua erregistratu.
+     *
      * @return Ondo joan bada true
      */
     public static boolean formalizatu(String idArtikulua, String nan, String izena,
-                                       String abizena, String telefonoa, String emaila,
-                                       String helbidea, String oharrak, int idLangile,
-                                       String dokumentuBidea) {
+            String abizena, String telefonoa, String emaila,
+            String helbidea, String oharrak, int idLangile,
+            String dokumentuBidea) {
         Connection con = null;
         try {
             con = DBConexioa.getKonexioa();
@@ -36,8 +38,8 @@ public class EmanaldiaDAO {
             }
 
             // 2. EMANALDIA txertatu
-            String sqlEm = "INSERT INTO EMANALDIA (emate_data, oharrak, dokumentu_bidea, id_artikulua, id_hartzailea, id_langile) " +
-                           "VALUES (CURDATE(), ?, ?, ?, ?, ?)";
+            String sqlEm = "INSERT INTO EMANALDIA (emate_data, oharrak, dokumentu_bidea, id_artikulua, id_hartzailea, id_langile) "
+                    + "VALUES (CURDATE(), ?, ?, ?, ?, ?)";
             try (PreparedStatement ps = con.prepareStatement(sqlEm)) {
                 ps.setString(1, oharrak.isEmpty() ? null : oharrak);
                 ps.setString(2, dokumentuBidea);
@@ -98,12 +100,14 @@ public class EmanaldiaDAO {
     }
 
     /**
-     * NAN bidez jabea bilatzen du edo, ez badago, sortu egiten du HARTZAILEA eta JABEA tauletan.
+     * NAN bidez jabea bilatzen du edo, ez badago, sortu egiten du HARTZAILEA
+     * eta JABEA tauletan.
+     *
      * @return Jaberen id_hartzailea, edo -1 errorea bada
      */
     private static int lortuEdoSortuJabea(Connection con, String nan, String izena,
-                                            String abizena, String telefonoa,
-                                            String emaila, String helbidea) throws SQLException {
+            String abizena, String telefonoa,
+            String emaila, String helbidea) throws SQLException {
         // NAN bidez bilatu
         String sqlBilatu = "SELECT id_hartzailea FROM JABEA WHERE nan = ?";
         try (PreparedStatement ps = con.prepareStatement(sqlBilatu)) {

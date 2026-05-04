@@ -10,23 +10,28 @@ import utils.Sesio;
 import utils.UIKudeatzailea;
 
 /**
- * Login formularioa kudeatzen duen kontroladorea.
- * Erabiltzaile-izena eta pasahitza egiaztatzen ditu eta dagokion bista kargatzen du.
+ * Login formularioa kudeatzen duen kontroladorea. Erabiltzaile-izena eta
+ * pasahitza egiaztatzen ditu eta dagokion bista kargatzen du.
+ *
  * @author Yeray Garrido
  */
 public class LoginController {
 
-    @FXML private TextField     txtErabiltzailea;
-    @FXML private PasswordField txtPasahitza;
-    @FXML private Label         lblErrorea;
+    @FXML
+    private TextField txtErabiltzailea;
+    @FXML
+    private PasswordField txtPasahitza;
+    @FXML
+    private Label lblErrorea;
 
     /**
-     * Saioa hasteko saiakera egiten du. Arrakasta izanez gero dagokion bista irekitzen du.
+     * Saioa hasteko saiakera egiten du. Arrakasta izanez gero dagokion bista
+     * irekitzen du.
      */
     @FXML
     private void sartu() {
         String erabiltzailea = txtErabiltzailea.getText().trim();
-        String pasahitza     = txtPasahitza.getText();
+        String pasahitza = txtPasahitza.getText();
 
         if (erabiltzailea.isEmpty() || pasahitza.isEmpty()) {
             lblErrorea.setText("Bete eremu guztiak.");

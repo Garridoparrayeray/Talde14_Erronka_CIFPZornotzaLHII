@@ -3,13 +3,16 @@ package model;
 import java.util.List;
 
 /**
- * Langilearen azpiklasea, administrazio-baimen osoa duen erabiltzailea adierazten duena.
+ * Langilearen azpiklasea, administrazio-baimen osoa duen erabiltzailea
+ * adierazten duena.
+ *
  * @author Yeray Garrido
  */
 public class Administratzailea extends Langilea {
 
     /**
      * Administratzailearen eraikitzailea.
+     *
      * @param langileId Langilearen identifikagailu bakarra
      * @param izena Administratzailearen izena
      * @param abizena Administratzailearen abizena
@@ -40,6 +43,7 @@ public class Administratzailea extends Langilea {
 
     /**
      * Erreklamazio guztiak ikusteko baimena duen metodoa.
+     *
      * @return Erreklamazioen zerrenda
      */
     public List<Erreklamazioa> ikusiErreklamazioGuztiak() {

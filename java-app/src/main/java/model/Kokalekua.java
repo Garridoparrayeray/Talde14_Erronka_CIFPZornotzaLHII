@@ -2,6 +2,7 @@ package model;
 
 /**
  * Biltegiko kokaleku fisiko bat adierazten duen eredua (armairua eta apala).
+ *
  * @author Yeray Garrido
  */
 public class Kokalekua {
@@ -14,6 +15,7 @@ public class Kokalekua {
 
     /**
      * Kokalekuaren eraikitzailea.
+     *
      * @param armairua Armairuaren kodea edo izena
      * @param apala Apalaren kodea edo izena
      * @param bhaDa Behin-Behineko Harrera Alderdian badago true
@@ -26,6 +28,7 @@ public class Kokalekua {
 
     /**
      * Kokalekuaren deskripzio osoa itzultzen du, BHA marka barne.
+     *
      * @return Kokalekuaren testu osoa
      */
     public String getKokalekuOsoa() {
@@ -38,6 +41,7 @@ public class Kokalekua {
 
     /**
      * Kokalekuaren mota itzultzen du.
+     *
      * @return "BHA" edo "Arrunta"
      */
     public String getMota() {
@@ -49,18 +53,41 @@ public class Kokalekua {
 
     /**
      * Kokalekuan dauden artikulu kopurua kate gisa itzultzen du.
+     *
      * @return Artikulu kopurua String gisa
      */
-    public String getArtikuluKopuruaStr() { return String.valueOf(artikuluKopurua); }
+    public String getArtikuluKopuruaStr() {
+        return String.valueOf(artikuluKopurua);
+    }
 
     // Getters & Setters
-    public int getKokalekuId() { return kokalekuId; }
-    public void setKokalekuId(int id) { this.kokalekuId = id; }
-    public String getArmairua() { return armairua; }
-    public String getApala() { return apala; }
-    public boolean isBhaDa() { return bhaDa; }
-    public int getArtikuluKopurua() { return artikuluKopurua; }
-    public void setArtikuluKopurua(int artikuluKopurua) { this.artikuluKopurua = artikuluKopurua; }
+    public int getKokalekuId() {
+        return kokalekuId;
+    }
+
+    public void setKokalekuId(int id) {
+        this.kokalekuId = id;
+    }
+
+    public String getArmairua() {
+        return armairua;
+    }
+
+    public String getApala() {
+        return apala;
+    }
+
+    public boolean isBhaDa() {
+        return bhaDa;
+    }
+
+    public int getArtikuluKopurua() {
+        return artikuluKopurua;
+    }
+
+    public void setArtikuluKopurua(int artikuluKopurua) {
+        this.artikuluKopurua = artikuluKopurua;
+    }
 
     @Override
     public String toString() {

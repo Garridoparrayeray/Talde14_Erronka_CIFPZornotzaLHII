@@ -14,22 +14,33 @@ import utils.Sesio;
 import utils.UIKudeatzailea;
 
 /**
- * Administrazio-atalaren nabigazio-menua eta edukia kudeatzen duen kontroladorea.
+ * Administrazio-atalaren nabigazio-menua eta edukia kudeatzen duen
+ * kontroladorea.
+ *
  * @author Yeray Garrido
  */
 public class AdminController implements Initializable {
 
-    @FXML private StackPane adminContentArea;
+    @FXML
+    private StackPane adminContentArea;
 
-    @FXML private Button btnAdminPanela;
-    @FXML private Button btnLangileak;
-    @FXML private Button btnKategoriak;
-    @FXML private Button btnKokalekuak;
-    @FXML private Button btnAuditoria;
+    @FXML
+    private Button btnAdminPanela;
+    @FXML
+    private Button btnLangileak;
+    @FXML
+    private Button btnKategoriak;
+    @FXML
+    private Button btnKokalekuak;
+    @FXML
+    private Button btnAuditoria;
 
-    @FXML private Label lblLangileIzena;
-    @FXML private Label lblLangileRola;
-    @FXML private Label lblInitialak;
+    @FXML
+    private Label lblLangileIzena;
+    @FXML
+    private Label lblLangileRola;
+    @FXML
+    private Label lblInitialak;
 
     private ArrayList<Button> navBotoiak;
 
@@ -46,7 +57,7 @@ public class AdminController implements Initializable {
         if (l != null) {
             lblLangileIzena.setText(l.getIzena() + " " + l.getAbizena());
             lblLangileRola.setText(l.getRola());
-            
+
             String ini = "";
             if (l.getIzena() != null && !l.getIzena().isEmpty()) {
                 ini = ini + l.getIzena().charAt(0);
@@ -54,7 +65,7 @@ public class AdminController implements Initializable {
             if (l.getAbizena() != null && !l.getAbizena().isEmpty()) {
                 ini = ini + l.getAbizena().charAt(0);
             }
-            
+
             lblInitialak.setText(ini.toUpperCase());
         }
 
@@ -62,20 +73,50 @@ public class AdminController implements Initializable {
         UIKudeatzailea.kargatuPanela(adminContentArea, "/view/AdminPanela.fxml");
     }
 
-    /** Admin panelaren bista kargatzen du. */
-    @FXML public void loadAdminPanela() { setAktibo(btnAdminPanela); UIKudeatzailea.kargatuPanela(adminContentArea, "/view/AdminPanela.fxml"); }
-    @FXML public void loadLangileak()   { setAktibo(btnLangileak);   UIKudeatzailea.kargatuPanela(adminContentArea, "/view/Langileak.fxml"); }
-    @FXML public void loadKategoriak()  { setAktibo(btnKategoriak);  UIKudeatzailea.kargatuPanela(adminContentArea, "/view/Kategoriak.fxml"); }
-    @FXML public void loadKokalekuak()  { setAktibo(btnKokalekuak);  UIKudeatzailea.kargatuPanela(adminContentArea, "/view/Kokalekuak.fxml"); }
-    @FXML public void loadAuditoria()   { setAktibo(btnAuditoria);   UIKudeatzailea.kargatuPanela(adminContentArea, "/view/Auditoria.fxml"); }
+    /**
+     * Admin panelaren bista kargatzen du.
+     */
+    @FXML
+    public void loadAdminPanela() {
+        setAktibo(btnAdminPanela);
+        UIKudeatzailea.kargatuPanela(adminContentArea, "/view/AdminPanela.fxml");
+    }
 
-    /** Langile-ikuspegira itzultzen da admin modutik. */
+    @FXML
+    public void loadLangileak() {
+        setAktibo(btnLangileak);
+        UIKudeatzailea.kargatuPanela(adminContentArea, "/view/Langileak.fxml");
+    }
+
+    @FXML
+    public void loadKategoriak() {
+        setAktibo(btnKategoriak);
+        UIKudeatzailea.kargatuPanela(adminContentArea, "/view/Kategoriak.fxml");
+    }
+
+    @FXML
+    public void loadKokalekuak() {
+        setAktibo(btnKokalekuak);
+        UIKudeatzailea.kargatuPanela(adminContentArea, "/view/Kokalekuak.fxml");
+    }
+
+    @FXML
+    public void loadAuditoria() {
+        setAktibo(btnAuditoria);
+        UIKudeatzailea.kargatuPanela(adminContentArea, "/view/Auditoria.fxml");
+    }
+
+    /**
+     * Langile-ikuspegira itzultzen da admin modutik.
+     */
     @FXML
     public void ErabiltzaileaItzuli() {
         UIKudeatzailea.aldatuLeihoa(adminContentArea, "/view/MainLayout.fxml", true);
     }
 
-    /** Saioa ixten du eta login pantailara itzultzen da. */
+    /**
+     * Saioa ixten du eta login pantailara itzultzen da.
+     */
     @FXML
     public void itxiSaioa() {
         Sesio.itxi();
@@ -83,9 +124,9 @@ public class AdminController implements Initializable {
     }
 
     // ---- helpers ----
-
     /**
      * Nabigazio menuko botoi bat aktibo gisa markatzen du estiloz.
+     *
      * @param aktibo Aktibatu beharreko botoia
      */
     private void setAktibo(Button aktibo) {

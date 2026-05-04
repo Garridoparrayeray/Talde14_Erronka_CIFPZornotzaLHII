@@ -3,8 +3,9 @@ package model;
 import java.util.Date;
 
 /**
- * Bat-etortze posible baten jakinarazpena adierazten duen eredua.
- * Erreklamazino bat eta artikulu bat lotzen ditu, kanalaren bidez bidaltzeko.
+ * Bat-etortze posible baten jakinarazpena adierazten duen eredua. Erreklamazino
+ * bat eta artikulu bat lotzen ditu, kanalaren bidez bidaltzeko.
+ *
  * @author Yeray Garrido
  */
 public class Jakinarazpena {
@@ -19,6 +20,7 @@ public class Jakinarazpena {
 
     /**
      * Jakinarazpenaren eraikitzailea. Mezua automatikoki sortzen du.
+     *
      * @param erreklamazioa Lotutako erreklamazioa
      * @param artikulua Bat datorren artikulua
      * @param kanala Bidaltzeko kanala
@@ -30,7 +32,7 @@ public class Jakinarazpena {
         this.bidaltzaData = new Date();
         this.irakurrita = false;
         this.mezua = "Zure erreklamazioarekin bat datorren artikulua aurkitu da: "
-                   + artikulua.getIzenburua();
+                + artikulua.getIzenburua();
     }
 
     /**
@@ -47,13 +49,33 @@ public class Jakinarazpena {
     }
 
     // Getters
-    public int getJakinarazpenaId() { return jakinarazpenaId; }
-    public Date getBidaltzaData() { return bidaltzaData; }
-    public Kanala getKanala() { return kanala; }
-    public String getMezua() { return mezua; }
-    public boolean isIrakurrita() { return irakurrita; }
-    public Erreklamazioa getErreklamazioa() { return erreklamazioa; }
-    public Artikulua getArtikulua() { return artikulua; }
+    public int getJakinarazpenaId() {
+        return jakinarazpenaId;
+    }
+
+    public Date getBidaltzaData() {
+        return bidaltzaData;
+    }
+
+    public Kanala getKanala() {
+        return kanala;
+    }
+
+    public String getMezua() {
+        return mezua;
+    }
+
+    public boolean isIrakurrita() {
+        return irakurrita;
+    }
+
+    public Erreklamazioa getErreklamazioa() {
+        return erreklamazioa;
+    }
+
+    public Artikulua getArtikulua() {
+        return artikulua;
+    }
 
     @Override
     public String toString() {

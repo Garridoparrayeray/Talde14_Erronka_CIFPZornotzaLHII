@@ -3,59 +3,75 @@ package controller;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 import dao.ArtikuluaDAO;
 import dao.EmanaldiaDAO;
 import dao.ErreklamazioaDAO;
-import java.util.Optional;
-
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
 import model.Artikulua;
 import model.Erreklamazioa;
 import utils.Sesio;
+import utils.UIKudeatzailea;
 
 /**
  * Erreklamazioen zerrendaren eta xehetasunen kontroladorea.
+ *
  * @author Yeray Garrido
  */
 public class ErreklamazioakController implements Initializable {
 
-    @FXML private VBox   listVBox;
-    @FXML private Label  lblKopurua;
-    @FXML private Button btnFiltroIrekiak;
-    @FXML private Button btnFiltroBaztertuak;
-    @FXML private Button btnFiltroEgindak;
+    @FXML
+    private StackPane contentArea;
+    @FXML
+    private VBox listVBox;
+    @FXML
+    private Label lblKopurua;
+    @FXML
+    private Button btnFiltroIrekiak;
+    @FXML
+    private Button btnFiltroBaztertuak;
+    @FXML
+    private Button btnFiltroEgindak;
 
-    @FXML private VBox   panelXehetasuna;
-    @FXML private Label  lblIdErreklam;
-    @FXML private Label  lblEgoeraBadge;
-    @FXML private Label  lblJabeIzena;
-    @FXML private Label  lblKontaktua;
-    @FXML private Label  lblDeskribapenaTestua;
-    @FXML private VBox   vboxBateragarriak;
-    @FXML private Button btnEbatzi;
-    @FXML private Button btnBaztertu;
-    @FXML private Button btnIrekiBerriz;
+    @FXML
+    private VBox panelXehetasuna;
+    @FXML
+    private Label lblIdErreklam;
+    @FXML
+    private Label lblEgoeraBadge;
+    @FXML
+    private Label lblJabeIzena;
+    @FXML
+    private Label lblKontaktua;
+    @FXML
+    private Label lblDeskribapenaTestua;
+    @FXML
+    private VBox vboxBateragarriak;
+    @FXML
+    private Button btnEbatzi;
+    @FXML
+    private Button btnBaztertu;
+    @FXML
+    private Button btnIrekiBerriz;
 
     private List<Erreklamazioa> erreklamazioak;
-    private Erreklamazioa       hautatua;
-    private VBox                itemHautatua;
-    private List<Artikulua>     bateragarriakZerrenda = new ArrayList<>();
-    private String              egoeraFiltro = "irekita";
+    private Erreklamazioa hautatua;
+    private VBox itemHautatua;
+    private List<Artikulua> bateragarriakZerrenda = new ArrayList<>();
+    private String egoeraFiltro = "irekita";
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -93,6 +109,7 @@ public class ErreklamazioakController implements Initializable {
 
     /**
      * Erreklamazio baten lista-elementua sortzen du.
+     *
      * @param err Erakutsi beharreko erreklamazioa
      * @param aktiboa Hasieratik aktibo erakustea nahi bada true
      * @return Lista-elementuaren VBox nodoa
@@ -112,7 +129,7 @@ public class ErreklamazioakController implements Initializable {
         HBox header = new HBox(lblId, spacer, badge);
         header.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
 
-        String izena   = err.getJabeIzena();
+        String izena = err.getJabeIzena();
         String abizena = err.getJabeAbizena();
         Label lblIzena = new Label(izena + " " + abizena);
         lblIzena.getStyleClass().addAll("font-bold", "text-dark");
@@ -149,7 +166,9 @@ public class ErreklamazioakController implements Initializable {
     }
 
     /**
-     * Erreklamazio bat hautatzen du eta xehetasunak eskuineko panelean erakusten ditu.
+     * Erreklamazio bat hautatzen du eta xehetasunak eskuineko panelean
+     * erakusten ditu.
+     *
      * @param err Hautatu beharreko erreklamazioa
      * @param item Aktibo markatu beharreko lista-elementua
      */
@@ -188,7 +207,9 @@ public class ErreklamazioakController implements Initializable {
     }
 
     /**
-     * Erreklamazioaren deskribapena biltegiko artikuluekin alderatuz bat-etortze posibleak erakusten ditu.
+     * Erreklamazioaren deskribapena biltegiko artikuluekin alderatuz
+     * bat-etortze posibleak erakusten ditu.
+     *
      * @param err Bat-etortzeak bilatu beharreko erreklamazioa
      */
     private void erakutsiBateragarriak(Erreklamazioa err) {
@@ -227,7 +248,9 @@ public class ErreklamazioakController implements Initializable {
         }
     }
 
-    /** Eskuineko xehetasun-panela hutsik uzten du erreklamaziorik ez dagoenean. */
+    /**
+     * Eskuineko xehetasun-panela hutsik uzten du erreklamaziorik ez dagoenean.
+     */
     private void panelHutsak() {
         lblIdErreklam.setText("—");
         lblEgoeraBadge.setText("—");
@@ -235,12 +258,18 @@ public class ErreklamazioakController implements Initializable {
         lblKontaktua.setText("");
         lblDeskribapenaTestua.setText("");
         vboxBateragarriak.getChildren().clear();
-        btnEbatzi.setVisible(false);      btnEbatzi.setManaged(false);
-        btnBaztertu.setVisible(false);    btnBaztertu.setManaged(false);
-        btnIrekiBerriz.setVisible(false); btnIrekiBerriz.setManaged(false);
+        btnEbatzi.setVisible(false);
+        btnEbatzi.setManaged(false);
+        btnBaztertu.setVisible(false);
+        btnBaztertu.setManaged(false);
+        btnIrekiBerriz.setVisible(false);
+        btnIrekiBerriz.setManaged(false);
     }
 
-    /** Hautatutako erreklamazioa ebazten du; bat-etortze badago artikulua ere lotzen du. */
+    /**
+     * Hautatutako erreklamazioa ebazten du; bat-etortze badago artikulua ere
+     * lotzen du.
+     */
     @FXML
     private void ebatzi() {
         if (hautatua == null) {
@@ -265,13 +294,13 @@ public class ErreklamazioakController implements Initializable {
             }
 
             boolean ok = EmanaldiaDAO.formalizatu(
-                art.getArtikuluKodea(),
-                hautatua.getJabeNan(),
-                hautatua.getJabeIzena(),
-                hautatua.getJabeAbizena(),
-                hautatua.getJabeTelefonoa(),
-                hautatua.getJabeEmaila(),
-                "", "", idLangile, null
+                    art.getArtikuluKodea(),
+                    hautatua.getJabeNan(),
+                    hautatua.getJabeIzena(),
+                    hautatua.getJabeAbizena(),
+                    hautatua.getJabeTelefonoa(),
+                    hautatua.getJabeEmaila(),
+                    "", "", idLangile, null
             );
 
             if (!ok) {
@@ -284,13 +313,17 @@ public class ErreklamazioakController implements Initializable {
         }
     }
 
-    /** Hautatutako erreklamazioa baztertuta gisa markatzen du. */
+    /**
+     * Hautatutako erreklamazioa baztertuta gisa markatzen du.
+     */
     @FXML
     private void baztertu() {
         aldatuEgoera("baztertuta");
     }
 
-    /** Hautatutako erreklamazioa berriro irekita gisa markatzen du. */
+    /**
+     * Hautatutako erreklamazioa berriro irekita gisa markatzen du.
+     */
     @FXML
     private void irekiBerriz() {
         aldatuEgoera("irekita");
@@ -298,6 +331,7 @@ public class ErreklamazioakController implements Initializable {
 
     /**
      * Hautatutako erreklamazioaren egoera datu-basean eguneratzen du.
+     *
      * @param egoera Ezarri beharreko egoera testua
      */
     private void aldatuEgoera(String egoera) {
@@ -310,7 +344,9 @@ public class ErreklamazioakController implements Initializable {
         }
     }
 
-    /** Iragazkia irekitako erreklamazioetara aldatzen du. */
+    /**
+     * Iragazkia irekitako erreklamazioetara aldatzen du.
+     */
     @FXML
     private void filtroIrekiak() {
         egoeraFiltro = "irekita";
@@ -320,7 +356,9 @@ public class ErreklamazioakController implements Initializable {
         kargatu();
     }
 
-    /** Iragazkia baztertutako erreklamazioetara aldatzen du. */
+    /**
+     * Iragazkia baztertutako erreklamazioetara aldatzen du.
+     */
     @FXML
     private void filtroBaztertutak() {
         egoeraFiltro = "baztertuta";
@@ -330,7 +368,9 @@ public class ErreklamazioakController implements Initializable {
         kargatu();
     }
 
-    /** Iragazkia ebatzitako erreklamazioetara aldatzen du. */
+    /**
+     * Iragazkia ebatzitako erreklamazioetara aldatzen du.
+     */
     @FXML
     private void filtroEgindak() {
         egoeraFiltro = "ebatzita";
@@ -340,31 +380,25 @@ public class ErreklamazioakController implements Initializable {
         kargatu();
     }
 
-    /** Erreklamazino berri bat sortzeko elkarrizketa-koadroa irekitzen du. */
+    /**
+     * Erreklamazino berri bat sortzeko formularioa contentArea-n kargatzen du.
+     */
     @FXML
     public void erreklamazioaBerria() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/ErreklamazioaBerria.fxml"));
-            Parent root = loader.load();
+            Node nodoa = loader.load();
             ErreklamazioaBerriController ctrl = loader.getController();
-
-            Stage dialog = new Stage();
-            dialog.initOwner(listVBox.getScene().getWindow());
-            dialog.initModality(Modality.WINDOW_MODAL);
-            dialog.setTitle("Erreklamazino berria");
-            dialog.setScene(new Scene(root, 520, 540));
-            dialog.setResizable(false);
-
-            ctrl.setOnGorde(this::kargatu);
-
-            dialog.showAndWait();
+            ctrl.setContentArea(contentArea);
+            UIKudeatzailea.kargatuPanela(contentArea, nodoa);
         } catch (Exception e) {
-            System.err.println("ErreklamazioakController.erreklamazioaBerria errorea: " + e.getMessage());
+            System.err.println("ErreklamazioakController.erreklamazioaBerria: " + e.getMessage());
         }
     }
 
     /**
      * Egoera kode batetik erakusteko testua itzultzen du.
+     *
      * @param egoera Egoera kode testua
      * @return Erabiltzaileari erakusteko etiketa
      */
@@ -385,6 +419,7 @@ public class ErreklamazioakController implements Initializable {
 
     /**
      * Egoera kode batetik CSS klase-izena itzultzen du badgearen kolorerako.
+     *
      * @param egoera Egoera kode testua
      * @return CSS klase-izena
      */

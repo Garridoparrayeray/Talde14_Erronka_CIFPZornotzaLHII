@@ -15,16 +15,20 @@ import utils.DBConexioa;
 
 /**
  * Artikuluen datu-baseko eragiketak kudeatzen dituen DAO klasea.
+ *
  * @author Yeray Garrido
  */
 public class ArtikuluaDAO {
 
     /**
      * Artikulua berria gordetzen du datu-basean, kode automatikoa sortuz.
+     *
      * @return Ondo gorde bada true
      */
     /**
-     * Artikulu berria gordetzen du datu-basean, kode automatikoa sortuz eta mugimendua erregistratuz.
+     * Artikulu berria gordetzen du datu-basean, kode automatikoa sortuz eta
+     * mugimendua erregistratuz.
+     *
      * @param izena Artikuluaren izenburua
      * @param deskribapena Artikuluaren deskripzio osoa
      * @param iragankorra Iragankorra bada true
@@ -34,7 +38,7 @@ public class ArtikuluaDAO {
      * @return Ondo gorde bada true
      */
     public static boolean gehitu(String izena, String deskribapena, boolean iragankorra,
-                                  int idKategoria, int idKokalekua, java.sql.Date sarreraData) {
+            int idKategoria, int idKokalekua, java.sql.Date sarreraData) {
         String kodea = sortuKodea(sarreraData);
         if (kodea == null) {
             return false;
@@ -48,10 +52,9 @@ public class ArtikuluaDAO {
             iraungData = new java.sql.Date(cal.getTimeInMillis());
         }
 
-        String sql = "INSERT INTO ARTIKULUA (id_artikulua, a_izena, a_deskribapena, egoera, iragankorra, " +
-                     "sarrera_data, iraungitze_data, id_kategoria, id_kokalekua) VALUES (?, ?, ?, 'aurkitua', ?, ?, ?, ?, ?)";
-        try (Connection con = DBConexioa.getKonexioa();
-             PreparedStatement ps = con.prepareStatement(sql)) {
+        String sql = "INSERT INTO ARTIKULUA (id_artikulua, a_izena, a_deskribapena, egoera, iragankorra, "
+                + "sarrera_data, iraungitze_data, id_kategoria, id_kokalekua) VALUES (?, ?, ?, 'aurkitua', ?, ?, ?, ?, ?)";
+        try (Connection con = DBConexioa.getKonexioa(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, kodea);
             ps.setString(2, izena);
             ps.setString(3, deskribapena);
@@ -88,7 +91,9 @@ public class ArtikuluaDAO {
     }
 
     /**
-     * Hurrengo artikulu-kode sekuentziala sortzen du urtearen arabera (G-NNN-AA formatua).
+     * Hurrengo artikulu-kode sekuentziala sortzen du urtearen arabera (G-NNN-AA
+     * formatua).
+     *
      * @param sarreraData Sarrera-data (urte-atzizkia ateratzeko)
      * @return Kode berria, edo null errorea bada
      */
@@ -100,8 +105,7 @@ public class ArtikuluaDAO {
             urteStr = String.format("%02d", cal.get(java.util.Calendar.YEAR) % 100);
         }
         String sql = "SELECT COUNT(*) + 1 AS hurrengo FROM ARTIKULUA WHERE id_artikulua LIKE ?";
-        try (Connection con = DBConexioa.getKonexioa();
-             PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = DBConexioa.getKonexioa(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, "G-%-" + urteStr);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
@@ -116,27 +120,27 @@ public class ArtikuluaDAO {
 
     /**
      * Artikulua bat kodearen bidez bilatzen du datu-basetik.
+     *
      * @param kodea Artikuluaren kode bakarra
      * @return Artikulua objektua, edo null ez badago
      */
     public static Artikulua getByKodea(String kodea) {
-        String sql = "SELECT a.id_artikulua, a.a_izena, a.a_deskribapena, a.egoera, " +
-                     "a.sarrera_data, a.argazkia, " +
-                     "k.id_kategoria, k.izena AS kat_izena, " +
-                     "ko.id_kokalekua, ko.armairua, ko.apala, ko.bha_da " +
-                     "FROM ARTIKULUA a " +
-                     "LEFT JOIN KATEGORIA k  ON a.id_kategoria  = k.id_kategoria " +
-                     "LEFT JOIN KOKALEKUA ko ON a.id_kokalekua = ko.id_kokalekua " +
-                     "WHERE a.id_artikulua = ?";
-        try (Connection con = DBConexioa.getKonexioa();
-             PreparedStatement ps = con.prepareStatement(sql)) {
+        String sql = "SELECT a.id_artikulua, a.a_izena, a.a_deskribapena, a.egoera, "
+                + "a.sarrera_data, a.argazkia, "
+                + "k.id_kategoria, k.izena AS kat_izena, "
+                + "ko.id_kokalekua, ko.armairua, ko.apala, ko.bha_da "
+                + "FROM ARTIKULUA a "
+                + "LEFT JOIN KATEGORIA k  ON a.id_kategoria  = k.id_kategoria "
+                + "LEFT JOIN KOKALEKUA ko ON a.id_kokalekua = ko.id_kokalekua "
+                + "WHERE a.id_artikulua = ?";
+        try (Connection con = DBConexioa.getKonexioa(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, kodea);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 Artikulua a = new Artikulua(
-                    rs.getString("id_artikulua"), rs.getString("a_izena"),
-                    rs.getString("a_deskribapena"), null, null,
-                    rs.getDate("sarrera_data"), rs.getString("argazkia")
+                        rs.getString("id_artikulua"), rs.getString("a_izena"),
+                        rs.getString("a_deskribapena"), null, null,
+                        rs.getDate("sarrera_data"), rs.getString("argazkia")
                 );
                 String egoeraStr = rs.getString("egoera");
                 if (egoeraStr != null) {
@@ -171,32 +175,31 @@ public class ArtikuluaDAO {
 
     /**
      * Datu-basetik artikulu guztiak lortzen ditu.
+     *
      * @return Artikuluen zerrenda
      */
     public static List<Artikulua> getGuztiak() {
         List<Artikulua> zerrenda = new ArrayList<>();
 
-        String sql = "SELECT a.id_artikulua, a.a_izena, a.a_deskribapena, a.egoera, " +
-                     "a.sarrera_data, a.iraungitze_data, a.argazkia, a.iragankorra, " +
-                     "k.id_kategoria, k.izena AS kat_izena, " +
-                     "ko.id_kokalekua, ko.armairua, ko.apala, ko.bha_da " +
-                     "FROM ARTIKULUA a " +
-                     "LEFT JOIN KATEGORIA k  ON a.id_kategoria  = k.id_kategoria " +
-                     "LEFT JOIN KOKALEKUA ko ON a.id_kokalekua = ko.id_kokalekua";
+        String sql = "SELECT a.id_artikulua, a.a_izena, a.a_deskribapena, a.egoera, "
+                + "a.sarrera_data, a.iraungitze_data, a.argazkia, a.iragankorra, "
+                + "k.id_kategoria, k.izena AS kat_izena, "
+                + "ko.id_kokalekua, ko.armairua, ko.apala, ko.bha_da "
+                + "FROM ARTIKULUA a "
+                + "LEFT JOIN KATEGORIA k  ON a.id_kategoria  = k.id_kategoria "
+                + "LEFT JOIN KOKALEKUA ko ON a.id_kokalekua = ko.id_kokalekua";
 
-        try (Connection con = DBConexioa.getKonexioa();
-             PreparedStatement ps = con.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
+        try (Connection con = DBConexioa.getKonexioa(); PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
                 // Artikulua oinarrizko datuekin sortu
                 Artikulua a = new Artikulua(
-                    rs.getString("id_artikulua"),
-                    rs.getString("a_izena"),
-                    rs.getString("a_deskribapena"),
-                    null, null,
-                    rs.getDate("sarrera_data"),
-                    rs.getString("argazkia")
+                        rs.getString("id_artikulua"),
+                        rs.getString("a_izena"),
+                        rs.getString("a_deskribapena"),
+                        null, null,
+                        rs.getDate("sarrera_data"),
+                        rs.getString("argazkia")
                 );
 
                 // Egoera bihurtu — DB-ko balioa enum balioarekin lotu
@@ -228,9 +231,9 @@ public class ArtikuluaDAO {
                 // Kokalekua esleitu (badago)
                 if (rs.getInt("id_kokalekua") != 0) {
                     a.setKokalekua(new Kokalekua(
-                        rs.getString("armairua"),
-                        rs.getString("apala"),
-                        rs.getBoolean("bha_da")
+                            rs.getString("armairua"),
+                            rs.getString("apala"),
+                            rs.getBoolean("bha_da")
                     ));
                 }
 

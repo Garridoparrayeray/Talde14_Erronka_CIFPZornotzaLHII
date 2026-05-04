@@ -20,19 +20,29 @@ import model.Kategoria;
 import model.Kokalekua;
 
 /**
- * Artikulu berri bat erregistratzeko formularioaren kontroladorea (pantaila osoa).
+ * Artikulu berri bat erregistratzeko formularioaren kontroladorea (pantaila
+ * osoa).
+ *
  * @author Yeray Garrido
  */
 public class ErregistroaController implements Initializable {
 
-    @FXML private TextField           txtIzena;
-    @FXML private ComboBox<Kategoria> cbKategoria;
-    @FXML private TextArea            txtDeskribapena;
-    @FXML private TextField           txtAurkipenLekua;
-    @FXML private DatePicker          dpSarreraData;
-    @FXML private CheckBox            chkIragankorra;
-    @FXML private ComboBox<Kokalekua> cbKokalekua;
-    @FXML private Label               lblErrorea;
+    @FXML
+    private TextField txtIzena;
+    @FXML
+    private ComboBox<Kategoria> cbKategoria;
+    @FXML
+    private TextArea txtDeskribapena;
+    @FXML
+    private TextField txtAurkipenLekua;
+    @FXML
+    private DatePicker dpSarreraData;
+    @FXML
+    private CheckBox chkIragankorra;
+    @FXML
+    private ComboBox<Kokalekua> cbKokalekua;
+    @FXML
+    private Label lblErrorea;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -46,7 +56,10 @@ public class ErregistroaController implements Initializable {
         ezkutuErrorea();
     }
 
-    /** Formularioko datuak egiaztatzen ditu eta artikulua datu-basean gordetzen du. */
+    /**
+     * Formularioko datuak egiaztatzen ditu eta artikulua datu-basean gordetzen
+     * du.
+     */
     @FXML
     private void erregistratu() {
         String izena = txtIzena.getText().trim();
@@ -93,13 +106,17 @@ public class ErregistroaController implements Initializable {
         }
     }
 
-    /** Aldaketak gorde gabe formularioa garbitzen du. */
+    /**
+     * Aldaketak gorde gabe formularioa garbitzen du.
+     */
     @FXML
     private void utzi() {
         garbitu();
     }
 
-    /** Formularioko eremu guztiak hasierako egoerara itzultzen ditu. */
+    /**
+     * Formularioko eremu guztiak hasierako egoerara itzultzen ditu.
+     */
     private void garbitu() {
         txtIzena.clear();
         cbKategoria.setValue(null);

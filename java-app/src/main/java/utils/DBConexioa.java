@@ -9,6 +9,7 @@ import java.util.Properties;
 /**
  * Datu-basearekin konexio bakarra mantentzen duen singleton klasea.
  * Konfigurazioaren lehentasuna: ingurune-aldagaiak > application.properties.
+ *
  * @author Yeray Garrido
  */
 public class DBConexioa {
@@ -25,7 +26,8 @@ public class DBConexioa {
             if (is != null) {
                 props.load(is);
             }
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
 
         if (System.getenv("DB_URL") != null) {
             URL = System.getenv("DB_URL");
@@ -46,10 +48,12 @@ public class DBConexioa {
 
     private static Connection konexioa = null;
 
-    private DBConexioa() {}
+    private DBConexioa() {
+    }
 
     /**
      * Datu-basearekin konexioa itzultzen du, beharrezkoa bada berria sortuz.
+     *
      * @return Konexio aktiboa
      * @throws SQLException Konexio-errorea bada
      */

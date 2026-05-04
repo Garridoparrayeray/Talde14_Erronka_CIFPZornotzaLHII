@@ -14,21 +14,27 @@ import model.MugimenduLerroa;
 
 /**
  * Auditoria-taulako mugimenduen erregistroa erakusten duen kontroladorea.
+ *
  * @author Yeray Garrido
  */
 public class AuditoriaController implements Initializable {
 
-    @FXML private TableView<MugimenduLerroa>           taula;
-    @FXML private TableColumn<MugimenduLerroa, String> colData;
-    @FXML private TableColumn<MugimenduLerroa, String> colLangilea;
-    @FXML private TableColumn<MugimenduLerroa, String> colEkintza;
-    @FXML private TableColumn<MugimenduLerroa, String> colXehetasunak;
+    @FXML
+    private TableView<MugimenduLerroa> taula;
+    @FXML
+    private TableColumn<MugimenduLerroa, String> colData;
+    @FXML
+    private TableColumn<MugimenduLerroa, String> colLangilea;
+    @FXML
+    private TableColumn<MugimenduLerroa, String> colEkintza;
+    @FXML
+    private TableColumn<MugimenduLerroa, String> colXehetasunak;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        colData.setCellValueFactory(c        -> new SimpleStringProperty(c.getValue().getData()));
-        colLangilea.setCellValueFactory(c    -> new SimpleStringProperty(c.getValue().getLangilea()));
-        colEkintza.setCellValueFactory(c     -> new SimpleStringProperty(c.getValue().getEkintza()));
+        colData.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getData()));
+        colLangilea.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getLangilea()));
+        colEkintza.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getEkintza()));
         colXehetasunak.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getArtikuluId()));
         kargatu();
     }
@@ -38,7 +44,9 @@ public class AuditoriaController implements Initializable {
         taula.getItems().setAll(datuak);
     }
 
-    /** Taulako datuak datu-basetik berriro kargatzen ditu. */
+    /**
+     * Taulako datuak datu-basetik berriro kargatzen ditu.
+     */
     @FXML
     private void freskatu() {
         kargatu();

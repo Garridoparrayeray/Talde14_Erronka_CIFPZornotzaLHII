@@ -1,8 +1,9 @@
 package model;
 
 /**
- * Galdu diren objektuak jasotzeko erakundea adierazten duen eredua.
- * Hartzailea klasearen azpiklasea da.
+ * Galdu diren objektuak jasotzeko erakundea adierazten duen eredua. Hartzailea
+ * klasearen azpiklasea da.
+ *
  * @author Yeray Garrido
  */
 public class Erakundea extends Hartzailea {
@@ -13,6 +14,7 @@ public class Erakundea extends Hartzailea {
 
     /**
      * Erakundearen eraikitzailea.
+     *
      * @param ifz Identifikazio Fiskaleko Zenbakia
      * @param izenFiskala Erakundearen izen ofiziala
      * @param erakundeMota Erakundearen mota (GKE, udala, etab.)
@@ -34,7 +36,15 @@ public class Erakundea extends Hartzailea {
     }
 
     // Getters
-    public String getIfz() { return ifz; }
-    public String getIzenFiskala() { return izenFiskala; }
-    public String getErakundeMota() { return erakundeMota; }
+    public String getIfz() {
+        return ifz;
+    }
+
+    public String getIzenFiskala() {
+        return izenFiskala;
+    }
+
+    public String getErakundeMota() {
+        return erakundeMota;
+    }
 }

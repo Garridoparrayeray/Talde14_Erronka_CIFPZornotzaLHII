@@ -277,7 +277,7 @@ colXehetasunak.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().ge
 | Kokalekua editatu | ❌ Falta | Media |
 | XML exportazioa UI-an | ❌ Ez lotuta | Media |
 | Data-iragazkia inbentarioan | ❌ Falta | Baja |
-| Aplikazioa offlinen erabiltzea | ❌ Falta | Baja |
+| Aplikazioa offlinen erabiltzea | ❌ Falta | Alta |
 
 | Artikulua gehitu | ✅ Eginda | — |
 | Artikulua erregistratu (pantaila osoa) | ✅ Eginda | — |

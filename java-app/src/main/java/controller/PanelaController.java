@@ -17,27 +17,43 @@ import model.KategoriaKopurua;
 import utils.Sesio;
 
 /**
- * Hasierako paneleko estatistikak eta azken mugimenduak erakusten dituen kontroladorea.
+ * Hasierako paneleko estatistikak eta azken mugimenduak erakusten dituen
+ * kontroladorea.
+ *
  * @author Yeray Garrido
  */
 public class PanelaController implements Initializable {
 
-    @FXML private Label lblEgunon;
-    @FXML private Label lblData;
-    @FXML private Label lblBiltegian;
-    @FXML private Label lblErreklamazioIrekiak;
-    @FXML private Label lblIraungitzear;
-    @FXML private Label lblIraungituak;
+    @FXML
+    private Label lblEgunon;
+    @FXML
+    private Label lblData;
+    @FXML
+    private Label lblBiltegian;
+    @FXML
+    private Label lblErreklamazioIrekiak;
+    @FXML
+    private Label lblIraungitzear;
+    @FXML
+    private Label lblIraungituak;
 
-    @FXML private TableView<AzkenMugimendua>           tblMugimenduak;
-    @FXML private TableColumn<AzkenMugimendua, String> colArtikulua;
-    @FXML private TableColumn<AzkenMugimendua, String> colMugimenduId;
-    @FXML private TableColumn<AzkenMugimendua, String> colLangilea;
-    @FXML private TableColumn<AzkenMugimendua, String> colData;
+    @FXML
+    private TableView<AzkenMugimendua> tblMugimenduak;
+    @FXML
+    private TableColumn<AzkenMugimendua, String> colArtikulua;
+    @FXML
+    private TableColumn<AzkenMugimendua, String> colMugimenduId;
+    @FXML
+    private TableColumn<AzkenMugimendua, String> colLangilea;
+    @FXML
+    private TableColumn<AzkenMugimendua, String> colData;
 
-    @FXML private TableView<KategoriaKopurua>           tblKategoriak;
-    @FXML private TableColumn<KategoriaKopurua, String> colKategoria;
-    @FXML private TableColumn<KategoriaKopurua, String> colKopurua;
+    @FXML
+    private TableView<KategoriaKopurua> tblKategoriak;
+    @FXML
+    private TableColumn<KategoriaKopurua, String> colKategoria;
+    @FXML
+    private TableColumn<KategoriaKopurua, String> colKopurua;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {

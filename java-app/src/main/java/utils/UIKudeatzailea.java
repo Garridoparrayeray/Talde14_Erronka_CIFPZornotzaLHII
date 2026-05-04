@@ -1,5 +1,8 @@
 package utils;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -8,12 +11,10 @@ import javafx.scene.control.Alert;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
- * Interfaze grafikoaren kudeaketa errazteko klase laguntzailea.
- * Erroreak erakutsi, panelak kargatu eta leihoak aldatzeko metodoak eskaintzen ditu.
+ * Interfaze grafikoaren kudeaketa errazteko klase laguntzailea. Erroreak
+ * erakutsi, panelak kargatu eta leihoak aldatzeko metodoak eskaintzen ditu.
+ *
  * @author Yeray Garrido
  */
 public class UIKudeatzailea {
@@ -22,6 +23,7 @@ public class UIKudeatzailea {
 
     /**
      * Errore mezu bat erakusten du pantailan Alert leiho baten bidez.
+     *
      * @param titulua Alerta leihoaren titulua
      * @param mezua Erakutsi beharreko errore mezua
      */
@@ -35,6 +37,7 @@ public class UIKudeatzailea {
 
     /**
      * FXML panel bat kargatzen du zehaztutako StackPane gunean.
+     *
      * @param contentArea Panela kargatuko den gunea
      * @param fxmlBidea FXML fitxategiaren bidea
      */
@@ -61,7 +64,30 @@ public class UIKudeatzailea {
     }
 
     /**
+     * Aurretik kargatutako nodo bat StackPane gunean kokatzen du.
+     *
+     * @param contentArea Panela kokatuko den gunea
+     * @param nodoa Dagoeneko kargatutako nodo grafikoa
+     */
+    public static void kargatuPanela(StackPane contentArea, Node nodoa) {
+        StackPane aurrekoa = wrapperrak.remove(contentArea);
+        if (aurrekoa != null) {
+            aurrekoa.prefWidthProperty().unbind();
+            aurrekoa.prefHeightProperty().unbind();
+        }
+
+        StackPane envoltorio = new StackPane(nodoa);
+        StackPane.setAlignment(nodoa, javafx.geometry.Pos.TOP_LEFT);
+        envoltorio.prefWidthProperty().bind(contentArea.widthProperty());
+        envoltorio.prefHeightProperty().bind(contentArea.heightProperty());
+
+        wrapperrak.put(contentArea, envoltorio);
+        contentArea.getChildren().setAll(envoltorio);
+    }
+
+    /**
      * Leiho berri bat kargatzen du eta uneko leihoa ordezkatzen du.
+     *
      * @param egungoNodoa Uneko leihoaren edozein nodo (Stage lortzeko)
      * @param fxmlBidea Leiho berriaren FXML bidea
      * @param maximizatu Leihoa maximizatuta agertuko den ala ez
@@ -89,4 +115,3 @@ public class UIKudeatzailea {
         }
     }
 }
-

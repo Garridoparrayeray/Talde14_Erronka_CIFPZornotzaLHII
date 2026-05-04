@@ -19,41 +19,58 @@ import model.EgoeraErreklamazioa;
 import model.Erreklamazioa;
 
 /**
- * Galdu diren gauzen erreklamazioen zerrenda eta iragazketa kudeatzen duen kontroladorea.
+ * Galdu diren gauzen erreklamazioen zerrenda eta iragazketa kudeatzen duen
+ * kontroladorea.
+ *
  * @author Yeray Garrido
  */
 public class GalduDabenakController implements Initializable {
 
-    @FXML private TableView<Erreklamazioa>           taula;
-    @FXML private TableColumn<Erreklamazioa, String> colZbk;
-    @FXML private TableColumn<Erreklamazioa, String> colData;
-    @FXML private TableColumn<Erreklamazioa, String> colIzena;
-    @FXML private TableColumn<Erreklamazioa, String> colAbizena;
-    @FXML private TableColumn<Erreklamazioa, String> colTelefonoa;
-    @FXML private TableColumn<Erreklamazioa, String> colEmaila;
-    @FXML private TableColumn<Erreklamazioa, String> colKategoria;
-    @FXML private TableColumn<Erreklamazioa, String> colDeskribapena;
-    @FXML private TableColumn<Erreklamazioa, String> colEgoera;
+    @FXML
+    private TableView<Erreklamazioa> taula;
+    @FXML
+    private TableColumn<Erreklamazioa, String> colZbk;
+    @FXML
+    private TableColumn<Erreklamazioa, String> colData;
+    @FXML
+    private TableColumn<Erreklamazioa, String> colIzena;
+    @FXML
+    private TableColumn<Erreklamazioa, String> colAbizena;
+    @FXML
+    private TableColumn<Erreklamazioa, String> colTelefonoa;
+    @FXML
+    private TableColumn<Erreklamazioa, String> colEmaila;
+    @FXML
+    private TableColumn<Erreklamazioa, String> colKategoria;
+    @FXML
+    private TableColumn<Erreklamazioa, String> colDeskribapena;
+    @FXML
+    private TableColumn<Erreklamazioa, String> colEgoera;
 
-    @FXML private CheckBox   cbBaztertuak;
-    @FXML private CheckBox   cbEgindak;
-    @FXML private HBox       hboxDateFilter;
-    @FXML private DatePicker dpHasiera;
-    @FXML private DatePicker dpAmaiera;
+    @FXML
+    private CheckBox cbBaztertuak;
+    @FXML
+    private CheckBox cbEgindak;
+    @FXML
+    private HBox hboxDateFilter;
+    @FXML
+    private DatePicker dpHasiera;
+    @FXML
+    private DatePicker dpAmaiera;
 
     private List<Erreklamazioa> guztiak;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        colZbk.setCellValueFactory(c          -> new SimpleStringProperty(String.valueOf(c.getValue().getErreklamazioId())));
-        colData.setCellValueFactory(c         -> new SimpleStringProperty(c.getValue().getDataFormatua()));
-        colIzena.setCellValueFactory(c        -> new SimpleStringProperty(c.getValue().getJabeIzena()));
-        colAbizena.setCellValueFactory(c      -> new SimpleStringProperty(c.getValue().getJabeAbizena()));
-        colTelefonoa.setCellValueFactory(c    -> new SimpleStringProperty(c.getValue().getJabeTelefonoa()));
-        colEmaila.setCellValueFactory(c       -> new SimpleStringProperty(c.getValue().getJabeEmaila()));
-        colKategoria.setCellValueFactory(c    -> new SimpleStringProperty(c.getValue().getKategoriaIzena()));
+        colZbk.setCellValueFactory(c -> new SimpleStringProperty(String.valueOf(c.getValue().getErreklamazioId())));
+        colData.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getDataFormatua()));
+        colIzena.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getJabeIzena()));
+        colAbizena.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getJabeAbizena()));
+        colTelefonoa.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getJabeTelefonoa()));
+        colEmaila.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getJabeEmaila()));
+        colKategoria.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getKategoriaIzena()));
         colDeskribapena.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getDeskribapena()));
-        colEgoera.setCellValueFactory(c       -> new SimpleStringProperty(c.getValue().getEgoeraTestua()));
+        colEgoera.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getEgoeraTestua()));
 
         hboxDateFilter.setVisible(false);
         hboxDateFilter.setManaged(false);
@@ -99,15 +116,19 @@ public class GalduDabenakController implements Initializable {
 
         taula.getItems().setAll(iragaziak);
     }
-    
 
-    /** Taulako datuak datu-basetik berriro kargatzen ditu. */
+    /**
+     * Taulako datuak datu-basetik berriro kargatzen ditu.
+     */
     @FXML
     private void freskatu() {
         kargatu();
     }
 
-    /** Baztertutako erreklamazioak erakusteko checkboxaren aldaketa kudeatu eta data-iragazkia erakutsi/ezkutatu egiten du. */
+    /**
+     * Baztertutako erreklamazioak erakusteko checkboxaren aldaketa kudeatu eta
+     * data-iragazkia erakutsi/ezkutatu egiten du.
+     */
     @FXML
     private void aldatuBaztertuak() {
         boolean checked = cbBaztertuak.isSelected();
@@ -120,13 +141,17 @@ public class GalduDabenakController implements Initializable {
         iragaziAktualizatu();
     }
 
-    /** Ebatzitako erreklamazioak erakusteko checkboxaren aldaketa kudeatzen du. */
+    /**
+     * Ebatzitako erreklamazioak erakusteko checkboxaren aldaketa kudeatzen du.
+     */
     @FXML
     private void aldatuEgindak() {
         iragaziAktualizatu();
     }
 
-    /** Data-iragazkia aldatzean taula freskatzeko deia egiten du. */
+    /**
+     * Data-iragazkia aldatzean taula freskatzeko deia egiten du.
+     */
     @FXML
     private void iragaziDataBidez() {
         iragaziAktualizatu();

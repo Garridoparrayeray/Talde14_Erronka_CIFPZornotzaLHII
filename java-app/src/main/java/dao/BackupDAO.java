@@ -1,7 +1,5 @@
 package dao;
 
-import utils.DBConexioa;
-
 import java.io.File;
 import java.io.FileWriter;
 import java.sql.Connection;
@@ -11,8 +9,11 @@ import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+import utils.DBConexioa;
+
 /**
  * Datu-basearen babes-kopiak kudeatzeko DAO klasea.
+ *
  * @author Yeray Garrido
  */
 public class BackupDAO {
@@ -25,6 +26,7 @@ public class BackupDAO {
 
     /**
      * Datu-basearen babes-kopia SQL fitxategi batean gordetzen du.
+     *
      * @return Sortutako fitxategiaren bide osoa
      * @throws Exception Idazketa edo konexio errorea
      */
@@ -38,9 +40,7 @@ public class BackupDAO {
         }
         String fitxategiIzena = exportDir.getAbsolutePath() + "/backup_" + data + ".sql";
 
-        try (FileWriter fw = new FileWriter(fitxategiIzena);
-             Connection con = DBConexioa.getKonexioa();
-             Statement st = con.createStatement()) {
+        try (FileWriter fw = new FileWriter(fitxategiIzena); Connection con = DBConexioa.getKonexioa(); Statement st = con.createStatement()) {
 
             fw.write("-- Babes-kopia: " + data + "\n");
             fw.write("USE erronka_galduak;\n\n");

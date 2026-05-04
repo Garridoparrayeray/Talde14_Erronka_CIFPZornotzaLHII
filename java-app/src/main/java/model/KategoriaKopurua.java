@@ -1,16 +1,19 @@
 package model;
 
 /**
- * Kategoria bakoitzeko artikulu kopurua gordetzeko eredua.
- * Taula grafikoan datuak behar bezala erakusteko erabiltzen da.
+ * Kategoria bakoitzeko artikulu kopurua gordetzeko eredua. Taula grafikoan
+ * datuak behar bezala erakusteko erabiltzen da.
+ *
  * @author Yeray Garrido
  */
 public class KategoriaKopurua {
+
     private String kategoriaIzena;
     private int kopurua;
 
     /**
      * Ereduaren eraikitzailea.
+     *
      * @param kategoriaIzena Kategoriaren izena
      * @param kopurua Zenbat artikulu dauden kategoria horretan
      */
@@ -20,7 +23,6 @@ public class KategoriaKopurua {
     }
 
     // ── Getterrak eta Setterrak ─────────────────────────────────────────────
-
     public String getKategoriaIzena() {
         if (kategoriaIzena != null) {
             return kategoriaIzena;

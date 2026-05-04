@@ -2,6 +2,7 @@ package model;
 
 /**
  * Artikuluen sailkapen kategoria bat adierazten duen eredua.
+ *
  * @author Yeray Garrido
  */
 public class Kategoria {
@@ -11,6 +12,7 @@ public class Kategoria {
 
     /**
      * Kategoriaren eraikitzailea.
+     *
      * @param kategoriaId Kategoriaren identifikagailu bakarra
      * @param izena Kategoriaren izena
      */
@@ -20,8 +22,13 @@ public class Kategoria {
     }
 
     // Getters
-    public int getKategoriaId() { return kategoriaId; }
-    public String getIzena() { return izena; }
+    public int getKategoriaId() {
+        return kategoriaId;
+    }
+
+    public String getIzena() {
+        return izena;
+    }
 
     @Override
     public String toString() {

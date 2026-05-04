@@ -1,11 +1,12 @@
 package model;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Calendar;
+import java.util.Date;
 
 /**
  * Biltegian dagoen galdu den objektu bat adierazten duen eredua.
+ *
  * @author Yeray Garrido
  */
 public class Artikulua {
@@ -25,6 +26,7 @@ public class Artikulua {
 
     /**
      * Artikuluaren eraikitzailea.
+     *
      * @param artikuluKodea Artikuluaren kode bakarra (adib. G-001-26)
      * @param izenburua Artikuluaren izen laburra
      * @param deskribapena Artikuluaren deskripzio osoa
@@ -34,7 +36,7 @@ public class Artikulua {
      * @param argazkiBidea Argazkiaren fitxategi-bidea
      */
     public Artikulua(String artikuluKodea, String izenburua, String deskribapena,
-                     String marka, String kolorea, Date sarreraData, String argazkiBidea) {
+            String marka, String kolorea, Date sarreraData, String argazkiBidea) {
         this.artikuluKodea = artikuluKodea;
         this.izenburua = izenburua;
         this.deskribapena = deskribapena;
@@ -48,6 +50,7 @@ public class Artikulua {
 
     /**
      * Artikuluaren gordailutze-epea iraungitu den egiaztatzen du.
+     *
      * @return Iraungitze-data igarota badago true
      */
     public boolean iraungipenaEgiaztatu() {
@@ -56,6 +59,7 @@ public class Artikulua {
 
     /**
      * Artikuluaren egoera eguneratzen du.
+     *
      * @param berria Egoera berria
      */
     public void aldatuEgoera(EgoeraArtikulua berria) {
@@ -66,7 +70,9 @@ public class Artikulua {
      * Sarrera-datatik 2 urtera iraungitze-data kalkulatzen du.
      */
     public void kalkulatuIraungitzea() {
-        if (sarreraData == null) return;
+        if (sarreraData == null) {
+            return;
+        }
         Calendar cal = Calendar.getInstance();
         cal.setTime(sarreraData);
         cal.add(Calendar.DAY_OF_YEAR, 730);
@@ -87,12 +93,18 @@ public class Artikulua {
             return "—";
         }
         switch (egoera) {
-            case BILTEGIAN: return "Biltegian";
-            case ITZULITA: return "Itzulita";
-            case IRAUNGITA: return "Iraungita";
-            case BHA_N_GORDETA: return "BHA-n gordeta";
-            case DOHANTZAN: return "Dohantzan";
-            default: return egoera.name();
+            case BILTEGIAN:
+                return "Biltegian";
+            case ITZULITA:
+                return "Itzulita";
+            case IRAUNGITA:
+                return "Iraungita";
+            case BHA_N_GORDETA:
+                return "BHA-n gordeta";
+            case DOHANTZAN:
+                return "Dohantzan";
+            default:
+                return egoera.name();
         }
     }
 
@@ -119,6 +131,7 @@ public class Artikulua {
 
     /**
      * Artikuluaren laburpen-katea itzultzen du erregistroetarako.
+     *
      * @return Kodea, izenburua, marka eta egoera katetuta
      */
     public String getDatuak() {
@@ -126,20 +139,61 @@ public class Artikulua {
     }
 
     // Getters & Setters
-    public int getArtikuluId() { return artikuluId; }
-    public String getArtikuluKodea() { return artikuluKodea; }
-    public String getIzenburua() { return izenburua; }
-    public String getDeskribapena() { return deskribapena; }
-    public String getMarka() { return marka; }
-    public String getKolorea() { return kolorea; }
-    public Date getSarreraData() { return sarreraData; }
-    public Date getIraungitzeData() { return iraungitzeData; }
-    public String getArgazkiBidea() { return argazkiBidea; }
-    public EgoeraArtikulua getEgoera() { return egoera; }
-    public Kategoria getKategoria() { return kategoria; }
-    public void setKategoria(Kategoria kategoria) { this.kategoria = kategoria; }
-    public Kokalekua getKokalekua() { return kokalekua; }
-    public void setKokalekua(Kokalekua kokalekua) { this.kokalekua = kokalekua; }
+    public int getArtikuluId() {
+        return artikuluId;
+    }
+
+    public String getArtikuluKodea() {
+        return artikuluKodea;
+    }
+
+    public String getIzenburua() {
+        return izenburua;
+    }
+
+    public String getDeskribapena() {
+        return deskribapena;
+    }
+
+    public String getMarka() {
+        return marka;
+    }
+
+    public String getKolorea() {
+        return kolorea;
+    }
+
+    public Date getSarreraData() {
+        return sarreraData;
+    }
+
+    public Date getIraungitzeData() {
+        return iraungitzeData;
+    }
+
+    public String getArgazkiBidea() {
+        return argazkiBidea;
+    }
+
+    public EgoeraArtikulua getEgoera() {
+        return egoera;
+    }
+
+    public Kategoria getKategoria() {
+        return kategoria;
+    }
+
+    public void setKategoria(Kategoria kategoria) {
+        this.kategoria = kategoria;
+    }
+
+    public Kokalekua getKokalekua() {
+        return kokalekua;
+    }
+
+    public void setKokalekua(Kokalekua kokalekua) {
+        this.kokalekua = kokalekua;
+    }
 
     @Override
     public String toString() {

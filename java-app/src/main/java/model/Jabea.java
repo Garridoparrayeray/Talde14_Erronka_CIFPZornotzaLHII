@@ -1,8 +1,9 @@
 package model;
 
 /**
- * Galdu duen objektuaren jabe fisikoa adierazten duen eredua.
- * Hartzailea klasearen azpiklasea da.
+ * Galdu duen objektuaren jabe fisikoa adierazten duen eredua. Hartzailea
+ * klasearen azpiklasea da.
+ *
  * @author Yeray Garrido
  */
 public class Jabea extends Hartzailea {
@@ -13,6 +14,7 @@ public class Jabea extends Hartzailea {
 
     /**
      * Jabearen eraikitzailea.
+     *
      * @param nan Nortasun Agiri Nazionala
      * @param izena Jabearen izena
      * @param abizena Jabearen abizena
@@ -34,7 +36,15 @@ public class Jabea extends Hartzailea {
         return nan;
     }
 
-    public String getIzena() { return izena; }
-    public String getAbizena() { return abizena; }
-    public String getNan() { return nan; }
+    public String getIzena() {
+        return izena;
+    }
+
+    public String getAbizena() {
+        return abizena;
+    }
+
+    public String getNan() {
+        return nan;
+    }
 }

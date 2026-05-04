@@ -1,8 +1,9 @@
 package model;
 
 /**
- * Azken mugimenduaren datu laburra adierazten duen DTO klasea.
- * Paneleko taula azkarrean erakusteko erabiltzen da.
+ * Azken mugimenduaren datu laburra adierazten duen DTO klasea. Paneleko taula
+ * azkarrean erakusteko erabiltzen da.
+ *
  * @author Yeray Garrido
  */
 public class AzkenMugimendua {
@@ -14,6 +15,7 @@ public class AzkenMugimendua {
 
     /**
      * AzkenMugimendua-ren eraikitzailea.
+     *
      * @param artikuluId Artikuluaren kode bakarra
      * @param deskribapena Mugimenduaren azalpen laburra
      * @param data Mugimenduaren data eta ordua
@@ -26,8 +28,19 @@ public class AzkenMugimendua {
         this.langilea = langilea;
     }
 
-    public String getArtikuluId() { return artikuluId; }
-    public String getDeskribapena() { return deskribapena; }
-    public String getData() { return data; }
-    public String getLangilea() { return langilea; }
+    public String getArtikuluId() {
+        return artikuluId;
+    }
+
+    public String getDeskribapena() {
+        return deskribapena;
+    }
+
+    public String getData() {
+        return data;
+    }
+
+    public String getLangilea() {
+        return langilea;
+    }
 }

@@ -12,19 +12,20 @@ import utils.DBConexioa;
 
 /**
  * Kategorien datu-baseko eragiketak kudeatzen dituen DAO klasea.
+ *
  * @author Yeray Garrido
  */
 public class KategoriaDAO {
 
     /**
      * Kategoria berria gordetzen du datu-basean.
+     *
      * @param izena Kategoriaren izena
      * @return Ondo gorde bada true
      */
     public static boolean gehitu(String izena) {
         String sql = "INSERT INTO KATEGORIA (izena) VALUES (?)";
-        try (Connection con = DBConexioa.getKonexioa();
-             PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = DBConexioa.getKonexioa(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, izena);
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -35,14 +36,14 @@ public class KategoriaDAO {
 
     /**
      * Kategoria baten izena eguneratzen du.
+     *
      * @param id Kategoriaren identifikagailua
      * @param izenaOso Izen berria
      * @return Ondo eguneratu bada true
      */
     public static boolean aldatuIzena(int id, String izenaOso) {
         String sql = "UPDATE KATEGORIA SET izena = ? WHERE id_kategoria = ?";
-        try (Connection con = DBConexioa.getKonexioa();
-             PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = DBConexioa.getKonexioa(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, izenaOso);
             ps.setInt(2, id);
             return ps.executeUpdate() > 0;
@@ -54,13 +55,13 @@ public class KategoriaDAO {
 
     /**
      * Kategoria bat ezabatzen du datu-basetik.
+     *
      * @param id Ezabatu beharreko kategoriaren identifikagailua
      * @return Ondo ezabatu bada true
      */
     public static boolean ezabatu(int id) {
         String sql = "DELETE FROM KATEGORIA WHERE id_kategoria = ?";
-        try (Connection con = DBConexioa.getKonexioa();
-             PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = DBConexioa.getKonexioa(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, id);
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -71,15 +72,14 @@ public class KategoriaDAO {
 
     /**
      * Datu-basetik kategoria guztiak lortzen ditu.
+     *
      * @return Kategorien zerrenda
      */
     public static List<Kategoria> getGuztiak() {
         List<Kategoria> kategoriak = new ArrayList<>();
         String sql = "SELECT id_kategoria, izena FROM KATEGORIA";
 
-        try (Connection con = DBConexioa.getKonexioa();
-             PreparedStatement ps = con.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
+        try (Connection con = DBConexioa.getKonexioa(); PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
                 Kategoria k = new Kategoria(rs.getInt("id_kategoria"), rs.getString("izena"));

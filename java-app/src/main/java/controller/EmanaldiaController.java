@@ -23,33 +23,51 @@ import utils.Sesio;
 
 /**
  * Emanaldien formularioa kudeatzen duen kontroladorea.
+ *
  * @author Yeray Garrido
  */
 public class EmanaldiaController implements Initializable {
 
     private static final SimpleDateFormat SDF = new SimpleDateFormat("dd/MM/yyyy");
 
-    @FXML private ComboBox<String> cbArtikulua;
+    @FXML
+    private ComboBox<String> cbArtikulua;
 
-    @FXML private Label lblArtikuluKodea;
-    @FXML private Label lblArtikuluIzena;
-    @FXML private Label lblArtikuluKokalekua;
-    @FXML private Label lblArtikuluSarrera;
-    @FXML private Label lblArtikuluEgoera;
+    @FXML
+    private Label lblArtikuluKodea;
+    @FXML
+    private Label lblArtikuluIzena;
+    @FXML
+    private Label lblArtikuluKokalekua;
+    @FXML
+    private Label lblArtikuluSarrera;
+    @FXML
+    private Label lblArtikuluEgoera;
 
-    @FXML private TextField txtNan;
-    @FXML private TextField txtIzena;
-    @FXML private TextField txtAbizena;
-    @FXML private TextField txtTelefonoa;
-    @FXML private TextField txtEmaila;
-    @FXML private TextField txtHelbidea;
-    @FXML private TextArea  txtOharrak;
+    @FXML
+    private TextField txtNan;
+    @FXML
+    private TextField txtIzena;
+    @FXML
+    private TextField txtAbizena;
+    @FXML
+    private TextField txtTelefonoa;
+    @FXML
+    private TextField txtEmaila;
+    @FXML
+    private TextField txtHelbidea;
+    @FXML
+    private TextArea txtOharrak;
 
-    @FXML private CheckBox chkNortasuna;
-    @FXML private CheckBox chkSinadura;
+    @FXML
+    private CheckBox chkNortasuna;
+    @FXML
+    private CheckBox chkSinadura;
 
-    @FXML private Label lblErrorea;
-    @FXML private Label lblArchivoSinadura;
+    @FXML
+    private Label lblErrorea;
+    @FXML
+    private Label lblArchivoSinadura;
 
     // Biltegiko artikuluen zerrenda (ComboBox-arekin parekatua)
     private ArrayList<Artikulua> artikuluak;
@@ -64,13 +82,15 @@ public class EmanaldiaController implements Initializable {
         archivoSinadura = null;
     }
 
-    /** Sinadura-dokumentua aukeratzeko fitxategi-hautatzailea irekitzen du. */
+    /**
+     * Sinadura-dokumentua aukeratzeko fitxategi-hautatzailea irekitzen du.
+     */
     @FXML
     private void hautaketaSinadura() {
         FileChooser fc = new FileChooser();
         fc.setTitle("Sinadura dokumentua hautatu");
         fc.getExtensionFilters().add(
-            new FileChooser.ExtensionFilter("Dokumentuak (PDF, JPG, PNG)", "*.pdf", "*.jpg", "*.jpeg", "*.png")
+                new FileChooser.ExtensionFilter("Dokumentuak (PDF, JPG, PNG)", "*.pdf", "*.jpg", "*.jpeg", "*.png")
         );
         File f = fc.showOpenDialog(cbArtikulua.getScene().getWindow());
         if (f != null) {
@@ -81,7 +101,9 @@ public class EmanaldiaController implements Initializable {
         }
     }
 
-    /** ComboBox-a biltegiko artikuluekin betetzen du. */
+    /**
+     * ComboBox-a biltegiko artikuluekin betetzen du.
+     */
     private void beteteArtikuluCombo() {
         cbArtikulua.getItems().clear();
         artikuluak.clear();
@@ -95,7 +117,9 @@ public class EmanaldiaController implements Initializable {
         }
     }
 
-    /** ComboBox-ean artikulua hautatzean xehetasunak erakusten ditu. */
+    /**
+     * ComboBox-ean artikulua hautatzean xehetasunak erakusten ditu.
+     */
     @FXML
     private void artikuluaHautatu() {
         int idx = cbArtikulua.getSelectionModel().getSelectedIndex();
@@ -123,7 +147,9 @@ public class EmanaldiaController implements Initializable {
         ezkutuErrorea();
     }
 
-    /** Formularioa egiaztatzen du eta emanaldia datu-basean gordetzen du. */
+    /**
+     * Formularioa egiaztatzen du eta emanaldia datu-basean gordetzen du.
+     */
     @FXML
     private void formalizatu() {
         int idx = cbArtikulua.getSelectionModel().getSelectedIndex();
@@ -132,9 +158,9 @@ public class EmanaldiaController implements Initializable {
             return;
         }
 
-        String nan      = txtNan.getText().trim();
-        String izena    = txtIzena.getText().trim();
-        String abizena  = txtAbizena.getText().trim();
+        String nan = txtNan.getText().trim();
+        String izena = txtIzena.getText().trim();
+        String abizena = txtAbizena.getText().trim();
 
         if (nan.isEmpty() || izena.isEmpty() || abizena.isEmpty()) {
             erakutsiErrorea("(*) eremuak bete behar dira: NAN, Izena eta Abizena.");
@@ -142,9 +168,9 @@ public class EmanaldiaController implements Initializable {
         }
 
         String telefonoa = txtTelefonoa.getText().trim();
-        String emaila    = txtEmaila.getText().trim();
-        String helbidea  = txtHelbidea.getText().trim();
-        String oharrak   = "";
+        String emaila = txtEmaila.getText().trim();
+        String helbidea = txtHelbidea.getText().trim();
+        String oharrak = "";
         if (txtOharrak != null) {
             oharrak = txtOharrak.getText().trim();
         }
@@ -157,7 +183,7 @@ public class EmanaldiaController implements Initializable {
         String idArtikulua = artikuluak.get(idx).getArtikuluKodea();
         String dokumentuBidea = archivoSinadura != null ? archivoSinadura.getAbsolutePath() : null;
         boolean ok = EmanaldiaDAO.formalizatu(idArtikulua, nan, izena, abizena,
-                                               telefonoa, emaila, helbidea, oharrak, idLangile, dokumentuBidea);
+                telefonoa, emaila, helbidea, oharrak, idLangile, dokumentuBidea);
         if (ok) {
             garbitu();
             erakutsiErrorea("Emanaldia ondo formalizatu da.");
@@ -166,13 +192,17 @@ public class EmanaldiaController implements Initializable {
         }
     }
 
-    /** Aldaketak gorde gabe formularioa garbitzen du. */
+    /**
+     * Aldaketak gorde gabe formularioa garbitzen du.
+     */
     @FXML
     private void utzi() {
         garbitu();
     }
 
-    /** Formularioko eremu guztiak hasierako egoerara itzultzen ditu. */
+    /**
+     * Formularioko eremu guztiak hasierako egoerara itzultzen ditu.
+     */
     private void garbitu() {
         beteteArtikuluCombo();
         cbArtikulua.setValue(null);
@@ -199,22 +229,36 @@ public class EmanaldiaController implements Initializable {
         ezkutuErrorea();
     }
 
-    /** Hautaturiko artikuluaren informazio-etiketa guztiak erakusten ditu. */
+    /**
+     * Hautaturiko artikuluaren informazio-etiketa guztiak erakusten ditu.
+     */
     private void erakutsiArtikuluInfo() {
-        lblArtikuluKodea.setVisible(true);    lblArtikuluKodea.setManaged(true);
-        lblArtikuluIzena.setVisible(true);    lblArtikuluIzena.setManaged(true);
-        lblArtikuluKokalekua.setVisible(true); lblArtikuluKokalekua.setManaged(true);
-        lblArtikuluSarrera.setVisible(true);  lblArtikuluSarrera.setManaged(true);
-        lblArtikuluEgoera.setVisible(true);   lblArtikuluEgoera.setManaged(true);
+        lblArtikuluKodea.setVisible(true);
+        lblArtikuluKodea.setManaged(true);
+        lblArtikuluIzena.setVisible(true);
+        lblArtikuluIzena.setManaged(true);
+        lblArtikuluKokalekua.setVisible(true);
+        lblArtikuluKokalekua.setManaged(true);
+        lblArtikuluSarrera.setVisible(true);
+        lblArtikuluSarrera.setManaged(true);
+        lblArtikuluEgoera.setVisible(true);
+        lblArtikuluEgoera.setManaged(true);
     }
 
-    /** Artikuluaren informazio-etiketa guztiak ezkutatzen ditu. */
+    /**
+     * Artikuluaren informazio-etiketa guztiak ezkutatzen ditu.
+     */
     private void ezkutuArtikuluInfo() {
-        lblArtikuluKodea.setVisible(false);    lblArtikuluKodea.setManaged(false);
-        lblArtikuluIzena.setVisible(false);    lblArtikuluIzena.setManaged(false);
-        lblArtikuluKokalekua.setVisible(false); lblArtikuluKokalekua.setManaged(false);
-        lblArtikuluSarrera.setVisible(false);  lblArtikuluSarrera.setManaged(false);
-        lblArtikuluEgoera.setVisible(false);   lblArtikuluEgoera.setManaged(false);
+        lblArtikuluKodea.setVisible(false);
+        lblArtikuluKodea.setManaged(false);
+        lblArtikuluIzena.setVisible(false);
+        lblArtikuluIzena.setManaged(false);
+        lblArtikuluKokalekua.setVisible(false);
+        lblArtikuluKokalekua.setManaged(false);
+        lblArtikuluSarrera.setVisible(false);
+        lblArtikuluSarrera.setManaged(false);
+        lblArtikuluEgoera.setVisible(false);
+        lblArtikuluEgoera.setManaged(false);
     }
 
     private void erakutsiErrorea(String mezua) {

@@ -4,6 +4,7 @@ import model.Langilea;
 
 /**
  * Uneko saioaren langile aktiboa gordetzen duen singleton estatikoa.
+ *
  * @author Yeray Garrido
  */
 public class Sesio {
@@ -11,10 +12,12 @@ public class Sesio {
     private static Langilea langileAktiboa = null;
     private static boolean adminDa = false;
 
-    private Sesio() {}
+    private Sesio() {
+    }
 
     /**
      * Saioa hasten du langile aktiboarekin.
+     *
      * @param langilea Saioa hasten duen langilea
      * @param admin Administratzailea bada true
      */
@@ -23,8 +26,13 @@ public class Sesio {
         adminDa = admin;
     }
 
-    public static Langilea getLangilea() { return langileAktiboa; }
-    public static boolean isAdmin()      { return adminDa; }
+    public static Langilea getLangilea() {
+        return langileAktiboa;
+    }
+
+    public static boolean isAdmin() {
+        return adminDa;
+    }
 
     /**
      * Saioa ixten du eta langile aktiboa garbitzen du.

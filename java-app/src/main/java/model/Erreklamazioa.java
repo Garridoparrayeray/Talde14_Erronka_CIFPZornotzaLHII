@@ -7,6 +7,7 @@ import java.util.List;
 
 /**
  * Erreklamazio baten informazioa gordetzen duen modelo klasea.
+ *
  * @author Yeray Garrido
  */
 public class Erreklamazioa {
@@ -21,13 +22,13 @@ public class Erreklamazioa {
 
     /**
      * Erreklamazioaren eraikitzailea.
-     * 
+     *
      * @param hartzailea Erreklamazioa egiten duen pertsona edo erakundea
      * @param deskribapenBilatua Galdutako objektuaren deskribapena
      * @param erreklamazioData Erreklamazioa sortu den data
      */
     public Erreklamazioa(Hartzailea hartzailea, String deskribapenBilatua,
-                         Date erreklamazioData) {
+            Date erreklamazioData) {
         this.hartzailea = hartzailea;
         this.deskribapenBilatua = deskribapenBilatua;
         this.erreklamazioData = erreklamazioData;
@@ -35,8 +36,9 @@ public class Erreklamazioa {
     }
 
     /**
-     * Biltegian dauden artikuluen artean, erreklamazio honekin bat datozenak bilatzen ditu.
-     * 
+     * Biltegian dauden artikuluen artean, erreklamazio honekin bat datozenak
+     * bilatzen ditu.
+     *
      * @param zerrenda Biltegian dauden artikuluen zerrenda
      * @return Bateragarriak diren artikuluen zerrenda
      */
@@ -54,7 +56,9 @@ public class Erreklamazioa {
                         }
                     }
                 }
-                if (bat) emaitzak.add(a);
+                if (bat) {
+                    emaitzak.add(a);
+                }
             }
         }
         return emaitzak;
@@ -62,37 +66,40 @@ public class Erreklamazioa {
 
     /**
      * Erreklamazioaren egoera eguneratzen du.
-     * 
+     *
      * @param egoera Egoera berria (IREKITA, EBATZITA, BAZTERTUTA)
      */
     public void eguneratuEgoera(EgoeraErreklamazioa egoera) {
         this.egoera = egoera;
     }
 
-   public String getJabeIzena() {
-    return hartzailea.getIzena();        
-}
-public String getJabeAbizena() {
-    return hartzailea.getAbizena();
-}
-public String getJabeTelefonoa() {
-    if (hartzailea.getTelefonoa() == null) {
-        return "—";
-    } else {
-        return hartzailea.getTelefonoa();
+    public String getJabeIzena() {
+        return hartzailea.getIzena();
     }
-}
 
-public String getJabeEmaila() {
-    if (hartzailea.getEmaila() == null) {
-        return "—";
-    } else {
-        return hartzailea.getEmaila();
+    public String getJabeAbizena() {
+        return hartzailea.getAbizena();
     }
-}
-public String getJabeNan() {
-    return hartzailea.getNan();
-}
+
+    public String getJabeTelefonoa() {
+        if (hartzailea.getTelefonoa() == null) {
+            return "—";
+        } else {
+            return hartzailea.getTelefonoa();
+        }
+    }
+
+    public String getJabeEmaila() {
+        if (hartzailea.getEmaila() == null) {
+            return "—";
+        } else {
+            return hartzailea.getEmaila();
+        }
+    }
+
+    public String getJabeNan() {
+        return hartzailea.getNan();
+    }
 
     public String getKategoriaIzena() {
         if (kategoria != null) {
@@ -111,39 +118,81 @@ public String getJabeNan() {
     }
 
     // Getters
-    public int getErreklamazioId() { return erreklamazioId; }
-    public void setErreklamazioId(int erreklamazioId) { this.erreklamazioId = erreklamazioId; }
-    public Date getErreklamazioData() { return erreklamazioData; }
-    public void setErreklamazioData(Date erreklamazioData) { this.erreklamazioData = erreklamazioData; }
-    public String getDeskribapenBilatua() { return deskribapenBilatua; }
-    public void setDeskribapenBilatua(String deskribapenBilatua) { this.deskribapenBilatua = deskribapenBilatua; }
-    public EgoeraErreklamazioa getEgoera() { return egoera; }
-    public void setEgoera(EgoeraErreklamazioa egoera) { this.egoera = egoera; }
-    public Hartzailea getHartzailea() { return hartzailea; }
-    public void setHartzailea(Hartzailea hartzailea) { this.hartzailea = hartzailea; }
-    public Kategoria getKategoria() { return kategoria; }
-    public void setKategoria(Kategoria kategoria) { this.kategoria = kategoria; }
-    public Langilea getLangilea() { return langilea; }
-    public void setLangilea(Langilea langilea) { this.langilea = langilea; }
+    public int getErreklamazioId() {
+        return erreklamazioId;
+    }
+
+    public void setErreklamazioId(int erreklamazioId) {
+        this.erreklamazioId = erreklamazioId;
+    }
+
+    public Date getErreklamazioData() {
+        return erreklamazioData;
+    }
+
+    public void setErreklamazioData(Date erreklamazioData) {
+        this.erreklamazioData = erreklamazioData;
+    }
+
+    public String getDeskribapenBilatua() {
+        return deskribapenBilatua;
+    }
+
+    public void setDeskribapenBilatua(String deskribapenBilatua) {
+        this.deskribapenBilatua = deskribapenBilatua;
+    }
+
+    public EgoeraErreklamazioa getEgoera() {
+        return egoera;
+    }
+
+    public void setEgoera(EgoeraErreklamazioa egoera) {
+        this.egoera = egoera;
+    }
+
+    public Hartzailea getHartzailea() {
+        return hartzailea;
+    }
+
+    public void setHartzailea(Hartzailea hartzailea) {
+        this.hartzailea = hartzailea;
+    }
+
+    public Kategoria getKategoria() {
+        return kategoria;
+    }
+
+    public void setKategoria(Kategoria kategoria) {
+        this.kategoria = kategoria;
+    }
+
+    public Langilea getLangilea() {
+        return langilea;
+    }
+
+    public void setLangilea(Langilea langilea) {
+        this.langilea = langilea;
+    }
 
     public String getIdString() {
-    return String.valueOf(this.erreklamazioId);
-}
+        return String.valueOf(this.erreklamazioId);
+    }
 
-public String getDataFormatua() {
-    if (this.erreklamazioData == null) {
+    public String getDataFormatua() {
+        if (this.erreklamazioData == null) {
+            return "—";
+        }
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        return sdf.format(this.erreklamazioData);
+    }
+
+    public String getDeskribapena() {
+        if (this.deskribapenBilatua != null) {
+            return this.deskribapenBilatua;
+        }
         return "—";
     }
-    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-    return sdf.format(this.erreklamazioData);
-}
 
-public String getDeskribapena() {
-    if (this.deskribapenBilatua != null) {
-        return this.deskribapenBilatua;
-    }
-    return "—";
-}
     @Override
     public String toString() {
         return erreklamazioId + " | " + deskribapenBilatua + " | " + egoera;

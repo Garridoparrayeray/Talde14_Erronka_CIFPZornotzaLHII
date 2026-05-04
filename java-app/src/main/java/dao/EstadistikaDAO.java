@@ -13,12 +13,14 @@ import utils.DBConexioa;
 
 /**
  * Datu-baseko estatistikak eta kopuru orokorrak lortzeko DAO klasea.
+ *
  * @author Yeray Garrido
  */
 public class EstadistikaDAO {
 
     /**
      * Biltegian dauden artikulu kopurua itzultzen du.
+     *
      * @return Artikulu kopurua
      */
     public static int biltegianKopurua() {
@@ -27,6 +29,7 @@ public class EstadistikaDAO {
 
     /**
      * Bueltatutako artikulu kopurua itzultzen du.
+     *
      * @return Artikulu kopurua
      */
     public static int bueltatakoKopurua() {
@@ -35,6 +38,7 @@ public class EstadistikaDAO {
 
     /**
      * Iraungita dauden artikulu kopurua itzultzen du.
+     *
      * @return Artikulu kopurua
      */
     public static int iraungituakKopurua() {
@@ -43,16 +47,18 @@ public class EstadistikaDAO {
 
     /**
      * Hurrengo 30 egunetan iraungiko diren artikulu kopurua itzultzen du.
+     *
      * @return Artikulu kopurua
      */
     public static int iraungitzearKopurua() {
-        String sql = "SELECT COUNT(*) FROM ARTIKULUA " +
-                     "WHERE egoera = 'aurkitua' AND iraungitze_data BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 30 DAY)";
+        String sql = "SELECT COUNT(*) FROM ARTIKULUA "
+                + "WHERE egoera = 'aurkitua' AND iraungitze_data BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 30 DAY)";
         return kontatuSql(sql);
     }
 
     /**
      * Irekita dauden erreklamazio kopurua itzultzen du.
+     *
      * @return Erreklamazio kopurua
      */
     public static int erreklamazioIrekiakKopurua() {
@@ -61,6 +67,7 @@ public class EstadistikaDAO {
 
     /**
      * Sisteman erregistratuta dauden langile kopurua itzultzen du.
+     *
      * @return Langile kopurua
      */
     public static int langileKopurua() {
@@ -69,6 +76,7 @@ public class EstadistikaDAO {
 
     /**
      * Datu-basean dauden artikulu guztien kopurua itzultzen du.
+     *
      * @return Artikulu kopurua
      */
     public static int artikuluGuztienKopurua() {
@@ -77,6 +85,7 @@ public class EstadistikaDAO {
 
     /**
      * Kategoria kopurua itzultzen du.
+     *
      * @return Kategoria kopurua
      */
     public static int kategoriaKopurua() {
@@ -85,6 +94,7 @@ public class EstadistikaDAO {
 
     /**
      * Kokaleku kopurua itzultzen du.
+     *
      * @return Kokaleku kopurua
      */
     public static int kokalekuakKopurua() {
@@ -96,19 +106,17 @@ public class EstadistikaDAO {
      */
     public static List<AzkenMugimendua> azkenMugimenduak() {
         List<AzkenMugimendua> zerrenda = new ArrayList<>();
-        String sql = "SELECT m.id_artikulua, m.deskribapena, m.data, " +
-                     "COALESCE(CONCAT(l.izena,' ',l.abizena), '—') AS langilea " +
-                     "FROM MUGIMENDUA m LEFT JOIN LANGILEA l ON m.id_langile = l.id_langile " +
-                     "ORDER BY m.data DESC LIMIT 10";
-        try (Connection con = DBConexioa.getKonexioa();
-             PreparedStatement ps = con.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
+        String sql = "SELECT m.id_artikulua, m.deskribapena, m.data, "
+                + "COALESCE(CONCAT(l.izena,' ',l.abizena), '—') AS langilea "
+                + "FROM MUGIMENDUA m LEFT JOIN LANGILEA l ON m.id_langile = l.id_langile "
+                + "ORDER BY m.data DESC LIMIT 10";
+        try (Connection con = DBConexioa.getKonexioa(); PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 zerrenda.add(new AzkenMugimendua(
-                    rs.getString("id_artikulua"),
-                    rs.getString("deskribapena"),
-                    rs.getString("data"),
-                    rs.getString("langilea")
+                        rs.getString("id_artikulua"),
+                        rs.getString("deskribapena"),
+                        rs.getString("data"),
+                        rs.getString("langilea")
                 ));
             }
         } catch (SQLException e) {
@@ -117,22 +125,21 @@ public class EstadistikaDAO {
         return zerrenda;
     }
 
-    /** 
+    /**
      * Kategoria bakoitzak zenbat artikulu dituen lortzen du.
+     *
      * @return Kategoria bakoitzaren izena eta artikulu kopurua
      */
     public static List<KategoriaKopurua> kategoriaKopuruak() {
         List<KategoriaKopurua> zerrenda = new ArrayList<>();
-        String sql = "SELECT k.izena, COUNT(a.id_artikulua) AS kop " +
-                     "FROM KATEGORIA k LEFT JOIN ARTIKULUA a ON k.id_kategoria = a.id_kategoria " +
-                     "GROUP BY k.id_kategoria, k.izena ORDER BY kop DESC";
-        try (Connection con = DBConexioa.getKonexioa();
-             PreparedStatement ps = con.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
+        String sql = "SELECT k.izena, COUNT(a.id_artikulua) AS kop "
+                + "FROM KATEGORIA k LEFT JOIN ARTIKULUA a ON k.id_kategoria = a.id_kategoria "
+                + "GROUP BY k.id_kategoria, k.izena ORDER BY kop DESC";
+        try (Connection con = DBConexioa.getKonexioa(); PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 String izena = rs.getString("izena");
                 int kop = rs.getInt("kop");
-                
+
                 // Eredua sortu eta zerrendan gehitu
                 KategoriaKopurua katKopurua = new KategoriaKopurua(izena, kop);
                 zerrenda.add(katKopurua);
@@ -145,6 +152,7 @@ public class EstadistikaDAO {
 
     /**
      * Datu-basearekiko konexioa ondo dabilen egiaztatzen du.
+     *
      * @return Konexioa badago true, bestela false
      */
     public static boolean dbKonexioaEgiaztatu() {
@@ -156,19 +164,20 @@ public class EstadistikaDAO {
     }
 
     // ── Laguntzaileak ────────────────────────────────────────────────────────
-
     /**
      * Emandako egoera batean dauden artikuluak kontatzen ditu.
+     *
      * @param egoera Bilatu beharreko artikuluaren egoera
      * @return Artikulu kopurua
      */
     private static int kontatuEgoera(String egoera) {
         String sql = "SELECT COUNT(*) FROM ARTIKULUA WHERE egoera = ?";
-        try (Connection con = DBConexioa.getKonexioa();
-             PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = DBConexioa.getKonexioa(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, egoera);
             try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) return rs.getInt(1);
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
             }
         } catch (SQLException e) {
             System.err.println("EstadistikaDAO.kontatuEgoera: " + e.getMessage());
@@ -178,14 +187,15 @@ public class EstadistikaDAO {
 
     /**
      * SQL COUNT kontsulta bat exekutatzen du eta emaitza itzultzen du.
+     *
      * @param sql Exekutatu beharreko SQL COUNT kontsulta
      * @return Kontatutako kopurua, edo 0 errorea bada
      */
     private static int kontatuSql(String sql) {
-        try (Connection con = DBConexioa.getKonexioa();
-             PreparedStatement ps = con.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
-            if (rs.next()) return rs.getInt(1);
+        try (Connection con = DBConexioa.getKonexioa(); PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
         } catch (SQLException e) {
             System.err.println("EstadistikaDAO.kontatuSql: " + e.getMessage());
         }
