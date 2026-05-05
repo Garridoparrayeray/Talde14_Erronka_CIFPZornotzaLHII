@@ -2,28 +2,45 @@ package controller;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Logger;
 
 import dao.KokalekuaDAO;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.stage.Stage;
+import javafx.scene.layout.StackPane;
+import utils.LogKudeatzailea;
+import utils.UIKudeatzailea;
 
+/**
+ * Kokaleku berri bat gehitzeko elkarrizketa-koadroaren kontroladorea.
+ *
+ * @author Yeray Garrido
+ */
 public class KokalekuaBerriController implements Initializable {
 
-    @FXML private TextField txtArmairua;
-    @FXML private TextField txtApala;
-    @FXML private CheckBox  chkBhaDa;
-    @FXML private Label     lblErrorea;
-    @FXML private Button    btnUtzi;
+    private static final Logger LOG = LogKudeatzailea.lortu(KokalekuaBerriController.class);
 
-    private Runnable onGordeCb;
+    @FXML
+    private TextField txtArmairua;
+    @FXML
+    private TextField txtApala;
+    @FXML
+    private CheckBox chkBhaDa;
+    @FXML
+    private Label lblErrorea;
 
-    public void setOnGorde(Runnable cb) {
-        this.onGordeCb = cb;
+    private StackPane contentArea;
+
+    /**
+     * Itzultzean erabili beharreko StackPane ezartzen du.
+     *
+     * @param contentArea Formularioa kargatuta dagoen gunea
+     */
+    public void setContentArea(StackPane contentArea) {
+        this.contentArea = contentArea;
     }
 
     @Override
@@ -31,11 +48,15 @@ public class KokalekuaBerriController implements Initializable {
         ezkutuErrorea();
     }
 
+    /**
+     * Formularioko datuak egiaztatzen ditu eta kokalekua datu-basean gordetzen
+     * du.
+     */
     @FXML
     private void gorde() {
         String armairua = txtArmairua.getText().trim().toUpperCase();
-        String apala    = txtApala.getText().trim();
-        boolean bhaDa   = chkBhaDa != null && chkBhaDa.isSelected();
+        String apala = txtApala.getText().trim();
+        boolean bhaDa = chkBhaDa != null && chkBhaDa.isSelected();
 
         if (armairua.isEmpty() || apala.isEmpty()) {
             erakutsiErrorea("(*) Armairua eta apala bete behar dira.");
@@ -44,13 +65,15 @@ public class KokalekuaBerriController implements Initializable {
 
         boolean ok = KokalekuaDAO.gehitu(armairua, apala, bhaDa);
         if (ok) {
-            if (onGordeCb != null) onGordeCb.run();
             itxi();
         } else {
             erakutsiErrorea("Errorea gordetzean. Egiaztatu datuak.");
         }
     }
 
+    /**
+     * Aldaketak gorde gabe zerrendara itzultzen du.
+     */
     @FXML
     private void utzi() {
         itxi();
@@ -68,7 +91,6 @@ public class KokalekuaBerriController implements Initializable {
     }
 
     private void itxi() {
-        Stage stage = (Stage) btnUtzi.getScene().getWindow();
-        stage.close();
+        UIKudeatzailea.kargatuPanela(contentArea, "/view/Kokalekuak.fxml");
     }
 }

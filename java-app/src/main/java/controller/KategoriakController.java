@@ -2,18 +2,18 @@ package controller;
 
 import java.net.URL;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import dao.EstadistikaDAO;
 import dao.KategoriaDAO;
-import java.util.Optional;
-
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
@@ -22,19 +22,26 @@ import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import javafx.stage.Window;
 import model.Kategoria;
 import model.KategoriaKopurua;
+import utils.LogKudeatzailea;
+import utils.UIKudeatzailea;
 
 /**
  * Kategorien ikuspegi dinamikoa kudeatzen duen kontroladorea.
+ *
+ * @author Yeray Garrido
  */
 public class KategoriakController implements Initializable {
 
-    @FXML private VBox vboxKategoriak;
+    private static final Logger LOG = LogKudeatzailea.lortu(KategoriakController.class);
+
+    @FXML
+    private StackPane contentArea;
+    @FXML
+    private VBox vboxKategoriak;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -47,7 +54,6 @@ public class KategoriakController implements Initializable {
         List<Kategoria> kategoriak = KategoriaDAO.getGuztiak();
         List<KategoriaKopurua> kopuruak = EstadistikaDAO.kategoriaKopuruak();
 
-        // 3 txartel lerro bakoitzeko
         HBox row = null;
         int idx = 0;
         for (Kategoria k : kategoriak) {
@@ -57,10 +63,9 @@ public class KategoriakController implements Initializable {
                 vboxKategoriak.getChildren().add(row);
             }
 
-            // Artikulu kopurua bilatu
             int kop = 0;
             for (KategoriaKopurua kk : kopuruak) {
-                if (kk.getKategoriaIzena().equals(k.getIzena())) {
+                if (k.getIzena().equals(kk.getKategoriaIzena())) {
                     kop = kk.getKopurua();
                     break;
                 }
@@ -72,7 +77,6 @@ public class KategoriakController implements Initializable {
             idx++;
         }
 
-        // Azken errenkadan hutsuneak bete
         if (row != null && kategoriak.size() % 3 != 0) {
             int falta = 3 - (kategoriak.size() % 3);
             for (int i = 0; i < falta; i++) {
@@ -83,6 +87,13 @@ public class KategoriakController implements Initializable {
         }
     }
 
+    /**
+     * Kategoria baten txartela sortzen du, editatu eta ezabatu botoiekin.
+     *
+     * @param k Erakutsi beharreko kategoria
+     * @param kopurua Kategoria horretan dauden artikulu kopurua
+     * @return Txartelaren HBox nodoa
+     */
     private HBox sortuTxartela(Kategoria k, int kopurua) {
         VBox info = new VBox(4);
         Label lblIzena = new Label(k.getIzena());
@@ -121,6 +132,11 @@ public class KategoriakController implements Initializable {
         return txartela;
     }
 
+    /**
+     * Kategoria baten izena aldatzeko elkarrizketa-koadroa irekitzen du.
+     *
+     * @param k Editatu beharreko kategoria
+     */
     private void editatuKategoria(Kategoria k) {
         TextInputDialog dlg = new TextInputDialog(k.getIzena());
         dlg.setTitle("Kategoria editatu");
@@ -137,6 +153,11 @@ public class KategoriakController implements Initializable {
         });
     }
 
+    /**
+     * Baieztapen-alerta erakutsi eta kategoria ezabatzen du onartu bada.
+     *
+     * @param k Ezabatu beharreko kategoria
+     */
     private void ezabatuKategoria(Kategoria k) {
         Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
         confirm.setTitle("Kategoria ezabatu");
@@ -151,24 +172,19 @@ public class KategoriakController implements Initializable {
         });
     }
 
+    /**
+     * Kategoria berri bat gehitzeko formularioa contentArea-n kargatzen du.
+     */
     @FXML
     public void kategoriaBerria() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/KategoriaBerria.fxml"));
-            Parent root = loader.load();
+            Node nodoa = loader.load();
             KategoriaBerriController ctrl = loader.getController();
-
-            Stage dialog = new Stage();
-            dialog.initOwner(vboxKategoriak.getScene().getWindow());
-            dialog.initModality(Modality.WINDOW_MODAL);
-            dialog.setTitle("Kategoria berria");
-            dialog.setScene(new Scene(root, 400, 300));
-            dialog.setResizable(false);
-
-            ctrl.setOnGorde(this::kargatu);
-            dialog.showAndWait();
+            ctrl.setContentArea(contentArea);
+            UIKudeatzailea.kargatuPanela(contentArea, nodoa);
         } catch (Exception e) {
-            System.err.println("KategoriakController.kategoriaBerria: " + e.getMessage());
+            LOG.log(Level.SEVERE, "kategoriaBerria: FXML kargatzean errorea", e);
         }
     }
 }

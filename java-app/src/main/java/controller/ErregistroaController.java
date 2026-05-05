@@ -3,8 +3,8 @@ package controller;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.ResourceBundle;
+import java.util.logging.Logger;
 
 import dao.ArtikuluaDAO;
 import dao.KategoriaDAO;
@@ -19,20 +19,34 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import model.Kategoria;
 import model.Kokalekua;
+import utils.LogKudeatzailea;
 
 /**
- * Artikulu berri bat erregistratzeko formularioaren kontroladorea (pantaila osoa).
+ * Artikulu berri bat erregistratzeko formularioaren kontroladorea (pantaila
+ * osoa).
+ *
+ * @author Yeray Garrido
  */
 public class ErregistroaController implements Initializable {
 
-    @FXML private TextField           txtIzena;
-    @FXML private ComboBox<Kategoria> cbKategoria;
-    @FXML private TextArea            txtDeskribapena;
-    @FXML private TextField           txtAurkipenLekua;
-    @FXML private DatePicker          dpSarreraData;
-    @FXML private CheckBox            chkIragankorra;
-    @FXML private ComboBox<Kokalekua> cbKokalekua;
-    @FXML private Label               lblErrorea;
+    private static final Logger LOG = LogKudeatzailea.lortu(ErregistroaController.class);
+
+    @FXML
+    private TextField txtIzena;
+    @FXML
+    private ComboBox<Kategoria> cbKategoria;
+    @FXML
+    private TextArea txtDeskribapena;
+    @FXML
+    private TextField txtAurkipenLekua;
+    @FXML
+    private DatePicker dpSarreraData;
+    @FXML
+    private CheckBox chkIragankorra;
+    @FXML
+    private ComboBox<Kokalekua> cbKokalekua;
+    @FXML
+    private Label lblErrorea;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -46,6 +60,10 @@ public class ErregistroaController implements Initializable {
         ezkutuErrorea();
     }
 
+    /**
+     * Formularioko datuak egiaztatzen ditu eta artikulua datu-basean gordetzen
+     * du.
+     */
     @FXML
     private void erregistratu() {
         String izena = txtIzena.getText().trim();
@@ -58,7 +76,6 @@ public class ErregistroaController implements Initializable {
             return;
         }
 
-        // Aurkipen-lekua deskribapenarentzat
         String deskFinal = deskribapena;
         if (!aurkipenLekua.isEmpty()) {
             deskFinal = "Aurkitua: " + aurkipenLekua + "\n" + deskribapena;
@@ -92,11 +109,17 @@ public class ErregistroaController implements Initializable {
         }
     }
 
+    /**
+     * Aldaketak gorde gabe formularioa garbitzen du.
+     */
     @FXML
     private void utzi() {
         garbitu();
     }
 
+    /**
+     * Formularioko eremu guztiak hasierako egoerara itzultzen ditu.
+     */
     private void garbitu() {
         txtIzena.clear();
         cbKategoria.setValue(null);

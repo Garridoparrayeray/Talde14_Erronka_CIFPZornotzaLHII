@@ -34,7 +34,6 @@
                         <ComboBox fx:id="cbKategoria" prefWidth="180.0" promptText="Kategoria guztiak" styleClass="form-select" onAction="#bilatu" />
                         <ComboBox fx:id="cbEgoera" prefWidth="150.0" promptText="Egoera guztiak" styleClass="form-select" onAction="#bilatu" />
                         <Button mnemonicParsing="false" styleClass="btn-outline" text="Garbitu" onAction="#garbitu" />
-                        <Button mnemonicParsing="false" styleClass="btn-primary" text="+ Artikulu berria" onAction="#artikuluBerria" />
                      </children>
                   </HBox>
                   <TableView fx:id="taula" styleClass="table-view" VBox.vgrow="ALWAYS">

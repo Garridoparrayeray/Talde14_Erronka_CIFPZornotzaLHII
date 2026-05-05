@@ -2,25 +2,40 @@ package controller;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Logger;
 
 import dao.KategoriaDAO;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.stage.Stage;
+import javafx.scene.layout.StackPane;
+import utils.LogKudeatzailea;
+import utils.UIKudeatzailea;
 
+/**
+ * Kategoria berri bat gehitzeko elkarrizketa-koadroaren kontroladorea.
+ *
+ * @author Yeray Garrido
+ */
 public class KategoriaBerriController implements Initializable {
 
-    @FXML private TextField txtIzena;
-    @FXML private Label     lblErrorea;
-    @FXML private Button    btnUtzi;
+    private static final Logger LOG = LogKudeatzailea.lortu(KategoriaBerriController.class);
 
-    private Runnable onGordeCb;
+    @FXML
+    private TextField txtIzena;
+    @FXML
+    private Label lblErrorea;
 
-    public void setOnGorde(Runnable cb) {
-        this.onGordeCb = cb;
+    private StackPane contentArea;
+
+    /**
+     * Itzultzean erabili beharreko StackPane ezartzen du.
+     *
+     * @param contentArea Formularioa kargatuta dagoen gunea
+     */
+    public void setContentArea(StackPane contentArea) {
+        this.contentArea = contentArea;
     }
 
     @Override
@@ -28,6 +43,10 @@ public class KategoriaBerriController implements Initializable {
         ezkutuErrorea();
     }
 
+    /**
+     * Formularioko datuak egiaztatzen ditu eta kategoria datu-basean gordetzen
+     * du.
+     */
     @FXML
     private void gorde() {
         String izena = txtIzena.getText().trim();
@@ -38,13 +57,15 @@ public class KategoriaBerriController implements Initializable {
 
         boolean ok = KategoriaDAO.gehitu(izena);
         if (ok) {
-            if (onGordeCb != null) onGordeCb.run();
             itxi();
         } else {
             erakutsiErrorea("Errorea gordetzean. Baliteke izen hori dagoeneko existitzea.");
         }
     }
 
+    /**
+     * Aldaketak gorde gabe zerrendara itzultzen du.
+     */
     @FXML
     private void utzi() {
         itxi();
@@ -62,7 +83,6 @@ public class KategoriaBerriController implements Initializable {
     }
 
     private void itxi() {
-        Stage stage = (Stage) btnUtzi.getScene().getWindow();
-        stage.close();
+        UIKudeatzailea.kargatuPanela(contentArea, "/view/Kategoriak.fxml");
     }
 }

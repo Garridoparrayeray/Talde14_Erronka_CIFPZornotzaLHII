@@ -1,18 +1,22 @@
 package utils;
 
-import dao.ArtikuluaDAO;
-import model.Artikulua;
-
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import dao.ArtikuluaDAO;
+import model.Artikulua;
 
 /**
- * Artikuluen XML fitxategia sortzen du /app/exportazioak/ karpetan.
- * Nginx-ek zerbitzatzen du datuak/ bidez web-etik irakurtzeko.
+ * Artikuluen XML fitxategia sortzen du /app/exportazioak/ karpetan. Nginx-ek
+ * zerbitzatzen du datuak/ bidez web-etik irakurtzeko.
  */
 public class XMLExportazioa {
+
+    private static final Logger LOG = LogKudeatzailea.lortu(XMLExportazioa.class);
 
     private static final String BIDEA;
 
@@ -26,6 +30,10 @@ public class XMLExportazioa {
 
     private static final SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd");
 
+    /**
+     * Biltegiko artikulu guztiak XML fitxategi batera exportatzen ditu.
+     * Nginx-ek zerbitzatzen du fitxategia web-etik irakurtzeko.
+     */
     public static void exportatu() {
         List<Artikulua> zerrenda = ArtikuluaDAO.getGuztiak();
 
@@ -71,12 +79,20 @@ public class XMLExportazioa {
         try (FileWriter fw = new FileWriter(BIDEA)) {
             fw.write(sb.toString());
         } catch (IOException e) {
-            System.err.println("XMLExportazioa errorea: " + e.getMessage());
+            LOG.log(Level.SEVERE, "exportatu: XML fitxategi idazketa errorea", e);
         }
     }
 
+    /**
+     * XML karaktere bereziak ihes-sekuentziekin ordezkatzen ditu.
+     *
+     * @param s Garbitu beharreko katea
+     * @return XML-erako segurua den katea
+     */
     private static String esc(String s) {
-        if (s == null) return "";
+        if (s == null) {
+            return "";
+        }
         return s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace("\"", "&quot;");
     }
 }
