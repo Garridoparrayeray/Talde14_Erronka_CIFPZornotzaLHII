@@ -1,11 +1,15 @@
 package controller;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import dao.LangileaDAO;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import model.Langilea;
+import utils.LogKudeatzailea;
 import utils.Sesio;
 import utils.UIKudeatzailea;
 
@@ -16,6 +20,8 @@ import utils.UIKudeatzailea;
  * @author Yeray Garrido
  */
 public class LoginController {
+
+    private static final Logger LOG = LogKudeatzailea.lortu(LoginController.class);
 
     @FXML
     private TextField txtErabiltzailea;
@@ -41,9 +47,12 @@ public class LoginController {
         Langilea langilea = LangileaDAO.login(erabiltzailea, pasahitza);
 
         if (langilea == null) {
+            LOG.warning("Saiakera hutsa: " + erabiltzailea);
             lblErrorea.setText("Erabiltzailea edo pasahitza okerra.");
             return;
         }
+
+        LOG.info("Saioa hasita: " + erabiltzailea);
 
         boolean adminDa = langilea.isAdmin();
         Sesio.hasiera(langilea, adminDa);
@@ -55,5 +64,11 @@ public class LoginController {
             fxml = "/view/MainLayout.fxml";
         }
         UIKudeatzailea.aldatuLeihoa(txtErabiltzailea, fxml, true);
+    }
+
+    @FXML
+    private void pasahitzaAhaztuDut() {
+        UIKudeatzailea.erakutsiErrorea("Pasahitza berreskuratu",
+                "Ezin da pasahitza automatikoki berreskuratu.\nJarri harremanetan administratzailearekin.");
     }
 }

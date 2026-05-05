@@ -6,9 +6,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import model.MugimenduLerroa;
 import utils.DBConexioa;
+import utils.LogKudeatzailea;
 
 /**
  * Mugimenduen (auditoria) datu-baseko eragiketak kudeatzen dituen DAO klasea.
@@ -16,6 +19,8 @@ import utils.DBConexioa;
  * @author Yeray Garrido
  */
 public class MugimenduDAO {
+
+    private static final Logger LOG = LogKudeatzailea.lortu(MugimenduDAO.class);
 
     /**
      * Mugimenduen erregistro guztiak itzultzen ditu auditoria taulako ordena
@@ -40,7 +45,7 @@ public class MugimenduDAO {
                 ));
             }
         } catch (SQLException e) {
-            System.err.println("MugimenduDAO.getGuztiak: " + e.getMessage());
+            LOG.log(Level.SEVERE, "getGuztiak: datu-baseko errorea", e);
         }
         return zerrenda;
     }

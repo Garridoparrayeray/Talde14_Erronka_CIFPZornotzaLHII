@@ -4,6 +4,7 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import java.util.logging.Logger;
 
 import dao.ArtikuluaDAO;
 import dao.KategoriaDAO;
@@ -18,6 +19,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import model.Kategoria;
 import model.Kokalekua;
+import utils.LogKudeatzailea;
 
 /**
  * Artikulu berri bat erregistratzeko formularioaren kontroladorea (pantaila
@@ -26,6 +28,8 @@ import model.Kokalekua;
  * @author Yeray Garrido
  */
 public class ErregistroaController implements Initializable {
+
+    private static final Logger LOG = LogKudeatzailea.lortu(ErregistroaController.class);
 
     @FXML
     private TextField txtIzena;
@@ -72,7 +76,6 @@ public class ErregistroaController implements Initializable {
             return;
         }
 
-        // Aurkipen-lekua deskribapenarentzat
         String deskFinal = deskribapena;
         if (!aurkipenLekua.isEmpty()) {
             deskFinal = "Aurkitua: " + aurkipenLekua + "\n" + deskribapena;

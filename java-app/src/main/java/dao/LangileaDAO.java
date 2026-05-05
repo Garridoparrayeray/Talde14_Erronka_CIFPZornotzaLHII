@@ -6,20 +6,26 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.mindrot.jbcrypt.BCrypt;
 
 import model.Administratzailea;
 import model.Langilea;
 import utils.DBConexioa;
+import utils.LogKudeatzailea;
 
 /**
  * Langileen datu-baseko eragiketak kudeatzen dituen DAO klasea.
+ * Langileak datu-basetik lortzeko, langile berriak gehitzeko eta
+ * autentifikatzeko metodoak ditu.
  *
- * @author Yeray Garrido Langileak datu-basetik lortzeko, langile berriak
- * gehitzeko eta autentifikatzeko metodoak ditu.
+ * @author Yeray Garrido
  */
 public class LangileaDAO {
+
+    private static final Logger LOG = LogKudeatzailea.lortu(LangileaDAO.class);
 
     /**
      * Langile guztiak itzultzen ditu datu-basetik (taulan erakusteko).
@@ -42,7 +48,7 @@ public class LangileaDAO {
                 zerrenda.add(l);
             }
         } catch (SQLException e) {
-            System.err.println("LangileaDAO.getGuztiak: " + e.getMessage());
+            LOG.log(Level.SEVERE, "getGuztiak: datu-baseko errorea", e);
         }
         return zerrenda;
     }
@@ -63,7 +69,7 @@ public class LangileaDAO {
                 });
             }
         } catch (SQLException e) {
-            System.err.println("LangileaDAO.getRolak: " + e.getMessage());
+            LOG.log(Level.SEVERE, "getRolak: datu-baseko errorea", e);
         }
         return zerrenda;
     }
@@ -82,7 +88,7 @@ public class LangileaDAO {
             ps.setInt(5, idRola);
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
-            System.err.println("LangileaDAO.gehitu: " + e.getMessage());
+            LOG.log(Level.SEVERE, "gehitu: datu-baseko errorea", e);
             return false;
         }
     }
@@ -105,7 +111,6 @@ public class LangileaDAO {
                 if (rs.next()) {
                     String hashGordea = rs.getString("pasahitza_hash");
 
-                    // Pasahitza egiaztatu BCrypt-ekin
                     boolean pasahitzaZuzena = BCrypt.checkpw(pasahitza, hashGordea);
                     if (!pasahitzaZuzena) {
                         return null;
@@ -117,20 +122,18 @@ public class LangileaDAO {
                     String er = rs.getString("erabiltzailea");
                     String rol = rs.getString("rola");
 
-                    // Rola egiaztatu eta langile mota egokia itzuli
                     Langilea langilea;
                     if ("Administratzailea".equals(rol)) {
                         langilea = new Administratzailea(id, iz, ab, er, hashGordea);
                     } else {
                         langilea = new Langilea(id, iz, ab, er, hashGordea);
                     }
-                    // DB-ko rola objektuan gorde (ez hardcodeatu kontroladorean)
                     langilea.setRola(rol);
                     return langilea;
                 }
             }
         } catch (SQLException e) {
-            System.err.println("LangileaDAO.login errorea: " + e.getMessage());
+            LOG.log(Level.SEVERE, "login: datu-baseko errorea", e);
         }
         return null;
     }

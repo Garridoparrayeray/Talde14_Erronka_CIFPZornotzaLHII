@@ -3,6 +3,7 @@ package controller;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.logging.Logger;
 
 import dao.LangileaDAO;
 import javafx.fxml.FXML;
@@ -12,6 +13,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.StackPane;
+import utils.LogKudeatzailea;
 import utils.UIKudeatzailea;
 
 /**
@@ -20,6 +22,8 @@ import utils.UIKudeatzailea;
  * @author Yeray Garrido
  */
 public class LangileBerriController implements Initializable {
+
+    private static final Logger LOG = LogKudeatzailea.lortu(LangileBerriController.class);
 
     @FXML
     private TextField txtIzena;

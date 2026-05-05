@@ -3,6 +3,7 @@ package controller;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import java.util.logging.Logger;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -10,6 +11,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import model.Langilea;
+import utils.LogKudeatzailea;
 import utils.Sesio;
 import utils.UIKudeatzailea;
 
@@ -20,6 +22,8 @@ import utils.UIKudeatzailea;
  * @author Yeray Garrido
  */
 public class AdminController implements Initializable {
+
+    private static final Logger LOG = LogKudeatzailea.lortu(AdminController.class);
 
     @FXML
     private StackPane adminContentArea;
@@ -123,14 +127,13 @@ public class AdminController implements Initializable {
         UIKudeatzailea.aldatuLeihoa(adminContentArea, "/view/login.fxml", true);
     }
 
-    // ---- helpers ----
     /**
      * Nabigazio menuko botoi bat aktibo gisa markatzen du estiloz.
      *
      * @param aktibo Aktibatu beharreko botoia
      */
     private void setAktibo(Button aktibo) {
-        for (Button b : navBotoiak) {  // botoi guztiak berrezarri
+        for (Button b : navBotoiak) {
             b.getStyleClass().removeAll("nav-item-active", "nav-item");
             b.getStyleClass().add("nav-item");
         }

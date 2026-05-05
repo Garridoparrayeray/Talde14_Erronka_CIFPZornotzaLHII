@@ -3,6 +3,8 @@ package controller;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import dao.KokalekuaDAO;
 import javafx.beans.property.SimpleStringProperty;
@@ -14,6 +16,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.StackPane;
 import model.Kokalekua;
+import utils.LogKudeatzailea;
 import utils.UIKudeatzailea;
 
 /**
@@ -22,6 +25,8 @@ import utils.UIKudeatzailea;
  * @author Yeray Garrido
  */
 public class KokalekuakController implements Initializable {
+
+    private static final Logger LOG = LogKudeatzailea.lortu(KokalekuakController.class);
 
     @FXML
     private StackPane contentArea;
@@ -65,7 +70,7 @@ public class KokalekuakController implements Initializable {
             ctrl.setContentArea(contentArea);
             UIKudeatzailea.kargatuPanela(contentArea, nodoa);
         } catch (Exception e) {
-            System.err.println("KokalekuakController.kokalekuaBerria: " + e.getMessage());
+            LOG.log(Level.SEVERE, "kokalekuaBerria: FXML kargatzean errorea", e);
         }
     }
 }

@@ -2,6 +2,7 @@ package controller;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Logger;
 
 import dao.KategoriaDAO;
 import javafx.fxml.FXML;
@@ -9,6 +10,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.StackPane;
+import utils.LogKudeatzailea;
 import utils.UIKudeatzailea;
 
 /**
@@ -17,6 +19,8 @@ import utils.UIKudeatzailea;
  * @author Yeray Garrido
  */
 public class KategoriaBerriController implements Initializable {
+
+    private static final Logger LOG = LogKudeatzailea.lortu(KategoriaBerriController.class);
 
     @FXML
     private TextField txtIzena;

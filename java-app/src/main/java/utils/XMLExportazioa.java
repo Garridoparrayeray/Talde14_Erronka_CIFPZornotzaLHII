@@ -4,6 +4,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import dao.ArtikuluaDAO;
 import model.Artikulua;
@@ -13,6 +15,8 @@ import model.Artikulua;
  * zerbitzatzen du datuak/ bidez web-etik irakurtzeko.
  */
 public class XMLExportazioa {
+
+    private static final Logger LOG = LogKudeatzailea.lortu(XMLExportazioa.class);
 
     private static final String BIDEA;
 
@@ -75,7 +79,7 @@ public class XMLExportazioa {
         try (FileWriter fw = new FileWriter(BIDEA)) {
             fw.write(sb.toString());
         } catch (IOException e) {
-            System.err.println("XMLExportazioa errorea: " + e.getMessage());
+            LOG.log(Level.SEVERE, "exportatu: XML fitxategi idazketa errorea", e);
         }
     }
 

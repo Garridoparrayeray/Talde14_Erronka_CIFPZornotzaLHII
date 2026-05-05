@@ -4,6 +4,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import dao.LangileaDAO;
 import javafx.beans.property.SimpleStringProperty;
@@ -17,6 +19,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.StackPane;
 import model.Langilea;
+import utils.LogKudeatzailea;
 import utils.UIKudeatzailea;
 
 /**
@@ -25,6 +28,8 @@ import utils.UIKudeatzailea;
  * @author Yeray Garrido
  */
 public class LangileakController implements Initializable {
+
+    private static final Logger LOG = LogKudeatzailea.lortu(LangileakController.class);
 
     @FXML
     private StackPane contentArea;
@@ -113,7 +118,7 @@ public class LangileakController implements Initializable {
             ctrl.setContentArea(contentArea);
             UIKudeatzailea.kargatuPanela(contentArea, nodoa);
         } catch (Exception e) {
-            System.err.println("LangileakController.langileaBerria: " + e.getMessage());
+            LOG.log(Level.SEVERE, "langileaBerria: FXML kargatzean errorea", e);
         }
     }
 }

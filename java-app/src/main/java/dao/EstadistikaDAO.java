@@ -6,10 +6,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import model.AzkenMugimendua;
 import model.KategoriaKopurua;
 import utils.DBConexioa;
+import utils.LogKudeatzailea;
 
 /**
  * Datu-baseko estatistikak eta kopuru orokorrak lortzeko DAO klasea.
@@ -17,6 +20,8 @@ import utils.DBConexioa;
  * @author Yeray Garrido
  */
 public class EstadistikaDAO {
+
+    private static final Logger LOG = LogKudeatzailea.lortu(EstadistikaDAO.class);
 
     /**
      * Biltegian dauden artikulu kopurua itzultzen du.
@@ -120,7 +125,7 @@ public class EstadistikaDAO {
                 ));
             }
         } catch (SQLException e) {
-            System.err.println("EstadistikaDAO.azkenMugimenduak: " + e.getMessage());
+            LOG.log(Level.SEVERE, "azkenMugimenduak: datu-baseko errorea", e);
         }
         return zerrenda;
     }
@@ -137,15 +142,10 @@ public class EstadistikaDAO {
                 + "GROUP BY k.id_kategoria, k.izena ORDER BY kop DESC";
         try (Connection con = DBConexioa.getKonexioa(); PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
-                String izena = rs.getString("izena");
-                int kop = rs.getInt("kop");
-
-                // Eredua sortu eta zerrendan gehitu
-                KategoriaKopurua katKopurua = new KategoriaKopurua(izena, kop);
-                zerrenda.add(katKopurua);
+                zerrenda.add(new KategoriaKopurua(rs.getString("izena"), rs.getInt("kop")));
             }
         } catch (SQLException e) {
-            System.err.println("EstadistikaDAO.kategoriaKopuruak: " + e.getMessage());
+            LOG.log(Level.SEVERE, "kategoriaKopuruak: datu-baseko errorea", e);
         }
         return zerrenda;
     }
@@ -163,7 +163,6 @@ public class EstadistikaDAO {
         }
     }
 
-    // ── Laguntzaileak ────────────────────────────────────────────────────────
     /**
      * Emandako egoera batean dauden artikuluak kontatzen ditu.
      *
@@ -180,7 +179,7 @@ public class EstadistikaDAO {
                 }
             }
         } catch (SQLException e) {
-            System.err.println("EstadistikaDAO.kontatuEgoera: " + e.getMessage());
+            LOG.log(Level.SEVERE, "kontatuEgoera: datu-baseko errorea", e);
         }
         return 0;
     }
@@ -197,7 +196,7 @@ public class EstadistikaDAO {
                 return rs.getInt(1);
             }
         } catch (SQLException e) {
-            System.err.println("EstadistikaDAO.kontatuSql: " + e.getMessage());
+            LOG.log(Level.SEVERE, "kontatuSql: datu-baseko errorea", e);
         }
         return 0;
     }

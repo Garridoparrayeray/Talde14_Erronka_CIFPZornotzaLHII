@@ -4,6 +4,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.logging.Logger;
 
 import dao.ArtikuluaDAO;
 import javafx.beans.property.SimpleStringProperty;
@@ -14,6 +15,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import model.Artikulua;
+import utils.LogKudeatzailea;
 
 /**
  * Inbentarioko artikuluen zerrenda eta bilaketa-filtroak kudeatzen dituen
@@ -22,6 +24,8 @@ import model.Artikulua;
  * @author Yeray Garrido
  */
 public class InbentarioController implements Initializable {
+
+    private static final Logger LOG = LogKudeatzailea.lortu(InbentarioController.class);
 
     @FXML
     private TableView<Artikulua> taula;

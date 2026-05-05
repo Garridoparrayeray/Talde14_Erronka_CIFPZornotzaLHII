@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.logging.Logger;
 
 import dao.ErreklamazioaDAO;
 import javafx.beans.property.SimpleStringProperty;
@@ -17,6 +18,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.layout.HBox;
 import model.EgoeraErreklamazioa;
 import model.Erreklamazioa;
+import utils.LogKudeatzailea;
 
 /**
  * Galdu diren gauzen erreklamazioen zerrenda eta iragazketa kudeatzen duen
@@ -25,6 +27,8 @@ import model.Erreklamazioa;
  * @author Yeray Garrido
  */
 public class GalduDabenakController implements Initializable {
+
+    private static final Logger LOG = LogKudeatzailea.lortu(GalduDabenakController.class);
 
     @FXML
     private TableView<Erreklamazioa> taula;
@@ -156,5 +160,4 @@ public class GalduDabenakController implements Initializable {
     private void iragaziDataBidez() {
         iragaziAktualizatu();
     }
-
 }

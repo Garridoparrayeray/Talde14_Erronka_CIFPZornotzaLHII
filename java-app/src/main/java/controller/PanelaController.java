@@ -4,6 +4,7 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
+import java.util.logging.Logger;
 
 import dao.EstadistikaDAO;
 import javafx.beans.property.SimpleStringProperty;
@@ -14,6 +15,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import model.AzkenMugimendua;
 import model.KategoriaKopurua;
+import utils.LogKudeatzailea;
 import utils.Sesio;
 
 /**
@@ -23,6 +25,8 @@ import utils.Sesio;
  * @author Yeray Garrido
  */
 public class PanelaController implements Initializable {
+
+    private static final Logger LOG = LogKudeatzailea.lortu(PanelaController.class);
 
     @FXML
     private Label lblEgunon;

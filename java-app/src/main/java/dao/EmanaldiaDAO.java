@@ -5,8 +5,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import utils.DBConexioa;
+import utils.LogKudeatzailea;
 
 /**
  * Emanaldien datu-baseko eragiketak kudeatzen dituen DAO klasea.
@@ -14,6 +17,8 @@ import utils.DBConexioa;
  * @author Yeray Garrido
  */
 public class EmanaldiaDAO {
+
+    private static final Logger LOG = LogKudeatzailea.lortu(EmanaldiaDAO.class);
 
     /**
      * Emanaldia formalizatzen du: hartzailea sortu/bilatu, emanaldia gorde,
@@ -30,14 +35,12 @@ public class EmanaldiaDAO {
             con = DBConexioa.getKonexioa();
             con.setAutoCommit(false);
 
-            // 1. Jabea bilatu NAN bidez edo sortu berria
             int idHartzailea = lortuEdoSortuJabea(con, nan, izena, abizena, telefonoa, emaila, helbidea);
             if (idHartzailea <= 0) {
                 con.rollback();
                 return false;
             }
 
-            // 2. EMANALDIA txertatu
             String sqlEm = "INSERT INTO EMANALDIA (emate_data, oharrak, dokumentu_bidea, id_artikulua, id_hartzailea, id_langile) "
                     + "VALUES (CURDATE(), ?, ?, ?, ?, ?)";
             try (PreparedStatement ps = con.prepareStatement(sqlEm)) {
@@ -53,14 +56,12 @@ public class EmanaldiaDAO {
                 ps.executeUpdate();
             }
 
-            // 3. ARTIKULUA egoera eguneratu → bueltatua
             String sqlUp = "UPDATE ARTIKULUA SET egoera = 'bueltatua' WHERE id_artikulua = ?";
             try (PreparedStatement ps = con.prepareStatement(sqlUp)) {
                 ps.setString(1, idArtikulua);
                 ps.executeUpdate();
             }
 
-            // 4. MUGIMENDUA txertatu (auditoria)
             String deskMug = "Artikulua " + izena + " " + abizena + "-ri eman zaio.";
             String sqlMug = "INSERT INTO MUGIMENDUA (deskribapena, id_artikulua, id_langile) VALUES (?, ?, ?)";
             try (PreparedStatement ps = con.prepareStatement(sqlMug)) {
@@ -78,12 +79,12 @@ public class EmanaldiaDAO {
             return true;
 
         } catch (SQLException e) {
-            System.err.println("EmanaldiaDAO.formalizatu: " + e.getMessage());
+            LOG.log(Level.SEVERE, "formalizatu: datu-baseko errorea", e);
             if (con != null) {
                 try {
                     con.rollback();
                 } catch (SQLException ex) {
-                    System.err.println("Rollback errorea: " + ex.getMessage());
+                    LOG.log(Level.SEVERE, "formalizatu: rollback errorea", ex);
                 }
             }
             return false;
@@ -93,7 +94,7 @@ public class EmanaldiaDAO {
                     con.setAutoCommit(true);
                     con.close();
                 } catch (SQLException ex) {
-                    System.err.println("Konexio itxiera errorea: " + ex.getMessage());
+                    LOG.log(Level.WARNING, "formalizatu: konexio itxiera errorea", ex);
                 }
             }
         }
@@ -108,7 +109,6 @@ public class EmanaldiaDAO {
     private static int lortuEdoSortuJabea(Connection con, String nan, String izena,
             String abizena, String telefonoa,
             String emaila, String helbidea) throws SQLException {
-        // NAN bidez bilatu
         String sqlBilatu = "SELECT id_hartzailea FROM JABEA WHERE nan = ?";
         try (PreparedStatement ps = con.prepareStatement(sqlBilatu)) {
             ps.setString(1, nan);
@@ -118,7 +118,6 @@ public class EmanaldiaDAO {
             }
         }
 
-        // Ez badago, HARTZAILEA sortu
         String sqlH = "INSERT INTO HARTZAILEA (telefonoa, emaila, helbidea) VALUES (?, ?, ?)";
         int idH;
         try (PreparedStatement ps = con.prepareStatement(sqlH, Statement.RETURN_GENERATED_KEYS)) {
@@ -133,7 +132,6 @@ public class EmanaldiaDAO {
             idH = gen.getInt(1);
         }
 
-        // JABEA sortu
         String sqlJ = "INSERT INTO JABEA (id_hartzailea, nan, izena, abizena) VALUES (?, ?, ?, ?)";
         try (PreparedStatement ps = con.prepareStatement(sqlJ)) {
             ps.setInt(1, idH);

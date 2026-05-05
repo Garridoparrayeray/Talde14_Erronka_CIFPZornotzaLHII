@@ -2,6 +2,7 @@ package dao;
 
 import model.Kokalekua;
 import utils.DBConexioa;
+import utils.LogKudeatzailea;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -9,6 +10,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Kokalekuen datu-baseko eragiketak kudeatzen dituen DAO klasea.
@@ -16,6 +19,8 @@ import java.util.List;
  * @author Yeray Garrido
  */
 public class KokalekuaDAO {
+
+    private static final Logger LOG = LogKudeatzailea.lortu(KokalekuaDAO.class);
 
     /**
      * Datu-basetik kokaleku guztiak lortzen ditu, bakoitzeko artikulu
@@ -41,7 +46,7 @@ public class KokalekuaDAO {
                 zerrenda.add(k);
             }
         } catch (SQLException e) {
-            System.err.println("KokalekuaDAO.getGuztiak: " + e.getMessage());
+            LOG.log(Level.SEVERE, "getGuztiak: datu-baseko errorea", e);
         }
         return zerrenda;
     }
@@ -59,7 +64,7 @@ public class KokalekuaDAO {
                 zerrenda.add(k);
             }
         } catch (SQLException e) {
-            System.err.println("KokalekuaDAO.getZerrenda: " + e.getMessage());
+            LOG.log(Level.SEVERE, "getZerrenda: datu-baseko errorea", e);
         }
         return zerrenda;
     }
@@ -75,7 +80,7 @@ public class KokalekuaDAO {
             ps.setBoolean(3, bhaDa);
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
-            System.err.println("KokalekuaDAO.gehitu: " + e.getMessage());
+            LOG.log(Level.SEVERE, "gehitu: datu-baseko errorea", e);
             return false;
         }
     }

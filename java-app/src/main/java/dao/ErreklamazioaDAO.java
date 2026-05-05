@@ -7,9 +7,12 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import model.EgoeraErreklamazioa;
 import model.Erreklamazioa;
+import utils.LogKudeatzailea;
 
 /**
  * Erreklamazioen datu-baseko eragiketak kudeatzen dituen DAO klasea.
@@ -17,6 +20,8 @@ import model.Erreklamazioa;
  * @author Yeray Garrido
  */
 public class ErreklamazioaDAO {
+
+    private static final Logger LOG = LogKudeatzailea.lortu(ErreklamazioaDAO.class);
 
     /**
      * Datu-basetik erreklamazio guztiak lortzen ditu objektu bidez mapatuta.
@@ -62,7 +67,6 @@ public class ErreklamazioaDAO {
                     emaila = "";
                 }
 
-                // 1. Hartzailea objektua sortu polimorfismoa eta eraikitzaile zuzena erabiliz.
                 model.Jabea jabea = new model.Jabea(
                         nan,
                         jabeIzena,
@@ -71,17 +75,14 @@ public class ErreklamazioaDAO {
                         emaila
                 );
 
-                // 2. Erreklamazioa objektu nagusia sortu
                 Erreklamazioa erreklamazioa = new Erreklamazioa(jabea, rs.getString("deskribapen_bilatua"), rs.getDate("erreklamazio_data"));
                 erreklamazioa.setErreklamazioId(rs.getInt("id_erreklamazio"));
 
-                // 3. Kategoria soilik badago
                 int idKat = rs.getInt("id_kategoria");
                 if (idKat != 0) {
                     erreklamazioa.setKategoria(new model.Kategoria(idKat, rs.getString("kategoria_izena")));
                 }
 
-                // Egoera bihurtu eta esleitu
                 String egoeraStr = rs.getString("errek_egoera");
                 if (egoeraStr != null) {
                     if (!egoeraStr.isEmpty()) {
@@ -96,7 +97,7 @@ public class ErreklamazioaDAO {
                 erreklamazioak.add(erreklamazioa);
             }
         } catch (SQLException e) {
-            System.err.println("Errorea ErreklamazioaDAO.getGuztiak exekutatzean: " + e.getMessage());
+            LOG.log(Level.SEVERE, "getGuztiak: datu-baseko errorea", e);
         }
 
         return erreklamazioak;
@@ -117,7 +118,7 @@ public class ErreklamazioaDAO {
             ps.executeUpdate();
             return true;
         } catch (SQLException | NumberFormatException e) {
-            System.err.println("Errorea ErreklamazioaDAO.updateEgoera exekutatzean: " + e.getMessage());
+            LOG.log(Level.SEVERE, "updateEgoera: datu-baseko errorea", e);
             return false;
         }
     }
@@ -132,7 +133,6 @@ public class ErreklamazioaDAO {
 
         try (Connection con = utils.DBConexioa.getKonexioa()) {
 
-            // 1. Egiaztatu Jabea existitzen den datu-basean bere NANaren bidez
             String checkSql = "SELECT id_hartzailea FROM JABEA WHERE nan = ?";
             try (PreparedStatement psCheck = con.prepareStatement(checkSql)) {
                 psCheck.setString(1, nan);
@@ -143,7 +143,6 @@ public class ErreklamazioaDAO {
                 }
             }
 
-            // 2. Ez bada existitzen, Hartzailea taulan eta ostean Jabea taulan erregistratu
             if (idHartzailea == -1) {
                 String insertH = "INSERT INTO HARTZAILEA (telefonoa, emaila) VALUES (?, ?)";
                 try (PreparedStatement psH = con.prepareStatement(insertH, Statement.RETURN_GENERATED_KEYS)) {
@@ -170,7 +169,6 @@ public class ErreklamazioaDAO {
                 }
             }
 
-            // 3. Azkenik, Erreklamazioa taulan gordetzen dugu eskuratutako hartzaile_id erabiliz
             if (idHartzailea != -1) {
                 String insertE = "INSERT INTO ERREKLAMAZIOA (erreklamazio_data, errek_egoera, deskribapen_bilatua, id_hartzailea, id_kategoria, id_langile) VALUES (CURDATE(), 'irekita', ?, ?, ?, ?)";
                 try (PreparedStatement psE = con.prepareStatement(insertE)) {
@@ -192,7 +190,7 @@ public class ErreklamazioaDAO {
             }
 
         } catch (SQLException e) {
-            System.err.println("Errorea ErreklamazioaDAO.gorde exekutatzean: " + e.getMessage());
+            LOG.log(Level.SEVERE, "gorde: datu-baseko errorea", e);
             return false;
         }
     }

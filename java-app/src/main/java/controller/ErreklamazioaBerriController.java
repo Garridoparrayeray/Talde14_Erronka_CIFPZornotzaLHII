@@ -1,5 +1,10 @@
 package controller;
 
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.ResourceBundle;
+import java.util.logging.Logger;
+
 import dao.ErreklamazioaDAO;
 import dao.KategoriaDAO;
 import javafx.fxml.FXML;
@@ -10,12 +15,9 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.StackPane;
 import model.Kategoria;
+import utils.LogKudeatzailea;
 import utils.Sesio;
 import utils.UIKudeatzailea;
-
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.ResourceBundle;
 
 /**
  * Erreklamazino berri bat sortzeko formularioaren kontroladorea.
@@ -23,6 +25,8 @@ import java.util.ResourceBundle;
  * @author Yeray Garrido
  */
 public class ErreklamazioaBerriController implements Initializable {
+
+    private static final Logger LOG = LogKudeatzailea.lortu(ErreklamazioaBerriController.class);
 
     @FXML
     private TextField txtIzena;
