@@ -6,9 +6,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.logging.Logger;
 
 import dao.ArtikuluaDAO;
 import dao.EmanaldiaDAO;
+import dao.ErreklamazioaDAO;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.CheckBox;
@@ -16,10 +18,14 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
 import model.Artikulua;
 import model.EgoeraArtikulua;
+import model.Erreklamazioa;
+import utils.LogKudeatzailea;
 import utils.Sesio;
+import utils.UIKudeatzailea;
 
 /**
  * Emanaldien formularioa kudeatzen duen kontroladorea.
@@ -27,6 +33,8 @@ import utils.Sesio;
  * @author Yeray Garrido
  */
 public class EmanaldiaController implements Initializable {
+
+    private static final Logger LOG = LogKudeatzailea.lortu(EmanaldiaController.class);
 
     private static final SimpleDateFormat SDF = new SimpleDateFormat("dd/MM/yyyy");
 
@@ -69,9 +77,10 @@ public class EmanaldiaController implements Initializable {
     @FXML
     private Label lblArchivoSinadura;
 
-    // Biltegiko artikuluen zerrenda (ComboBox-arekin parekatua)
     private ArrayList<Artikulua> artikuluak;
     private File archivoSinadura;
+    private int erreklamazioId = -1;
+    private StackPane contentArea = null;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -80,6 +89,31 @@ public class EmanaldiaController implements Initializable {
         ezkutuArtikuluInfo();
         ezkutuErrorea();
         archivoSinadura = null;
+    }
+
+    /**
+     * Erreklamazioa baten datuak formularioan aurrez betetzen ditu eta
+     * jabea identifikatzen du, emanaldian erreklamazioa zuzenean ebazteko.
+     *
+     * @param err       Ebazteko erreklamazioa
+     * @param contentArea Itzultzean erabili beharreko StackPane nagusia
+     */
+    public void setErreklamazioa(Erreklamazioa err, StackPane contentArea) {
+        this.erreklamazioId = err.getErreklamazioId();
+        this.contentArea = contentArea;
+        txtNan.setText(err.getJabeNan() != null ? err.getJabeNan() : "");
+        txtIzena.setText(err.getJabeIzena() != null ? err.getJabeIzena() : "");
+        txtAbizena.setText(err.getJabeAbizena() != null ? err.getJabeAbizena() : "");
+        txtTelefonoa.setText(err.getJabeTelefonoa() != null ? err.getJabeTelefonoa() : "");
+        txtEmaila.setText(err.getJabeEmaila() != null ? err.getJabeEmaila() : "");
+        List<Artikulua> bateragarriak = err.bilatuBateragarriak(artikuluak);
+        if (!bateragarriak.isEmpty()) {
+            int idx = artikuluak.indexOf(bateragarriak.get(0));
+            if (idx >= 0) {
+                cbArtikulua.getSelectionModel().select(idx);
+                artikuluaHautatu();
+            }
+        }
     }
 
     /**
@@ -185,19 +219,29 @@ public class EmanaldiaController implements Initializable {
         boolean ok = EmanaldiaDAO.formalizatu(idArtikulua, nan, izena, abizena,
                 telefonoa, emaila, helbidea, oharrak, idLangile, dokumentuBidea);
         if (ok) {
-            garbitu();
-            erakutsiErrorea("Emanaldia ondo formalizatu da.");
+            if (erreklamazioId > 0) {
+                ErreklamazioaDAO.updateEgoera(String.valueOf(erreklamazioId), "ebatzita");
+                UIKudeatzailea.kargatuPanela(contentArea, "/view/Erreklamazioak.fxml");
+            } else {
+                garbitu();
+                erakutsiErrorea("Emanaldia ondo formalizatu da.");
+            }
         } else {
             erakutsiErrorea("Errorea gordetzean. Egiaztatu datuak.");
         }
     }
 
     /**
-     * Aldaketak gorde gabe formularioa garbitzen du.
+     * Aldaketak gorde gabe atzera egiten du: erreklamaziotik etorri bada
+     * erreklamazioen zerrendara itzultzen da, bestela formularioa garbitzen du.
      */
     @FXML
     private void utzi() {
-        garbitu();
+        if (contentArea != null) {
+            UIKudeatzailea.kargatuPanela(contentArea, "/view/Erreklamazioak.fxml");
+        } else {
+            garbitu();
+        }
     }
 
     /**
@@ -229,9 +273,6 @@ public class EmanaldiaController implements Initializable {
         ezkutuErrorea();
     }
 
-    /**
-     * Hautaturiko artikuluaren informazio-etiketa guztiak erakusten ditu.
-     */
     private void erakutsiArtikuluInfo() {
         lblArtikuluKodea.setVisible(true);
         lblArtikuluKodea.setManaged(true);
@@ -245,9 +286,6 @@ public class EmanaldiaController implements Initializable {
         lblArtikuluEgoera.setManaged(true);
     }
 
-    /**
-     * Artikuluaren informazio-etiketa guztiak ezkutatzen ditu.
-     */
     private void ezkutuArtikuluInfo() {
         lblArtikuluKodea.setVisible(false);
         lblArtikuluKodea.setManaged(false);

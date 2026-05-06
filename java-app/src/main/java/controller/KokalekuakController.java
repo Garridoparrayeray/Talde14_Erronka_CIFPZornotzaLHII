@@ -3,17 +3,28 @@ package controller;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import dao.KokalekuaDAO;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.GridPane;
 import javafx.scene.Node;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.StackPane;
 import model.Kokalekua;
+import utils.LogKudeatzailea;
 import utils.UIKudeatzailea;
 
 /**
@@ -22,6 +33,8 @@ import utils.UIKudeatzailea;
  * @author Yeray Garrido
  */
 public class KokalekuakController implements Initializable {
+    private static final Logger LOG = LogKudeatzailea.lortu(KokalekuakController.class);
+
 
     @FXML
     private StackPane contentArea;
@@ -65,7 +78,107 @@ public class KokalekuakController implements Initializable {
             ctrl.setContentArea(contentArea);
             UIKudeatzailea.kargatuPanela(contentArea, nodoa);
         } catch (Exception e) {
-            System.err.println("KokalekuakController.kokalekuaBerria: " + e.getMessage());
+            LOG.log(Level.SEVERE, "kokalekuaBerria: errorea", e);
         }
+    }
+
+    /**
+     * Taulan aukeratutako kokalekua datu-basetik ezabatzen du.
+     */
+    @FXML
+    public void kokalekuaEzabatu() {
+        Kokalekua sel = taula.getSelectionModel().getSelectedItem();
+        
+        if (sel == null) {
+            erakutsiAlerta(Alert.AlertType.WARNING, "Kontuz", "Aukeratu kokaleku bat taulan ezabatzeko.");
+            return;
+        }
+
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+        confirm.setTitle("Kokalekua ezabatu");
+        confirm.setHeaderText("Kokalekua behin betiko ezabatuko da");
+        confirm.setContentText("Ziur zaude kokaleku hau ezabatu nahi duzula?");
+        confirm.initOwner(taula.getScene().getWindow());
+
+        confirm.showAndWait().ifPresent(btn -> {
+            if (btn == ButtonType.OK) {
+                boolean ondo = KokalekuaDAO.ezabatu(sel.getKokalekuId());
+                if (ondo) {
+                    kargatu();
+                    erakutsiAlerta(Alert.AlertType.INFORMATION, "Eginda", "Kokalekua ondo ezabatu da.");
+                } else {
+                    erakutsiAlerta(Alert.AlertType.ERROR, "Errorea", "Ezin izan da kokalekua ezabatu. Agian objektuekin lotuta dago.");
+                }
+            }
+        });
+    }
+
+    /**
+     * Taulan aukeratutako kokalekua editatzeko elkarrizketa-koadroa erakusten du.
+     */
+    @FXML
+    public void kokalekuaEditatu() {
+        Kokalekua sel = taula.getSelectionModel().getSelectedItem();
+        
+        if (sel == null) {
+            erakutsiAlerta(Alert.AlertType.WARNING, "Kontuz", "Aukeratu kokaleku bat taulan editatzeko.");
+            return;
+        }
+
+        Dialog<ButtonType> dialog = new Dialog<>();
+        dialog.setTitle("Kokalekua editatu");
+        dialog.setHeaderText("Aldatu kokalekuaren datuak");
+        dialog.initOwner(taula.getScene().getWindow());
+        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(20, 20, 10, 10));
+
+        TextField txtArmairua = new TextField(sel.getArmairua());
+        txtArmairua.setPromptText("Armairua");
+        
+        TextField txtApala = new TextField(sel.getApala());
+        txtApala.setPromptText("Apala");
+        
+        CheckBox chkBha = new CheckBox("BHA (Bolumen Handiko Armairua)");
+        chkBha.setSelected(sel.isBhaDa());
+
+        grid.add(new Label("Armairua:"), 0, 0);
+        grid.add(txtArmairua, 1, 0);
+        grid.add(new Label("Apala:"), 0, 1);
+        grid.add(txtApala, 1, 1);
+        grid.add(chkBha, 1, 2);
+
+        dialog.getDialogPane().setContent(grid);
+
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == ButtonType.OK) {
+                boolean ondo = KokalekuaDAO.eguneratu(
+                    sel.getKokalekuId(), 
+                    txtArmairua.getText().trim(), 
+                    txtApala.getText().trim(), 
+                    chkBha.isSelected()
+                );
+                if (ondo) {
+                    kargatu(); 
+                    erakutsiAlerta(Alert.AlertType.INFORMATION, "Eginda", "Kokalekua ondo eguneratu da.");
+                } else {
+                    erakutsiAlerta(Alert.AlertType.ERROR, "Errorea", "Ezin izan da kokalekua eguneratu.");
+                }
+            }
+            return null;
+        });
+
+        dialog.showAndWait();
+    }
+
+    private void erakutsiAlerta(Alert.AlertType mota, String titulua, String mezua) {
+        Alert alert = new Alert(mota);
+        alert.setTitle(titulua);
+        alert.setHeaderText(null);
+        alert.setContentText(mezua);
+        alert.showAndWait();
     }
 }

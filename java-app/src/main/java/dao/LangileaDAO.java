@@ -6,11 +6,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.mindrot.jbcrypt.BCrypt;
 
 import model.Administratzailea;
 import model.Langilea;
+import utils.LogKudeatzailea;
 import utils.DBConexioa;
 
 /**
@@ -20,6 +23,8 @@ import utils.DBConexioa;
  * gehitzeko eta autentifikatzeko metodoak ditu.
  */
 public class LangileaDAO {
+    private static final Logger LOG = LogKudeatzailea.lortu(LangileaDAO.class);
+
 
     /**
      * Langile guztiak itzultzen ditu datu-basetik (taulan erakusteko).
@@ -42,7 +47,7 @@ public class LangileaDAO {
                 zerrenda.add(l);
             }
         } catch (SQLException e) {
-            System.err.println("LangileaDAO.getGuztiak: " + e.getMessage());
+            LOG.log(Level.SEVERE, "getGuztiak: errorea", e);
         }
         return zerrenda;
     }
@@ -63,7 +68,7 @@ public class LangileaDAO {
                 });
             }
         } catch (SQLException e) {
-            System.err.println("LangileaDAO.getRolak: " + e.getMessage());
+            LOG.log(Level.SEVERE, "getRolak: errorea", e);
         }
         return zerrenda;
     }
@@ -82,7 +87,7 @@ public class LangileaDAO {
             ps.setInt(5, idRola);
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
-            System.err.println("LangileaDAO.gehitu: " + e.getMessage());
+            LOG.log(Level.SEVERE, "gehitu: errorea", e);
             return false;
         }
     }
@@ -130,8 +135,61 @@ public class LangileaDAO {
                 }
             }
         } catch (SQLException e) {
-            System.err.println("LangileaDAO.login errorea: " + e.getMessage());
+            LOG.log(Level.SEVERE, "login: errorea", e);
         }
         return null;
     }
+    /**
+     * Langilea baten datuak eguneratzen ditu datu-basean.
+     * 
+     * @param id Langilearen identifikatzailea
+     * @param izena Langilearen izen berria
+     * @param abizena Langilearen abizen berria
+     * @param erabiltzailea Erabiltzaile izen berria
+     * @param idRola Rolaren ID berria
+     * @return true ondo eguneratu bada, false bestela
+     */
+    public static boolean eguneratu(int id, String izena, String abizena, String erabiltzailea, int idRola) {
+        String sql = "UPDATE LANGILEA SET izena=?, abizena=?, erabiltzailea=?, id_rola=? WHERE id_langile=?";
+        
+        try (Connection con = DBConexioa.getKonexioa();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            
+            ps.setString(1, izena);
+            ps.setString(2, abizena);
+            ps.setString(3, erabiltzailea);
+            ps.setInt(4, idRola);
+            ps.setInt(5, id);
+            
+            int affectedRows = ps.executeUpdate();
+            return affectedRows > 0;
+            
+        } catch (SQLException e) {
+            LOG.log(Level.SEVERE, "eguneratu: errorea", e);
+            return false;
+        }
+    }
+
+    /**
+     * Langilea datu-basetik ezabatzen du.
+     * 
+     * @param id Ezabatu beharreko langilearen IDa
+     * @return true ondo ezabatu bada, false bestela
+     */
+    public static boolean ezabatu(int id) {
+        String sql = "DELETE FROM LANGILEA WHERE id_langile = ?";
+        
+        try (Connection con = DBConexioa.getKonexioa();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            
+            ps.setInt(1, id);
+            int affectedRows = ps.executeUpdate();
+            return affectedRows > 0;
+            
+        } catch (SQLException e) {
+            LOG.log(Level.SEVERE, "ezabatu: errorea", e);
+            return false;
+        }
+    }
+
 }

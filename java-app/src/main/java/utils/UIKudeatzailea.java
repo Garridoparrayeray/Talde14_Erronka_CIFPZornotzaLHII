@@ -1,8 +1,5 @@
 package utils;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -18,8 +15,6 @@ import javafx.stage.Stage;
  * @author Yeray Garrido
  */
 public class UIKudeatzailea {
-
-    private static final Map<StackPane, StackPane> wrapperrak = new HashMap<>();
 
     /**
      * Errore mezu bat erakusten du pantailan Alert leiho baten bidez.
@@ -38,25 +33,12 @@ public class UIKudeatzailea {
     /**
      * FXML panel bat kargatzen du zehaztutako StackPane gunean.
      *
-     * @param contentArea Panela kargatuko den gunea
+     * @param edukiGunea Panela kargatuko den gunea
      * @param fxmlBidea FXML fitxategiaren bidea
      */
-    public static void kargatuPanela(StackPane contentArea, String fxmlBidea) {
+    public static void kargatuPanela(StackPane edukiGunea, String fxmlBidea) {
         try {
-            StackPane aurrekoa = wrapperrak.remove(contentArea);
-            if (aurrekoa != null) {
-                aurrekoa.prefWidthProperty().unbind();
-                aurrekoa.prefHeightProperty().unbind();
-            }
-
-            Node nodoa = FXMLLoader.load(UIKudeatzailea.class.getResource(fxmlBidea));
-            StackPane envoltorio = new StackPane(nodoa);
-            StackPane.setAlignment(nodoa, javafx.geometry.Pos.TOP_LEFT);
-            envoltorio.prefWidthProperty().bind(contentArea.widthProperty());
-            envoltorio.prefHeightProperty().bind(contentArea.heightProperty());
-
-            wrapperrak.put(contentArea, envoltorio);
-            contentArea.getChildren().setAll(envoltorio);
+            kargatuPanela(edukiGunea, (Node) FXMLLoader.load(UIKudeatzailea.class.getResource(fxmlBidea)));
         } catch (Exception e) {
             erakutsiErrorea("Errorea bista kargatzean",
                     "Ezin izan da kargatu: " + fxmlBidea + "\n\nArrazoia: " + e.getMessage());
@@ -66,23 +48,11 @@ public class UIKudeatzailea {
     /**
      * Aurretik kargatutako nodo bat StackPane gunean kokatzen du.
      *
-     * @param contentArea Panela kokatuko den gunea
+     * @param edukiGunea Panela kokatuko den gunea
      * @param nodoa Dagoeneko kargatutako nodo grafikoa
      */
-    public static void kargatuPanela(StackPane contentArea, Node nodoa) {
-        StackPane aurrekoa = wrapperrak.remove(contentArea);
-        if (aurrekoa != null) {
-            aurrekoa.prefWidthProperty().unbind();
-            aurrekoa.prefHeightProperty().unbind();
-        }
-
-        StackPane envoltorio = new StackPane(nodoa);
-        StackPane.setAlignment(nodoa, javafx.geometry.Pos.TOP_LEFT);
-        envoltorio.prefWidthProperty().bind(contentArea.widthProperty());
-        envoltorio.prefHeightProperty().bind(contentArea.heightProperty());
-
-        wrapperrak.put(contentArea, envoltorio);
-        contentArea.getChildren().setAll(envoltorio);
+    public static void kargatuPanela(StackPane edukiGunea, Node nodoa) {
+        edukiGunea.getChildren().setAll(nodoa);
     }
 
     /**
@@ -94,20 +64,20 @@ public class UIKudeatzailea {
      */
     public static void aldatuLeihoa(Node egungoNodoa, String fxmlBidea, boolean maximizatu) {
         try {
-            Parent root = FXMLLoader.load(UIKudeatzailea.class.getResource(fxmlBidea));
-            Stage stage = (Stage) egungoNodoa.getScene().getWindow();
+            Parent erroa = FXMLLoader.load(UIKudeatzailea.class.getResource(fxmlBidea));
+            Stage leihoa = (Stage) egungoNodoa.getScene().getWindow();
 
             // Uneko dimentsioak gorde — Scene berria sortzean leihoa ez jauzi dadin
-            boolean zenMaximizatua = stage.isMaximized();
-            double w = stage.getScene().getWidth();
-            double h = stage.getScene().getHeight();
+            boolean zenMaximizatua = leihoa.isMaximized();
+            double zabalera = leihoa.getScene().getWidth();
+            double altuera = leihoa.getScene().getHeight();
 
             // Maximizazioa kendu Scene aldatu aurretik (Windows-en beharrezkoa)
-            stage.setMaximized(false);
-            stage.setScene(new Scene(root, w, h));
+            leihoa.setMaximized(false);
+            leihoa.setScene(new Scene(erroa, zabalera, altuera));
 
             if (maximizatu || zenMaximizatua) {
-                stage.setMaximized(true);
+                leihoa.setMaximized(true);
             }
         } catch (Exception e) {
             erakutsiErrorea("Errorea leihoa aldatzean",

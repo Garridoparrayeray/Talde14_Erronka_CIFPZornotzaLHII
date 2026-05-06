@@ -2,12 +2,15 @@ package controller;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import dao.BackupDAO;
 import dao.EstadistikaDAO;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
+import utils.LogKudeatzailea;
 import utils.Sesio;
 
 /**
@@ -17,6 +20,8 @@ import utils.Sesio;
  * @author Yeray Garrido
  */
 public class AdminPanelaController implements Initializable {
+
+    private static final Logger LOG = LogKudeatzailea.lortu(AdminPanelaController.class);
 
     @FXML
     private Label lblLangileak;
@@ -74,13 +79,13 @@ public class AdminPanelaController implements Initializable {
             lblAzkenKopia.getStyleClass().removeAll("text-danger", "text-success");
             lblAzkenKopia.getStyleClass().add("text-success");
         } catch (Exception e) {
+            LOG.log(Level.SEVERE, "eginBabesKopia: errorea", e);
             lblAzkenKopia.setText("Errorea: " + e.getMessage());
             lblAzkenKopia.getStyleClass().removeAll("text-danger", "text-success");
             lblAzkenKopia.getStyleClass().add("text-danger");
         }
     }
 
-    // ── Laguntzaileak ────────────────────────────────────────────────────────
     /**
      * DB konexio-egoeraren etiketa eguneratzen du kolore eta testuarekin.
      *

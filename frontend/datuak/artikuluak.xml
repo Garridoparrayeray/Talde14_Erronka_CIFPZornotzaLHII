@@ -1,38 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<katalogoa>
+<artikuluak>
     <artikulua>
         <id>1</id>
-        <izenburua>Eskola-motxila</izenburua>
+        <izena>Eskola-motxila urdina</izena>
+        <deskribapena>motxila urdin bat</deskribapena>
         <kategoria>Jantziak</kategoria>
+        <sarreraData></sarreraData>
+        <argazkia>mochila-azul.jpg</argazkia>
     </artikulua>
     <artikulua>
         <id>2</id>
-        <izenburua>Haur-bufanda gorria</izenburua>
-        <kategoria>Jantziak</kategoria>
-    </artikulua>
-    <artikulua>
-        <id>3</id>
-        <izenburua>Eskuko ordularia (Casio)</izenburua>
+        <izena>Erlojua</izena>
+        <deskribapena>Erloju bat</deskribapena>
         <kategoria>Elektronika</kategoria>
+        <sarreraData></sarreraData>
+        <argazkia>reloj.png</argazkia>
     </artikulua>
-    <artikulua>
-        <id>4</id>
-        <izenburua>Giltza-multzoa (3 giltza)</izenburua>
-        <kategoria>Gakoak</kategoria>
-    </artikulua>
-    <artikulua>
-        <id>5</id>
-        <izenburua>Nortasun agiria (NAN)</izenburua>
-        <kategoria>Dokumentuak</kategoria>
-    </artikulua>
-    <artikulua>
-        <id>6</id>
-        <izenburua>Txapela beltza</izenburua>
-        <kategoria>Jantziak</kategoria>
-    </artikulua>
-    <artikulua>
-        <id>7</id>
-        <izenburua>Iphone 16</izenburua>
-        <kategoria>Elektronika</kategoria>
-    </artikulua>
-</katalogoa>
+</artikuluak>

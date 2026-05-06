@@ -3,6 +3,7 @@ package controller;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.logging.Logger;
 
 import dao.MugimenduDAO;
 import javafx.beans.property.SimpleStringProperty;
@@ -11,6 +12,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import model.MugimenduLerroa;
+import utils.LogKudeatzailea;
 
 /**
  * Auditoria-taulako mugimenduen erregistroa erakusten duen kontroladorea.
@@ -18,6 +20,8 @@ import model.MugimenduLerroa;
  * @author Yeray Garrido
  */
 public class AuditoriaController implements Initializable {
+
+    private static final Logger LOG = LogKudeatzailea.lortu(AuditoriaController.class);
 
     @FXML
     private TableView<MugimenduLerroa> taula;

@@ -34,6 +34,7 @@ public class Main extends Application {
      * @param args Komando-lerroko argumentuak
      */
     public static void main(String[] args) {
+        utils.LogKudeatzailea.hasieratu();
         launch(args);
     }
 }

@@ -4,6 +4,8 @@ import java.net.URL;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import dao.EstadistikaDAO;
 import dao.KategoriaDAO;
@@ -24,6 +26,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import model.Kategoria;
 import model.KategoriaKopurua;
+import utils.LogKudeatzailea;
 import utils.UIKudeatzailea;
 
 /**
@@ -32,6 +35,8 @@ import utils.UIKudeatzailea;
  * @author Yeray Garrido
  */
 public class KategoriakController implements Initializable {
+
+    private static final Logger LOG = LogKudeatzailea.lortu(KategoriakController.class);
 
     @FXML
     private StackPane contentArea;
@@ -179,7 +184,7 @@ public class KategoriakController implements Initializable {
             ctrl.setContentArea(contentArea);
             UIKudeatzailea.kargatuPanela(contentArea, nodoa);
         } catch (Exception e) {
-            System.err.println("KategoriakController.kategoriaBerria: " + e.getMessage());
+            LOG.log(Level.SEVERE, "kategoriaBerria: FXML kargatzean errorea", e);
         }
     }
 }

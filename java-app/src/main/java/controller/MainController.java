@@ -3,6 +3,7 @@ package controller;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import java.util.logging.Logger;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -11,6 +12,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import model.Langilea;
+import utils.LogKudeatzailea;
 import utils.Sesio;
 import utils.UIKudeatzailea;
 
@@ -20,6 +22,8 @@ import utils.UIKudeatzailea;
  * @author Yeray Garrido
  */
 public class MainController implements Initializable {
+
+    private static final Logger LOG = LogKudeatzailea.lortu(MainController.class);
 
     @FXML
     private StackPane contentArea;
@@ -48,13 +52,6 @@ public class MainController implements Initializable {
 
     private ArrayList<Button> navBotoiak;
 
-    /**
-     * Kontroladorea hasieratzen du. Langilearen datuak kargatzen ditu eta
-     * hasierako panela ezartzen du.
-     *
-     * @param url Hasierako URLa
-     * @param rb Baliabideen sorta
-     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         navBotoiak = new ArrayList<Button>();
@@ -81,7 +78,6 @@ public class MainController implements Initializable {
             lblInitialak.setText(ini.toUpperCase());
         }
 
-        // Admin switch botoia ezkutu langile arruntentzat
         if (boxAdminSwitch != null) {
             boxAdminSwitch.setVisible(Sesio.isAdmin());
             boxAdminSwitch.setManaged(Sesio.isAdmin());
@@ -164,14 +160,13 @@ public class MainController implements Initializable {
         UIKudeatzailea.aldatuLeihoa(contentArea, "/view/login.fxml", true);
     }
 
-    // ── Laguntzaileak ────────────────────────────────────────────────────────
     /**
      * Nabigazio menuko botoi bat aktibo gisa markatzen du estiloz.
      *
      * @param aktibo Aktibatu beharreko botoia
      */
     private void setAktibo(Button aktibo) {
-        for (Button b : navBotoiak) {  // botoi guztiak berrezarri
+        for (Button b : navBotoiak) {
             b.getStyleClass().removeAll("nav-item-active", "nav-item");
             b.getStyleClass().add("nav-item");
         }

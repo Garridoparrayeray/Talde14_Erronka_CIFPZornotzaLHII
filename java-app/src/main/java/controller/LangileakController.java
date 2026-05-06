@@ -4,12 +4,20 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import dao.LangileaDAO;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
@@ -17,6 +25,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.StackPane;
 import model.Langilea;
+import utils.LogKudeatzailea;
 import utils.UIKudeatzailea;
 
 /**
@@ -25,6 +34,8 @@ import utils.UIKudeatzailea;
  * @author Yeray Garrido
  */
 public class LangileakController implements Initializable {
+    private static final Logger LOG = LogKudeatzailea.lortu(LangileakController.class);
+
 
     @FXML
     private StackPane contentArea;
@@ -113,7 +124,85 @@ public class LangileakController implements Initializable {
             ctrl.setContentArea(contentArea);
             UIKudeatzailea.kargatuPanela(contentArea, nodoa);
         } catch (Exception e) {
-            System.err.println("LangileakController.langileaBerria: " + e.getMessage());
+            LOG.log(Level.SEVERE, "langileaBerria: errorea", e);
         }
+    }
+    
+    /**
+     * Taulan aukeratutako langilea datu-basetik ezabatzen du.
+     * Ezabatu aurretik, erabiltzaileari baieztapena eskatzen dio erroreak ekiditeko.
+     */
+    @FXML
+    public void langileaEzabatu() {
+        Langilea sel = taula.getSelectionModel().getSelectedItem();
+        
+        if (sel == null) {
+            erakutsiAlerta(Alert.AlertType.WARNING, "Kontuz", "Aukeratu langile bat taulan ezabatzeko.");
+            return;
+        }
+
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+        confirm.setTitle("Langilea ezabatu");
+        confirm.setHeaderText("Langilea behin betiko ezabatuko da");
+        confirm.setContentText("Ziur zaude '" + sel.getErabiltzailea() + "' erabiltzailea ezabatu nahi duzula?");
+        confirm.initOwner(taula.getScene().getWindow());
+
+        confirm.showAndWait().ifPresent(btn -> {
+            if (btn == ButtonType.OK) {
+                boolean ondo = LangileaDAO.ezabatu(sel.getLangileId());
+                if (ondo) {
+                    kargatu(); // Taula datu berriekin freskatu
+                    erakutsiAlerta(Alert.AlertType.INFORMATION, "Eginda", "Langilea ondo ezabatu da.");
+                } else {
+                    erakutsiAlerta(Alert.AlertType.ERROR, "Errorea", "Ezin izan da langilea ezabatu. Agian beste datu batzuekin lotuta dago.");
+                }
+            }
+        });
+    }
+
+    /**
+     * Taulan aukeratutako langilea editatzeko leihoa irekitzen du.
+     */
+    @FXML
+    public void langileaEditatu() {
+        Langilea sel = taula.getSelectionModel().getSelectedItem();
+        
+        if (sel == null) {
+            erakutsiAlerta(Alert.AlertType.WARNING, "Kontuz", "Aukeratu langile bat taulan editatzeko.");
+            return;
+        }
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/LangileaEditu.fxml"));
+            Parent root = loader.load();
+            
+            LangileaEdituController ctrl = loader.getController();
+            ctrl.setLangilea(sel);
+            ctrl.setOnUpdateCallback(() -> kargatu()); // Leihoa istean taula freskatzeko
+            
+            Stage stage = new Stage();
+            stage.initOwner(taula.getScene().getWindow());
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.setTitle("Langilea Editatu");
+            stage.setScene(new Scene(root));
+            stage.showAndWait();
+        } catch (Exception e) {
+            erakutsiAlerta(Alert.AlertType.ERROR, "Errorea", "Ezin izan da editatzeko leihoa kargatu: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Erabiltzaileari informazio, abisu edo errore mezuak erakusteko metodo laguntzailea.
+     * 
+     * @param mota Alertaren mota (INFO, WARNING, ERROR...)
+     * @param titulua Alertaren izenburua
+     * @param mezua Erakutsi beharreko testua
+     */
+    private void erakutsiAlerta(Alert.AlertType mota, String titulua, String mezua) {
+        Alert alert = new Alert(mota);
+        alert.setTitle(titulua);
+        alert.setHeaderText(null);
+        alert.setContentText(mezua);
+        alert.showAndWait();
     }
 }

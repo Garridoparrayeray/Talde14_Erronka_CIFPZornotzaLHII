@@ -6,12 +6,15 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import model.Artikulua;
 import model.EgoeraArtikulua;
 import model.Kategoria;
 import model.Kokalekua;
 import utils.DBConexioa;
+import utils.LogKudeatzailea;
 
 /**
  * Artikuluen datu-baseko eragiketak kudeatzen dituen DAO klasea.
@@ -20,11 +23,8 @@ import utils.DBConexioa;
  */
 public class ArtikuluaDAO {
 
-    /**
-     * Artikulua berria gordetzen du datu-basean, kode automatikoa sortuz.
-     *
-     * @return Ondo gorde bada true
-     */
+    private static final Logger LOG = LogKudeatzailea.lortu(ArtikuluaDAO.class);
+
     /**
      * Artikulu berria gordetzen du datu-basean, kode automatikoa sortuz eta
      * mugimendua erregistratuz.
@@ -73,7 +73,6 @@ public class ArtikuluaDAO {
             }
             boolean ok = ps.executeUpdate() > 0;
 
-            // Mugimendua sortu (auditoria)
             if (ok) {
                 String mugDesc = "Artikulua sisteman erregistratu da: " + kodea;
                 String sqlMug = "INSERT INTO MUGIMENDUA (deskribapena, id_artikulua) VALUES (?, ?)";
@@ -85,7 +84,7 @@ public class ArtikuluaDAO {
             }
             return ok;
         } catch (SQLException e) {
-            System.err.println("ArtikuluaDAO.gehitu: " + e.getMessage());
+            LOG.log(Level.SEVERE, "gehitu: datu-baseko errorea", e);
             return false;
         }
     }
@@ -113,7 +112,7 @@ public class ArtikuluaDAO {
                 return String.format("G-%03d-%s", seq, urteStr);
             }
         } catch (SQLException e) {
-            System.err.println("ArtikuluaDAO.sortuKodea: " + e.getMessage());
+            LOG.log(Level.SEVERE, "sortuKodea: datu-baseko errorea", e);
         }
         return null;
     }
@@ -168,7 +167,7 @@ public class ArtikuluaDAO {
                 return a;
             }
         } catch (SQLException e) {
-            System.err.println("ArtikuluaDAO.getByKodea: " + e.getMessage());
+            LOG.log(Level.SEVERE, "getByKodea: datu-baseko errorea", e);
         }
         return null;
     }
@@ -192,7 +191,6 @@ public class ArtikuluaDAO {
         try (Connection con = DBConexioa.getKonexioa(); PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
-                // Artikulua oinarrizko datuekin sortu
                 Artikulua a = new Artikulua(
                         rs.getString("id_artikulua"),
                         rs.getString("a_izena"),
@@ -202,7 +200,6 @@ public class ArtikuluaDAO {
                         rs.getString("argazkia")
                 );
 
-                // Egoera bihurtu — DB-ko balioa enum balioarekin lotu
                 String egoeraStr = rs.getString("egoera");
                 if (egoeraStr != null) {
                     switch (egoeraStr) {
@@ -213,8 +210,6 @@ public class ArtikuluaDAO {
                             a.aldatuEgoera(EgoeraArtikulua.ITZULITA);
                             break;
                         case "artxibatua":
-                            a.aldatuEgoera(EgoeraArtikulua.IRAUNGITA);
-                            break;
                         case "iraungita":
                             a.aldatuEgoera(EgoeraArtikulua.IRAUNGITA);
                             break;
@@ -223,12 +218,10 @@ public class ArtikuluaDAO {
                     }
                 }
 
-                // Kategoria esleitu (badago)
                 if (rs.getInt("id_kategoria") != 0) {
                     a.setKategoria(new Kategoria(rs.getInt("id_kategoria"), rs.getString("kat_izena")));
                 }
 
-                // Kokalekua esleitu (badago)
                 if (rs.getInt("id_kokalekua") != 0) {
                     a.setKokalekua(new Kokalekua(
                             rs.getString("armairua"),
@@ -240,7 +233,7 @@ public class ArtikuluaDAO {
                 zerrenda.add(a);
             }
         } catch (SQLException e) {
-            System.err.println("ArtikuluaDAO.getGuztiak errorea: " + e.getMessage());
+            LOG.log(Level.SEVERE, "getGuztiak: datu-baseko errorea", e);
         }
         return zerrenda;
     }

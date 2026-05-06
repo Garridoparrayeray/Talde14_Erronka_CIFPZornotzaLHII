@@ -3,11 +3,11 @@ package controller;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import dao.ArtikuluaDAO;
-import dao.EmanaldiaDAO;
 import dao.ErreklamazioaDAO;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -15,7 +15,6 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
@@ -23,7 +22,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import model.Artikulua;
 import model.Erreklamazioa;
-import utils.Sesio;
+import utils.LogKudeatzailea;
 import utils.UIKudeatzailea;
 
 /**
@@ -32,6 +31,8 @@ import utils.UIKudeatzailea;
  * @author Yeray Garrido
  */
 public class ErreklamazioakController implements Initializable {
+
+    private static final Logger LOG = LogKudeatzailea.lortu(ErreklamazioakController.class);
 
     @FXML
     private StackPane contentArea;
@@ -70,7 +71,6 @@ public class ErreklamazioakController implements Initializable {
     private List<Erreklamazioa> erreklamazioak;
     private Erreklamazioa hautatua;
     private VBox itemHautatua;
-    private List<Artikulua> bateragarriakZerrenda = new ArrayList<>();
     private String egoeraFiltro = "irekita";
 
     @Override
@@ -216,7 +216,6 @@ public class ErreklamazioakController implements Initializable {
         vboxBateragarriak.getChildren().clear();
         List<Artikulua> guztiak = ArtikuluaDAO.getGuztiak();
         List<Artikulua> bateragarriak = err.bilatuBateragarriak(guztiak);
-        bateragarriakZerrenda = bateragarriak;
 
         if (bateragarriak.isEmpty()) {
             Label lblHuts = new Label("Bat-etortze posiblerik ez.");
@@ -267,49 +266,22 @@ public class ErreklamazioakController implements Initializable {
     }
 
     /**
-     * Hautatutako erreklamazioa ebazten du; bat-etortze badago artikulua ere
-     * lotzen du.
+     * Hautatutako erreklamazioa ebazteko emanaldiaren formularioa irekitzen du,
+     * jabea eta bat-etortze posibleak aurrez beteta.
      */
     @FXML
     private void ebatzi() {
         if (hautatua == null) {
             return;
         }
-
-        if (!bateragarriakZerrenda.isEmpty()) {
-            ChoiceDialog<Artikulua> dlg = new ChoiceDialog<>(bateragarriakZerrenda.get(0), bateragarriakZerrenda);
-            dlg.setTitle("Artikulua lotu");
-            dlg.setHeaderText("Bat-etortze posibleak aurkitu dira.");
-            dlg.setContentText("Hautatu artikulua:");
-
-            Optional<Artikulua> aukera = dlg.showAndWait();
-            if (!aukera.isPresent()) {
-                return;
-            }
-
-            Artikulua art = aukera.get();
-            int idLangile = 0;
-            if (Sesio.getLangilea() != null) {
-                idLangile = Sesio.getLangilea().getLangileId();
-            }
-
-            boolean ok = EmanaldiaDAO.formalizatu(
-                    art.getArtikuluKodea(),
-                    hautatua.getJabeNan(),
-                    hautatua.getJabeIzena(),
-                    hautatua.getJabeAbizena(),
-                    hautatua.getJabeTelefonoa(),
-                    hautatua.getJabeEmaila(),
-                    "", "", idLangile, null
-            );
-
-            if (!ok) {
-                return;
-            }
-            ErreklamazioaDAO.updateEgoera(String.valueOf(hautatua.getErreklamazioId()), "ebatzita");
-            kargatu();
-        } else {
-            aldatuEgoera("ebatzita");
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/Emanaldia.fxml"));
+            javafx.scene.Parent root = loader.load();
+            EmanaldiaController ctrl = loader.getController();
+            ctrl.setErreklamazioa(hautatua, contentArea);
+            UIKudeatzailea.kargatuPanela(contentArea, root);
+        } catch (Exception e) {
+            LOG.log(Level.SEVERE, "ebatzi: Emanaldia FXML kargatzean errorea", e);
         }
     }
 
@@ -392,7 +364,7 @@ public class ErreklamazioakController implements Initializable {
             ctrl.setContentArea(contentArea);
             UIKudeatzailea.kargatuPanela(contentArea, nodoa);
         } catch (Exception e) {
-            System.err.println("ErreklamazioakController.erreklamazioaBerria: " + e.getMessage());
+            LOG.log(Level.SEVERE, "erreklamazioaBerria: FXML kargatzean errorea", e);
         }
     }
 

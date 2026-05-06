@@ -89,13 +89,10 @@
                 <PasswordField fx:id="txtPasahitza" promptText="••••••••" styleClass="form-control" />
               </children>
             </VBox>
-
-            <CheckBox mnemonicParsing="false" styleClass="text-dark" text="Gogoratu nire saioa" />
-
             <VBox spacing="12.0">
               <children>
                 <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#sartu" styleClass="btn-primary" text="Sartu" />
-                <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="btn-outline" text="Pasahitza ahaztu dut" />
+                <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="btn-outline" text="Pasahitza ahaztu dut" onAction="#pasahitzaAhaztuDut" />
                 <Label fx:id="lblErrorea" style="-fx-text-fill: #EF4444; -fx-font-size: 12px;" text="" />
               </children>
             </VBox>

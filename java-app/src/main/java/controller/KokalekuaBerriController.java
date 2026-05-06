@@ -2,6 +2,8 @@ package controller;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import dao.KokalekuaDAO;
 import javafx.fxml.FXML;
@@ -10,6 +12,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.StackPane;
+import utils.LogKudeatzailea;
 import utils.UIKudeatzailea;
 
 /**
@@ -18,6 +21,8 @@ import utils.UIKudeatzailea;
  * @author Yeray Garrido
  */
 public class KokalekuaBerriController implements Initializable {
+    private static final Logger LOG = LogKudeatzailea.lortu(KokalekuaBerriController.class);
+
 
     @FXML
     private TextField txtArmairua;
