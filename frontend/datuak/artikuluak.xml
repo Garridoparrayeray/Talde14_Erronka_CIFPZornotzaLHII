@@ -1,19 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="../xslt/artikuluak.xsl"?>
+<!DOCTYPE artikuluak SYSTEM "artikuluak.dtd">
 <artikuluak>
     <artikulua>
         <id>1</id>
         <izena>Eskola-motxila urdina</izena>
-        <deskribapena>motxila urdin bat</deskribapena>
-        <kategoria>Jantziak</kategoria>
-        <sarreraData></sarreraData>
-        <argazkia>mochila-azul.jpg</argazkia>
+        <kategoria>jantziak</kategoria>
+        <deskribapena>Sakonera handiko motxila urdin bat, eskolako materialarekin barruan.</deskribapena>
+        <sarreraData>2026-05-01</sarreraData>
     </artikulua>
     <artikulua>
         <id>2</id>
         <izena>Erlojua</izena>
-        <deskribapena>Erloju bat</deskribapena>
-        <kategoria>Elektronika</kategoria>
-        <sarreraData></sarreraData>
-        <argazkia>reloj.png</argazkia>
+        <kategoria>elektronika</kategoria>
+        <deskribapena>Eskumuturreko erloju beltza, kirol-motakoa.</deskribapena>
+        <sarreraData>2026-05-03</sarreraData>
+    </artikulua>
+    <artikulua>
+        <id>4</id>
+        <izena>Jertse beltza</izena>
+        <kategoria>jantziak</kategoria>
+        <deskribapena>Neguko jertse beltz bat, artilezkoa, kremailerarik gabea.</deskribapena>
+        <sarreraData>2026-05-04</sarreraData>
+    </artikulua>
+    <artikulua>
+        <id>5</id>
+        <izena>Telefono mugikorra</izena>
+        <kategoria>elektronika</kategoria>
+        <deskribapena>Pantaila apurtuta duen smartphone grisa, zorro gardenarekin. Bateria deskargatuta dago.</deskribapena>
+        <sarreraData>2026-05-05</sarreraData>
     </artikulua>
 </artikuluak>

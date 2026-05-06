@@ -198,6 +198,81 @@ document.addEventListener('DOMContentLoaded', () => {
         categoryGrid.innerHTML = '<p style="color: red;">Errorea datuak kargatzean.</p>';
       });
   }
+
+  // 7. Carrusel de objetos perdidos en la tarjeta de inicio (Hero)
+  const mockupCard = document.querySelector('.mockup-card');
+  if (mockupCard) {
+    mockupCard.addEventListener('click', () => {
+      window.location.href = 'html/objektu-zerrenda.html';
+    });
+
+    fetch('datuak/artikuluak.xml')
+      .then(response => response.text())
+      .then(str => new window.DOMParser().parseFromString(str, "text/xml"))
+      .then(xmlDoc => {
+        const artikuluak = Array.from(xmlDoc.querySelectorAll("artikulua"));
+        if (artikuluak.length > 0) {
+          let currentIndex = 0;
+          
+          function updateMockup() {
+            const art = artikuluak[currentIndex];
+            const izena = art.querySelector("izena") ? art.querySelector("izena").textContent : 'Izen gabea';
+            const kategoria = art.querySelector("kategoria") ? art.querySelector("kategoria").textContent : '';
+            const deskribapena = art.querySelector("deskribapena") ? art.querySelector("deskribapena").textContent : '-';
+            const data = art.querySelector("sarreraData") ? art.querySelector("sarreraData").textContent : '-';
+
+            // Respetar el idioma actual para las etiquetas
+            const currentLang = localStorage.getItem('appLang') || 'EU';
+            const labelDesc = currentLang === 'ES' ? 'Descripción' : 'Deskribapena';
+            const labelDate = currentLang === 'ES' ? 'Fecha' : 'Data';
+
+            // Animación de salida
+            mockupCard.style.opacity = 0;
+            mockupCard.style.transform = 'translateY(10px)';
+            mockupCard.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+
+            setTimeout(() => {
+              // Reconstruir el interior de la tarjeta con los datos del XML
+              mockupCard.innerHTML = `
+                <div class="mc-header">
+                  <div class="mc-icon">
+                    <svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+                  </div>
+                  <div>
+                    <div class="mc-title">${izena}</div>
+                    <div class="mc-sub" style="text-transform: capitalize;">${kategoria}</div>
+                  </div>
+                </div>
+                <div class="mc-field">
+                  <div class="mc-label">${labelDesc}</div>
+                  <div class="mc-value" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis;" title="${deskribapena}">${deskribapena}</div>
+                </div>
+                <div class="mc-divider"></div>
+                <div class="mc-row">
+                  <div class="mc-field">
+                    <div class="mc-label">${labelDate}</div>
+                    <div class="mc-value"><span class="mc-tag">${data}</span></div>
+                  </div>
+                </div>
+              `;
+              
+              // Animación de entrada
+              mockupCard.style.opacity = 1;
+              mockupCard.style.transform = 'translateY(0)';
+              
+              currentIndex = (currentIndex + 1) % artikuluak.length;
+            }, 400); 
+          }
+
+          // Dejamos la tarjeta fija original durante 4 segundos antes de empezar a rotar los objetos
+          setTimeout(() => {
+            updateMockup(); 
+            setInterval(updateMockup, 5000); 
+          }, 4000);
+        }
+      })
+      .catch(error => console.error("Errorea artikuluak kargatzean (carrusel):", error));
+  }
 });
 // ==========================================================================
 // MODO OSCURO (DARK MODE)

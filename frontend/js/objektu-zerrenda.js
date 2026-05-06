@@ -151,9 +151,10 @@ document.addEventListener("DOMContentLoaded", () => {
       .then(xmlDoc => {
         const kategoriak = xmlDoc.querySelectorAll("kategoria");
         kategoriak.forEach(kat => {
+          const id = kat.getAttribute("id");
           const izena = kat.querySelector("izena").textContent;
           const option = document.createElement('option');
-          option.value = izena; 
+          option.value = id ? id.toLowerCase() : izena.toLowerCase(); 
           option.textContent = izena; 
           categorySelect.appendChild(option);
         });
@@ -241,7 +242,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const itemName = card.querySelector('.item-name').textContent.toLowerCase();
       const itemCategory = card.getAttribute('data-category');
       const matchesSearch = itemName.includes(searchTerm);
-      const matchesCategory = selectedCategory === 'all' || itemCategory === selectedCategory;
+      const matchesCategory = selectedCategory === 'all' || (itemCategory && itemCategory.toLowerCase() === selectedCategory.toLowerCase());
       return matchesSearch && matchesCategory;
     });
 
