@@ -14,7 +14,8 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox styleClass="bg-light" stylesheets="@style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
+<VBox styleClass="bg-light" stylesheets="@style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="controller.AuditoriaController">
    <children>
 
       <HBox alignment="CENTER_LEFT" style="-fx-border-color: transparent transparent #E5E7EB transparent; -fx-padding: 15 30;" styleClass="bg-white">
@@ -43,22 +44,17 @@
                         <Button mnemonicParsing="false" styleClass="btn-outline" text="CSV esportatu" />
                      </children>
                   </HBox>
-                  <ScrollPane VBox.vgrow="ALWAYS">
-                     <content>
-      
-                        <TableView styleClass="table-view">
-                          <columns>
-                            <TableColumn prefWidth="180.0" text="DATA" />
-                            <TableColumn prefWidth="250.0" text="LANGILEA" />
-                            <TableColumn prefWidth="180.0" text="EKINTZA" />
-                            <TableColumn prefWidth="350.0" text="XEHETASUNAK" />
-                          </columns>
-                           <columnResizePolicy>
-                              <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                           </columnResizePolicy>
-                        </TableView>
-                     </content>
-                  </ScrollPane>
+                  <TableView fx:id="taula" styleClass="table-view" VBox.vgrow="ALWAYS">
+                    <columns>
+                      <TableColumn fx:id="colData"        prefWidth="180.0" text="DATA" />
+                      <TableColumn fx:id="colLangilea"    prefWidth="250.0" text="LANGILEA" />
+                      <TableColumn fx:id="colEkintza"     prefWidth="180.0" text="EKINTZA" />
+                      <TableColumn fx:id="colXehetasunak" prefWidth="350.0" text="XEHETASUNAK" />
+                    </columns>
+                     <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                     </columnResizePolicy>
+                  </TableView>
 
                </children>
                <padding>

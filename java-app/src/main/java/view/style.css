@@ -37,6 +37,18 @@
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.04), 10, 0, 0, 2);
 }
 
+/* --- 3b. KPI TXARTELAK --- */
+.kpi-label {
+    -fx-text-fill: #6B7280;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+}
+.kpi-value {
+    -fx-font-size: 36px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #111827;
+}
+
 /* --- 4. TIPOGRAFIA --- */
 .text-white {
     -fx-text-fill: #FFFFFF;
@@ -191,6 +203,7 @@
     -fx-background-color: #FFFFFF;
     -fx-border-color: transparent transparent #F3F4F6 transparent;
     -fx-cell-size: 45px;
+    
 }
 .table-view .table-row-cell:hover {
     -fx-background-color: #F9FAFB;
@@ -198,6 +211,7 @@
 .table-view .table-cell {
     -fx-border-color: transparent;
     -fx-text-fill: #374151;
+    -fx-alignment: center;
 }
 
 /* =========================================================================
@@ -342,7 +356,11 @@
 }
 
 .text-success {
-    -fx-text-fill: #059669; /* Berde indartsua portzentajearentzat */
+    -fx-text-fill: #059669;
+}
+
+.text-danger {
+    -fx-text-fill: #DC2626;
 }
 /* =========================================================================
  * 12. CHECKBOX & RADIO BUTTONS (Aukera-botoiak)
