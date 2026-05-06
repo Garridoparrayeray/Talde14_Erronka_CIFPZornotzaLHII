@@ -1,5 +1,6 @@
 package model;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -9,7 +10,9 @@ import java.util.Date;
  *
  * @author Yeray Garrido
  */
-public class Artikulua {
+public class Artikulua implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private int artikuluId;
     private String artikuluKodea;
@@ -151,8 +154,16 @@ public class Artikulua {
         return izenburua;
     }
 
+    public void setIzenburua(String izenburua) {
+        this.izenburua = izenburua;
+    }
+
     public String getDeskribapena() {
         return deskribapena;
+    }
+
+    public void setDeskribapena(String deskribapena) {
+        this.deskribapena = deskribapena;
     }
 
     public String getMarka() {
@@ -173,6 +184,10 @@ public class Artikulua {
 
     public String getArgazkiBidea() {
         return argazkiBidea;
+    }
+
+    public void setArgazkiBidea(String argazkiBidea) {
+        this.argazkiBidea = argazkiBidea;
     }
 
     public EgoeraArtikulua getEgoera() {

@@ -12,6 +12,8 @@ import java.util.logging.Logger;
 import model.MugimenduLerroa;
 import utils.DBConexioa;
 import utils.LogKudeatzailea;
+import utils.ModoKudeatzailea;
+import utils.BiltegiLocala;
 
 /**
  * Mugimenduen (auditoria) datu-baseko eragiketak kudeatzen dituen DAO klasea.
@@ -27,6 +29,7 @@ public class MugimenduDAO {
      * deszendentearekin.
      */
     public static List<MugimenduLerroa> getGuztiak() {
+        if (ModoKudeatzailea.isOffline()) return BiltegiLocala.getInstance().getMugimenduak();
         List<MugimenduLerroa> zerrenda = new ArrayList<>();
         String sql = "SELECT m.data, "
                 + "COALESCE(CONCAT(l.izena, ' ', l.abizena), '—') AS langilea, "

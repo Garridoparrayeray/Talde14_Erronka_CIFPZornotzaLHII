@@ -5,7 +5,10 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TableColumn;
 import javafx.scene.layout.StackPane;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 /**
@@ -62,6 +65,28 @@ public class UIKudeatzailea {
      * @param fxmlBidea Leiho berriaren FXML bidea
      * @param maximizatu Leihoa maximizatuta agertuko den ala ez
      */
+    /**
+     * TableColumn bateko testua hitz-jauziarekin erakusten du, "..." moztu gabe.
+     * Deskribapen luzeak dituzten zutabeetarako erabili initialize() barruan.
+     *
+     * @param <T>     Taulako errenkadaren mota generikoa
+     * @param zutabea Testu osoa erakutsi nahi den zutabea
+     */
+    public static <T> void ehundatuZelulak(TableColumn<T, String> zutabea) {
+        zutabea.setCellFactory(col -> new TableCell<T, String>() {
+            private final Text testua = new Text();
+            {
+                testua.wrappingWidthProperty().bind(col.widthProperty().subtract(10));
+                setGraphic(testua);
+            }
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                testua.setText(empty || item == null ? "" : item);
+            }
+        });
+    }
+
     public static void aldatuLeihoa(Node egungoNodoa, String fxmlBidea, boolean maximizatu) {
         try {
             Parent erroa = FXMLLoader.load(UIKudeatzailea.class.getResource(fxmlBidea));

@@ -141,9 +141,7 @@ public class ErreklamazioakController implements Initializable {
         }
         Label lblDesk = new Label(deskribapena);
         lblDesk.getStyleClass().add("text-muted");
-        lblDesk.setMaxWidth(240);
-        lblDesk.setWrapText(false);
-        lblDesk.setEllipsisString("...");
+        lblDesk.setWrapText(true);
 
         String dataStr = "";
         if (err.getErreklamazioData() != null) {

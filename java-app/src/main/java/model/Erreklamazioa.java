@@ -1,5 +1,6 @@
 package model;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -10,7 +11,9 @@ import java.util.List;
  *
  * @author Yeray Garrido
  */
-public class Erreklamazioa {
+public class Erreklamazioa implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private int erreklamazioId;
     private Date erreklamazioData;
@@ -44,21 +47,39 @@ public class Erreklamazioa {
      */
     public List<Artikulua> bilatuBateragarriak(List<Artikulua> zerrenda) {
         List<Artikulua> emaitzak = new ArrayList<>();
+        if (deskribapenBilatua == null || deskribapenBilatua.trim().isEmpty()) {
+            return emaitzak;
+        }
+
+        // Hitz esanguratsuak soilik (5+ karaktere), zarata-hitzak baztertu
+        String[] piezak = deskribapenBilatua.toLowerCase().split("[\\s,;.]+");
+        List<String> hitzak = new ArrayList<>();
+        for (String h : piezak) {
+            if (h.length() >= 5) {
+                hitzak.add(h);
+            }
+        }
+        if (hitzak.isEmpty()) {
+            return emaitzak;
+        }
+
         for (Artikulua a : zerrenda) {
-            if (a.getEgoera() == model.EgoeraArtikulua.BILTEGIAN) {
-                boolean bat = false;
-                if (deskribapenBilatua != null && a.getDeskribapena() != null) {
-                    String[] hitzak = deskribapenBilatua.toLowerCase().split("\\s+");
-                    for (String h : hitzak) {
-                        if (a.getDeskribapena().toLowerCase().contains(h)) {
-                            bat = true;
-                            break;
-                        }
-                    }
+            if (a.getEgoera() != model.EgoeraArtikulua.BILTEGIAN) {
+                continue;
+            }
+            String desk = (a.getDeskribapena() != null ? a.getDeskribapena() : "").toLowerCase();
+            String izenb = a.getIzenburua().toLowerCase();
+            String kat = a.getKategoriaIzena().toLowerCase();
+
+            int matches = 0;
+            for (String h : hitzak) {
+                if (desk.contains(h) || izenb.contains(h) || kat.contains(h)) {
+                    matches++;
                 }
-                if (bat) {
-                    emaitzak.add(a);
-                }
+            }
+            // Bat etortzea: gutxienez hitz esanguratsua 1, eta 40%+ bat dator
+            if (matches >= 1 && (double) matches / hitzak.size() >= 0.4) {
+                emaitzak.add(a);
             }
         }
         return emaitzak;

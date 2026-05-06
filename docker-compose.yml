@@ -32,6 +32,7 @@ services:
       - DB_URL=jdbc:mariadb://db:3306/erronka_galduak
       - DB_USER=bermeo_udaltzain
       - DB_PASS=udaltzainpw
+      - OFFLINE_DATA_PATH=/app/exportazioak
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix:rw
       - ${HOME}/.Xauthority:/root/.Xauthority:rw

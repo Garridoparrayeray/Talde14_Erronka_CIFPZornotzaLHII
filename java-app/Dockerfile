@@ -1,11 +1,11 @@
-FROM maven:3.9.6-eclipse-temurin-21 AS builder
+FROM maven:3.9.9-eclipse-temurin-21 AS builder
 WORKDIR /java-app
 COPY pom.xml .
 RUN mvn dependency:go-offline -B
 COPY src ./src
 RUN touch /.env && mvn clean package -DskipTests
 
-FROM eclipse-temurin:21-jre
+FROM eclipse-temurin:21.0.5_11-jre-jammy
 WORKDIR /java-app
 RUN apt-get update && apt-get install -y \
     libxext6 libxrender1 libxtst6 libxi6 \

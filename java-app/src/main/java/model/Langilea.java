@@ -1,5 +1,6 @@
 package model;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -8,7 +9,9 @@ import java.util.List;
  *
  * @author Yeray Garrido
  */
-public class Langilea {
+public class Langilea implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private int langileId;
     private String izena;
@@ -83,8 +86,16 @@ public class Langilea {
         return izena;
     }
 
+    public void setIzena(String izena) {
+        this.izena = izena;
+    }
+
     public String getAbizena() {
         return abizena;
+    }
+
+    public void setAbizena(String abizena) {
+        this.abizena = abizena;
     }
 
     public String getIzenOsoa() {
@@ -93,6 +104,18 @@ public class Langilea {
 
     public String getErabiltzailea() {
         return erabiltzailea;
+    }
+
+    public void setErabiltzailea(String erabiltzailea) {
+        this.erabiltzailea = erabiltzailea;
+    }
+
+    public String getPasahitzaHash() {
+        return pasahitzaHash;
+    }
+
+    public void setPasahitzaHash(String hash) {
+        this.pasahitzaHash = hash;
     }
 
     public String getRola() {

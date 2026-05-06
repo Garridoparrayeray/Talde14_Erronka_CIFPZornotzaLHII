@@ -1,12 +1,16 @@
 package model;
 
+import java.io.Serializable;
+
 /**
  * Kategoria bakoitzeko artikulu kopurua gordetzeko eredua. Taula grafikoan
  * datuak behar bezala erakusteko erabiltzen da.
  *
  * @author Yeray Garrido
  */
-public class KategoriaKopurua {
+public class KategoriaKopurua implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private String kategoriaIzena;
     private int kopurua;

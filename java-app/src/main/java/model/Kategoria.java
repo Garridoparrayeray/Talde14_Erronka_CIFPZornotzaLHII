@@ -1,11 +1,15 @@
 package model;
 
+import java.io.Serializable;
+
 /**
  * Artikuluen sailkapen kategoria bat adierazten duen eredua.
  *
  * @author Yeray Garrido
  */
-public class Kategoria {
+public class Kategoria implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private int kategoriaId;
     private String izena;
@@ -21,13 +25,17 @@ public class Kategoria {
         this.izena = izena;
     }
 
-    // Getters
+    // Getters & Setters
     public int getKategoriaId() {
         return kategoriaId;
     }
 
     public String getIzena() {
         return izena;
+    }
+
+    public void setIzena(String izena) {
+        this.izena = izena;
     }
 
     @Override

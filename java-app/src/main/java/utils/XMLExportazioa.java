@@ -1,5 +1,6 @@
 package utils;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -11,23 +12,13 @@ import dao.ArtikuluaDAO;
 import model.Artikulua;
 
 /**
- * Artikuluen XML fitxategia sortzen du /app/exportazioak/ karpetan. Nginx-ek
- * zerbitzatzen du datuak/ bidez web-etik irakurtzeko.
+ * Artikuluen XML fitxategia sortzen du partekatutako_datuak/ karpetan.
+ * Nginx-ek zerbitzatzen du datuak/ bidez web-etik irakurtzeko.
+ * Windows eta Docker biak onartzen ditu AppConfig bidez.
  */
 public class XMLExportazioa {
 
     private static final Logger LOG = LogKudeatzailea.lortu(XMLExportazioa.class);
-
-    private static final String BIDEA;
-
-    static {
-        if (System.getenv("EXPORT_BIDEA") != null) {
-            BIDEA = System.getenv("EXPORT_BIDEA");
-        } else {
-            BIDEA = "/app/exportazioak/artikuluak.xml";
-        }
-    }
-
     private static final SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd");
 
     /**
@@ -36,6 +27,11 @@ public class XMLExportazioa {
      */
     public static void exportatu() {
         List<Artikulua> zerrenda = ArtikuluaDAO.getGuztiak();
+
+        File exportDir = new File(AppConfig.getExportBidea());
+        if (!exportDir.exists()) {
+            exportDir.mkdirs();
+        }
 
         StringBuilder sb = new StringBuilder();
         sb.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
@@ -46,53 +42,29 @@ public class XMLExportazioa {
             sb.append("    <id>").append(esc(a.getArtikuluKodea())).append("</id>\n");
             sb.append("    <izena>").append(esc(a.getIzenburua())).append("</izena>\n");
             sb.append("    <deskribapena>").append(esc(a.getDeskribapena())).append("</deskribapena>\n");
-            if (a.getKategoria() != null) {
-                sb.append("    <kategoria>").append(esc(a.getKategoria().getIzena())).append("</kategoria>\n");
-            } else {
-                sb.append("    <kategoria></kategoria>\n");
-            }
-            if (a.getEgoera() != null) {
-                sb.append("    <egoera>").append(a.getEgoera().name()).append("</egoera>\n");
-            } else {
-                sb.append("    <egoera></egoera>\n");
-            }
-            if (a.getSarreraData() != null) {
-                sb.append("    <sarreraData>").append(SDF.format(a.getSarreraData())).append("</sarreraData>\n");
-            } else {
-                sb.append("    <sarreraData></sarreraData>\n");
-            }
-            if (a.getKokalekua() != null) {
-                sb.append("    <kokalekua>").append(esc(a.getKokalekua().toString())).append("</kokalekua>\n");
-            } else {
-                sb.append("    <kokalekua></kokalekua>\n");
-            }
-            if (a.getArgazkiBidea() != null) {
-                sb.append("    <argazkia>").append(esc(a.getArgazkiBidea())).append("</argazkia>\n");
-            } else {
-                sb.append("    <argazkia></argazkia>\n");
-            }
+            sb.append("    <kategoria>").append(a.getKategoria() != null ? esc(a.getKategoria().getIzena()) : "").append("</kategoria>\n");
+            sb.append("    <kokalekua>").append(a.getKokalekua() != null ? esc(a.getKokalekua().getKokalekuOsoa()) : "").append("</kokalekua>\n");
+            sb.append("    <egoera>").append(a.getEgoera() != null ? a.getEgoera().name() : "").append("</egoera>\n");
+            sb.append("    <sarreraData>").append(a.getSarreraData() != null ? SDF.format(a.getSarreraData()) : "").append("</sarreraData>\n");
+            sb.append("    <iraungitzeData>").append(a.getIraungitzeData() != null ? SDF.format(a.getIraungitzeData()) : "").append("</iraungitzeData>\n");
+            // Argazkia: bide erlatiboa (irudiak/G-001-26.jpg) web-etik irakurtzeko
+            sb.append("    <argazkia>").append(a.getArgazkiBidea() != null ? esc(a.getArgazkiBidea()) : "").append("</argazkia>\n");
             sb.append("  </artikulua>\n");
         }
 
         sb.append("</artikuluak>");
 
-        try (FileWriter fw = new FileWriter(BIDEA)) {
+        File xmlFile = new File(AppConfig.getXmlBidea());
+        try (FileWriter fw = new FileWriter(xmlFile)) {
             fw.write(sb.toString());
+            LOG.info("XML exportatuta: " + xmlFile.getAbsolutePath() + " (" + zerrenda.size() + " artikulu)");
         } catch (IOException e) {
-            LOG.log(Level.SEVERE, "exportatu: XML fitxategi idazketa errorea", e);
+            LOG.log(Level.SEVERE, "exportatu: XML fitxategi idazketa errorea: " + xmlFile.getAbsolutePath(), e);
         }
     }
 
-    /**
-     * XML karaktere bereziak ihes-sekuentziekin ordezkatzen ditu.
-     *
-     * @param s Garbitu beharreko katea
-     * @return XML-erako segurua den katea
-     */
     private static String esc(String s) {
-        if (s == null) {
-            return "";
-        }
+        if (s == null) return "";
         return s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace("\"", "&quot;");
     }
 }

@@ -19,6 +19,7 @@ import javafx.scene.layout.HBox;
 import model.EgoeraErreklamazioa;
 import model.Erreklamazioa;
 import utils.LogKudeatzailea;
+import utils.UIKudeatzailea;
 
 /**
  * Galdu diren gauzen erreklamazioen zerrenda eta iragazketa kudeatzen duen
@@ -74,6 +75,7 @@ public class GalduDabenakController implements Initializable {
         colEmaila.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getJabeEmaila()));
         colKategoria.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getKategoriaIzena()));
         colDeskribapena.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getDeskribapena()));
+        UIKudeatzailea.ehundatuZelulak(colDeskribapena);
         colEgoera.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getEgoeraTestua()));
 
         hboxDateFilter.setVisible(false);

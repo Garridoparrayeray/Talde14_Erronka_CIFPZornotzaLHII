@@ -83,6 +83,12 @@ public class MainController implements Initializable {
             boxAdminSwitch.setManaged(Sesio.isAdmin());
         }
 
+        // Erregistratzaileak ezin du emanaldiak egin
+        if (l != null && "Erregistratzailea".equalsIgnoreCase(l.getRola())) {
+            btnEmanaldia.setVisible(false);
+            btnEmanaldia.setManaged(false);
+        }
+
         setAktibo(btnPanela);
         UIKudeatzailea.kargatuPanela(contentArea, "/view/Panela.fxml");
     }

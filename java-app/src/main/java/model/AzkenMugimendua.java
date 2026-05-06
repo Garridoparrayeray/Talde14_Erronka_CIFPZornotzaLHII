@@ -1,12 +1,16 @@
 package model;
 
+import java.io.Serializable;
+
 /**
  * Azken mugimenduaren datu laburra adierazten duen DTO klasea. Paneleko taula
  * azkarrean erakusteko erabiltzen da.
  *
  * @author Yeray Garrido
  */
-public class AzkenMugimendua {
+public class AzkenMugimendua implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private String artikuluId;
     private String deskribapena;

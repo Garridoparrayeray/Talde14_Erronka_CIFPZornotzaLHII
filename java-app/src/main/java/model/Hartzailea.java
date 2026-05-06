@@ -1,5 +1,6 @@
 package model;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 /**
@@ -8,7 +9,9 @@ import java.util.Objects;
  *
  * @author Yeray Garrido
  */
-public abstract class Hartzailea {
+public abstract class Hartzailea implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private int hartzaileId;
     private String telefonoa;
@@ -38,6 +41,10 @@ public abstract class Hartzailea {
     // Getters & Setters
     public int getHartzaileId() {
         return hartzaileId;
+    }
+
+    public void setHartzaileId(int hartzaileId) {
+        this.hartzaileId = hartzaileId;
     }
 
     /**

@@ -1,8 +1,10 @@
 package dao;
 
 import model.Kokalekua;
-import utils.LogKudeatzailea;
 import utils.DBConexioa;
+import utils.LogKudeatzailea;
+import utils.ModoKudeatzailea;
+import utils.BiltegiLocala;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -27,6 +29,7 @@ public class KokalekuaDAO {
      * kopuruarekin.
      */
     public static List<Kokalekua> getGuztiak() {
+        if (ModoKudeatzailea.isOffline()) return BiltegiLocala.getInstance().getKokalekuak();
         List<Kokalekua> zerrenda = new ArrayList<>();
         String sql = "SELECT k.id_kokalekua, k.armairua, k.apala, k.bha_da, "
                 + "COUNT(a.id_artikulua) AS kop "
@@ -55,6 +58,7 @@ public class KokalekuaDAO {
      * Kokaleku guztiak Kokalekua objektu gisa itzultzen ditu (ComboBox-erako).
      */
     public static List<Kokalekua> getZerrenda() {
+        if (ModoKudeatzailea.isOffline()) return BiltegiLocala.getInstance().getKokalekuakZerrenda();
         List<Kokalekua> zerrenda = new ArrayList<Kokalekua>();
         String sql = "SELECT id_kokalekua, armairua, apala, bha_da FROM KOKALEKUA ORDER BY id_kokalekua";
         try (Connection con = DBConexioa.getKonexioa(); PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
@@ -73,6 +77,7 @@ public class KokalekuaDAO {
      * Kokaleku berria gordetzen du datu-basean.
      */
     public static boolean gehitu(String armairua, String apala, boolean bhaDa) {
+        if (ModoKudeatzailea.isOffline()) return BiltegiLocala.getInstance().kokalekuaGehitu(armairua, apala, bhaDa);
         String sql = "INSERT INTO KOKALEKUA (armairua, apala, bha_da) VALUES (?, ?, ?)";
         try (Connection con = DBConexioa.getKonexioa(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, armairua);
@@ -89,6 +94,7 @@ public class KokalekuaDAO {
      * Kokaleku baten datuak eguneratzen ditu datu-basean.
      */
     public static boolean eguneratu(int id, String armairua, String apala, boolean bhaDa) {
+        if (ModoKudeatzailea.isOffline()) return BiltegiLocala.getInstance().kokalekuaEguneratu(id, armairua, apala, bhaDa);
         String sql = "UPDATE KOKALEKUA SET armairua=?, apala=?, bha_da=? WHERE id_kokalekua=?";
         try (Connection con = DBConexioa.getKonexioa();
              PreparedStatement ps = con.prepareStatement(sql)) {
@@ -107,6 +113,7 @@ public class KokalekuaDAO {
      * Kokaleku bat datu-basetik ezabatzen du.
      */
     public static boolean ezabatu(int id) {
+        if (ModoKudeatzailea.isOffline()) return BiltegiLocala.getInstance().kokalekuaEzabatu(id);
         String sql = "DELETE FROM KOKALEKUA WHERE id_kokalekua = ?";
         try (Connection con = DBConexioa.getKonexioa();
              PreparedStatement ps = con.prepareStatement(sql)) {

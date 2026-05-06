@@ -8,6 +8,8 @@ package model;
  */
 public class Erakundea extends Hartzailea {
 
+    private static final long serialVersionUID = 1L;
+
     private String ifz;
     private String izenFiskala;
     private String erakundeMota;

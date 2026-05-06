@@ -18,7 +18,6 @@ public class Main extends Application {
      */
     @Override
     public void start(Stage primaryStage) throws Exception {
-        //login froga
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/login.fxml"));
         Parent root = loader.load();
 
@@ -30,11 +29,26 @@ public class Main extends Application {
     }
 
     /**
+     * Aplikazioa ixten denean deitzen da automatikoki.
+     * DB-tik azken datuak store.dat-era gordetzen ditu offline-erako.
+     */
+    @Override
+    public void stop() {
+        if (!utils.ModoKudeatzailea.isOffline()) {
+            utils.BiltegiLocala.getInstance().sincronizatuDBtik();
+        } else {
+            utils.BiltegiLocala.getInstance().gorde();
+        }
+        utils.DBConexioa.itxi();
+    }
+
+    /**
      * JavaFX aplikazioa abiarazten du.
      * @param args Komando-lerroko argumentuak
      */
     public static void main(String[] args) {
         utils.LogKudeatzailea.hasieratu();
+        utils.ModoKudeatzailea.detektatu();
         launch(args);
     }
 }

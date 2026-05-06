@@ -16,9 +16,11 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import model.Artikulua;
 import model.EgoeraArtikulua;
@@ -29,53 +31,45 @@ import utils.UIKudeatzailea;
 
 /**
  * Emanaldien formularioa kudeatzen duen kontroladorea.
- *
- * @author Yeray Garrido
+ * Pertsona (NAN) zein erakundea (IFZ) onartzen ditu.
  */
 public class EmanaldiaController implements Initializable {
 
     private static final Logger LOG = LogKudeatzailea.lortu(EmanaldiaController.class);
-
     private static final SimpleDateFormat SDF = new SimpleDateFormat("dd/MM/yyyy");
 
-    @FXML
-    private ComboBox<String> cbArtikulua;
+    @FXML private ComboBox<String> cbArtikulua;
+    @FXML private Label lblArtikuluKodea;
+    @FXML private Label lblArtikuluIzena;
+    @FXML private Label lblArtikuluKokalekua;
+    @FXML private Label lblArtikuluSarrera;
+    @FXML private Label lblArtikuluEgoera;
 
-    @FXML
-    private Label lblArtikuluKodea;
-    @FXML
-    private Label lblArtikuluIzena;
-    @FXML
-    private Label lblArtikuluKokalekua;
-    @FXML
-    private Label lblArtikuluSarrera;
-    @FXML
-    private Label lblArtikuluEgoera;
+    // Toggle
+    @FXML private RadioButton rbPertsona;
+    @FXML private RadioButton rbErakundea;
+    @FXML private VBox boxPertsona;
+    @FXML private VBox boxErakundea;
 
-    @FXML
-    private TextField txtNan;
-    @FXML
-    private TextField txtIzena;
-    @FXML
-    private TextField txtAbizena;
-    @FXML
-    private TextField txtTelefonoa;
-    @FXML
-    private TextField txtEmaila;
-    @FXML
-    private TextField txtHelbidea;
-    @FXML
-    private TextArea txtOharrak;
+    // Pertsona eremuak
+    @FXML private TextField txtNan;
+    @FXML private TextField txtIzena;
+    @FXML private TextField txtAbizena;
 
-    @FXML
-    private CheckBox chkNortasuna;
-    @FXML
-    private CheckBox chkSinadura;
+    // Erakundea eremuak
+    @FXML private TextField txtIft;
+    @FXML private TextField txtIzenOfiziala;
 
-    @FXML
-    private Label lblErrorea;
-    @FXML
-    private Label lblArchivoSinadura;
+    // Kontaktua (biak)
+    @FXML private TextField txtTelefonoa;
+    @FXML private TextField txtEmaila;
+    @FXML private TextField txtHelbidea;
+    @FXML private TextArea txtOharrak;
+
+    @FXML private CheckBox chkNortasuna;
+    @FXML private CheckBox chkSinadura;
+    @FXML private Label lblErrorea;
+    @FXML private Label lblArchivoSinadura;
 
     private ArrayList<Artikulua> artikuluak;
     private File archivoSinadura;
@@ -84,7 +78,7 @@ public class EmanaldiaController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        artikuluak = new ArrayList<Artikulua>();
+        artikuluak = new ArrayList<>();
         beteteArtikuluCombo();
         ezkutuArtikuluInfo();
         ezkutuErrorea();
@@ -92,15 +86,26 @@ public class EmanaldiaController implements Initializable {
     }
 
     /**
-     * Erreklamazioa baten datuak formularioan aurrez betetzen ditu eta
-     * jabea identifikatzen du, emanaldian erreklamazioa zuzenean ebazteko.
-     *
-     * @param err       Ebazteko erreklamazioa
-     * @param contentArea Itzultzean erabili beharreko StackPane nagusia
+     * RadioButton-en arabera pertsona edo erakundearen eremuak erakutsi/ezkutatu.
      */
+    @FXML
+    private void aldatuHartzaileMota() {
+        boolean erakundea = rbErakundea != null && rbErakundea.isSelected();
+        if (boxPertsona != null) {
+            boxPertsona.setVisible(!erakundea);
+            boxPertsona.setManaged(!erakundea);
+        }
+        if (boxErakundea != null) {
+            boxErakundea.setVisible(erakundea);
+            boxErakundea.setManaged(erakundea);
+        }
+    }
+
     public void setErreklamazioa(Erreklamazioa err, StackPane contentArea) {
         this.erreklamazioId = err.getErreklamazioId();
         this.contentArea = contentArea;
+        if (rbPertsona != null) rbPertsona.setSelected(true);
+        aldatuHartzaileMota();
         txtNan.setText(err.getJabeNan() != null ? err.getJabeNan() : "");
         txtIzena.setText(err.getJabeIzena() != null ? err.getJabeIzena() : "");
         txtAbizena.setText(err.getJabeAbizena() != null ? err.getJabeAbizena() : "");
@@ -116,9 +121,6 @@ public class EmanaldiaController implements Initializable {
         }
     }
 
-    /**
-     * Sinadura-dokumentua aukeratzeko fitxategi-hautatzailea irekitzen du.
-     */
     @FXML
     private void hautaketaSinadura() {
         FileChooser fc = new FileChooser();
@@ -135,13 +137,9 @@ public class EmanaldiaController implements Initializable {
         }
     }
 
-    /**
-     * ComboBox-a biltegiko artikuluekin betetzen du.
-     */
     private void beteteArtikuluCombo() {
         cbArtikulua.getItems().clear();
         artikuluak.clear();
-
         List<Artikulua> guztiak = ArtikuluaDAO.getGuztiak();
         for (Artikulua a : guztiak) {
             if (a.getEgoera() == EgoeraArtikulua.BILTEGIAN) {
@@ -151,9 +149,6 @@ public class EmanaldiaController implements Initializable {
         }
     }
 
-    /**
-     * ComboBox-ean artikulua hautatzean xehetasunak erakusten ditu.
-     */
     @FXML
     private void artikuluaHautatu() {
         int idx = cbArtikulua.getSelectionModel().getSelectedIndex();
@@ -164,26 +159,15 @@ public class EmanaldiaController implements Initializable {
         Artikulua sel = artikuluak.get(idx);
         lblArtikuluKodea.setText(sel.getArtikuluKodea());
         lblArtikuluIzena.setText(sel.getIzenburua());
-
-        String kok = "—";
-        if (sel.getKokalekua() != null) {
-            kok = sel.getKokalekua().getKokalekuOsoa();
-        }
+        String kok = sel.getKokalekua() != null ? sel.getKokalekua().getKokalekuOsoa() : "—";
         lblArtikuluKokalekua.setText(kok);
-
-        String data = "—";
-        if (sel.getSarreraData() != null) {
-            data = SDF.format(sel.getSarreraData());
-        }
+        String data = sel.getSarreraData() != null ? SDF.format(sel.getSarreraData()) : "—";
         lblArtikuluSarrera.setText(data);
         lblArtikuluEgoera.setText("Biltegian");
         erakutsiArtikuluInfo();
         ezkutuErrorea();
     }
 
-    /**
-     * Formularioa egiaztatzen du eta emanaldia datu-basean gordetzen du.
-     */
     @FXML
     private void formalizatu() {
         int idx = cbArtikulua.getSelectionModel().getSelectedIndex();
@@ -191,33 +175,38 @@ public class EmanaldiaController implements Initializable {
             erakutsiErrorea("Artikulu bat hautatu behar da.");
             return;
         }
-
-        String nan = txtNan.getText().trim();
-        String izena = txtIzena.getText().trim();
-        String abizena = txtAbizena.getText().trim();
-
-        if (nan.isEmpty() || izena.isEmpty() || abizena.isEmpty()) {
-            erakutsiErrorea("(*) eremuak bete behar dira: NAN, Izena eta Abizena.");
-            return;
-        }
-
+        String idArtikulua = artikuluak.get(idx).getArtikuluKodea();
         String telefonoa = txtTelefonoa.getText().trim();
         String emaila = txtEmaila.getText().trim();
         String helbidea = txtHelbidea.getText().trim();
-        String oharrak = "";
-        if (txtOharrak != null) {
-            oharrak = txtOharrak.getText().trim();
-        }
-
-        int idLangile = 0;
-        if (Sesio.getLangilea() != null) {
-            idLangile = Sesio.getLangilea().getLangileId();
-        }
-
-        String idArtikulua = artikuluak.get(idx).getArtikuluKodea();
+        String oharrak = txtOharrak != null ? txtOharrak.getText().trim() : "";
+        int idLangile = Sesio.getLangilea() != null ? Sesio.getLangilea().getLangileId() : 0;
         String dokumentuBidea = archivoSinadura != null ? archivoSinadura.getAbsolutePath() : null;
-        boolean ok = EmanaldiaDAO.formalizatu(idArtikulua, nan, izena, abizena,
-                telefonoa, emaila, helbidea, oharrak, idLangile, dokumentuBidea);
+
+        boolean erakundeaDa = rbErakundea != null && rbErakundea.isSelected();
+        boolean ok;
+
+        if (erakundeaDa) {
+            String ift = txtIft.getText().trim();
+            String izenOfiziala = txtIzenOfiziala.getText().trim();
+            if (ift.isEmpty() || izenOfiziala.isEmpty()) {
+                erakutsiErrorea("(*) IFZ eta izen ofiziala bete behar dira.");
+                return;
+            }
+            ok = EmanaldiaDAO.formalizatuErakundea(idArtikulua, ift, izenOfiziala,
+                    telefonoa, emaila, helbidea, oharrak, idLangile, dokumentuBidea);
+        } else {
+            String nan = txtNan.getText().trim();
+            String izena = txtIzena.getText().trim();
+            String abizena = txtAbizena.getText().trim();
+            if (nan.isEmpty() || izena.isEmpty() || abizena.isEmpty()) {
+                erakutsiErrorea("(*) eremuak bete behar dira: NAN, Izena eta Abizena.");
+                return;
+            }
+            ok = EmanaldiaDAO.formalizatu(idArtikulua, nan, izena, abizena,
+                    telefonoa, emaila, helbidea, oharrak, idLangile, dokumentuBidea);
+        }
+
         if (ok) {
             if (erreklamazioId > 0) {
                 ErreklamazioaDAO.updateEgoera(String.valueOf(erreklamazioId), "ebatzita");
@@ -231,10 +220,6 @@ public class EmanaldiaController implements Initializable {
         }
     }
 
-    /**
-     * Aldaketak gorde gabe atzera egiten du: erreklamaziotik etorri bada
-     * erreklamazioen zerrendara itzultzen da, bestela formularioa garbitzen du.
-     */
     @FXML
     private void utzi() {
         if (contentArea != null) {
@@ -244,59 +229,42 @@ public class EmanaldiaController implements Initializable {
         }
     }
 
-    /**
-     * Formularioko eremu guztiak hasierako egoerara itzultzen ditu.
-     */
     private void garbitu() {
         beteteArtikuluCombo();
         cbArtikulua.setValue(null);
         ezkutuArtikuluInfo();
+        if (rbPertsona != null) rbPertsona.setSelected(true);
+        aldatuHartzaileMota();
         txtNan.clear();
         txtIzena.clear();
         txtAbizena.clear();
+        if (txtIft != null) txtIft.clear();
+        if (txtIzenOfiziala != null) txtIzenOfiziala.clear();
         txtTelefonoa.clear();
         txtEmaila.clear();
         txtHelbidea.clear();
-        if (txtOharrak != null) {
-            txtOharrak.clear();
-        }
-        if (chkNortasuna != null) {
-            chkNortasuna.setSelected(false);
-        }
-        if (chkSinadura != null) {
-            chkSinadura.setSelected(false);
-        }
+        if (txtOharrak != null) txtOharrak.clear();
+        if (chkNortasuna != null) chkNortasuna.setSelected(false);
+        if (chkSinadura != null) chkSinadura.setSelected(false);
         archivoSinadura = null;
-        if (lblArchivoSinadura != null) {
-            lblArchivoSinadura.setText("Ez da fitxategirik hautatu.");
-        }
+        if (lblArchivoSinadura != null) lblArchivoSinadura.setText("Ez da fitxategirik hautatu.");
         ezkutuErrorea();
     }
 
     private void erakutsiArtikuluInfo() {
-        lblArtikuluKodea.setVisible(true);
-        lblArtikuluKodea.setManaged(true);
-        lblArtikuluIzena.setVisible(true);
-        lblArtikuluIzena.setManaged(true);
-        lblArtikuluKokalekua.setVisible(true);
-        lblArtikuluKokalekua.setManaged(true);
-        lblArtikuluSarrera.setVisible(true);
-        lblArtikuluSarrera.setManaged(true);
-        lblArtikuluEgoera.setVisible(true);
-        lblArtikuluEgoera.setManaged(true);
+        lblArtikuluKodea.setVisible(true); lblArtikuluKodea.setManaged(true);
+        lblArtikuluIzena.setVisible(true); lblArtikuluIzena.setManaged(true);
+        lblArtikuluKokalekua.setVisible(true); lblArtikuluKokalekua.setManaged(true);
+        lblArtikuluSarrera.setVisible(true); lblArtikuluSarrera.setManaged(true);
+        lblArtikuluEgoera.setVisible(true); lblArtikuluEgoera.setManaged(true);
     }
 
     private void ezkutuArtikuluInfo() {
-        lblArtikuluKodea.setVisible(false);
-        lblArtikuluKodea.setManaged(false);
-        lblArtikuluIzena.setVisible(false);
-        lblArtikuluIzena.setManaged(false);
-        lblArtikuluKokalekua.setVisible(false);
-        lblArtikuluKokalekua.setManaged(false);
-        lblArtikuluSarrera.setVisible(false);
-        lblArtikuluSarrera.setManaged(false);
-        lblArtikuluEgoera.setVisible(false);
-        lblArtikuluEgoera.setManaged(false);
+        lblArtikuluKodea.setVisible(false); lblArtikuluKodea.setManaged(false);
+        lblArtikuluIzena.setVisible(false); lblArtikuluIzena.setManaged(false);
+        lblArtikuluKokalekua.setVisible(false); lblArtikuluKokalekua.setManaged(false);
+        lblArtikuluSarrera.setVisible(false); lblArtikuluSarrera.setManaged(false);
+        lblArtikuluEgoera.setVisible(false); lblArtikuluEgoera.setManaged(false);
     }
 
     private void erakutsiErrorea(String mezua) {

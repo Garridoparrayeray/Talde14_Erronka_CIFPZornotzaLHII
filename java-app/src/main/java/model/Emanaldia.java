@@ -1,5 +1,6 @@
 package model;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -7,7 +8,9 @@ import java.util.Date;
  *
  * @author Yeray Garrido
  */
-public class Emanaldia {
+public class Emanaldia implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private int emanaldiId;
     private Date emateData;

@@ -8,6 +8,8 @@ package model;
  */
 public class Jabea extends Hartzailea {
 
+    private static final long serialVersionUID = 1L;
+
     private String nan;
     private String izena;
     private String abizena;

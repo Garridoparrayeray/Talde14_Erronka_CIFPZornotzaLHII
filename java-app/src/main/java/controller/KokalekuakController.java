@@ -12,16 +12,16 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.GridPane;
-import javafx.scene.Node;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import model.Kokalekua;
 import utils.LogKudeatzailea;
@@ -30,11 +30,11 @@ import utils.UIKudeatzailea;
 /**
  * Kokalekuen zerrenda eta kokaleku berria gehitzeko kontroladorea.
  *
- * @author Yeray Garrido
+ * @author Yeray Garrido eta Eder Martin
  */
 public class KokalekuakController implements Initializable {
-    private static final Logger LOG = LogKudeatzailea.lortu(KokalekuakController.class);
 
+    private static final Logger LOG = LogKudeatzailea.lortu(KokalekuakController.class);
 
     @FXML
     private StackPane contentArea;
@@ -61,6 +61,9 @@ public class KokalekuakController implements Initializable {
         kargatu();
     }
 
+    /**
+     * Kokaleku guztiak datu-basetik kargatzen ditu eta taula eguneratzen du.
+     */
     private void kargatu() {
         List<Kokalekua> datuak = KokalekuaDAO.getGuztiak();
         taula.getItems().setAll(datuak);
@@ -88,7 +91,7 @@ public class KokalekuakController implements Initializable {
     @FXML
     public void kokalekuaEzabatu() {
         Kokalekua sel = taula.getSelectionModel().getSelectedItem();
-        
+
         if (sel == null) {
             erakutsiAlerta(Alert.AlertType.WARNING, "Kontuz", "Aukeratu kokaleku bat taulan ezabatzeko.");
             return;
@@ -114,12 +117,13 @@ public class KokalekuakController implements Initializable {
     }
 
     /**
-     * Taulan aukeratutako kokalekua editatzeko elkarrizketa-koadroa erakusten du.
+     * Taulan aukeratutako kokalekua editatzeko elkarrizketa-koadroa erakusten
+     * du.
      */
     @FXML
     public void kokalekuaEditatu() {
         Kokalekua sel = taula.getSelectionModel().getSelectedItem();
-        
+
         if (sel == null) {
             erakutsiAlerta(Alert.AlertType.WARNING, "Kontuz", "Aukeratu kokaleku bat taulan editatzeko.");
             return;
@@ -138,10 +142,10 @@ public class KokalekuakController implements Initializable {
 
         TextField txtArmairua = new TextField(sel.getArmairua());
         txtArmairua.setPromptText("Armairua");
-        
+
         TextField txtApala = new TextField(sel.getApala());
         txtApala.setPromptText("Apala");
-        
+
         CheckBox chkBha = new CheckBox("BHA (Bolumen Handiko Armairua)");
         chkBha.setSelected(sel.isBhaDa());
 
@@ -156,13 +160,13 @@ public class KokalekuakController implements Initializable {
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == ButtonType.OK) {
                 boolean ondo = KokalekuaDAO.eguneratu(
-                    sel.getKokalekuId(), 
-                    txtArmairua.getText().trim(), 
-                    txtApala.getText().trim(), 
-                    chkBha.isSelected()
+                        sel.getKokalekuId(),
+                        txtArmairua.getText().trim(),
+                        txtApala.getText().trim(),
+                        chkBha.isSelected()
                 );
                 if (ondo) {
-                    kargatu(); 
+                    kargatu();
                     erakutsiAlerta(Alert.AlertType.INFORMATION, "Eginda", "Kokalekua ondo eguneratu da.");
                 } else {
                     erakutsiAlerta(Alert.AlertType.ERROR, "Errorea", "Ezin izan da kokalekua eguneratu.");
@@ -174,6 +178,13 @@ public class KokalekuakController implements Initializable {
         dialog.showAndWait();
     }
 
+    /**
+     * Erabiltzaileari mezu-koadro bat erakusten dio.
+     *
+     * @param mota    Alertaren mota (INFORMATION, WARNING, ERROR...)
+     * @param titulua Alertaren izenburua
+     * @param mezua   Erakutsi beharreko testua
+     */
     private void erakutsiAlerta(Alert.AlertType mota, String titulua, String mezua) {
         Alert alert = new Alert(mota);
         alert.setTitle(titulua);

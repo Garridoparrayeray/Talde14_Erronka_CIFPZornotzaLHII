@@ -10,7 +10,8 @@ USE erronka_galduak;
 -- ---------------------------------------------------------------------
 INSERT INTO ROLA (deskribapena) VALUES
     ('Administratzailea'),
-    ('Udaltzaina');
+    ('Udaltzaina'),
+    ('Erregistratzailea');
 
 -- ---------------------------------------------------------------------
 -- LANGILEA
@@ -20,7 +21,9 @@ INSERT INTO LANGILEA (izena, abizena, erabiltzailea, pasahitza_hash, id_rola) VA
     ('Miren', 'Agirre', 'admin',
      '$2a$10$oFl.yJsTOmztwUCT0ov7K.VoNDHioYD/wGpqbNP2U3kTwgB4B7Ica', 1),
     ('Jon',   'Zabala', 'udaltzain1',
-     '$2a$10$oFl.yJsTOmztwUCT0ov7K.VoNDHioYD/wGpqbNP2U3kTwgB4B7Ica', 2);
+     '$2a$10$oFl.yJsTOmztwUCT0ov7K.VoNDHioYD/wGpqbNP2U3kTwgB4B7Ica', 2),
+    ('Ander', 'Txurru', 'erregistratzaile1',
+     '$2a$10$oFl.yJsTOmztwUCT0ov7K.VoNDHioYD/wGpqbNP2U3kTwgB4B7Ica', 3);
 
 -- ---------------------------------------------------------------------
 -- KATEGORIA

@@ -1,11 +1,15 @@
 package model;
 
+import java.io.Serializable;
+
 /**
  * Biltegiko kokaleku fisiko bat adierazten duen eredua (armairua eta apala).
  *
  * @author Yeray Garrido
  */
-public class Kokalekua {
+public class Kokalekua implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private int kokalekuId;
     private String armairua;

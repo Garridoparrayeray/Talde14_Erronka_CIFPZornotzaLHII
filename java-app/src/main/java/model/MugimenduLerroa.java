@@ -1,11 +1,15 @@
 package model;
 
+import java.io.Serializable;
+
 /**
  * Auditoria-taulako mugimenduen errenkada bat adierazten duen DTO klasea.
  *
  * @author Yeray Garrido
  */
-public class MugimenduLerroa {
+public class MugimenduLerroa implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private String data;
     private String langilea;
