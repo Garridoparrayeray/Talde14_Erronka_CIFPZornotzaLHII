@@ -2,6 +2,7 @@ package controller;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import dao.KokalekuaDAO;
@@ -20,8 +21,8 @@ import utils.UIKudeatzailea;
  * @author Yeray Garrido
  */
 public class KokalekuaBerriController implements Initializable {
-
     private static final Logger LOG = LogKudeatzailea.lortu(KokalekuaBerriController.class);
+
 
     @FXML
     private TextField txtArmairua;

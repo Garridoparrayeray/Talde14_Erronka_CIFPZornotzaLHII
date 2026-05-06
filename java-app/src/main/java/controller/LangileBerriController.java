@@ -3,6 +3,7 @@ package controller;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import dao.LangileaDAO;
@@ -22,8 +23,8 @@ import utils.UIKudeatzailea;
  * @author Yeray Garrido
  */
 public class LangileBerriController implements Initializable {
-
     private static final Logger LOG = LogKudeatzailea.lortu(LangileBerriController.class);
+
 
     @FXML
     private TextField txtIzena;

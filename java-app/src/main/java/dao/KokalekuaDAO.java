@@ -1,8 +1,8 @@
 package dao;
 
 import model.Kokalekua;
-import utils.DBConexioa;
 import utils.LogKudeatzailea;
+import utils.DBConexioa;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -19,8 +19,8 @@ import java.util.logging.Logger;
  * @author Yeray Garrido
  */
 public class KokalekuaDAO {
-
     private static final Logger LOG = LogKudeatzailea.lortu(KokalekuaDAO.class);
+
 
     /**
      * Datu-basetik kokaleku guztiak lortzen ditu, bakoitzeko artikulu
@@ -46,7 +46,7 @@ public class KokalekuaDAO {
                 zerrenda.add(k);
             }
         } catch (SQLException e) {
-            LOG.log(Level.SEVERE, "getGuztiak: datu-baseko errorea", e);
+            LOG.log(Level.SEVERE, "getGuztiak: errorea", e);
         }
         return zerrenda;
     }
@@ -64,7 +64,7 @@ public class KokalekuaDAO {
                 zerrenda.add(k);
             }
         } catch (SQLException e) {
-            LOG.log(Level.SEVERE, "getZerrenda: datu-baseko errorea", e);
+            LOG.log(Level.SEVERE, "getZerrenda: errorea", e);
         }
         return zerrenda;
     }
@@ -80,7 +80,40 @@ public class KokalekuaDAO {
             ps.setBoolean(3, bhaDa);
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
-            LOG.log(Level.SEVERE, "gehitu: datu-baseko errorea", e);
+            LOG.log(Level.SEVERE, "gehitu: errorea", e);
+            return false;
+        }
+    }
+
+    /**
+     * Kokaleku baten datuak eguneratzen ditu datu-basean.
+     */
+    public static boolean eguneratu(int id, String armairua, String apala, boolean bhaDa) {
+        String sql = "UPDATE KOKALEKUA SET armairua=?, apala=?, bha_da=? WHERE id_kokalekua=?";
+        try (Connection con = DBConexioa.getKonexioa();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, armairua);
+            ps.setString(2, apala);
+            ps.setBoolean(3, bhaDa);
+            ps.setInt(4, id);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            LOG.log(Level.SEVERE, "eguneratu: errorea", e);
+            return false;
+        }
+    }
+
+    /**
+     * Kokaleku bat datu-basetik ezabatzen du.
+     */
+    public static boolean ezabatu(int id) {
+        String sql = "DELETE FROM KOKALEKUA WHERE id_kokalekua = ?";
+        try (Connection con = DBConexioa.getKonexioa();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            LOG.log(Level.SEVERE, "ezabatu: errorea", e);
             return false;
         }
     }
