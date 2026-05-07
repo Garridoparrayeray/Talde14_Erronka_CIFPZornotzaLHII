@@ -10,7 +10,7 @@ services:
       MARIADB_USER: bermeo_udaltzain
       MARIADB_PASSWORD: udaltzainpw
     ports:
-      - "0.0.0.0:3306:3306"
+      - "3306:3306"
     volumes:
       - ./db/init:/docker-entrypoint-initdb.d:ro
       - db_data:/var/lib/mysql
@@ -21,21 +21,19 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
-  #### docker exec erronka_db mariadb-dump -u bermeo_udaltzain -pudaltzainpw erronka_galduak > copia_seguridad.sql
 
-  # 2. JAVA APLIKAZIOA (JavaFX X11 forwarding-ekin)
+  # 2. JAVA APLIKAZIOA (JavaFX noVNC bidez - http://localhost:6080/vnc.html)
   java-app:
     build: ./java-app
     container_name: erronka_desktop
     environment:
-      - DISPLAY=${DISPLAY}
       - DB_URL=jdbc:mariadb://db:3306/erronka_galduak
       - DB_USER=bermeo_udaltzain
       - DB_PASS=udaltzainpw
       - OFFLINE_DATA_PATH=/app/exportazioak
+    ports:
+      - "6080:6080"
     volumes:
-      - /tmp/.X11-unix:/tmp/.X11-unix:rw
-      - ${HOME}/.Xauthority:/root/.Xauthority:rw
       - ./partekatutako_datuak:/app/exportazioak
       - ./artikulu_irudiak:/app/irudiak
     networks:
@@ -58,7 +56,7 @@ services:
     depends_on:
       - db
 
-  # 4. ADMINER (BD UI nabigatzailetik)
+  # 4. ADMINER
   adminer:
     image: adminer:latest
     container_name: erronka_adminer

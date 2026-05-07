@@ -1,24 +1,27 @@
-FROM maven:3.9.9-eclipse-temurin-21 AS builder
-WORKDIR /java-app
+FROM maven:3.9.6-eclipse-temurin-21 AS builder
+WORKDIR /app
 COPY pom.xml .
-RUN mvn dependency:go-offline -B
+RUN mvn dependency:resolve dependency:resolve-plugins
 COPY src ./src
-RUN touch /.env && mvn clean package -DskipTests
+RUN mvn clean package -DskipTests
 
-FROM eclipse-temurin:21.0.5_11-jre-jammy
-WORKDIR /java-app
+FROM ubuntu:22.04
+WORKDIR /app
+
+ENV DEBIAN_FRONTEND=noninteractive TZ=UTC
+
 RUN apt-get update && apt-get install -y \
-    libxext6 libxrender1 libxtst6 libxi6 \
-    libgl1 libgl1-mesa-dri \
+    openjdk-21-jdk \
+    xvfb x11-utils x11vnc \
+    novnc websockify \
     libgtk-3-0 libgdk-pixbuf2.0-0 \
-    libpango-1.0-0 libatk1.0-0 libcairo2 \
-    libfreetype6 libfontconfig1 \
-    libxxf86vm1 libxrandr2 \
-    xvfb x11vnc novnc websockify \
+    libx11-6 libxext6 libxrender1 libxtst6 libxi6 libgl1 \
     && rm -rf /var/lib/apt/lists/*
-ENV LIBGL_ALWAYS_SOFTWARE=1
-COPY --from=builder /java-app/target/galdutakoak-1.0-SNAPSHOT.jar app.jar
-COPY startup.sh .
-RUN chmod +x startup.sh
-EXPOSE 6080
-CMD ["./startup.sh"]
+
+COPY --from=builder /app/target/galdutakoak-1.0-SNAPSHOT.jar app.jar
+COPY start.sh .
+RUN chmod +x start.sh
+
+EXPOSE 5900 6080
+
+CMD ["./start.sh"]

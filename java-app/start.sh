@@ -1,0 +1,20 @@
+#!/bin/bash
+set -e
+
+echo "Iniciando Xvfb..."
+Xvfb :99 -screen 0 1024x768x24 &
+XVFB_PID=$!
+sleep 2
+
+export DISPLAY=:99
+
+echo "Iniciando x11vnc..."
+x11vnc -display :99 -forever -nopw -rfbport 5900 &
+X11VNC_PID=$!
+sleep 2
+
+echo "Iniciando noVNC/websockify..."
+websockify --web=/usr/share/novnc/ 6080 localhost:5900 &
+
+echo "Iniciando aplicación Java..."
+java --add-opens java.base/java.lang=ALL-UNNAMED -jar app.jar

@@ -11,7 +11,7 @@ echo ==========================================
 echo.
 
 REM --- 1. Docker Desktop egiaztatu ---
-echo [1/3] Docker Desktop egiaztatzen...
+echo [1/2] Docker Desktop egiaztatzen...
 docker info >nul 2>&1
 if errorlevel 1 (
     echo.
@@ -23,8 +23,8 @@ if errorlevel 1 (
 )
 
 REM --- 2. Konposatu ---
-echo [2/3] Edukiontziak eraikitzen eta abiarazten...
-docker compose -f docker-compose.windows.yml up --build -d
+echo [2/2] Edukiontziak eraikitzen eta abiarazten...
+docker compose up --build -d
 
 if errorlevel 1 (
     echo.
@@ -32,11 +32,6 @@ if errorlevel 1 (
     pause
     exit /b 1
 )
-
-REM --- 3. Egoera ---
-echo.
-echo [3/3] Egoera:
-docker compose -f docker-compose.windows.yml ps
 
 echo.
 echo ==========================================
