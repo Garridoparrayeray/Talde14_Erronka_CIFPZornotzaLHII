@@ -15,14 +15,15 @@ RUN apt-get update && apt-get install -y \
     xvfb x11-utils x11vnc \
     novnc websockify \
     dbus-x11 \
+    dos2unix \
     libgtk-3-0 libgdk-pixbuf2.0-0 \
     libx11-6 libxext6 libxrender1 libxtst6 libxi6 libgl1 \
     && rm -rf /var/lib/apt/lists/*
 
 COPY --from=builder /app/target/galdutakoak-1.0-SNAPSHOT.jar app.jar
 COPY start.sh .
-RUN sed -i 's/\r$//' start.sh && chmod +x start.sh
+RUN dos2unix start.sh && chmod +x start.sh
 
 EXPOSE 5900 6080
 
-CMD ["./start.sh"]
+CMD ["/bin/bash","./start.sh"]
