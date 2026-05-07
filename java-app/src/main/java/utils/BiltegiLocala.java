@@ -1,25 +1,57 @@
 package utils;
 
-import java.io.*;
-import java.nio.file.*;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
-import java.util.*;
-import java.util.logging.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import dao.*;
-import model.*;
 import org.mindrot.jbcrypt.BCrypt;
+
+import dao.ArtikuluaDAO;
+import dao.ErreklamazioaDAO;
+import dao.KategoriaDAO;
+import dao.KokalekuaDAO;
+import dao.LangileaDAO;
+import dao.MugimenduDAO;
+import model.Administratzailea;
+import model.Artikulua;
+import model.Aurkitzailea;
+import model.AzkenMugimendua;
+import model.EgoeraArtikulua;
+import model.EgoeraErreklamazioa;
+import model.Erakundea;
+import model.Erreklamazioa;
+import model.Jabea;
+import model.Kategoria;
+import model.KategoriaKopurua;
+import model.Kokalekua;
+import model.Langilea;
+import model.MugimenduLerroa;
 
 /**
  * DB datuen kopia lokala, offline erabilerarako.
  *
- * <p>Aplikazioa online dagoenean {@code sincronizatuDBtik()} metodoak
- * datu-baseko eduki guztia memoria eta {@code store.dat} fitxategian gordetzen du.
+ * <p>
+ * Aplikazioa online dagoenean {@code sincronizatuDBtik()} metodoak datu-baseko
+ * eduki guztia memoria eta {@code store.dat} fitxategian gordetzen du.
  * Aplikazioa ixten denean ere sinkronizatu egiten da {@code Main.stop()}-etik.
  * Hurrengo exekuzioan DB eskuragarri ez bada, azken sinkronizazioko datuak
  * erabiltzen dira fitxategitik irakurrita.</p>
  *
- * <p>Singleton — {@code getInstance()} bidez lortu.</p>
+ * <p>
+ * Singleton — {@code getInstance()} bidez lortu.</p>
  */
 public class BiltegiLocala {
 
@@ -42,7 +74,6 @@ public class BiltegiLocala {
     }
 
     // ─── Fitxategi kudeaketa ──────────────────────────────────────────────────
-
     private static Path getFitxategi() {
         String env = System.getenv("OFFLINE_DATA_PATH");
         Path dir = (env != null && !env.isEmpty())
@@ -80,8 +111,8 @@ public class BiltegiLocala {
 
     /**
      * DB-tik datuak kargatu eta kaxa eguneratzen du.
-     * ModoKudeatzailea.detektatu()-k deitzen du online dagoenean,
-     * kaxa beti datu errealak eduki ditzan.
+     * ModoKudeatzailea.detektatu()-k deitzen du online dagoenean, kaxa beti
+     * datu errealak eduki ditzan.
      */
     public synchronized void sincronizatuDBtik() {
         try {
@@ -138,7 +169,6 @@ public class BiltegiLocala {
     }
 
     // ─── LANGILEA ─────────────────────────────────────────────────────────────
-
     public List<Langilea> getLangileak() {
         return new ArrayList<>(poltsa.langileak);
     }
@@ -196,19 +226,22 @@ public class BiltegiLocala {
 
     public synchronized boolean langileaEzabatu(int id) {
         boolean removed = poltsa.langileak.removeIf(l -> l.getLangileId() == id);
-        if (removed) gorde();
+        if (removed) {
+            gorde();
+        }
         return removed;
     }
 
     private String getRolaDesk(int idRola) {
         for (String[] r : poltsa.rolak) {
-            if (Integer.parseInt(r[0]) == idRola) return r[1];
+            if (Integer.parseInt(r[0]) == idRola) {
+                return r[1];
+            }
         }
         return "Udaltzaina";
     }
 
     // ─── ARTIKULUA ────────────────────────────────────────────────────────────
-
     public List<Artikulua> getArtikuluak() {
         return new ArrayList<>(poltsa.artikuluak);
     }
@@ -264,7 +297,9 @@ public class BiltegiLocala {
 
     public synchronized boolean artikuluaEzabatu(String kodea) {
         boolean removed = poltsa.artikuluak.removeIf(a -> a.getArtikuluKodea().equals(kodea));
-        if (removed) gorde();
+        if (removed) {
+            gorde();
+        }
         return removed;
     }
 
@@ -283,7 +318,6 @@ public class BiltegiLocala {
     }
 
     // ─── KATEGORIA ────────────────────────────────────────────────────────────
-
     public List<Kategoria> getKategoriak() {
         return new ArrayList<>(poltsa.kategoriak);
     }
@@ -307,12 +341,13 @@ public class BiltegiLocala {
 
     public synchronized boolean kategoriaEzabatu(int id) {
         boolean removed = poltsa.kategoriak.removeIf(k -> k.getKategoriaId() == id);
-        if (removed) gorde();
+        if (removed) {
+            gorde();
+        }
         return removed;
     }
 
     // ─── KOKALEKUA ────────────────────────────────────────────────────────────
-
     public List<Kokalekua> getKokalekuak() {
         List<Kokalekua> result = new ArrayList<>();
         for (Kokalekua k : poltsa.kokalekuak) {
@@ -357,19 +392,24 @@ public class BiltegiLocala {
 
     public synchronized boolean kokalekuaEzabatu(int id) {
         boolean removed = poltsa.kokalekuak.removeIf(k -> k.getKokalekuId() == id);
-        if (removed) gorde();
+        if (removed) {
+            gorde();
+        }
         return removed;
     }
 
     // ─── ERREKLAMAZIOA ────────────────────────────────────────────────────────
-
     public List<Erreklamazioa> getErreklamazioak() {
         return new ArrayList<>(poltsa.erreklamazioak);
     }
 
     public synchronized boolean erreklamazioaUpdateEgoera(String id, String egoera) {
         int idInt;
-        try { idInt = Integer.parseInt(id); } catch (NumberFormatException e) { return false; }
+        try {
+            idInt = Integer.parseInt(id);
+        } catch (NumberFormatException e) {
+            return false;
+        }
         for (Erreklamazioa e : poltsa.erreklamazioak) {
             if (e.getErreklamazioId() == idInt) {
                 try {
@@ -399,7 +439,6 @@ public class BiltegiLocala {
     }
 
     // ─── EMANALDIA ────────────────────────────────────────────────────────────
-
     public synchronized boolean formalizatu(String idArtikulua, String nan, String izena,
             String abizena, String telefonoa, String emaila,
             String helbidea, String oharrak, int idLangile, String dokumentuBidea) {
@@ -435,7 +474,6 @@ public class BiltegiLocala {
     }
 
     // ─── AURKITZAILEA ─────────────────────────────────────────────────────────
-
     public synchronized boolean aurkitzaileaGehitu(String idArtikulua, String izena,
             String abizena, String telefonoa, String emaila, String aurkipenLekua) {
         Aurkitzailea a = new Aurkitzailea(izena, abizena,
@@ -456,7 +494,6 @@ public class BiltegiLocala {
     }
 
     // ─── MUGIMENDUA ───────────────────────────────────────────────────────────
-
     public List<MugimenduLerroa> getMugimenduak() {
         return new ArrayList<>(poltsa.mugimenduak);
     }
@@ -472,7 +509,6 @@ public class BiltegiLocala {
     }
 
     // ─── ESTADISTIKAK ─────────────────────────────────────────────────────────
-
     public int biltegianKopurua() {
         return (int) poltsa.artikuluak.stream().filter(a -> a.getEgoera() == EgoeraArtikulua.BILTEGIAN).count();
     }
@@ -493,9 +529,9 @@ public class BiltegiLocala {
         Date hemendik30 = cal.getTime();
         return (int) poltsa.artikuluak.stream()
                 .filter(a -> a.getEgoera() == EgoeraArtikulua.BILTEGIAN
-                        && a.getIraungitzeData() != null
-                        && !a.getIraungitzeData().before(orain)
-                        && !a.getIraungitzeData().after(hemendik30))
+                && a.getIraungitzeData() != null
+                && !a.getIraungitzeData().before(orain)
+                && !a.getIraungitzeData().after(hemendik30))
                 .count();
     }
 
@@ -504,10 +540,21 @@ public class BiltegiLocala {
                 .filter(e -> e.getEgoera() == EgoeraErreklamazioa.IREKITA).count();
     }
 
-    public int langileKopurua()         { return poltsa.langileak.size(); }
-    public int artikuluGuztienKopurua() { return poltsa.artikuluak.size(); }
-    public int kategoriaKopurua()       { return poltsa.kategoriak.size(); }
-    public int kokalekuakKopurua()      { return poltsa.kokalekuak.size(); }
+    public int langileKopurua() {
+        return poltsa.langileak.size();
+    }
+
+    public int artikuluGuztienKopurua() {
+        return poltsa.artikuluak.size();
+    }
+
+    public int kategoriaKopurua() {
+        return poltsa.kategoriak.size();
+    }
+
+    public int kokalekuakKopurua() {
+        return poltsa.kokalekuak.size();
+    }
 
     public List<KategoriaKopurua> kategoriaKopuruak() {
         List<KategoriaKopurua> result = new ArrayList<>();
@@ -522,11 +569,12 @@ public class BiltegiLocala {
     }
 
     // ─── Laguntzaileak ────────────────────────────────────────────────────────
-
     private Jabea lortuEdoSortuJabea(String nan, String izena, String abizena,
             String telefonoa, String emaila) {
         for (Jabea j : poltsa.jabeak) {
-            if (nan.equals(j.getNan())) return j;
+            if (nan.equals(j.getNan())) {
+                return j;
+            }
         }
         Jabea jabea = new Jabea(nan, izena, abizena, telefonoa, emaila);
         jabea.setHartzaileId(poltsa.hartzaileNextId++);
@@ -537,7 +585,9 @@ public class BiltegiLocala {
     private Erakundea lortuEdoSortuErakundea(String ift, String izenOfiziala,
             String telefonoa, String emaila, String helbidea) {
         for (Erakundea e : poltsa.erakundeak) {
-            if (ift.equals(e.getIfz())) return e;
+            if (ift.equals(e.getIfz())) {
+                return e;
+            }
         }
         Erakundea er = new Erakundea(ift, izenOfiziala, null, telefonoa);
         er.setHartzaileId(poltsa.hartzaileNextId++);
@@ -546,7 +596,9 @@ public class BiltegiLocala {
     }
 
     private String getLangileIzena(int idLangile) {
-        if (idLangile <= 0) return "—";
+        if (idLangile <= 0) {
+            return "—";
+        }
         return poltsa.langileak.stream()
                 .filter(l -> l.getLangileId() == idLangile)
                 .map(l -> l.getIzena() + " " + l.getAbizena())
@@ -558,8 +610,8 @@ public class BiltegiLocala {
     }
 
     // ─── Datu-poltsa (Serializable) ───────────────────────────────────────────
-
     private static class DatuakPoltsa implements Serializable {
+
         private static final long serialVersionUID = 1L;
         List<Langilea> langileak = new ArrayList<>();
         List<String[]> rolak = new ArrayList<>();
