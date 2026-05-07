@@ -27,9 +27,13 @@ services:
     build: ./java-app
     container_name: erronka_desktop
     environment:
-      # Windows-en VcXsrv TCP socketean entzuten du
+      # Windows-en VcXsrv TCP socketean entzuten du (Unix socket ez dago)
       - DISPLAY=host.docker.internal:0.0
+      - LIBGL_ALWAYS_INDIRECT=1
       - DB_URL=jdbc:mariadb://db:3306/erronka_galduak
+      - DB_USER=bermeo_udaltzain
+      - DB_PASS=udaltzainpw
+      - OFFLINE_DATA_PATH=/app/exportazioak
     volumes:
       - ./partekatutako_datuak:/app/exportazioak
       - ./artikulu_irudiak:/app/irudiak
