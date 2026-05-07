@@ -59,13 +59,6 @@ public class UIKudeatzailea {
     }
 
     /**
-     * Leiho berri bat kargatzen du eta uneko leihoa ordezkatzen du.
-     *
-     * @param egungoNodoa Uneko leihoaren edozein nodo (Stage lortzeko)
-     * @param fxmlBidea Leiho berriaren FXML bidea
-     * @param maximizatu Leihoa maximizatuta agertuko den ala ez
-     */
-    /**
      * TableColumn bateko testua hitz-jauziarekin erakusten du, "..." moztu gabe.
      * Deskribapen luzeak dituzten zutabeetarako erabili initialize() barruan.
      *
@@ -82,11 +75,22 @@ public class UIKudeatzailea {
             @Override
             protected void updateItem(String item, boolean empty) {
                 super.updateItem(item, empty);
-                testua.setText(empty || item == null ? "" : item);
+                if (empty || item == null) {
+                    testua.setText("");
+                } else {
+                    testua.setText(item);
+                }
             }
         });
     }
 
+    /**
+     * Leiho berri bat kargatzen du eta uneko leihoa ordezkatzen du.
+     *
+     * @param egungoNodoa Uneko leihoaren edozein nodo (Stage lortzeko)
+     * @param fxmlBidea   Leiho berriaren FXML bidea
+     * @param maximizatu  Leihoa maximizatuta agertuko den ala ez
+     */
     public static void aldatuLeihoa(Node egungoNodoa, String fxmlBidea, boolean maximizatu) {
         try {
             Parent erroa = FXMLLoader.load(UIKudeatzailea.class.getResource(fxmlBidea));

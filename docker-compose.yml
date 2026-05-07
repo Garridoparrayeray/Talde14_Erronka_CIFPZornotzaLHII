@@ -30,12 +30,13 @@ services:
       - DB_URL=jdbc:mariadb://db:3306/erronka_galduak
       - DB_USER=bermeo_udaltzain
       - DB_PASS=udaltzainpw
-      - OFFLINE_DATA_PATH=/app/exportazioak
+      - OFFLINE_DATA_PATH=/app/partekatutako_datuak
     ports:
       - "6080:6080"
     volumes:
-      - ./partekatutako_datuak:/app/exportazioak
-      - ./artikulu_irudiak:/app/irudiak
+      - ./partekatutako_datuak:/app/partekatutako_datuak
+      - ./artikulu_irudiak:/app/artikulu_irudiak
+      - ./logs:/root/erronka-bermeo/logs
     networks:
       - erronka-net
     depends_on:
@@ -51,6 +52,7 @@ services:
     volumes:
       - ./frontend:/usr/share/nginx/html
       - ./partekatutako_datuak:/usr/share/nginx/html/datuak:ro
+      - ./artikulu_irudiak:/usr/share/nginx/html/irudiak:ro
     networks:
       - erronka-net
     depends_on:

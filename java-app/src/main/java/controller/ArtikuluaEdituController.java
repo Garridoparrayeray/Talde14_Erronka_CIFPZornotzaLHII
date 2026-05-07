@@ -29,19 +29,26 @@ import utils.LogKudeatzailea;
 import utils.XMLExportazioa;
 
 /**
- * Artikulu bat editatzeko formularioaren kontroladorea.
+ * @author Eder Martin Artikulu bat editatzeko formularioaren kontroladorea.
  */
 public class ArtikuluaEdituController implements Initializable {
 
     private static final Logger LOG = LogKudeatzailea.lortu(ArtikuluaEdituController.class);
 
-    @FXML private Label lblTitulua;
-    @FXML private TextField txtIzena;
-    @FXML private ComboBox<Kategoria> cbKategoria;
-    @FXML private ComboBox<Kokalekua> cbKokalekua;
-    @FXML private TextArea txtDeskribapena;
-    @FXML private Label lblArgazkiIzena;
-    @FXML private Label lblErrorea;
+    @FXML
+    private Label lblTitulua;
+    @FXML
+    private TextField txtIzena;
+    @FXML
+    private ComboBox<Kategoria> cbKategoria;
+    @FXML
+    private ComboBox<Kokalekua> cbKokalekua;
+    @FXML
+    private TextArea txtDeskribapena;
+    @FXML
+    private Label lblArgazkiIzena;
+    @FXML
+    private Label lblErrorea;
 
     private Artikulua artikulua;
     private File argazkiFile;
@@ -57,8 +64,8 @@ public class ArtikuluaEdituController implements Initializable {
     /**
      * Editatu beharreko artikuluaren datuak formularioan aurrez betetzen ditu.
      *
-     * @param a        Editatu beharreko artikulua
-     * @param onGorde  Gorde ostean deitzen den callback-a (taula freskatzeko)
+     * @param a Editatu beharreko artikulua
+     * @param onGorde Gorde ostean deitzen den callback-a (taula freskatzeko)
      */
     public void kargatu(Artikulua a, Runnable onGorde) {
         this.artikulua = a;
@@ -132,7 +139,9 @@ public class ArtikuluaEdituController implements Initializable {
                 idKat, idKok, argazkiBidea);
         if (ok) {
             XMLExportazioa.exportatu();
-            if (onGordeCb != null) onGordeCb.run();
+            if (onGordeCb != null) {
+                onGordeCb.run();
+            }
             itxi();
         } else {
             erakutsiErrorea("Errorea gordetzean.");
@@ -148,7 +157,9 @@ public class ArtikuluaEdituController implements Initializable {
     private String kopiatuArgazkia(File origen) {
         try {
             File irudiDir = new File(AppConfig.getArtikuluIrudiakBidea());
-            if (!irudiDir.exists()) irudiDir.mkdirs();
+            if (!irudiDir.exists()) {
+                irudiDir.mkdirs();
+            }
             String nombre = origen.getName();
             int dot = nombre.lastIndexOf('.');
             String ext = dot >= 0 ? nombre.substring(dot).toLowerCase() : "";

@@ -13,20 +13,20 @@ import org.mindrot.jbcrypt.BCrypt;
 
 import model.Administratzailea;
 import model.Langilea;
+import utils.BiltegiLocala;
 import utils.DBConexioa;
 import utils.LogKudeatzailea;
 import utils.ModoKudeatzailea;
-import utils.BiltegiLocala;
 
 /**
  * Langileen datu-baseko eragiketak kudeatzen dituen DAO klasea.
  *
- * @author Yeray Garrido Langileak datu-basetik lortzeko, langile berriak
+ * @author Eder Martin Langileak datu-basetik lortzeko, langile berriak
  * gehitzeko eta autentifikatzeko metodoak ditu.
  */
 public class LangileaDAO {
-    private static final Logger LOG = LogKudeatzailea.lortu(LangileaDAO.class);
 
+    private static final Logger LOG = LogKudeatzailea.lortu(LangileaDAO.class);
 
     /**
      * Langile guztiak itzultzen ditu datu-basetik (taulan erakusteko).
@@ -153,9 +153,10 @@ public class LangileaDAO {
         }
         return null;
     }
+
     /**
      * Langilea baten datuak eguneratzen ditu datu-basean.
-     * 
+     *
      * @param id Langilearen identifikatzailea
      * @param izena Langilearen izen berria
      * @param abizena Langilearen abizen berria
@@ -178,8 +179,7 @@ public class LangileaDAO {
         }
         sql.append(" WHERE id_langile=?");
 
-        try (Connection con = DBConexioa.getKonexioa();
-             PreparedStatement ps = con.prepareStatement(sql.toString())) {
+        try (Connection con = DBConexioa.getKonexioa(); PreparedStatement ps = con.prepareStatement(sql.toString())) {
             ps.setString(1, izena);
             ps.setString(2, abizena);
             ps.setString(3, erabiltzailea);
@@ -199,7 +199,7 @@ public class LangileaDAO {
 
     /**
      * Langilea datu-basetik ezabatzen du.
-     * 
+     *
      * @param id Ezabatu beharreko langilearen IDa
      * @return true ondo ezabatu bada, false bestela
      */
@@ -208,8 +208,7 @@ public class LangileaDAO {
             return BiltegiLocala.getInstance().langileaEzabatu(id);
         }
         String sql = "DELETE FROM LANGILEA WHERE id_langile = ?";
-        try (Connection con = DBConexioa.getKonexioa();
-             PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = DBConexioa.getKonexioa(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, id);
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {

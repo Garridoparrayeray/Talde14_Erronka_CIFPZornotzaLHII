@@ -60,6 +60,13 @@ public class LangileakController implements Initializable {
 
     private List<Langilea> guztiak;
 
+    /**
+     * Kontroladorea hasieratzen du. Zutabeak konfiguratzen ditu, rolak kargatzen ditu
+     * eta langileen zerrenda bistaratzen du.
+     *
+     * @param url Hasierako URLa
+     * @param rb  Baliabideen sorta
+     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         colLangilea.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getIzenOsoa()));
@@ -79,6 +86,9 @@ public class LangileakController implements Initializable {
         kargatu();
     }
 
+    /**
+     * Langileen zerrenda datu-basetik kargatzen du eta taula eguneratzen du.
+     */
     private void kargatu() {
         guztiak = LangileaDAO.getGuztiak();
         taula.getItems().setAll(guztiak);
@@ -101,10 +111,22 @@ public class LangileakController implements Initializable {
 
         List<Langilea> iragaziak = new ArrayList<>();
         for (Langilea l : guztiak) {
-            boolean testPasa = testua.isEmpty()
-                    || l.getIzenOsoa().toLowerCase().contains(testua)
-                    || l.getErabiltzailea().toLowerCase().contains(testua);
-            boolean rolPasa = rolSel.equals("Rol guztiak") || l.getRola().equals(rolSel);
+            boolean testPasa;
+            if (testua.isEmpty()) {
+                testPasa = true;
+            } else if (l.getIzenOsoa().toLowerCase().contains(testua)) {
+                testPasa = true;
+            } else {
+                testPasa = l.getErabiltzailea().toLowerCase().contains(testua);
+            }
+
+            boolean rolPasa;
+            if (rolSel.equals("Rol guztiak")) {
+                rolPasa = true;
+            } else {
+                rolPasa = l.getRola().equals(rolSel);
+            }
+
             if (testPasa && rolPasa) {
                 iragaziak.add(l);
             }

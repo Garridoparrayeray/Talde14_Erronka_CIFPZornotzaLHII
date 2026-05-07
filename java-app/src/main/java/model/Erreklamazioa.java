@@ -47,39 +47,21 @@ public class Erreklamazioa implements Serializable {
      */
     public List<Artikulua> bilatuBateragarriak(List<Artikulua> zerrenda) {
         List<Artikulua> emaitzak = new ArrayList<>();
-        if (deskribapenBilatua == null || deskribapenBilatua.trim().isEmpty()) {
-            return emaitzak;
-        }
-
-        // Hitz esanguratsuak soilik (5+ karaktere), zarata-hitzak baztertu
-        String[] piezak = deskribapenBilatua.toLowerCase().split("[\\s,;.]+");
-        List<String> hitzak = new ArrayList<>();
-        for (String h : piezak) {
-            if (h.length() >= 5) {
-                hitzak.add(h);
-            }
-        }
-        if (hitzak.isEmpty()) {
-            return emaitzak;
-        }
-
         for (Artikulua a : zerrenda) {
-            if (a.getEgoera() != model.EgoeraArtikulua.BILTEGIAN) {
-                continue;
-            }
-            String desk = (a.getDeskribapena() != null ? a.getDeskribapena() : "").toLowerCase();
-            String izenb = a.getIzenburua().toLowerCase();
-            String kat = a.getKategoriaIzena().toLowerCase();
-
-            int matches = 0;
-            for (String h : hitzak) {
-                if (desk.contains(h) || izenb.contains(h) || kat.contains(h)) {
-                    matches++;
+            if (a.getEgoera() == model.EgoeraArtikulua.BILTEGIAN) {
+                boolean bat = false;
+                if (deskribapenBilatua != null && a.getDeskribapena() != null) {
+                    String[] hitzak = deskribapenBilatua.toLowerCase().split("\\s+");
+                    for (String h : hitzak) {
+                        if (a.getDeskribapena().toLowerCase().contains(h)) {
+                            bat = true;
+                            break;
+                        }
+                    }
                 }
-            }
-            // Bat etortzea: gutxienez hitz esanguratsua 1, eta 40%+ bat dator
-            if (matches >= 1 && (double) matches / hitzak.size() >= 0.4) {
-                emaitzak.add(a);
+                if (bat) {
+                    emaitzak.add(a);
+                }
             }
         }
         return emaitzak;
@@ -94,14 +76,29 @@ public class Erreklamazioa implements Serializable {
         this.egoera = egoera;
     }
 
+    /**
+     * Erreklamazioaren jabearen izena itzultzen du.
+     *
+     * @return Jabearen izena
+     */
     public String getJabeIzena() {
         return hartzailea.getIzena();
     }
 
+    /**
+     * Erreklamazioaren jabearen abizena itzultzen du.
+     *
+     * @return Jabearen abizena
+     */
     public String getJabeAbizena() {
         return hartzailea.getAbizena();
     }
 
+    /**
+     * Jabearen telefono zenbakia itzultzen du.
+     *
+     * @return Telefonoa, edo "—" null bada
+     */
     public String getJabeTelefonoa() {
         if (hartzailea.getTelefonoa() == null) {
             return "—";
@@ -110,6 +107,11 @@ public class Erreklamazioa implements Serializable {
         }
     }
 
+    /**
+     * Jabearen helbide elektronikoa itzultzen du.
+     *
+     * @return Emaila, edo "—" null bada
+     */
     public String getJabeEmaila() {
         if (hartzailea.getEmaila() == null) {
             return "—";
@@ -118,10 +120,20 @@ public class Erreklamazioa implements Serializable {
         }
     }
 
+    /**
+     * Jabearen NAN zenbakia itzultzen du.
+     *
+     * @return NAN testua
+     */
     public String getJabeNan() {
         return hartzailea.getNan();
     }
 
+    /**
+     * Lotutako kategoriaren izena itzultzen du.
+     *
+     * @return Kategoriaren izena, edo "—" null bada
+     */
     public String getKategoriaIzena() {
         if (kategoria != null) {
             return kategoria.getIzena();
@@ -130,6 +142,11 @@ public class Erreklamazioa implements Serializable {
         }
     }
 
+    /**
+     * Erreklamazioaren egoeraren testu laburra itzultzen du.
+     *
+     * @return Egoeraren testu txikia, edo "irekita" null bada
+     */
     public String getEgoeraTestua() {
         if (egoera != null) {
             return egoera.toString().toLowerCase();
@@ -139,66 +156,146 @@ public class Erreklamazioa implements Serializable {
     }
 
     // Getters
+    /**
+     * Erreklamazioaren datu-baseko IDa itzultzen du.
+     *
+     * @return Erreklamazioaren IDa
+     */
     public int getErreklamazioId() {
         return erreklamazioId;
     }
 
+    /**
+     * Erreklamazioaren IDa ezartzen du.
+     *
+     * @param erreklamazioId Ezarri beharreko IDa
+     */
     public void setErreklamazioId(int erreklamazioId) {
         this.erreklamazioId = erreklamazioId;
     }
 
+    /**
+     * Erreklamazioa sortu zen data itzultzen du.
+     *
+     * @return Erreklamazioaren data
+     */
     public Date getErreklamazioData() {
         return erreklamazioData;
     }
 
+    /**
+     * Erreklamazioaren data ezartzen du.
+     *
+     * @param erreklamazioData Ezarri beharreko data
+     */
     public void setErreklamazioData(Date erreklamazioData) {
         this.erreklamazioData = erreklamazioData;
     }
 
+    /**
+     * Galdutako objektuaren deskribapena itzultzen du.
+     *
+     * @return Deskribapen bilatua
+     */
     public String getDeskribapenBilatua() {
         return deskribapenBilatua;
     }
 
+    /**
+     * Galdutako objektuaren deskribapena ezartzen du.
+     *
+     * @param deskribapenBilatua Ezarri beharreko deskribapena
+     */
     public void setDeskribapenBilatua(String deskribapenBilatua) {
         this.deskribapenBilatua = deskribapenBilatua;
     }
 
+    /**
+     * Erreklamazioaren uneko egoera itzultzen du.
+     *
+     * @return Egoera enumerazioa
+     */
     public EgoeraErreklamazioa getEgoera() {
         return egoera;
     }
 
+    /**
+     * Erreklamazioaren egoera ezartzen du.
+     *
+     * @param egoera Ezarri beharreko egoera
+     */
     public void setEgoera(EgoeraErreklamazioa egoera) {
         this.egoera = egoera;
     }
 
+    /**
+     * Erreklamazioa egin duen hartzailea itzultzen du.
+     *
+     * @return Hartzailea objektua
+     */
     public Hartzailea getHartzailea() {
         return hartzailea;
     }
 
+    /**
+     * Erreklamazioaren hartzailea ezartzen du.
+     *
+     * @param hartzailea Ezarri beharreko hartzailea
+     */
     public void setHartzailea(Hartzailea hartzailea) {
         this.hartzailea = hartzailea;
     }
 
+    /**
+     * Lotutako kategoria itzultzen du.
+     *
+     * @return Kategoria objektua
+     */
     public Kategoria getKategoria() {
         return kategoria;
     }
 
+    /**
+     * Erreklamazioaren kategoria ezartzen du.
+     *
+     * @param kategoria Ezarri beharreko kategoria
+     */
     public void setKategoria(Kategoria kategoria) {
         this.kategoria = kategoria;
     }
 
+    /**
+     * Erreklamazioa erregistratu duen langilea itzultzen du.
+     *
+     * @return Langilea objektua
+     */
     public Langilea getLangilea() {
         return langilea;
     }
 
+    /**
+     * Erreklamazioaren langilea ezartzen du.
+     *
+     * @param langilea Ezarri beharreko langilea
+     */
     public void setLangilea(Langilea langilea) {
         this.langilea = langilea;
     }
 
+    /**
+     * Erreklamazioaren IDa kate gisa itzultzen du.
+     *
+     * @return Erreklamazioaren ID testua
+     */
     public String getIdString() {
         return String.valueOf(this.erreklamazioId);
     }
 
+    /**
+     * Erreklamazioaren data formatu irakurgarrian itzultzen du (dd/MM/yyyy).
+     *
+     * @return Erreklamazioaren data formateaturiko katea, edo "—" null bada
+     */
     public String getDataFormatua() {
         if (this.erreklamazioData == null) {
             return "—";
@@ -207,6 +304,11 @@ public class Erreklamazioa implements Serializable {
         return sdf.format(this.erreklamazioData);
     }
 
+    /**
+     * Galdutako objektuaren deskribapena itzultzen du, null bada "—".
+     *
+     * @return Deskribapena katea, edo "—" null bada
+     */
     public String getDeskribapena() {
         if (this.deskribapenBilatua != null) {
             return this.deskribapenBilatua;

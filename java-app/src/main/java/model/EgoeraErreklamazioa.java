@@ -8,7 +8,10 @@ package model;
  * @author Yeray Garrido
  */
 public enum EgoeraErreklamazioa {
+    /** Erreklamazioa oraindik ebatzi gabe dago. */
     IREKITA,
+    /** Erreklamazioa ebatzi da eta artikulua eman zaio jabeari. */
     EBATZITA,
+    /** Erreklamazioa baztertu da. */
     BAZTERTUTA
 }

@@ -44,7 +44,7 @@ echo                   User:    bermeo_udaltzain
 echo                   Pass:    udaltzainpw
 echo                   DB:      erronka_galduak
 echo.
-echo   JavaFX app:     http://localhost:6080/vnc.html
+echo   JavaFX app:     http://localhost:6080/vnc.html?autoconnect=1^&resize=scale
 echo                   (nabigatzailean ireki, 10-15s itxaron)
 echo.
 echo   Geldiarazteko:  stop-windows.bat
