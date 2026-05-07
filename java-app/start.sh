@@ -16,5 +16,6 @@ sleep 2
 echo "Iniciando noVNC/websockify..."
 websockify --web=/usr/share/novnc/ 6080 localhost:5900 &
 
+echo "Interfazea: http://localhost:6080/vnc.html?autoconnect=1&resize=scale"
 echo "Iniciando aplicación Java..."
-java --add-opens java.base/java.lang=ALL-UNNAMED -jar app.jar
+exec java --add-opens java.base/java.lang=ALL-UNNAMED -jar app.jar
