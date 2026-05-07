@@ -13,6 +13,8 @@ import java.util.logging.Logger;
 import model.EgoeraErreklamazioa;
 import model.Erreklamazioa;
 import utils.LogKudeatzailea;
+import utils.ModoKudeatzailea;
+import utils.BiltegiLocala;
 
 /**
  * Erreklamazioen datu-baseko eragiketak kudeatzen dituen DAO klasea.
@@ -29,6 +31,7 @@ public class ErreklamazioaDAO {
      * @return Erreklamazioen zerrenda
      */
     public static List<Erreklamazioa> getGuztiak() {
+        if (ModoKudeatzailea.isOffline()) return BiltegiLocala.getInstance().getErreklamazioak();
         List<Erreklamazioa> erreklamazioak = new ArrayList<>();
 
         String sql = "SELECT e.id_erreklamazio, e.erreklamazio_data, e.deskribapen_bilatua, e.errek_egoera, "
@@ -111,6 +114,7 @@ public class ErreklamazioaDAO {
      * @return Eguneraketa ondo joan den ala ez
      */
     public static boolean updateEgoera(String id, String egoera) {
+        if (ModoKudeatzailea.isOffline()) return BiltegiLocala.getInstance().erreklamazioaUpdateEgoera(id, egoera);
         String sql = "UPDATE ERREKLAMAZIOA SET errek_egoera = ? WHERE id_erreklamazio = ?";
         try (Connection con = utils.DBConexioa.getKonexioa(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, egoera);
@@ -129,6 +133,9 @@ public class ErreklamazioaDAO {
      * @return Ondo gorde den
      */
     public static boolean gorde(String nan, String izena, String abizena, String telefonoa, String emaila, int kategoriaId, String deskribapena, int idLangile) {
+        if (ModoKudeatzailea.isOffline()) {
+            return BiltegiLocala.getInstance().erreklamazioaGorde(nan, izena, abizena, telefonoa, emaila, kategoriaId, deskribapena, idLangile);
+        }
         int idHartzailea = -1;
 
         try (Connection con = utils.DBConexioa.getKonexioa()) {

@@ -10,6 +10,8 @@ import java.util.logging.Logger;
 
 import utils.DBConexioa;
 import utils.LogKudeatzailea;
+import utils.ModoKudeatzailea;
+import utils.BiltegiLocala;
 
 /**
  * Emanaldien datu-baseko eragiketak kudeatzen dituen DAO klasea.
@@ -30,6 +32,9 @@ public class EmanaldiaDAO {
             String abizena, String telefonoa, String emaila,
             String helbidea, String oharrak, int idLangile,
             String dokumentuBidea) {
+        if (ModoKudeatzailea.isOffline()) {
+            return BiltegiLocala.getInstance().formalizatu(idArtikulua, nan, izena, abizena, telefonoa, emaila, helbidea, oharrak, idLangile, dokumentuBidea);
+        }
         Connection con = null;
         try {
             con = DBConexioa.getKonexioa();
@@ -56,11 +61,7 @@ public class EmanaldiaDAO {
                 ps.executeUpdate();
             }
 
-            String sqlUp = "UPDATE ARTIKULUA SET egoera = 'bueltatua' WHERE id_artikulua = ?";
-            try (PreparedStatement ps = con.prepareStatement(sqlUp)) {
-                ps.setString(1, idArtikulua);
-                ps.executeUpdate();
-            }
+            // ARTIKULUA egoera trg_emanaldia_eguneratu_artikulua triggerrak aldatzen du
 
             String deskMug = "Artikulua " + izena + " " + abizena + "-ri eman zaio.";
             String sqlMug = "INSERT INTO MUGIMENDUA (deskribapena, id_artikulua, id_langile) VALUES (?, ?, ?)";
@@ -98,6 +99,110 @@ public class EmanaldiaDAO {
                 }
             }
         }
+    }
+
+    /**
+     * Emanaldia formalizatzen du erakundearekin (IFZ bidez).
+     *
+     * @return Ondo joan bada true
+     */
+    public static boolean formalizatuErakundea(String idArtikulua, String ift,
+            String izenOfiziala, String telefonoa, String emaila,
+            String helbidea, String oharrak, int idLangile, String dokumentuBidea) {
+        if (ModoKudeatzailea.isOffline()) {
+            return BiltegiLocala.getInstance().formalizatuErakundea(idArtikulua, ift, izenOfiziala, telefonoa, emaila, helbidea, oharrak, idLangile, dokumentuBidea);
+        }
+        Connection con = null;
+        try {
+            con = DBConexioa.getKonexioa();
+            con.setAutoCommit(false);
+
+            int idHartzailea = lortuEdoSortuErakundea(con, ift, izenOfiziala, telefonoa, emaila, helbidea);
+            if (idHartzailea <= 0) {
+                con.rollback();
+                return false;
+            }
+
+            String sqlEm = "INSERT INTO EMANALDIA (emate_data, oharrak, dokumentu_bidea, id_artikulua, id_hartzailea, id_langile) "
+                    + "VALUES (CURDATE(), ?, ?, ?, ?, ?)";
+            try (PreparedStatement ps = con.prepareStatement(sqlEm)) {
+                ps.setString(1, oharrak.isEmpty() ? null : oharrak);
+                ps.setString(2, dokumentuBidea);
+                ps.setString(3, idArtikulua);
+                ps.setInt(4, idHartzailea);
+                if (idLangile > 0) {
+                    ps.setInt(5, idLangile);
+                } else {
+                    ps.setNull(5, java.sql.Types.INTEGER);
+                }
+                ps.executeUpdate();
+            }
+
+            String deskMug = "Artikulua " + izenOfiziala + " erakundeari eman zaio.";
+            String sqlMug = "INSERT INTO MUGIMENDUA (deskribapena, id_artikulua, id_langile) VALUES (?, ?, ?)";
+            try (PreparedStatement ps = con.prepareStatement(sqlMug)) {
+                ps.setString(1, deskMug);
+                ps.setString(2, idArtikulua);
+                if (idLangile > 0) {
+                    ps.setInt(3, idLangile);
+                } else {
+                    ps.setNull(3, java.sql.Types.INTEGER);
+                }
+                ps.executeUpdate();
+            }
+
+            con.commit();
+            return true;
+        } catch (SQLException e) {
+            LOG.log(Level.SEVERE, "formalizatuErakundea: datu-baseko errorea", e);
+            if (con != null) {
+                try { con.rollback(); } catch (SQLException ex) { LOG.log(Level.SEVERE, "rollback errorea", ex); }
+            }
+            return false;
+        } finally {
+            if (con != null) {
+                try { con.setAutoCommit(true); con.close(); } catch (SQLException ex) { LOG.log(Level.WARNING, "itxiera errorea", ex); }
+            }
+        }
+    }
+
+    /**
+     * IFZ bidez erakundea bilatzen du edo sortu egiten du.
+     *
+     * @return id_hartzailea, edo -1 errorea bada
+     */
+    private static int lortuEdoSortuErakundea(Connection con, String ift, String izenOfiziala,
+            String telefonoa, String emaila, String helbidea) throws SQLException {
+        String sqlBilatu = "SELECT id_hartzailea FROM ERAKUNDEA WHERE ift = ?";
+        try (PreparedStatement ps = con.prepareStatement(sqlBilatu)) {
+            ps.setString(1, ift);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("id_hartzailea");
+            }
+        }
+
+        String sqlH = "INSERT INTO HARTZAILEA (telefonoa, emaila, helbidea) VALUES (?, ?, ?)";
+        int idH;
+        try (PreparedStatement ps = con.prepareStatement(sqlH, Statement.RETURN_GENERATED_KEYS)) {
+            ps.setString(1, telefonoa.isEmpty() ? null : telefonoa);
+            ps.setString(2, emaila.isEmpty() ? null : emaila);
+            ps.setString(3, helbidea.isEmpty() ? null : helbidea);
+            ps.executeUpdate();
+            ResultSet gen = ps.getGeneratedKeys();
+            if (!gen.next()) return -1;
+            idH = gen.getInt(1);
+        }
+
+        String sqlE = "INSERT INTO ERAKUNDEA (id_hartzailea, ift, izen_ofiziala) VALUES (?, ?, ?)";
+        try (PreparedStatement ps = con.prepareStatement(sqlE)) {
+            ps.setInt(1, idH);
+            ps.setString(2, ift);
+            ps.setString(3, izenOfiziala);
+            ps.executeUpdate();
+        }
+
+        return idH;
     }
 
     /**

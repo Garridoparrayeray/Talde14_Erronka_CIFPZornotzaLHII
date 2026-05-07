@@ -10,6 +10,8 @@ import java.util.List;
  */
 public class Administratzailea extends Langilea {
 
+    private static final long serialVersionUID = 1L;
+
     /**
      * Administratzailearen eraikitzailea.
      *

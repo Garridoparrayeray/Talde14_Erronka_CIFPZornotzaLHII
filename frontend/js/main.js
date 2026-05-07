@@ -161,31 +161,36 @@ document.addEventListener('DOMContentLoaded', () => {
       "bestelakoak": { bg: "#E6F4F1", color: "#0D9488", svg: '<line x1="12" y1="2" x2="12" y2="6"/><path d="M6.3 6.3l-2.8-2.8M17.7 6.3l2.8-2.8M6 12H2M22 12h-4M6.3 17.7l-2.8 2.8M17.7 17.7l2.8 2.8M12 18v4"/><circle cx="12" cy="12" r="4"/>' }
     };
 
-    fetch('datuak/kategoriak.xml')
+    fetch('../partekatutako_datuak/artikuluak.xml')
       .then(response => response.text())
       .then(str => new window.DOMParser().parseFromString(str, "text/xml"))
       .then(xmlDoc => {
-        const kategoriak = xmlDoc.querySelectorAll("kategoria");
+        const artikuluak = xmlDoc.querySelectorAll("artikulua");
         categoryGrid.innerHTML = ''; 
 
-        kategoriak.forEach(kat => {
-          const id = kat.getAttribute("id");
-          const izena = kat.querySelector("izena").textContent;
-          const kopurua = kat.querySelector("kopurua").textContent;
+        // Agrupar y contar categorías dinámicamente
+        const counts = {};
+        artikuluak.forEach(art => {
+          const katName = art.querySelector("kategoria") ? art.querySelector("kategoria").textContent : 'Bestelakoak';
+          counts[katName] = (counts[katName] || 0) + 1;
+        });
+
+        Object.entries(counts).forEach(([izena, kopurua]) => {
+          // Usamos el nombre en minúsculas para buscar el estilo (ej: "Jantziak" -> "jantziak")
+          const styleKey = izena.toLowerCase();
           
-          const estilo = katEstiloak[id] || { bg: "#F2F5FD", color: "#6B6F80", svg: '<circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/>' };
+          const estilo = katEstiloak[styleKey] || { bg: "#F2F5FD", color: "#6B6F80", svg: '<circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/>' };
 
           const card = document.createElement('a');
           card.href = 'html/objektu-zerrenda.html';
           card.className = 'cat-card';
           
-          // Lógica bilingüe para la palabra "objetos" al cargar el XML
           const currentLang = localStorage.getItem('appLang') || 'EU';
           const textObj = currentLang === 'ES' ? 'objetos' : 'objektu';
 
           card.innerHTML = `
             <div class="cat-icon" style="background:${estilo.bg};">
-              <svg viewBox="0 0 24 24" style="stroke:${estilo.color};"><g>${estilo.svg}</g></svg>
+              <svg viewBox="0 0 24 24" style="stroke:${estilo.color}; fill:none; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round;"><g>${estilo.svg}</g></svg>
             </div>
             <div class="cat-name">${izena}</div>
             <div class="cat-count">${kopurua} ${textObj}</div>
@@ -197,6 +202,158 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error("Errorea:", error);
         categoryGrid.innerHTML = '<p style="color: red;">Errorea datuak kargatzean.</p>';
       });
+  }
+
+  // 7. Carrusel de objetos perdidos en la tarjeta de inicio (Hero)
+  const mockupCard = document.querySelector('.mockup-card');
+  if (mockupCard) {
+    mockupCard.addEventListener('click', () => {
+      window.location.href = 'html/objektu-zerrenda.html';
+    });
+
+    fetch('../partekatutako_datuak/artikuluak.xml')
+      .then(response => response.text())
+      .then(str => new window.DOMParser().parseFromString(str, "text/xml"))
+      .then(xmlDoc => {
+        const artikuluak = Array.from(xmlDoc.querySelectorAll("artikulua"));
+        if (artikuluak.length > 0) {
+          let currentIndex = 0;
+          
+          function updateMockup() {
+            const art = artikuluak[currentIndex];
+            const izena = art.querySelector("izena") ? art.querySelector("izena").textContent : 'Izen gabea';
+            const kategoria = art.querySelector("kategoria") ? art.querySelector("kategoria").textContent : '';
+            const deskribapena = art.querySelector("deskribapena") ? art.querySelector("deskribapena").textContent : '-';
+            const data = art.querySelector("sarreraData") ? art.querySelector("sarreraData").textContent : '-';
+
+            // Respetar el idioma actual para las etiquetas
+            const currentLang = localStorage.getItem('appLang') || 'EU';
+            const labelDesc = currentLang === 'ES' ? 'Descripción' : 'Deskribapena';
+            const labelDate = currentLang === 'ES' ? 'Fecha' : 'Data';
+
+            // Animación de salida
+            mockupCard.style.opacity = 0;
+            mockupCard.style.transform = 'translateY(10px)';
+            mockupCard.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+
+            setTimeout(() => {
+              // Reconstruir el interior de la tarjeta con los datos del XML
+              mockupCard.innerHTML = `
+                <div class="mc-header">
+                  <div class="mc-icon">
+                    <svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+                  </div>
+                  <div>
+                    <div class="mc-title">${izena}</div>
+                    <div class="mc-sub" style="text-transform: capitalize;">${kategoria}</div>
+                  </div>
+                </div>
+                <div class="mc-field">
+                  <div class="mc-label">${labelDesc}</div>
+                  <div class="mc-value" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis;" title="${deskribapena}">${deskribapena}</div>
+                </div>
+                <div class="mc-divider"></div>
+                <div class="mc-row">
+                  <div class="mc-field">
+                    <div class="mc-label">${labelDate}</div>
+                    <div class="mc-value"><span class="mc-tag">${data}</span></div>
+                  </div>
+                </div>
+              `;
+              
+              // Animación de entrada
+              mockupCard.style.opacity = 1;
+              mockupCard.style.transform = 'translateY(0)';
+              
+              currentIndex = (currentIndex + 1) % artikuluak.length;
+            }, 400); 
+          }
+
+          // Dejamos la tarjeta fija original durante 4 segundos antes de empezar a rotar los objetos
+          setTimeout(() => {
+            updateMockup(); 
+            setInterval(updateMockup, 5000); 
+          }, 4000);
+        }
+      })
+      .catch(error => console.error("Errorea artikuluak kargatzean (carrusel):", error));
+  }
+
+  // 8. Formularioaren kudeaketa (XML Sortzea)
+
+  const claimForm = document.querySelector('form');
+  if (claimForm) {
+    claimForm.addEventListener('submit', (e) => {
+      e.preventDefault(); // Evitamos que abra el cliente de correo
+      
+      // --- XML Sortzea eta Deskargatzea (RA 2 betetzeko) ---
+      let xmlContent = '<?xml version="1.0" encoding="UTF-8"?>\n';
+      xmlContent += '<erreklamazioa>\n';
+      
+      const formData = new FormData(claimForm);
+      const data = Object.fromEntries(formData.entries());
+
+      // --- NAN Baliozkotzea (RA 3 - Murriztapenak) ---
+      // Erregela: 8 zenbaki eta letra bat (adibidez: 12345678A)
+      const nanRegex = /^[0-9]{8}[a-zA-Z]$/;
+      const nanBalioa = data.nan || ""; // Ziurtatu HTMLan name="nan" duela
+
+      if (nanBalioa && !nanRegex.test(nanBalioa)) {
+        const errorMsg = localStorage.getItem('appLang') === 'ES' 
+          ? "Formato de NAN incorrecto (8 números y una letra)." 
+          : "NAN formatu okerra (8 zenbaki eta letra bat).";
+        alert(errorMsg);
+        return; // Gelditu prozesua formatua okerra bada
+      }
+
+      let hasData = false;
+      
+      // 1. Intentamos recoger los datos por el atributo 'name'
+      formData.forEach((value, key) => {
+          if (typeof value === 'string') {
+              hasData = true;
+              let safeKey = key.replace(/[^a-zA-Z0-9_]/g, '');
+              if (!/^[a-zA-Z_]/.test(safeKey)) safeKey = 'eremua_' + safeKey;
+              let safeValue = value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+              xmlContent += `    <${safeKey}>${safeValue}</${safeKey}>\n`;
+          }
+      });
+      
+      // 2. Si el formulario no tiene 'names', usamos los 'ids' como respaldo
+      if (!hasData) {
+          const inputs = claimForm.querySelectorAll('input:not([type="submit"]):not([type="file"]):not([type="checkbox"]), textarea, select');
+          inputs.forEach((input, index) => {
+              let rawKey = input.name || input.id || `eremua_${index + 1}`;
+              let safeKey = rawKey.replace(/[^a-zA-Z0-9_]/g, '');
+              if (!/^[a-zA-Z_]/.test(safeKey)) safeKey = 'eremua_' + safeKey;
+              
+              let safeValue = (input.value || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+              xmlContent += `    <${safeKey}>${safeValue}</${safeKey}>\n`;
+          });
+      }
+      
+      // Añadimos la fecha de generación automáticamente
+      const gaur = new Date().toISOString().split('T')[0];
+      xmlContent += `    <eskaeraData>${gaur}</eskaeraData>\n`;
+      xmlContent += '</erreklamazioa>';
+
+      // Forzar la descarga del archivo XML
+      const blob = new Blob([xmlContent], { type: 'application/xml' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+
+      // Lortu izena eta abizena fitxategi-izenerako (RA 2)
+      const izenGarbia = (data.name || data.izena || 'erabiltzailea').toString().trim().replace(/\s+/g, '_');
+      const abizenGarbia = (data.surname || data.abizena || '').toString().trim().replace(/\s+/g, '_');
+      const fitxategiIzena = abizenGarbia ? `erreklamazioa_${abizenGarbia}_${izenGarbia}.xml` : `erreklamazioa_${izenGarbia}.xml`;
+
+      a.download = fitxategiIzena;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    });
   }
 });
 // ==========================================================================

@@ -9,8 +9,8 @@ USE erronka_galduak;
 -- 1. ROLAK SORTU
 -- ---------------------------------------------------------------------
 CREATE ROLE IF NOT EXISTS 'admin_rola';
-CREATE ROLE IF NOT EXISTS 'udaltzain_rola';
-CREATE ROLE IF NOT EXISTS 'bezero_rola';
+CREATE ROLE IF NOT EXISTS 'langile_rola';
+CREATE ROLE IF NOT EXISTS 'ikusle_rola';
 
 -- ---------------------------------------------------------------------
 -- 2. BAIMENAK ESLEITU
@@ -19,57 +19,44 @@ CREATE ROLE IF NOT EXISTS 'bezero_rola';
 -- Admin: dena
 GRANT ALL PRIVILEGES ON erronka_galduak.* TO 'admin_rola';
 
--- Udaltzaina: dena LANGILEA eta ROLA izan ezik (irakurketa soilik)
-GRANT SELECT, INSERT, UPDATE, DELETE ON erronka_galduak.ARTIKULUA    TO 'udaltzain_rola';
-GRANT SELECT, INSERT, UPDATE, DELETE ON erronka_galduak.KATEGORIA    TO 'udaltzain_rola';
-GRANT SELECT, INSERT, UPDATE, DELETE ON erronka_galduak.KOKALEKUA    TO 'udaltzain_rola';
-GRANT SELECT, INSERT, UPDATE, DELETE ON erronka_galduak.HARTZAILEA   TO 'udaltzain_rola';
-GRANT SELECT, INSERT, UPDATE, DELETE ON erronka_galduak.JABEA        TO 'udaltzain_rola';
-GRANT SELECT, INSERT, UPDATE, DELETE ON erronka_galduak.ERAKUNDEA    TO 'udaltzain_rola';
-GRANT SELECT, INSERT, UPDATE, DELETE ON erronka_galduak.ERREKLAMAZIOA TO 'udaltzain_rola';
-GRANT SELECT, INSERT, UPDATE, DELETE ON erronka_galduak.EMANALDIA    TO 'udaltzain_rola';
-GRANT SELECT, INSERT, UPDATE, DELETE ON erronka_galduak.MUGIMENDUA   TO 'udaltzain_rola';
-GRANT SELECT, INSERT, UPDATE, DELETE ON erronka_galduak.JAKINARAZPENA TO 'udaltzain_rola';
-GRANT SELECT ON erronka_galduak.LANGILEA TO 'udaltzain_rola';
-GRANT SELECT ON erronka_galduak.ROLA     TO 'udaltzain_rola';
+-- Langilea: operazional osoa, LANGILEA eta ROLA irakurketa soilik
+GRANT SELECT, INSERT, UPDATE, DELETE ON erronka_galduak.ARTIKULUA     TO 'langile_rola';
+GRANT SELECT, INSERT, UPDATE, DELETE ON erronka_galduak.KATEGORIA     TO 'langile_rola';
+GRANT SELECT, INSERT, UPDATE, DELETE ON erronka_galduak.KOKALEKUA     TO 'langile_rola';
+GRANT SELECT, INSERT, UPDATE, DELETE ON erronka_galduak.HARTZAILEA    TO 'langile_rola';
+GRANT SELECT, INSERT, UPDATE, DELETE ON erronka_galduak.JABEA         TO 'langile_rola';
+GRANT SELECT, INSERT, UPDATE, DELETE ON erronka_galduak.ERAKUNDEA     TO 'langile_rola';
+GRANT SELECT, INSERT, UPDATE, DELETE ON erronka_galduak.ERREKLAMAZIOA TO 'langile_rola';
+GRANT SELECT, INSERT, UPDATE, DELETE ON erronka_galduak.EMANALDIA     TO 'langile_rola';
+GRANT SELECT, INSERT, UPDATE, DELETE ON erronka_galduak.MUGIMENDUA    TO 'langile_rola';
+GRANT SELECT, INSERT, UPDATE, DELETE ON erronka_galduak.JAKINARAZPENA TO 'langile_rola';
+GRANT SELECT, INSERT, UPDATE, DELETE ON erronka_galduak.AURKITZAILEA  TO 'langile_rola';
+GRANT SELECT ON erronka_galduak.LANGILEA TO 'langile_rola';
+GRANT SELECT ON erronka_galduak.ROLA     TO 'langile_rola';
 
--- Bezeroa: web atari publikoa 
-GRANT SELECT ON erronka_galduak.ARTIKULUA  TO 'bezero_rola';
-GRANT SELECT ON erronka_galduak.KATEGORIA  TO 'bezero_rola';
-GRANT SELECT ON erronka_galduak.KOKALEKUA  TO 'bezero_rola';
--- Erreklamazioa BIDALI ahal izateko herritarrek
-GRANT INSERT ON erronka_galduak.HARTZAILEA     TO 'bezero_rola';
-GRANT INSERT ON erronka_galduak.JABEA          TO 'bezero_rola';
-GRANT INSERT ON erronka_galduak.ERREKLAMAZIOA  TO 'bezero_rola';
+-- Ikuslea: artikuluak erregistratu soilik
+GRANT SELECT ON erronka_galduak.KATEGORIA  TO 'ikusle_rola';
+GRANT SELECT ON erronka_galduak.KOKALEKUA  TO 'ikusle_rola';
+GRANT SELECT ON erronka_galduak.ROLA       TO 'ikusle_rola';
+GRANT SELECT, INSERT ON erronka_galduak.ARTIKULUA    TO 'ikusle_rola';
+GRANT SELECT, INSERT ON erronka_galduak.MUGIMENDUA   TO 'ikusle_rola';
+GRANT SELECT, INSERT ON erronka_galduak.AURKITZAILEA TO 'ikusle_rola';
 
 -- ---------------------------------------------------------------------
 -- 3. ERABILTZAILEAK SORTU ETA ROLEKIN LOTU
 -- ---------------------------------------------------------------------
--- Admin
 CREATE USER IF NOT EXISTS 'admin'@'%' IDENTIFIED BY 'admin123';
 GRANT 'admin_rola' TO 'admin'@'%';
 SET DEFAULT ROLE 'admin_rola' FOR 'admin'@'%';
 
--- Udaltzaingoa 
-CREATE USER IF NOT EXISTS 'udaltzain1'@'%' IDENTIFIED BY 'udal123';
-GRANT 'udaltzain_rola' TO 'udaltzain1'@'%';
-SET DEFAULT ROLE 'udaltzain_rola' FOR 'udaltzain1'@'%';
+CREATE USER IF NOT EXISTS 'langile1'@'%' IDENTIFIED BY 'langile123';
+GRANT 'langile_rola' TO 'langile1'@'%';
+SET DEFAULT ROLE 'langile_rola' FOR 'langile1'@'%';
 
-CREATE USER IF NOT EXISTS 'udaltzain2'@'%' IDENTIFIED BY 'udal123';
-GRANT 'udaltzain_rola' TO 'udaltzain2'@'%';
-SET DEFAULT ROLE 'udaltzain_rola' FOR 'udaltzain2'@'%';
-
--- Web bezeroa 
-CREATE USER IF NOT EXISTS 'bezero_web'@'%' IDENTIFIED BY 'bezeropw';
-GRANT 'bezero_rola' TO 'bezero_web'@'%';
-SET DEFAULT ROLE 'bezero_rola' FOR 'bezero_web'@'%';
+CREATE USER IF NOT EXISTS 'ikusle1'@'%' IDENTIFIED BY 'ikusle123';
+GRANT 'ikusle_rola' TO 'ikusle1'@'%';
+SET DEFAULT ROLE 'ikusle_rola' FOR 'ikusle1'@'%';
 
 FLUSH PRIVILEGES;
 
--- ---------------------------------------------------------------------
--- Egiaztapena
--- ---------------------------------------------------------------------
 SELECT '[INIT] Rol eta erabiltzaileak sortuta' AS mezua;
-SELECT User, Host FROM mysql.user
- WHERE User IN ('admin','udaltzain1','udaltzain2','bezero_web')
- ORDER BY User;

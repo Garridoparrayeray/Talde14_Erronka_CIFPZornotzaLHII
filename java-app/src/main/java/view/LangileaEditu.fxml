@@ -4,6 +4,7 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -15,7 +16,7 @@
       xmlns="http://javafx.com/javafx/21"
       xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="controller.LangileaEdituController"
-      style="-fx-background-color: white; -fx-pref-width: 450; -fx-pref-height: 400;">
+      style="-fx-background-color: white; -fx-pref-width: 450; -fx-pref-height: 480;">
 
    <children>
       <VBox style="-fx-border-color: transparent transparent #E5E7EB transparent; -fx-padding: 20 25 15 25;">
@@ -55,6 +56,10 @@
             <VBox spacing="4.0">
                <Label text="Rola *" styleClass="text-muted"><font><Font size="11.0" /></font></Label>
                <ComboBox fx:id="cbRola" maxWidth="1.7976931348623157E308" styleClass="form-select" />
+            </VBox>
+            <VBox spacing="4.0">
+               <Label text="Pasahitz berria (hutsik utzi ez aldatzeko)" styleClass="text-muted"><font><Font size="11.0" /></font></Label>
+               <PasswordField fx:id="txtPasahitza" styleClass="form-control" maxWidth="1.7976931348623157E308" promptText="••••••••" />
             </VBox>
             <Label fx:id="lblErrorea" styleClass="text-danger" wrapText="true" managed="false" visible="false"><font><Font size="11.0" /></font></Label>
          </children>

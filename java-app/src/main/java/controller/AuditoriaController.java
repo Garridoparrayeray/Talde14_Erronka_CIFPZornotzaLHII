@@ -13,6 +13,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import model.MugimenduLerroa;
 import utils.LogKudeatzailea;
+import utils.UIKudeatzailea;
 
 /**
  * Auditoria-taulako mugimenduen erregistroa erakusten duen kontroladorea.
@@ -39,6 +40,7 @@ public class AuditoriaController implements Initializable {
         colData.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getData()));
         colLangilea.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getLangilea()));
         colEkintza.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getEkintza()));
+        UIKudeatzailea.ehundatuZelulak(colEkintza);
         colXehetasunak.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getArtikuluId()));
         kargatu();
     }

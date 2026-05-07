@@ -1,5 +1,6 @@
 package model;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -9,7 +10,9 @@ import java.util.Date;
  *
  * @author Yeray Garrido
  */
-public class Artikulua {
+public class Artikulua implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private int artikuluId;
     private String artikuluKodea;
@@ -81,6 +84,11 @@ public class Artikulua {
 
     private static final SimpleDateFormat SDF = new SimpleDateFormat("dd/MM/yyyy");
 
+    /**
+     * Sarrera-data formatu irakurgarrian itzultzen du (dd/MM/yyyy).
+     *
+     * @return Sarrera-data formateaturiko katea, edo "—" null bada
+     */
     public String getSarreraDataFormatua() {
         if (sarreraData == null) {
             return "—";
@@ -88,6 +96,11 @@ public class Artikulua {
         return SDF.format(sarreraData);
     }
 
+    /**
+     * Artikuluaren egoeraren testu erabiltzaileentzako itzultzen du.
+     *
+     * @return Egoeraren euskarazko testua
+     */
     public String getEgoeraTestua() {
         if (egoera == null) {
             return "—";
@@ -108,6 +121,11 @@ public class Artikulua {
         }
     }
 
+    /**
+     * Artikuluaren kategoriaren izena itzultzen du.
+     *
+     * @return Kategoriaren izena, edo "—" kategoria null bada
+     */
     public String getKategoriaIzena() {
         if (kategoria == null) {
             return "—";
@@ -115,6 +133,11 @@ public class Artikulua {
         return kategoria.getIzena();
     }
 
+    /**
+     * Artikuluaren kokalekuaren deskripzio osoa itzultzen du.
+     *
+     * @return Kokalekuaren testu osoa, edo "—" kokalekua null bada
+     */
     public String getKokalekuaIzena() {
         if (kokalekua == null) {
             return "—";
@@ -122,6 +145,11 @@ public class Artikulua {
         return kokalekua.getKokalekuOsoa();
     }
 
+    /**
+     * Deskribapena itzultzen du, null bada "—" itzultzen du.
+     *
+     * @return Deskribapena katea, edo "—" null bada
+     */
     public String getDeskribapenaSegurua() {
         if (deskribapena != null) {
             return deskribapena;
@@ -139,58 +167,155 @@ public class Artikulua {
     }
 
     // Getters & Setters
+    /**
+     * Artikuluaren datu-baseko ID zenbakia itzultzen du.
+     *
+     * @return Artikuluaren IDa
+     */
     public int getArtikuluId() {
         return artikuluId;
     }
 
+    /**
+     * Artikuluaren kode bakarra itzultzen du.
+     *
+     * @return Artikuluaren kode testua (adib. G-001-26)
+     */
     public String getArtikuluKodea() {
         return artikuluKodea;
     }
 
+    /**
+     * Artikuluaren izen laburra itzultzen du.
+     *
+     * @return Izenburua
+     */
     public String getIzenburua() {
         return izenburua;
     }
 
+    /**
+     * Artikuluaren izen laburra ezartzen du.
+     *
+     * @param izenburua Ezarri beharreko izenburua
+     */
+    public void setIzenburua(String izenburua) {
+        this.izenburua = izenburua;
+    }
+
+    /**
+     * Artikuluaren deskripzio osoa itzultzen du.
+     *
+     * @return Deskribapena
+     */
     public String getDeskribapena() {
         return deskribapena;
     }
 
+    /**
+     * Artikuluaren deskribapena ezartzen du.
+     *
+     * @param deskribapena Ezarri beharreko deskribapena
+     */
+    public void setDeskribapena(String deskribapena) {
+        this.deskribapena = deskribapena;
+    }
+
+    /**
+     * Artikuluaren markaren izena itzultzen du.
+     *
+     * @return Marka
+     */
     public String getMarka() {
         return marka;
     }
 
+    /**
+     * Artikuluaren kolorea itzultzen du.
+     *
+     * @return Kolorea
+     */
     public String getKolorea() {
         return kolorea;
     }
 
+    /**
+     * Biltegira sartu zen data itzultzen du.
+     *
+     * @return Sarrera-data
+     */
     public Date getSarreraData() {
         return sarreraData;
     }
 
+    /**
+     * Artikuluaren gordailutze-epearen azken data itzultzen du.
+     *
+     * @return Iraungitze-data
+     */
     public Date getIraungitzeData() {
         return iraungitzeData;
     }
 
+    /**
+     * Argazkiaren fitxategi-bidea itzultzen du.
+     *
+     * @return Argazkiaren bidea
+     */
     public String getArgazkiBidea() {
         return argazkiBidea;
     }
 
+    /**
+     * Argazkiaren fitxategi-bidea ezartzen du.
+     *
+     * @param argazkiBidea Ezarri beharreko argazki-bidea
+     */
+    public void setArgazkiBidea(String argazkiBidea) {
+        this.argazkiBidea = argazkiBidea;
+    }
+
+    /**
+     * Artikuluaren uneko egoera itzultzen du.
+     *
+     * @return Egoera enumerazioa
+     */
     public EgoeraArtikulua getEgoera() {
         return egoera;
     }
 
+    /**
+     * Artikuluari lotutako kategoria itzultzen du.
+     *
+     * @return Kategoria objektua
+     */
     public Kategoria getKategoria() {
         return kategoria;
     }
 
+    /**
+     * Artikuluaren kategoria ezartzen du.
+     *
+     * @param kategoria Ezarri beharreko kategoria
+     */
     public void setKategoria(Kategoria kategoria) {
         this.kategoria = kategoria;
     }
 
+    /**
+     * Artikuluari lotutako kokalekua itzultzen du.
+     *
+     * @return Kokalekua objektua
+     */
     public Kokalekua getKokalekua() {
         return kokalekua;
     }
 
+    /**
+     * Artikuluaren kokalekua ezartzen du.
+     *
+     * @param kokalekua Ezarri beharreko kokalekua
+     */
     public void setKokalekua(Kokalekua kokalekua) {
         this.kokalekua = kokalekua;
     }

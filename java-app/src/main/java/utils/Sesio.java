@@ -26,10 +26,20 @@ public class Sesio {
         adminDa = admin;
     }
 
+    /**
+     * Uneko saioko langile aktiboa itzultzen du.
+     *
+     * @return Langile aktiboa, edo null saioa ez bada hasi
+     */
     public static Langilea getLangilea() {
         return langileAktiboa;
     }
 
+    /**
+     * Uneko langilea administratzailea den egiaztatzen du.
+     *
+     * @return Administratzailea bada true
+     */
     public static boolean isAdmin() {
         return adminDa;
     }

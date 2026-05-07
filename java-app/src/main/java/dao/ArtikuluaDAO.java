@@ -15,6 +15,8 @@ import model.Kategoria;
 import model.Kokalekua;
 import utils.DBConexioa;
 import utils.LogKudeatzailea;
+import utils.ModoKudeatzailea;
+import utils.BiltegiLocala;
 
 /**
  * Artikuluen datu-baseko eragiketak kudeatzen dituen DAO klasea.
@@ -29,19 +31,23 @@ public class ArtikuluaDAO {
      * Artikulu berria gordetzen du datu-basean, kode automatikoa sortuz eta
      * mugimendua erregistratuz.
      *
-     * @param izena Artikuluaren izenburua
+     * @param izena        Artikuluaren izenburua
      * @param deskribapena Artikuluaren deskripzio osoa
-     * @param iragankorra Iragankorra bada true
-     * @param idKategoria Kategoriaaren identifikagailua (0 bada ez da lotzen)
-     * @param idKokalekua Kokalekuaren identifikagailua (0 bada ez da lotzen)
-     * @param sarreraData Biltegira sartu zen data
-     * @return Ondo gorde bada true
+     * @param iragankorra  Iragankorra bada true
+     * @param idKategoria  Kategoriaaren identifikagailua (0 bada ez da lotzen)
+     * @param idKokalekua  Kokalekuaren identifikagailua (0 bada ez da lotzen)
+     * @param sarreraData  Biltegira sartu zen data
+     * @param argazkiBidea Argazkiaren bide erlatiboa (null bada hutsik)
+     * @return Sortutako artikulu-kodea, edo null errorea bada
      */
-    public static boolean gehitu(String izena, String deskribapena, boolean iragankorra,
-            int idKategoria, int idKokalekua, java.sql.Date sarreraData) {
+    public static String gehitu(String izena, String deskribapena, boolean iragankorra,
+            int idKategoria, int idKokalekua, java.sql.Date sarreraData, String argazkiBidea) {
+        if (ModoKudeatzailea.isOffline()) {
+            return BiltegiLocala.getInstance().artikuluaGehitu(izena, deskribapena, iragankorra, idKategoria, idKokalekua, sarreraData, argazkiBidea);
+        }
         String kodea = sortuKodea(sarreraData);
         if (kodea == null) {
-            return false;
+            return null;
         }
 
         java.sql.Date iraungData = null;
@@ -53,7 +59,8 @@ public class ArtikuluaDAO {
         }
 
         String sql = "INSERT INTO ARTIKULUA (id_artikulua, a_izena, a_deskribapena, egoera, iragankorra, "
-                + "sarrera_data, iraungitze_data, id_kategoria, id_kokalekua) VALUES (?, ?, ?, 'aurkitua', ?, ?, ?, ?, ?)";
+                + "sarrera_data, iraungitze_data, argazkia, id_kategoria, id_kokalekua) "
+                + "VALUES (?, ?, ?, 'aurkitua', ?, ?, ?, ?, ?, ?)";
         try (Connection con = DBConexioa.getKonexioa(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, kodea);
             ps.setString(2, izena);
@@ -61,15 +68,20 @@ public class ArtikuluaDAO {
             ps.setBoolean(4, iragankorra);
             ps.setDate(5, sarreraData);
             ps.setDate(6, iraungData);
-            if (idKategoria > 0) {
-                ps.setInt(7, idKategoria);
+            if (argazkiBidea != null && !argazkiBidea.isEmpty()) {
+                ps.setString(7, argazkiBidea);
             } else {
-                ps.setNull(7, java.sql.Types.INTEGER);
+                ps.setNull(7, java.sql.Types.VARCHAR);
             }
-            if (idKokalekua > 0) {
-                ps.setInt(8, idKokalekua);
+            if (idKategoria > 0) {
+                ps.setInt(8, idKategoria);
             } else {
                 ps.setNull(8, java.sql.Types.INTEGER);
+            }
+            if (idKokalekua > 0) {
+                ps.setInt(9, idKokalekua);
+            } else {
+                ps.setNull(9, java.sql.Types.INTEGER);
             }
             boolean ok = ps.executeUpdate() > 0;
 
@@ -81,11 +93,12 @@ public class ArtikuluaDAO {
                     psMug.setString(2, kodea);
                     psMug.executeUpdate();
                 }
+                return kodea;
             }
-            return ok;
+            return null;
         } catch (SQLException e) {
             LOG.log(Level.SEVERE, "gehitu: datu-baseko errorea", e);
-            return false;
+            return null;
         }
     }
 
@@ -124,6 +137,9 @@ public class ArtikuluaDAO {
      * @return Artikulua objektua, edo null ez badago
      */
     public static Artikulua getByKodea(String kodea) {
+        if (ModoKudeatzailea.isOffline()) {
+            return BiltegiLocala.getInstance().getArtikuluaByKodea(kodea);
+        }
         String sql = "SELECT a.id_artikulua, a.a_izena, a.a_deskribapena, a.egoera, "
                 + "a.sarrera_data, a.argazkia, "
                 + "k.id_kategoria, k.izena AS kat_izena, "
@@ -178,6 +194,9 @@ public class ArtikuluaDAO {
      * @return Artikuluen zerrenda
      */
     public static List<Artikulua> getGuztiak() {
+        if (ModoKudeatzailea.isOffline()) {
+            return BiltegiLocala.getInstance().getArtikuluak();
+        }
         List<Artikulua> zerrenda = new ArrayList<>();
 
         String sql = "SELECT a.id_artikulua, a.a_izena, a.a_deskribapena, a.egoera, "
@@ -236,5 +255,82 @@ public class ArtikuluaDAO {
             LOG.log(Level.SEVERE, "getGuztiak: datu-baseko errorea", e);
         }
         return zerrenda;
+    }
+
+    /**
+     * Artikuluaren datuak eguneratzen ditu datu-basean.
+     *
+     * @param kodea       Aldatu beharreko artikuluaren kodea
+     * @param izena       Izen berria
+     * @param deskribapena Deskribapen berria
+     * @param idKategoria Kategoria berria (0 bada ez da aldatzen)
+     * @param idKokalekua Kokaleku berria (0 bada null ezartzen da)
+     * @param argazkiBidea Argazki bide berria (null bada ez da aldatzen)
+     * @return Ondo eguneratu bada true
+     */
+    public static boolean eguneratu(String kodea, String izena, String deskribapena,
+            int idKategoria, int idKokalekua, String argazkiBidea) {
+        if (ModoKudeatzailea.isOffline()) {
+            return BiltegiLocala.getInstance().artikuluaEguneratu(kodea, izena, deskribapena, idKategoria, idKokalekua, argazkiBidea);
+        }
+        StringBuilder sql = new StringBuilder(
+                "UPDATE ARTIKULUA SET a_izena=?, a_deskribapena=?");
+        if (idKategoria > 0) {
+            sql.append(", id_kategoria=?");
+        } else {
+            sql.append(", id_kategoria=NULL");
+        }
+        if (idKokalekua > 0) {
+            sql.append(", id_kokalekua=?");
+        } else {
+            sql.append(", id_kokalekua=NULL");
+        }
+        if (argazkiBidea != null && !argazkiBidea.isEmpty()) {
+            sql.append(", argazkia=?");
+        }
+        sql.append(" WHERE id_artikulua=?");
+
+        try (Connection con = DBConexioa.getKonexioa();
+                PreparedStatement ps = con.prepareStatement(sql.toString())) {
+            int idx = 1;
+            ps.setString(idx++, izena);
+            ps.setString(idx++, deskribapena);
+            if (idKategoria > 0) {
+                ps.setInt(idx++, idKategoria);
+            }
+            if (idKokalekua > 0) {
+                ps.setInt(idx++, idKokalekua);
+            }
+            if (argazkiBidea != null && !argazkiBidea.isEmpty()) {
+                ps.setString(idx++, argazkiBidea);
+            }
+            ps.setString(idx, kodea);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            LOG.log(Level.SEVERE, "eguneratu: datu-baseko errorea", e);
+            return false;
+        }
+    }
+
+    /**
+     * Artikulua datu-basetik ezabatzen du.
+     * Mugimendua eta EMANALDIA badago, ezin da ezabatu (FK RESTRICT).
+     *
+     * @param kodea Ezabatu beharreko artikuluaren kodea
+     * @return Ondo ezabatu bada true
+     */
+    public static boolean ezabatu(String kodea) {
+        if (ModoKudeatzailea.isOffline()) {
+            return BiltegiLocala.getInstance().artikuluaEzabatu(kodea);
+        }
+        String sql = "DELETE FROM ARTIKULUA WHERE id_artikulua=?";
+        try (Connection con = DBConexioa.getKonexioa();
+                PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, kodea);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            LOG.log(Level.SEVERE, "ezabatu: datu-baseko errorea", e);
+            return false;
+        }
     }
 }

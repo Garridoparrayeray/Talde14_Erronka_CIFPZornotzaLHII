@@ -49,30 +49,65 @@ public class Jakinarazpena {
     }
 
     // Getters
+    /**
+     * Jakinarazpenaren datu-baseko IDa itzultzen du.
+     *
+     * @return Jakinarazpenaren IDa
+     */
     public int getJakinarazpenaId() {
         return jakinarazpenaId;
     }
 
+    /**
+     * Jakinarazpena bidali zen data itzultzen du.
+     *
+     * @return Bidaltzaile-data
+     */
     public Date getBidaltzaData() {
         return bidaltzaData;
     }
 
+    /**
+     * Jakinarazpena bidaltzeko erabilitako kanala itzultzen du.
+     *
+     * @return Kanala enumerazioa
+     */
     public Kanala getKanala() {
         return kanala;
     }
 
+    /**
+     * Jakinarazpenaren mezua itzultzen du.
+     *
+     * @return Mezu testua
+     */
     public String getMezua() {
         return mezua;
     }
 
+    /**
+     * Jakinarazpena irakurri den egiaztatzen du.
+     *
+     * @return Irakurria bada true
+     */
     public boolean isIrakurrita() {
         return irakurrita;
     }
 
+    /**
+     * Jakinarazpenarekin lotutako erreklamazioa itzultzen du.
+     *
+     * @return Erreklamazioa objektua
+     */
     public Erreklamazioa getErreklamazioa() {
         return erreklamazioa;
     }
 
+    /**
+     * Bat datorren artikulua itzultzen du.
+     *
+     * @return Artikulua objektua
+     */
     public Artikulua getArtikulua() {
         return artikulua;
     }

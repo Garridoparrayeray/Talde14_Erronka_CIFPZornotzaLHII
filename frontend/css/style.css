@@ -476,6 +476,11 @@ body.catalog-page {
   width: 360px;
   border: 1px solid var(--gray-100);
   position: relative;
+  cursor: pointer;
+}
+
+.mockup-card:hover {
+  box-shadow: 0 16px 50px rgba(59,91,219,.22);
 }
 
 .mc-header {
@@ -1047,6 +1052,7 @@ footer {
   text-decoration: none;
   display: flex; align-items: center; gap: 6px;
   transition: color .2s;
+  width: fit-content;
 }
 
 .footer-contact a:hover { color: rgba(255,255,255,.9); }
@@ -1075,6 +1081,7 @@ footer {
   text-decoration: none;
   transition: color .2s;
   display: flex; align-items: center; gap: 5px;
+  width: fit-content;
 }
 
 .footer-links a:hover { color: rgba(255,255,255,.9); }
@@ -1269,4 +1276,25 @@ body.dark-theme .theme-toggle {
 }
 body.dark-theme .theme-toggle:hover {
   background: var(--gray-100);
+}
+
+/* --- RA 1: Modal Styles (Moved from JS to CSS) --- */
+.custom-modal-content {
+  border-radius: var(--radius-md);
+  border: none;
+  box-shadow: var(--shadow-lg);
+  background: var(--white);
+}
+
+.custom-modal-header {
+  background: var(--blue-600);
+  color: white;
+  border-top-left-radius: var(--radius-md);
+  border-top-right-radius: var(--radius-md);
+}
+
+.custom-modal-body {
+  padding: 24px;
+  font-family: var(--font-body);
+  color: var(--gray-700);
 }

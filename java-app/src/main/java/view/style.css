@@ -203,15 +203,27 @@
     -fx-background-color: #FFFFFF;
     -fx-border-color: transparent transparent #F3F4F6 transparent;
     -fx-cell-size: 45px;
-    
+    -fx-cursor: hand;
 }
 .table-view .table-row-cell:hover {
-    -fx-background-color: #F9FAFB;
+    -fx-background-color: #EFF6FF;
+}
+.table-view .table-row-cell:selected,
+.table-view:focused .table-row-cell:selected {
+    -fx-background-color: #3B82F6;
+}
+.table-view .table-row-cell:selected:hover,
+.table-view:focused .table-row-cell:selected:hover {
+    -fx-background-color: #2563EB;
 }
 .table-view .table-cell {
     -fx-border-color: transparent;
     -fx-text-fill: #374151;
     -fx-alignment: center;
+}
+.table-view .table-row-cell:selected .table-cell,
+.table-view:focused .table-row-cell:selected .table-cell {
+    -fx-text-fill: #FFFFFF;
 }
 
 /* =========================================================================
