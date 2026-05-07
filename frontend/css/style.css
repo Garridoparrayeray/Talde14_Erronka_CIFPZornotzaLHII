@@ -1277,3 +1277,24 @@ body.dark-theme .theme-toggle {
 body.dark-theme .theme-toggle:hover {
   background: var(--gray-100);
 }
+
+/* --- RA 1: Modal Styles (Moved from JS to CSS) --- */
+.custom-modal-content {
+  border-radius: var(--radius-md);
+  border: none;
+  box-shadow: var(--shadow-lg);
+  background: var(--white);
+}
+
+.custom-modal-header {
+  background: var(--blue-600);
+  color: white;
+  border-top-left-radius: var(--radius-md);
+  border-top-right-radius: var(--radius-md);
+}
+
+.custom-modal-body {
+  padding: 24px;
+  font-family: var(--font-body);
+  color: var(--gray-700);
+}

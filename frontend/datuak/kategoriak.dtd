@@ -1,5 +1,0 @@
-<!ELEMENT kategoriak (kategoria+)>
-<!ELEMENT kategoria (izena, kopurua)>
-<!ATTLIST kategoria id CDATA #REQUIRED>
-<!ELEMENT izena (#PCDATA)>
-<!ELEMENT kopurua (#PCDATA)>

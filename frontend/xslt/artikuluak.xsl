@@ -35,8 +35,10 @@
                     <tr>
                         <th>ID</th>
                         <th>Izena</th>
-                        <th>Kategoria</th>
                         <th>Deskribapena</th>
+                        <th>Kategoria</th>
+                        <th>Egoera</th>
+                        <th>Kokalekua</th>
                         <th>Data</th>
                     </tr>
                 </thead>
@@ -45,8 +47,10 @@
                         <tr>
                             <td><xsl:value-of select="id"/></td>
                             <td style="font-weight: 600;"><xsl:value-of select="izena"/></td>
-                            <td><span class="kategoria"><xsl:value-of select="kategoria"/></span></td>
                             <td style="font-size: 14px; color: #6B6F80;"><xsl:value-of select="deskribapena"/></td>
+                            <td><span class="kategoria"><xsl:value-of select="kategoria"/></span></td>
+                            <td style="font-size: 12px; font-weight: 600; color: #1A3A8F;"><xsl:value-of select="egoera"/></td>
+                            <td style="font-size: 13px; color: #12131A;"><xsl:value-of select="kokalekua"/></td>
                             <td><xsl:value-of select="sarreraData"/></td>
                         </tr>
                     </xsl:for-each>

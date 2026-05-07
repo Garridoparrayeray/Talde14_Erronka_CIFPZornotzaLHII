@@ -142,19 +142,24 @@ document.addEventListener("DOMContentLoaded", () => {
   let visibleLimit = 6; 
 
   if (categorySelect) {
-    fetch('../datuak/kategoriak.xml')
+    fetch('../../partekatutako_datuak/artikuluak.xml')
       .then(response => {
-        if (!response.ok) throw new Error("XML kategoria fitxategia ez da aurkitu");
+        if (!response.ok) throw new Error("Ezin izan da XML artikuluak fitxategia kargatu");
         return response.text();
       })
       .then(str => new window.DOMParser().parseFromString(str, "text/xml"))
       .then(xmlDoc => {
-        const kategoriak = xmlDoc.querySelectorAll("kategoria");
-        kategoriak.forEach(kat => {
-          const id = kat.getAttribute("id");
-          const izena = kat.querySelector("izena").textContent;
+        const artikuluak = xmlDoc.querySelectorAll("artikulua");
+        const uniqueKats = new Set();
+        
+        artikuluak.forEach(art => {
+          const kat = art.querySelector("kategoria") ? art.querySelector("kategoria").textContent : 'Bestelakoak';
+          uniqueKats.add(kat);
+        });
+
+        uniqueKats.forEach(izena => {
           const option = document.createElement('option');
-          option.value = id ? id.toLowerCase() : izena.toLowerCase(); 
+          option.value = izena.toLowerCase(); 
           option.textContent = izena; 
           categorySelect.appendChild(option);
         });
@@ -163,7 +168,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   if (catalogGrid) {
-    fetch('../datuak/artikuluak.xml')
+    fetch('../../partekatutako_datuak/artikuluak.xml')
       .then(response => {
         if (!response.ok) throw new Error("Ezin izan da XML artikuluak fitxategia kargatu");
         return response.text();
@@ -183,7 +188,7 @@ document.addEventListener("DOMContentLoaded", () => {
           
           let visualContent = '';
           if (argazkia !== '') {
-            visualContent = `<img src="../datuak/img/${argazkia}" alt="${izena}" style="width:100%; height:100%; object-fit:cover;">`;
+            visualContent = `<img src="../../artikulu_irudiak/${argazkia}" alt="${izena}" style="width:100%; height:100%; object-fit:cover;">`;
           } else {
             visualContent = `
               <div class="img-placeholder">

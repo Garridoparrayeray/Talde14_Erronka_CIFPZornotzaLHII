@@ -161,31 +161,36 @@ document.addEventListener('DOMContentLoaded', () => {
       "bestelakoak": { bg: "#E6F4F1", color: "#0D9488", svg: '<line x1="12" y1="2" x2="12" y2="6"/><path d="M6.3 6.3l-2.8-2.8M17.7 6.3l2.8-2.8M6 12H2M22 12h-4M6.3 17.7l-2.8 2.8M17.7 17.7l2.8 2.8M12 18v4"/><circle cx="12" cy="12" r="4"/>' }
     };
 
-    fetch('datuak/kategoriak.xml')
+    fetch('../partekatutako_datuak/artikuluak.xml')
       .then(response => response.text())
       .then(str => new window.DOMParser().parseFromString(str, "text/xml"))
       .then(xmlDoc => {
-        const kategoriak = xmlDoc.querySelectorAll("kategoria");
+        const artikuluak = xmlDoc.querySelectorAll("artikulua");
         categoryGrid.innerHTML = ''; 
 
-        kategoriak.forEach(kat => {
-          const id = kat.getAttribute("id");
-          const izena = kat.querySelector("izena").textContent;
-          const kopurua = kat.querySelector("kopurua").textContent;
+        // Agrupar y contar categorías dinámicamente
+        const counts = {};
+        artikuluak.forEach(art => {
+          const katName = art.querySelector("kategoria") ? art.querySelector("kategoria").textContent : 'Bestelakoak';
+          counts[katName] = (counts[katName] || 0) + 1;
+        });
+
+        Object.entries(counts).forEach(([izena, kopurua]) => {
+          // Usamos el nombre en minúsculas para buscar el estilo (ej: "Jantziak" -> "jantziak")
+          const styleKey = izena.toLowerCase();
           
-          const estilo = katEstiloak[id] || { bg: "#F2F5FD", color: "#6B6F80", svg: '<circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/>' };
+          const estilo = katEstiloak[styleKey] || { bg: "#F2F5FD", color: "#6B6F80", svg: '<circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/>' };
 
           const card = document.createElement('a');
           card.href = 'html/objektu-zerrenda.html';
           card.className = 'cat-card';
           
-          // Lógica bilingüe para la palabra "objetos" al cargar el XML
           const currentLang = localStorage.getItem('appLang') || 'EU';
           const textObj = currentLang === 'ES' ? 'objetos' : 'objektu';
 
           card.innerHTML = `
             <div class="cat-icon" style="background:${estilo.bg};">
-              <svg viewBox="0 0 24 24" style="stroke:${estilo.color};"><g>${estilo.svg}</g></svg>
+              <svg viewBox="0 0 24 24" style="stroke:${estilo.color}; fill:none; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round;"><g>${estilo.svg}</g></svg>
             </div>
             <div class="cat-name">${izena}</div>
             <div class="cat-count">${kopurua} ${textObj}</div>
@@ -206,7 +211,7 @@ document.addEventListener('DOMContentLoaded', () => {
       window.location.href = 'html/objektu-zerrenda.html';
     });
 
-    fetch('datuak/artikuluak.xml')
+    fetch('../partekatutako_datuak/artikuluak.xml')
       .then(response => response.text())
       .then(str => new window.DOMParser().parseFromString(str, "text/xml"))
       .then(xmlDoc => {
@@ -272,6 +277,83 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       })
       .catch(error => console.error("Errorea artikuluak kargatzean (carrusel):", error));
+  }
+
+  // 8. Formularioaren kudeaketa (XML Sortzea)
+
+  const claimForm = document.querySelector('form');
+  if (claimForm) {
+    claimForm.addEventListener('submit', (e) => {
+      e.preventDefault(); // Evitamos que abra el cliente de correo
+      
+      // --- XML Sortzea eta Deskargatzea (RA 2 betetzeko) ---
+      let xmlContent = '<?xml version="1.0" encoding="UTF-8"?>\n';
+      xmlContent += '<erreklamazioa>\n';
+      
+      const formData = new FormData(claimForm);
+      const data = Object.fromEntries(formData.entries());
+
+      // --- NAN Baliozkotzea (RA 3 - Murriztapenak) ---
+      // Erregela: 8 zenbaki eta letra bat (adibidez: 12345678A)
+      const nanRegex = /^[0-9]{8}[a-zA-Z]$/;
+      const nanBalioa = data.nan || ""; // Ziurtatu HTMLan name="nan" duela
+
+      if (nanBalioa && !nanRegex.test(nanBalioa)) {
+        const errorMsg = localStorage.getItem('appLang') === 'ES' 
+          ? "Formato de NAN incorrecto (8 números y una letra)." 
+          : "NAN formatu okerra (8 zenbaki eta letra bat).";
+        alert(errorMsg);
+        return; // Gelditu prozesua formatua okerra bada
+      }
+
+      let hasData = false;
+      
+      // 1. Intentamos recoger los datos por el atributo 'name'
+      formData.forEach((value, key) => {
+          if (typeof value === 'string') {
+              hasData = true;
+              let safeKey = key.replace(/[^a-zA-Z0-9_]/g, '');
+              if (!/^[a-zA-Z_]/.test(safeKey)) safeKey = 'eremua_' + safeKey;
+              let safeValue = value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+              xmlContent += `    <${safeKey}>${safeValue}</${safeKey}>\n`;
+          }
+      });
+      
+      // 2. Si el formulario no tiene 'names', usamos los 'ids' como respaldo
+      if (!hasData) {
+          const inputs = claimForm.querySelectorAll('input:not([type="submit"]):not([type="file"]):not([type="checkbox"]), textarea, select');
+          inputs.forEach((input, index) => {
+              let rawKey = input.name || input.id || `eremua_${index + 1}`;
+              let safeKey = rawKey.replace(/[^a-zA-Z0-9_]/g, '');
+              if (!/^[a-zA-Z_]/.test(safeKey)) safeKey = 'eremua_' + safeKey;
+              
+              let safeValue = (input.value || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+              xmlContent += `    <${safeKey}>${safeValue}</${safeKey}>\n`;
+          });
+      }
+      
+      // Añadimos la fecha de generación automáticamente
+      const gaur = new Date().toISOString().split('T')[0];
+      xmlContent += `    <eskaeraData>${gaur}</eskaeraData>\n`;
+      xmlContent += '</erreklamazioa>';
+
+      // Forzar la descarga del archivo XML
+      const blob = new Blob([xmlContent], { type: 'application/xml' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+
+      // Lortu izena eta abizena fitxategi-izenerako (RA 2)
+      const izenGarbia = (data.name || data.izena || 'erabiltzailea').toString().trim().replace(/\s+/g, '_');
+      const abizenGarbia = (data.surname || data.abizena || '').toString().trim().replace(/\s+/g, '_');
+      const fitxategiIzena = abizenGarbia ? `erreklamazioa_${abizenGarbia}_${izenGarbia}.xml` : `erreklamazioa_${izenGarbia}.xml`;
+
+      a.download = fitxategiIzena;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    });
   }
 });
 // ==========================================================================

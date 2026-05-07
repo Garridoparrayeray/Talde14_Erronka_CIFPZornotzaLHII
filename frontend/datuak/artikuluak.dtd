@@ -1,8 +1,0 @@
-<!ELEMENT artikuluak (artikulua*)>
-<!ELEMENT artikulua (id, izena, kategoria, deskribapena?, sarreraData?, argazkia?)>
-<!ELEMENT id (#PCDATA)>
-<!ELEMENT izena (#PCDATA)>
-<!ELEMENT kategoria (#PCDATA)>
-<!ELEMENT deskribapena (#PCDATA)>
-<!ELEMENT sarreraData (#PCDATA)>
-<!ELEMENT argazkia (#PCDATA)>
