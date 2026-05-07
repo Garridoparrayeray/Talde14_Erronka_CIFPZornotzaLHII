@@ -1,6 +1,5 @@
 package model;
 
-import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -8,9 +7,7 @@ import java.util.Date;
  *
  * @author Yeray Garrido
  */
-public class Mugimendua implements Serializable {
-
-    private static final long serialVersionUID = 1L;
+public class Mugimendua {
 
     private int mugimenduId;
     private Date dataOrdua;
@@ -43,26 +40,56 @@ public class Mugimendua implements Serializable {
     }
 
     // ── Getterrak ────────────────────────────────────────────────────────────
+    /**
+     * Mugimenduaren datu-baseko IDa itzultzen du.
+     *
+     * @return Mugimenduaren IDa
+     */
     public int getMugimenduId() {
         return mugimenduId;
     }
 
+    /**
+     * Mugimendua gertatu zen data eta ordua itzultzen du.
+     *
+     * @return Data eta ordua
+     */
     public Date getDataOrdua() {
         return dataOrdua;
     }
 
+    /**
+     * Mugimenduaren mota itzultzen du.
+     *
+     * @return MugimenduMota enumerazioa
+     */
     public MugimenduMota getMota() {
         return mota;
     }
 
+    /**
+     * Mugimenduaren azalpen laburra itzultzen du.
+     *
+     * @return Deskribapena
+     */
     public String getDeskribapena() {
         return deskribapena;
     }
 
+    /**
+     * Eragiketa burutu duen langilea itzultzen du.
+     *
+     * @return Langilea objektua
+     */
     public Langilea getLangilea() {
         return langilea;
     }
 
+    /**
+     * Mugitu den artikulua itzultzen du.
+     *
+     * @return Artikulua objektua
+     */
     public Artikulua getArtikulua() {
         return artikulua;
     }

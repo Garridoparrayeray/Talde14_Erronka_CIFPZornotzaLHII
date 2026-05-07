@@ -76,9 +76,12 @@ public class BiltegiLocala {
     // ─── Fitxategi kudeaketa ──────────────────────────────────────────────────
     private static Path getFitxategi() {
         String env = System.getenv("OFFLINE_DATA_PATH");
-        Path dir = (env != null && !env.isEmpty())
-                ? Paths.get(env)
-                : Paths.get(System.getProperty("user.home"), ".erronka-bermeo");
+        Path dir;
+        if (env != null && !env.isEmpty()) {
+            dir = Paths.get(env);
+        } else {
+            dir = Paths.get(System.getProperty("user.home"), ".erronka-bermeo");
+        }
         try {
             Files.createDirectories(dir);
         } catch (IOException e) {
@@ -279,12 +282,20 @@ public class BiltegiLocala {
             if (a.getArtikuluKodea().equals(kodea)) {
                 a.setIzenburua(izena);
                 a.setDeskribapena(deskribapena);
-                a.setKategoria(idKategoria > 0
-                        ? poltsa.kategoriak.stream().filter(k -> k.getKategoriaId() == idKategoria).findFirst().orElse(null)
-                        : null);
-                a.setKokalekua(idKokalekua > 0
-                        ? poltsa.kokalekuak.stream().filter(k -> k.getKokalekuId() == idKokalekua).findFirst().orElse(null)
-                        : null);
+                if (idKategoria > 0) {
+                    a.setKategoria(poltsa.kategoriak.stream()
+                            .filter(k -> k.getKategoriaId() == idKategoria)
+                            .findFirst().orElse(null));
+                } else {
+                    a.setKategoria(null);
+                }
+                if (idKokalekua > 0) {
+                    a.setKokalekua(poltsa.kokalekuak.stream()
+                            .filter(k -> k.getKokalekuId() == idKokalekua)
+                            .findFirst().orElse(null));
+                } else {
+                    a.setKokalekua(null);
+                }
                 if (argazkiBidea != null && !argazkiBidea.isEmpty()) {
                     a.setArgazkiBidea(argazkiBidea);
                 }
@@ -476,11 +487,25 @@ public class BiltegiLocala {
     // ─── AURKITZAILEA ─────────────────────────────────────────────────────────
     public synchronized boolean aurkitzaileaGehitu(String idArtikulua, String izena,
             String abizena, String telefonoa, String emaila, String aurkipenLekua) {
-        Aurkitzailea a = new Aurkitzailea(izena, abizena,
-                telefonoa.isEmpty() ? null : telefonoa,
-                emaila.isEmpty() ? null : emaila,
-                aurkipenLekua.isEmpty() ? null : aurkipenLekua,
-                idArtikulua);
+        String tel;
+        if (telefonoa.isEmpty()) {
+            tel = null;
+        } else {
+            tel = telefonoa;
+        }
+        String ema;
+        if (emaila.isEmpty()) {
+            ema = null;
+        } else {
+            ema = emaila;
+        }
+        String lekua;
+        if (aurkipenLekua.isEmpty()) {
+            lekua = null;
+        } else {
+            lekua = aurkipenLekua;
+        }
+        Aurkitzailea a = new Aurkitzailea(izena, abizena, tel, ema, lekua, idArtikulua);
         a.setAurkitzaileaId(poltsa.aurkitzaileNextId++);
         poltsa.aurkitzaileak.add(a);
         gorde();

@@ -2,7 +2,7 @@
 set -e
 
 echo "Iniciando Xvfb..."
-Xvfb :99 -screen 0 1024x768x24 &
+Xvfb :99 -screen 0 1600x900x24 &
 XVFB_PID=$!
 sleep 2
 

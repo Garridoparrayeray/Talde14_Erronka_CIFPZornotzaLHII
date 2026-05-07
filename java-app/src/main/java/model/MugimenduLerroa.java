@@ -31,18 +31,38 @@ public class MugimenduLerroa implements Serializable {
         this.artikuluId = artikuluId;
     }
 
+    /**
+     * Mugimenduaren data eta ordua itzultzen du.
+     *
+     * @return Data eta ordua katea
+     */
     public String getData() {
         return data;
     }
 
+    /**
+     * Eragiketa burutu duen langilearen izena itzultzen du.
+     *
+     * @return Langilearen izena
+     */
     public String getLangilea() {
         return langilea;
     }
 
+    /**
+     * Eginikako ekintzaren deskribapena itzultzen du.
+     *
+     * @return Ekintzaren deskribapena
+     */
     public String getEkintza() {
         return ekintza;
     }
 
+    /**
+     * Lotutako artikuluaren kode bakarra itzultzen du.
+     *
+     * @return Artikuluaren ID testua
+     */
     public String getArtikuluId() {
         return artikuluId;
     }

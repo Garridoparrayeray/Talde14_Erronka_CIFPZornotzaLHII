@@ -41,12 +41,19 @@ public class LogKudeatzailea {
             for (Handler h : erroa.getHandlers()) {
                 erroa.removeHandler(h);
             }
-            erroa.setLevel(Level.ALL);
+            erroa.setLevel(Level.INFO);
 
             FileHandler fitxategiaKudeatzailea = new FileHandler(
                     LOG_DIREKTORIOA + "/app-%g.log", 5 * 1024 * 1024, 3, true);
-            fitxategiaKudeatzailea.setLevel(Level.ALL);
+            fitxategiaKudeatzailea.setLevel(Level.INFO);
             fitxategiaKudeatzailea.setFormatter(sortuFormatzailea());
+            fitxategiaKudeatzailea.setFilter(erregistroa -> {
+                String izena = erregistroa.getLoggerName();
+                if (izena == null) return false;
+                return izena.startsWith("app.") || izena.startsWith("controller.")
+                    || izena.startsWith("dao.")  || izena.startsWith("model.")
+                    || izena.startsWith("utils.") || izena.startsWith("view.");
+            });
             erroa.addHandler(fitxategiaKudeatzailea);
 
             ConsoleHandler kontsolaKudeatzailea = new ConsoleHandler();
@@ -75,7 +82,7 @@ public class LogKudeatzailea {
 
     private static Formatter sortuFormatzailea() {
         return new SimpleFormatter() {
-            private static final String FORMATUA = "[%1$tF %1$tT] [%-7s] %s: %s%n";
+            private static final String FORMATUA = "[%1$tF %1$tT] [%2$-7s] %3$s: %4$s%n";
 
             @Override
             public synchronized String format(LogRecord erregistroa) {

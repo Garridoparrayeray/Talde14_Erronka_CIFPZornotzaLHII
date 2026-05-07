@@ -65,30 +65,65 @@ public class Kokalekua implements Serializable {
     }
 
     // Getters & Setters
+    /**
+     * Kokalekuaren datu-baseko IDa itzultzen du.
+     *
+     * @return Kokalekuaren IDa
+     */
     public int getKokalekuId() {
         return kokalekuId;
     }
 
+    /**
+     * Kokalekuaren datu-baseko IDa ezartzen du.
+     *
+     * @param id Ezarri beharreko IDa
+     */
     public void setKokalekuId(int id) {
         this.kokalekuId = id;
     }
 
+    /**
+     * Armairuaren kodea edo izena itzultzen du.
+     *
+     * @return Armairua
+     */
     public String getArmairua() {
         return armairua;
     }
 
+    /**
+     * Apalaren kodea edo izena itzultzen du.
+     *
+     * @return Apala
+     */
     public String getApala() {
         return apala;
     }
 
+    /**
+     * Kokalekua BHA-n dagoen ala ez itzultzen du.
+     *
+     * @return BHA-n badago true
+     */
     public boolean isBhaDa() {
         return bhaDa;
     }
 
+    /**
+     * Kokalekuan dauden artikulu kopurua itzultzen du.
+     *
+     * @return Artikulu kopurua
+     */
     public int getArtikuluKopurua() {
         return artikuluKopurua;
     }
 
+    /**
+     * Kokalekuan dauden artikulu kopurua ezartzen du.
+     *
+     * @param artikuluKopurua Ezarri beharreko kopurua
+     */
     public void setArtikuluKopurua(int artikuluKopurua) {
         this.artikuluKopurua = artikuluKopurua;
     }

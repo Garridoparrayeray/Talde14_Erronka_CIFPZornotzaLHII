@@ -56,8 +56,8 @@ Datu-base bat partekatzen dute (MariaDB), eta XML fitxategien bidez ere komunika
 
   ┌──────────────────┐         ┌──────────────────┐
   │   JavaFX App     │         │   Web Portala    │
-  │  (Udaltzaingoa)  │         │  (Herritarrak)   │
-  │   Port: GUI      │         │   Port: 8000     │
+  │  (Langileak)     │         │  (Herritarrak)   │
+  │  Port: 6080(VNC) │         │   Port: 8000     │
   └────────┬─────────┘         └────────┬─────────┘
            │                            │
            │      ┌──────────────┐      │
@@ -70,14 +70,15 @@ Datu-base bat partekatzen dute (MariaDB), eta XML fitxategien bidez ere komunika
                   │  Port: 8081  │
                   └──────────────┘
 
-  Fitxategi-trukea:  ./partekatutako_datuak/*.xml
-                     (Java idatzi → Web irakurri)
+  Fitxategi-trukea:
+    ./partekatutako_datuak/artikuluak.xml  (Java idatzi → Web irakurri)
+    ./artikulu_irudiak/                    (Java + Web partekatzen dute)
 ```
 
 | Zerbitzua | Irudia | Portua | Funtzioa |
 |-----------|--------|--------|----------|
 | `db` | mariadb:11 | 3306 | Datu-base nagusia |
-| `java-app` | (eraikia) | — | JavaFX back-office |
+| `java-app` | (eraikia) | 6080 (noVNC) | JavaFX back-office |
 | `web` | nginx:alpine | 8000 | Web atari publikoa |
 | `adminer` | adminer:latest | 8081 | BD-aren web UI |
 
@@ -193,8 +194,6 @@ erronka-bermeo/
 
 ## Abiaraztea Linux-en
 
-### Behin egin behar dena (lehen aldiz)
-
 ```bash
 # Lehen aldiz
 chmod +x start-linux.sh stop-linux.sh
@@ -202,24 +201,25 @@ chmod +x start-linux.sh stop-linux.sh
 # Abiarazi
 ./start-linux.sh
 
+# JavaFX aplikazioa nabigatzailean:
+# http://localhost:6080/vnc.html?autoconnect=1&resize=scale
+
 # Geldiarazi
 ./stop-linux.sh
 ```
 
-### Windows
+## Abiaraztea Windows-en
 
 1. **Docker Desktop** ireki eta itxaron prest egon arte
-2. **VcXsrv (XLaunch)** ireki (XLaunch dehitzen da)
-3. DISPLAY SETTINGS -> ONE LARGE WINDOW
-4. Dispaly number -> 0
-5. Start no client
-6. Disable access control* aktibatu
-7. `start-windows.bat` exekutatu (bi klik)
+2. `start-windows.bat` exekutatu (bi klik)
+3. Nabigatzailean ireki: **http://localhost:6080/vnc.html?autoconnect=1&resize=scale**
+
+> VcXsrv edo X server beharrik ez — JavaFX nabigatzailean (noVNC) irekitzen da.
 
 ### Aurretiko eskakizunak
 
-**Linux:** `docker`, `docker-compose`, `xorg-xhost`
-**Windows:** [Docker Desktop](https://www.docker.com/products/docker-desktop/) + [VcXsrv](https://sourceforge.net/projects/vcxsrv/)
+**Linux:** `docker`, `docker-compose`
+**Windows:** [Docker Desktop](https://www.docker.com/products/docker-desktop/) soilik
 
 ---
 
@@ -378,6 +378,17 @@ docker compose logs -f db
 docker compose logs -f web
 ```
 
+### JavaFX aplikazioaren log fitxategia
+Aplikazioak ekintza guztiak gordetzen ditu (`logs/app-0.log`):
+```bash
+# Bizirik jarraitu
+tail -f logs/app-0.log
+
+# Erroreak soilik
+grep "SEVERE\|WARNING" logs/app-0.log
+```
+**Windows-en:** proiektuaren karpeta → `logs\app-0.log`
+
 ### Zerbitzu bat berreraiki (kodea aldatu ondoren)
 ```bash
 docker compose up --build java-app
@@ -426,11 +437,19 @@ docker exec -it erronka_desktop bash
 
 ### Rolak (segurtasuna)
 
-| Rola | Eskumenak | Erabiltzailea |
+| Rola | Eskumenak | Erabiltzailea (DB) |
 |------|-----------|---------------|
-| `rol_admin` | Guztia | `bermeo_admin` |
-| `rol_udaltzain` | CRUD osoa | `bermeo_udaltzain` |
-| `rol_bezeroa` | Irakurtze + erreklamazioa sartu | `bermeo_bezeroa` |
+| `admin_rola` | Guztia | `admin` |
+| `langile_rola` | CRUD osoa (LANGILEA/ROLA irakurketa soilik) | `langile1` |
+| `ikusle_rola` | Artikuluak erregistratu soilik | `ikusle1` |
+
+**Aplikazioko erabiltzaileak (hasierako seed, pasahitza: `1234`):**
+
+| Izena | Erabiltzailea | Rola |
+|-------|--------------|------|
+| Miren Agirre | `admin` | Administratzailea |
+| Jon Zabala | `langile1` | Langilea |
+| Ander Txurru | `ikusle1` | Ikuslea |
 
 ### Hasieratze-fitxategiak
 
@@ -572,14 +591,15 @@ sudo apt install x11-xserver-utils   # Ubuntu
    ```
 3. `xhost +local:docker` exekutatu saio grafikoaren barruan (ez SSH bidez).
 
-### Windows: JavaFX leihoa ez agertu
-1. Egiaztatu **VcXsrv** martxan dagoela (sistemako tray-an X-aren ikonoa).
-2. Egiaztatu **Disable access control** aktibatuta egon zela XLaunch konfiguratzean.
-3. Suebakia (firewall) `vcxsrv.exe`-ri konexioak baimentzen ari zaion.
-4. Edukiontzia berrabiarazi:
+### Windows: JavaFX ez da nabigatzailean agertzen
+1. Itxaron 15-20 segundo edukiontziak abiarazi ondoren.
+2. Egiaztatu URL zuzena erabiltzen ari zarela:
+   `http://localhost:6080/vnc.html?autoconnect=1&resize=scale`
+3. Edukiontzia berrabiarazi:
    ```bat
-   docker compose -f docker-compose.windows.yml restart java-app
+   docker compose restart java-app
    ```
+4. Logak egiaztatu: `logs\app-0.log`
 
 ### `port is already allocated`
 Beste prozesu batek portua erabiltzen du. Egiaztatu zer:

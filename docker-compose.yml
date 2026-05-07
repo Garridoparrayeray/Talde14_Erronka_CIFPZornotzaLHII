@@ -36,6 +36,7 @@ services:
     volumes:
       - ./partekatutako_datuak:/app/partekatutako_datuak
       - ./artikulu_irudiak:/app/artikulu_irudiak
+      - ./logs:/root/erronka-bermeo/logs
     networks:
       - erronka-net
     depends_on:
@@ -51,6 +52,7 @@ services:
     volumes:
       - ./frontend:/usr/share/nginx/html
       - ./partekatutako_datuak:/usr/share/nginx/html/datuak:ro
+      - ./artikulu_irudiak:/usr/share/nginx/html/irudiak:ro
     networks:
       - erronka-net
     depends_on:

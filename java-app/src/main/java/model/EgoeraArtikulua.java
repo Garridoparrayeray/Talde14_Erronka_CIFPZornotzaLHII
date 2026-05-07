@@ -8,9 +8,14 @@ package model;
  * @author Yeray Garrido
  */
 public enum EgoeraArtikulua {
+    /** Artikulua biltegian gordeta dago, oraindik jaso gabe. */
     BILTEGIAN,
+    /** Artikulua Behin-Behineko Harrera Alderdian gordeta dago. */
     BHA_N_GORDETA,
+    /** Artikulua jabeak jaso du. */
     ITZULITA,
+    /** Gordailutze-epea iraungitu da. */
     IRAUNGITA,
+    /** Artikulua dohaintzan eman da. */
     DOHANTZAN
 }

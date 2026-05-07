@@ -8,7 +8,10 @@ package model;
  * @author Yeray Garrido
  */
 public enum Kanala {
+    /** Testu-mezua telefono mugikorraren bidez. */
     SMS,
+    /** Helbide elektronikoaren bidez. */
     EMAIL,
+    /** Aplikazioaren barneko jakinarazpena. */
     APP
 }

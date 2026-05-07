@@ -25,15 +25,30 @@ public class Kategoria implements Serializable {
         this.izena = izena;
     }
 
-    // Getters & Setters
+    // Getters
+    /**
+     * Kategoriaren datu-baseko IDa itzultzen du.
+     *
+     * @return Kategoriaren IDa
+     */
     public int getKategoriaId() {
         return kategoriaId;
     }
 
+    /**
+     * Kategoriaren izena itzultzen du.
+     *
+     * @return Izena
+     */
     public String getIzena() {
         return izena;
     }
 
+    /**
+     * Kategoriaren izena ezartzen du.
+     *
+     * @param izena Ezarri beharreko izena
+     */
     public void setIzena(String izena) {
         this.izena = izena;
     }
