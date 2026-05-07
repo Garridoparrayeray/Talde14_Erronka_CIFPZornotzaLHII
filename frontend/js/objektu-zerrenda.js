@@ -142,7 +142,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let visibleLimit = 6; 
 
   if (categorySelect) {
-    fetch('../../partekatutako_datuak/artikuluak.xml')
+    fetch('/datuak/artikuluak.xml')
       .then(response => {
         if (!response.ok) throw new Error("Ezin izan da XML artikuluak fitxategia kargatu");
         return response.text();
@@ -168,7 +168,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   if (catalogGrid) {
-    fetch('../../partekatutako_datuak/artikuluak.xml')
+    fetch('/datuak/artikuluak.xml')
       .then(response => {
         if (!response.ok) throw new Error("Ezin izan da XML artikuluak fitxategia kargatu");
         return response.text();
@@ -188,7 +188,7 @@ document.addEventListener("DOMContentLoaded", () => {
           
           let visualContent = '';
           if (argazkia !== '') {
-            visualContent = `<img src="../../artikulu_irudiak/${argazkia}" alt="${izena}" style="width:100%; height:100%; object-fit:cover;">`;
+            visualContent = `<img src="/irudiak/${argazkia}" alt="${izena}" style="width:100%; height:100%; object-fit:cover;">`;
           } else {
             visualContent = `
               <div class="img-placeholder">
@@ -233,7 +233,7 @@ document.addEventListener("DOMContentLoaded", () => {
       .catch(error => {
         console.error("Errorea:", error);
         if (loadingMsg) {
-           loadingMsg.textContent = "Errorea datuak kargatzean. Egiaztatu zerbitzari lokala erabiltzen ari zarela (Live Server).";
+           loadingMsg.textContent = "Errorea datuak kargatzean.";
         }
       });
   }

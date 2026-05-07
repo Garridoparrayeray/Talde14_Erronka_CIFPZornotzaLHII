@@ -161,7 +161,7 @@ document.addEventListener('DOMContentLoaded', () => {
       "bestelakoak": { bg: "#E6F4F1", color: "#0D9488", svg: '<line x1="12" y1="2" x2="12" y2="6"/><path d="M6.3 6.3l-2.8-2.8M17.7 6.3l2.8-2.8M6 12H2M22 12h-4M6.3 17.7l-2.8 2.8M17.7 17.7l2.8 2.8M12 18v4"/><circle cx="12" cy="12" r="4"/>' }
     };
 
-    fetch('../partekatutako_datuak/artikuluak.xml')
+    fetch('/datuak/artikuluak.xml')
       .then(response => response.text())
       .then(str => new window.DOMParser().parseFromString(str, "text/xml"))
       .then(xmlDoc => {
@@ -211,7 +211,7 @@ document.addEventListener('DOMContentLoaded', () => {
       window.location.href = 'html/objektu-zerrenda.html';
     });
 
-    fetch('../partekatutako_datuak/artikuluak.xml')
+    fetch('/datuak/artikuluak.xml')
       .then(response => response.text())
       .then(str => new window.DOMParser().parseFromString(str, "text/xml"))
       .then(xmlDoc => {
