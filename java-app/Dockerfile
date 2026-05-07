@@ -14,7 +14,11 @@ RUN apt-get update && apt-get install -y \
     libpango-1.0-0 libatk1.0-0 libcairo2 \
     libfreetype6 libfontconfig1 \
     libxxf86vm1 libxrandr2 \
+    xvfb x11vnc novnc websockify \
     && rm -rf /var/lib/apt/lists/*
 ENV LIBGL_ALWAYS_SOFTWARE=1
 COPY --from=builder /java-app/target/galdutakoak-1.0-SNAPSHOT.jar app.jar
-CMD ["java", "-jar", "app.jar"]
+COPY startup.sh .
+RUN chmod +x startup.sh
+EXPOSE 6080
+CMD ["./startup.sh"]
