@@ -3,20 +3,24 @@ package utils;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import dao.ArtikuluaDAO;
+
 /**
- * DB konexioa detektatu eta online/offline modua kudeatzen duen klase estatikoa.
+ * DB konexioa detektatu eta online/offline modua kudeatzen duen klase
+ * estatikoa.
  */
 public class ModoKudeatzailea {
 
     private static final Logger LOG = LogKudeatzailea.lortu(ModoKudeatzailea.class);
     private static volatile boolean offlineModo = false;
 
-    private ModoKudeatzailea() {}
+    private ModoKudeatzailea() {
+    }
 
     /**
-     * Abiaraztean DB konexioa egiaztatu eta modua ezartzen du.
-     * Online bada, BiltegiLocala DB-tik sinkronizatzen du hurrengo offline-erako.
-     * DB eskuragarri ez bada, offline modura aldatzen da automatikoki.
+     * Abiaraztean DB konexioa egiaztatu eta modua ezartzen du. Online bada,
+     * BiltegiLocala DB-tik sinkronizatzen du hurrengo offline-erako. DB
+     * eskuragarri ez bada, offline modura aldatzen da automatikoki.
      */
     public static void detektatu() {
         try {
@@ -28,10 +32,11 @@ public class ModoKudeatzailea {
         }
         if (offlineModo) {
             LOG.info("OFFLINE modua aktibo — store.dat fitxategia erabiltzen da.");
-            BiltegiLocala.getInstance();
+            BiltegiLocala.hasieratu();
         } else {
             LOG.info("ONLINE modua aktibo — DB konexioa erabiliko da.");
-            BiltegiLocala.getInstance().sincronizatuDBtik();
+            ArtikuluaDAO.iraungituakEguneratu();
+            BiltegiLocala.sincronizatuDBtik();
         }
     }
 
@@ -53,7 +58,7 @@ public class ModoKudeatzailea {
     public static void setOffline(boolean offline) {
         offlineModo = offline;
         if (offline) {
-            BiltegiLocala.getInstance();
+            BiltegiLocala.hasieratu();
         }
     }
 }

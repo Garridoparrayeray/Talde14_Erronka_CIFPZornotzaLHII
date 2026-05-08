@@ -150,6 +150,9 @@ public class ErregistroaController implements Initializable {
             LOG.log(Level.WARNING, "Aurkitzailearen datuak ezin izan dira gorde: " + kodea);
         }
 
+        // Iraungitze-egiaztapena (sarrera-data zaharra bada berehala markatu)
+        ArtikuluaDAO.iraungituakEguneratu();
+
         // XML eguneratu
         XMLExportazioa.exportatu();
 

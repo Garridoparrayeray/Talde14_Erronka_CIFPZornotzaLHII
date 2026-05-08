@@ -33,10 +33,10 @@ public class LangileaDAO {
      */
     public static List<Langilea> getGuztiak() {
         if (ModoKudeatzailea.isOffline()) {
-            return BiltegiLocala.getInstance().getLangileak();
+            return BiltegiLocala.getLangileak();
         }
         List<Langilea> zerrenda = new ArrayList<>();
-        String sql = "SELECT l.id_langile, l.izena, l.abizena, l.erabiltzailea, r.deskribapena AS rola "
+        String sql = "SELECT l.id_langile, l.izena, l.abizena, l.erabiltzailea, l.pasahitza_hash, r.deskribapena AS rola "
                 + "FROM LANGILEA l JOIN ROLA r ON l.id_rola = r.id_rola "
                 + "ORDER BY l.id_langile";
         try (Connection con = DBConexioa.getKonexioa(); PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
@@ -46,7 +46,7 @@ public class LangileaDAO {
                         rs.getString("izena"),
                         rs.getString("abizena"),
                         rs.getString("erabiltzailea"),
-                        null
+                        rs.getString("pasahitza_hash")
                 );
                 l.setRola(rs.getString("rola"));
                 zerrenda.add(l);
@@ -64,7 +64,7 @@ public class LangileaDAO {
      */
     public static ArrayList<String[]> getRolak() {
         if (ModoKudeatzailea.isOffline()) {
-            return new ArrayList<>(BiltegiLocala.getInstance().getRolak());
+            return new ArrayList<>(BiltegiLocala.getRolak());
         }
         ArrayList<String[]> zerrenda = new ArrayList<>();
         String sql = "SELECT id_rola, deskribapena FROM ROLA ORDER BY id_rola";
@@ -86,7 +86,7 @@ public class LangileaDAO {
      */
     public static boolean gehitu(String izena, String abizena, String erabiltzailea, String pasahitza, int idRola) {
         if (ModoKudeatzailea.isOffline()) {
-            return BiltegiLocala.getInstance().langileaGehitu(izena, abizena, erabiltzailea, pasahitza, idRola);
+            return BiltegiLocala.langileaGehitu(izena, abizena, erabiltzailea, pasahitza, idRola);
         }
         String hash = BCrypt.hashpw(pasahitza, BCrypt.gensalt(10));
         String sql = "INSERT INTO LANGILEA (izena, abizena, erabiltzailea, pasahitza_hash, id_rola) VALUES (?, ?, ?, ?, ?)";
@@ -111,7 +111,7 @@ public class LangileaDAO {
      */
     public static Langilea login(String erabiltzailea, String pasahitza) {
         if (ModoKudeatzailea.isOffline()) {
-            return BiltegiLocala.getInstance().login(erabiltzailea, pasahitza);
+            return BiltegiLocala.login(erabiltzailea, pasahitza);
         }
         String sql = "SELECT l.id_langile, l.izena, l.abizena, l.erabiltzailea, l.pasahitza_hash, r.deskribapena AS rola "
                 + "FROM LANGILEA l JOIN ROLA r ON l.id_rola = r.id_rola "
@@ -170,7 +170,7 @@ public class LangileaDAO {
 
     public static boolean eguneratu(int id, String izena, String abizena, String erabiltzailea, int idRola, String pasahitzaBerria) {
         if (ModoKudeatzailea.isOffline()) {
-            return BiltegiLocala.getInstance().langileaEguneratu(id, izena, abizena, erabiltzailea, idRola, pasahitzaBerria);
+            return BiltegiLocala.langileaEguneratu(id, izena, abizena, erabiltzailea, idRola, pasahitzaBerria);
         }
         StringBuilder sql = new StringBuilder("UPDATE LANGILEA SET izena=?, abizena=?, erabiltzailea=?, id_rola=?");
         boolean pasahitzaAldatu = pasahitzaBerria != null && !pasahitzaBerria.isEmpty();
@@ -205,7 +205,7 @@ public class LangileaDAO {
      */
     public static boolean ezabatu(int id) {
         if (ModoKudeatzailea.isOffline()) {
-            return BiltegiLocala.getInstance().langileaEzabatu(id);
+            return BiltegiLocala.langileaEzabatu(id);
         }
         String sql = "DELETE FROM LANGILEA WHERE id_langile = ?";
         try (Connection con = DBConexioa.getKonexioa(); PreparedStatement ps = con.prepareStatement(sql)) {

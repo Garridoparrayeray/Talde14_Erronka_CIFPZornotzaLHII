@@ -48,7 +48,8 @@
                   <Button fx:id="btnLangileak"   maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#loadLangileak"   styleClass="nav-item" text="Langileak" />
                   <Button fx:id="btnKategoriak"  maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#loadKategoriak"  styleClass="nav-item" text="Kategoriak" />
                   <Button fx:id="btnKokalekuak"  maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#loadKokalekuak"  styleClass="nav-item" text="Kokalekuak" />
-                  <Button fx:id="btnAuditoria"   maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#loadAuditoria"   styleClass="nav-item" text="Auditoria" />
+                  <Button fx:id="btnAuditoria"      maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#loadAuditoria"      styleClass="nav-item" text="Auditoria" />
+                  <Button fx:id="btnIraungitakoak" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#loadIraungitakoak" styleClass="nav-item" text="Iraungitakoak" />
                </children>
             </VBox>
 

@@ -6,6 +6,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
+import dao.ArtikuluaDAO;
 import dao.EstadistikaDAO;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
@@ -65,6 +66,9 @@ public class PanelaController implements Initializable {
             lblEgunon.setText("Egun on, " + Sesio.getLangilea().getIzena());
         }
         lblData.setText("Gaur, " + LocalDate.now().format(DateTimeFormatter.ofPattern("dd MMM yyyy")));
+
+        // Iraungitutako artikuluak eguneratu estadistikak irakurri aurretik
+        ArtikuluaDAO.iraungituakEguneratu();
 
         lblBiltegian.setText(String.valueOf(EstadistikaDAO.biltegianKopurua()));
         lblErreklamazioIrekiak.setText(String.valueOf(EstadistikaDAO.erreklamazioIrekiakKopurua()));

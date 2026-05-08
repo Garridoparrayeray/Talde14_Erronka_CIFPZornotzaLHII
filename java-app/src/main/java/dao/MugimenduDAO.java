@@ -10,10 +10,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import model.MugimenduLerroa;
+import utils.BiltegiLocala;
 import utils.DBConexioa;
 import utils.LogKudeatzailea;
 import utils.ModoKudeatzailea;
-import utils.BiltegiLocala;
 
 /**
  * Mugimenduen (auditoria) datu-baseko eragiketak kudeatzen dituen DAO klasea.
@@ -25,11 +25,41 @@ public class MugimenduDAO {
     private static final Logger LOG = LogKudeatzailea.lortu(MugimenduDAO.class);
 
     /**
+     * Mugimendua berria txertatzen du auditoria taulan.
+     *
+     * @param deskribapena Ekintzaren deskribapena
+     * @param idArtikulua Lotutako artikuluaren kodea
+     * @param idLangile Langilearen IDa (0 bada sistema-ekintza)
+     * @return Ondo txertatu bada true
+     */
+    public static boolean gehitu(String deskribapena, String idArtikulua, int idLangile) {
+        if (ModoKudeatzailea.isOffline()) {
+            return false;
+        }
+        String sql = "INSERT INTO MUGIMENDUA (deskribapena, id_artikulua, id_langile) VALUES (?, ?, ?)";
+        try (Connection con = DBConexioa.getKonexioa(); PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, deskribapena);
+            ps.setString(2, idArtikulua);
+            if (idLangile > 0) {
+                ps.setInt(3, idLangile);
+            } else {
+                ps.setNull(3, java.sql.Types.INTEGER);
+            }
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            LOG.log(Level.SEVERE, "gehitu: datu-baseko errorea", e);
+            return false;
+        }
+    }
+
+    /**
      * Mugimenduen erregistro guztiak itzultzen ditu auditoria taulako ordena
      * deszendentearekin.
      */
     public static List<MugimenduLerroa> getGuztiak() {
-        if (ModoKudeatzailea.isOffline()) return BiltegiLocala.getInstance().getMugimenduak();
+        if (ModoKudeatzailea.isOffline()) {
+            return BiltegiLocala.getMugimenduak();
+        }
         List<MugimenduLerroa> zerrenda = new ArrayList<>();
         String sql = "SELECT m.data, "
                 + "COALESCE(CONCAT(l.izena, ' ', l.abizena), '—') AS langilea, "

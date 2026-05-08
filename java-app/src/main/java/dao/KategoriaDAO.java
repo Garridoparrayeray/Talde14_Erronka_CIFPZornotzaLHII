@@ -10,10 +10,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import model.Kategoria;
+import utils.BiltegiLocala;
 import utils.DBConexioa;
 import utils.LogKudeatzailea;
 import utils.ModoKudeatzailea;
-import utils.BiltegiLocala;
 
 /**
  * Kategorien datu-baseko eragiketak kudeatzen dituen DAO klasea.
@@ -31,7 +31,9 @@ public class KategoriaDAO {
      * @return Ondo gorde bada true
      */
     public static boolean gehitu(String izena) {
-        if (ModoKudeatzailea.isOffline()) return BiltegiLocala.getInstance().kategoriaGehitu(izena);
+        if (ModoKudeatzailea.isOffline()) {
+            return BiltegiLocala.kategoriaGehitu(izena);
+        }
         String sql = "INSERT INTO KATEGORIA (izena) VALUES (?)";
         try (Connection con = DBConexioa.getKonexioa(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, izena);
@@ -50,7 +52,9 @@ public class KategoriaDAO {
      * @return Ondo eguneratu bada true
      */
     public static boolean aldatuIzena(int id, String izenaOso) {
-        if (ModoKudeatzailea.isOffline()) return BiltegiLocala.getInstance().kategoriaAldatuIzena(id, izenaOso);
+        if (ModoKudeatzailea.isOffline()) {
+            return BiltegiLocala.kategoriaAldatuIzena(id, izenaOso);
+        }
         String sql = "UPDATE KATEGORIA SET izena = ? WHERE id_kategoria = ?";
         try (Connection con = DBConexioa.getKonexioa(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, izenaOso);
@@ -69,7 +73,9 @@ public class KategoriaDAO {
      * @return Ondo ezabatu bada true
      */
     public static boolean ezabatu(int id) {
-        if (ModoKudeatzailea.isOffline()) return BiltegiLocala.getInstance().kategoriaEzabatu(id);
+        if (ModoKudeatzailea.isOffline()) {
+            return BiltegiLocala.kategoriaEzabatu(id);
+        }
         String sql = "DELETE FROM KATEGORIA WHERE id_kategoria = ?";
         try (Connection con = DBConexioa.getKonexioa(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, id);
@@ -86,7 +92,9 @@ public class KategoriaDAO {
      * @return Kategorien zerrenda
      */
     public static List<Kategoria> getGuztiak() {
-        if (ModoKudeatzailea.isOffline()) return BiltegiLocala.getInstance().getKategoriak();
+        if (ModoKudeatzailea.isOffline()) {
+            return BiltegiLocala.getKategoriak();
+        }
         List<Kategoria> kategoriak = new ArrayList<>();
         String sql = "SELECT id_kategoria, izena FROM KATEGORIA";
 

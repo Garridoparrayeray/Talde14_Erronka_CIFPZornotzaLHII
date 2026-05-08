@@ -11,10 +11,10 @@ import java.util.logging.Logger;
 
 import model.AzkenMugimendua;
 import model.KategoriaKopurua;
+import utils.BiltegiLocala;
 import utils.DBConexioa;
 import utils.LogKudeatzailea;
 import utils.ModoKudeatzailea;
-import utils.BiltegiLocala;
 
 /**
  * Datu-baseko estatistikak eta kopuru orokorrak lortzeko DAO klasea.
@@ -31,54 +31,74 @@ public class EstadistikaDAO {
      * @return Artikulu kopurua
      */
     public static int biltegianKopurua() {
-        if (ModoKudeatzailea.isOffline()) return BiltegiLocala.getInstance().biltegianKopurua();
+        if (ModoKudeatzailea.isOffline()) {
+            return BiltegiLocala.biltegianKopurua();
+        }
         return kontatuEgoera("aurkitua");
     }
 
     public static int bueltatakoKopurua() {
-        if (ModoKudeatzailea.isOffline()) return BiltegiLocala.getInstance().bueltatakoKopurua();
+        if (ModoKudeatzailea.isOffline()) {
+            return BiltegiLocala.bueltatakoKopurua();
+        }
         return kontatuEgoera("bueltatua");
     }
 
     public static int iraungituakKopurua() {
-        if (ModoKudeatzailea.isOffline()) return BiltegiLocala.getInstance().iraungituakKopurua();
+        if (ModoKudeatzailea.isOffline()) {
+            return BiltegiLocala.iraungituakKopurua();
+        }
         return kontatuEgoera("iraungita");
     }
 
     public static int iraungitzearKopurua() {
-        if (ModoKudeatzailea.isOffline()) return BiltegiLocala.getInstance().iraungitzearKopurua();
+        if (ModoKudeatzailea.isOffline()) {
+            return BiltegiLocala.iraungitzearKopurua();
+        }
         String sql = "SELECT COUNT(*) FROM ARTIKULUA "
                 + "WHERE egoera = 'aurkitua' AND iraungitze_data BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 30 DAY)";
         return kontatuSql(sql);
     }
 
     public static int erreklamazioIrekiakKopurua() {
-        if (ModoKudeatzailea.isOffline()) return BiltegiLocala.getInstance().erreklamazioIrekiakKopurua();
+        if (ModoKudeatzailea.isOffline()) {
+            return BiltegiLocala.erreklamazioIrekiakKopurua();
+        }
         return kontatuSql("SELECT COUNT(*) FROM ERREKLAMAZIOA WHERE errek_egoera = 'irekita'");
     }
 
     public static int langileKopurua() {
-        if (ModoKudeatzailea.isOffline()) return BiltegiLocala.getInstance().langileKopurua();
+        if (ModoKudeatzailea.isOffline()) {
+            return BiltegiLocala.langileKopurua();
+        }
         return kontatuSql("SELECT COUNT(*) FROM LANGILEA");
     }
 
     public static int artikuluGuztienKopurua() {
-        if (ModoKudeatzailea.isOffline()) return BiltegiLocala.getInstance().artikuluGuztienKopurua();
+        if (ModoKudeatzailea.isOffline()) {
+            return BiltegiLocala.artikuluGuztienKopurua();
+        }
         return kontatuSql("SELECT COUNT(*) FROM ARTIKULUA");
     }
 
     public static int kategoriaKopurua() {
-        if (ModoKudeatzailea.isOffline()) return BiltegiLocala.getInstance().kategoriaKopurua();
+        if (ModoKudeatzailea.isOffline()) {
+            return BiltegiLocala.kategoriaKopurua();
+        }
         return kontatuSql("SELECT COUNT(*) FROM KATEGORIA");
     }
 
     public static int kokalekuakKopurua() {
-        if (ModoKudeatzailea.isOffline()) return BiltegiLocala.getInstance().kokalekuakKopurua();
+        if (ModoKudeatzailea.isOffline()) {
+            return BiltegiLocala.kokalekuakKopurua();
+        }
         return kontatuSql("SELECT COUNT(*) FROM KOKALEKUA");
     }
 
     public static List<AzkenMugimendua> azkenMugimenduak() {
-        if (ModoKudeatzailea.isOffline()) return BiltegiLocala.getInstance().getAzkenMugimenduak();
+        if (ModoKudeatzailea.isOffline()) {
+            return BiltegiLocala.getAzkenMugimenduak();
+        }
         List<AzkenMugimendua> zerrenda = new ArrayList<>();
         String sql = "SELECT m.id_artikulua, m.deskribapena, m.data, "
                 + "COALESCE(CONCAT(l.izena,' ',l.abizena), '—') AS langilea "
@@ -105,7 +125,9 @@ public class EstadistikaDAO {
      * @return Kategoria bakoitzaren izena eta artikulu kopurua
      */
     public static List<KategoriaKopurua> kategoriaKopuruak() {
-        if (ModoKudeatzailea.isOffline()) return BiltegiLocala.getInstance().kategoriaKopuruak();
+        if (ModoKudeatzailea.isOffline()) {
+            return BiltegiLocala.kategoriaKopuruak();
+        }
         List<KategoriaKopurua> zerrenda = new ArrayList<>();
         String sql = "SELECT k.izena, COUNT(a.id_artikulua) AS kop "
                 + "FROM KATEGORIA k LEFT JOIN ARTIKULUA a ON k.id_kategoria = a.id_kategoria "
@@ -126,7 +148,9 @@ public class EstadistikaDAO {
      * @return Konexioa badago true, bestela false
      */
     public static boolean dbKonexioaEgiaztatu() {
-        if (ModoKudeatzailea.isOffline()) return false;
+        if (ModoKudeatzailea.isOffline()) {
+            return false;
+        }
         try (Connection con = DBConexioa.getKonexioa()) {
             return con != null && !con.isClosed();
         } catch (SQLException e) {

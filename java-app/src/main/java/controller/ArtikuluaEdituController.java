@@ -19,6 +19,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import model.Artikulua;
@@ -26,11 +27,9 @@ import model.Kategoria;
 import model.Kokalekua;
 import utils.AppConfig;
 import utils.LogKudeatzailea;
+import utils.UIKudeatzailea;
 import utils.XMLExportazioa;
 
-/**
- * @author Eder Martin Artikulu bat editatzeko formularioaren kontroladorea.
- */
 public class ArtikuluaEdituController implements Initializable {
 
     private static final Logger LOG = LogKudeatzailea.lortu(ArtikuluaEdituController.class);
@@ -52,7 +51,16 @@ public class ArtikuluaEdituController implements Initializable {
 
     private Artikulua artikulua;
     private File argazkiFile;
-    private Runnable onGordeCb;
+    private StackPane contentArea;
+
+    /**
+     * Itzultzean erabili beharreko StackPane ezartzen du.
+     *
+     * @param contentArea Formularioa kargatuta dagoen gunea
+     */
+    public void setContentArea(StackPane contentArea) {
+        this.contentArea = contentArea;
+    }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -61,15 +69,9 @@ public class ArtikuluaEdituController implements Initializable {
         ezkutuErrorea();
     }
 
-    /**
-     * Editatu beharreko artikuluaren datuak formularioan aurrez betetzen ditu.
-     *
-     * @param a Editatu beharreko artikulua
-     * @param onGorde Gorde ostean deitzen den callback-a (taula freskatzeko)
-     */
-    public void kargatu(Artikulua a, Runnable onGorde) {
+    public void kargatu(Artikulua a, StackPane contentArea) {
         this.artikulua = a;
-        this.onGordeCb = onGorde;
+        this.contentArea = contentArea;
 
         lblTitulua.setText("Editatu: " + a.getArtikuluKodea());
         txtIzena.setText(a.getIzenburua());
@@ -79,7 +81,6 @@ public class ArtikuluaEdituController implements Initializable {
             lblArgazkiIzena.setText(a.getArgazkiBidea());
         }
 
-        // Kategoria hautatu
         if (a.getKategoria() != null) {
             for (Kategoria k : cbKategoria.getItems()) {
                 if (k.getKategoriaId() == a.getKategoria().getKategoriaId()) {
@@ -89,7 +90,6 @@ public class ArtikuluaEdituController implements Initializable {
             }
         }
 
-        // Kokalekua hautatu
         if (a.getKokalekua() != null) {
             for (Kokalekua kok : cbKokalekua.getItems()) {
                 if (kok.getKokalekuOsoa().equals(a.getKokalekua().getKokalekuOsoa())) {
@@ -126,12 +126,11 @@ public class ArtikuluaEdituController implements Initializable {
         int idKat = cbKategoria.getValue() != null ? cbKategoria.getValue().getKategoriaId() : 0;
         int idKok = cbKokalekua.getValue() != null ? cbKokalekua.getValue().getKokalekuId() : 0;
 
-        // Argazki berria kopiatzen da
         String argazkiBidea = artikulua.getArgazkiBidea();
         if (argazkiFile != null) {
-            String kopiaCopy = kopiatuArgazkia(argazkiFile);
-            if (kopiaCopy != null) {
-                argazkiBidea = kopiaCopy;
+            String kopia = kopiatuArgazkia(argazkiFile);
+            if (kopia != null) {
+                argazkiBidea = kopia;
             }
         }
 
@@ -139,9 +138,6 @@ public class ArtikuluaEdituController implements Initializable {
                 idKat, idKok, argazkiBidea);
         if (ok) {
             XMLExportazioa.exportatu();
-            if (onGordeCb != null) {
-                onGordeCb.run();
-            }
             itxi();
         } else {
             erakutsiErrorea("Errorea gordetzean.");
@@ -150,8 +146,11 @@ public class ArtikuluaEdituController implements Initializable {
 
     @FXML
     private void itxi() {
-        Stage stage = (Stage) txtIzena.getScene().getWindow();
-        stage.close();
+        if (contentArea != null) {
+            UIKudeatzailea.kargatuPanela(contentArea, "/view/Inbentario.fxml");
+        } else {
+            ((Stage) txtIzena.getScene().getWindow()).close();
+        }
     }
 
     private String kopiatuArgazkia(File origen) {
