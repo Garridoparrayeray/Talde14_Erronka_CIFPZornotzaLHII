@@ -1,4 +1,5 @@
 package app;
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -7,12 +8,14 @@ import javafx.stage.Stage;
 
 /**
  * JavaFX aplikazioaren klase nagusia. Login pantaila kargatzen du hasieran.
+ *
  * @author Yeray Garrido
  */
 public class Main extends Application {
 
     /**
      * Leiho nagusia sortzen du eta login bista kargatzen du.
+     *
      * @param primaryStage JavaFX leiho nagusia
      * @throws Exception FXML kargatzean errorea bada
      */
@@ -29,21 +32,22 @@ public class Main extends Application {
     }
 
     /**
-     * Aplikazioa ixten denean deitzen da automatikoki.
-     * DB-tik azken datuak store.dat-era gordetzen ditu offline-erako.
+     * Aplikazioa ixten denean deitzen da automatikoki. DB-tik azken datuak
+     * store.dat-era gordetzen ditu offline-erako.
      */
     @Override
     public void stop() {
         if (!utils.ModoKudeatzailea.isOffline()) {
-            utils.BiltegiLocala.getInstance().sincronizatuDBtik();
+            utils.BiltegiLocala.sincronizatuDBtik();
         } else {
-            utils.BiltegiLocala.getInstance().gorde();
+            utils.BiltegiLocala.gorde();
         }
         utils.DBConexioa.itxi();
     }
 
     /**
      * JavaFX aplikazioa abiarazten du.
+     *
      * @param args Komando-lerroko argumentuak
      */
     public static void main(String[] args) {

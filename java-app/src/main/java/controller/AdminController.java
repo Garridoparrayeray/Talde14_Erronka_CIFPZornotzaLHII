@@ -38,6 +38,8 @@ public class AdminController implements Initializable {
     private Button btnKokalekuak;
     @FXML
     private Button btnAuditoria;
+    @FXML
+    private Button btnIraungitakoak;
 
     @FXML
     private Label lblLangileIzena;
@@ -56,6 +58,7 @@ public class AdminController implements Initializable {
         navBotoiak.add(btnKategoriak);
         navBotoiak.add(btnKokalekuak);
         navBotoiak.add(btnAuditoria);
+        navBotoiak.add(btnIraungitakoak);
 
         Langilea l = Sesio.getLangilea();
         if (l != null) {
@@ -108,6 +111,15 @@ public class AdminController implements Initializable {
     public void loadAuditoria() {
         setAktibo(btnAuditoria);
         UIKudeatzailea.kargatuPanela(adminContentArea, "/view/Auditoria.fxml");
+    }
+
+    /**
+     * Iraungitako artikuluen kudeaketa bista kargatzen du.
+     */
+    @FXML
+    public void loadIraungitakoak() {
+        setAktibo(btnIraungitakoak);
+        UIKudeatzailea.kargatuPanela(adminContentArea, "/view/Iraungitakoak.fxml");
     }
 
     /**

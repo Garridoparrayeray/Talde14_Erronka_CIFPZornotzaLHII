@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 import utils.DBConexioa;
+import utils.ModoKudeatzailea;
 
 /**
  * Datu-basearen babes-kopiak kudeatzeko DAO klasea.
@@ -31,6 +32,10 @@ public class BackupDAO {
      * @throws Exception Idazketa edo konexio errorea
      */
     public static String eginBabesKopia() throws Exception {
+        if (ModoKudeatzailea.isOffline()) {
+            throw new Exception("Aplikazioa offline moduan dago. Ezin da datu-basearen babes-kopiarik egin.");
+        }
+
         String data = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmm"));
 
         File exportDir = new File("/app/exportazioak");

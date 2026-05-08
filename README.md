@@ -228,8 +228,8 @@ chmod +x start-linux.sh stop-linux.sh
 | Zerbitzua | URL | Erabiltzailea | Pasahitza |
 |-----------|-----|---------------|-----------|
 | Web ataria | http://localhost:8000 | — | — |
-| Adminer (BD UI) | http://localhost:8081 | `bermeo_udaltzain` | `udaltzainpw` |
-| BD zuzena | localhost:3306 | `bermeo_udaltzain` | `udaltzainpw` |
+| Adminer (BD UI) | http://localhost:8081 | `admin` | `admin123` |
+| BD zuzena | localhost:3306 | `admin` | `admin123` |
 
 **Adminer konfigurazioa:**
 - **Sistema:** MySQL

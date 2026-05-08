@@ -8,10 +8,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import model.Aurkitzailea;
+import utils.BiltegiLocala;
 import utils.DBConexioa;
 import utils.LogKudeatzailea;
 import utils.ModoKudeatzailea;
-import utils.BiltegiLocala;
 
 /**
  * AURKITZAILEA taulako eragiketak kudeatzen dituen DAO klasea.
@@ -28,12 +28,11 @@ public class AurkitzaileaDAO {
     public static boolean gehitu(String idArtikulua, String izena, String abizena,
             String telefonoa, String emaila, String aurkipenLekua) {
         if (ModoKudeatzailea.isOffline()) {
-            return BiltegiLocala.getInstance().aurkitzaileaGehitu(idArtikulua, izena, abizena, telefonoa, emaila, aurkipenLekua);
+            return BiltegiLocala.aurkitzaileaGehitu(idArtikulua, izena, abizena, telefonoa, emaila, aurkipenLekua);
         }
         String sql = "INSERT INTO AURKITZAILEA (izena, abizena, telefonoa, emaila, aurkipen_lekua, id_artikulua) "
                 + "VALUES (?, ?, ?, ?, ?, ?)";
-        try (Connection con = DBConexioa.getKonexioa();
-                PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = DBConexioa.getKonexioa(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, izena);
             ps.setString(2, abizena);
             ps.setString(3, telefonoa.isEmpty() ? null : telefonoa);
@@ -53,10 +52,11 @@ public class AurkitzaileaDAO {
      * @return Aurkitzailea edo null ez bada
      */
     public static Aurkitzailea getByArtikulua(String idArtikulua) {
-        if (ModoKudeatzailea.isOffline()) return BiltegiLocala.getInstance().getAurkitzaileaByArtikulua(idArtikulua);
+        if (ModoKudeatzailea.isOffline()) {
+            return BiltegiLocala.getAurkitzaileaByArtikulua(idArtikulua);
+        }
         String sql = "SELECT * FROM AURKITZAILEA WHERE id_artikulua = ? LIMIT 1";
-        try (Connection con = DBConexioa.getKonexioa();
-                PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = DBConexioa.getKonexioa(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, idArtikulua);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {

@@ -1151,7 +1151,7 @@ Los **roles de base de datos** son una función avanzada que permite definir con
 |-----------|-----------|-----|----------|
 | `admin` | `admin123` | `admin_rola` | Administradores |
 | `udaltzain1`, `udaltzain2` | `udal123` | `udaltzain_rola` | Empleados |
-| `bermeo_udaltzain` | `udaltzainpw` | — | Conexión de la app Java |
+| `admin` | `admin123` | — | Conexión de la app Java |
 | `bezero_web` | `bezeropw` | `bezero_rola` | Portal web (solo lectura) |
 
 ### 5.3 Triggers

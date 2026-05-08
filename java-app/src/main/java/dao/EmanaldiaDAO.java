@@ -8,10 +8,10 @@ import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import utils.BiltegiLocala;
 import utils.DBConexioa;
 import utils.LogKudeatzailea;
 import utils.ModoKudeatzailea;
-import utils.BiltegiLocala;
 
 /**
  * Emanaldien datu-baseko eragiketak kudeatzen dituen DAO klasea.
@@ -33,7 +33,7 @@ public class EmanaldiaDAO {
             String helbidea, String oharrak, int idLangile,
             String dokumentuBidea) {
         if (ModoKudeatzailea.isOffline()) {
-            return BiltegiLocala.getInstance().formalizatu(idArtikulua, nan, izena, abizena, telefonoa, emaila, helbidea, oharrak, idLangile, dokumentuBidea);
+            return BiltegiLocala.formalizatu(idArtikulua, nan, izena, abizena, telefonoa, emaila, helbidea, oharrak, idLangile, dokumentuBidea);
         }
         Connection con = null;
         try {
@@ -62,7 +62,6 @@ public class EmanaldiaDAO {
             }
 
             // ARTIKULUA egoera trg_emanaldia_eguneratu_artikulua triggerrak aldatzen du
-
             String deskMug = "Artikulua " + izena + " " + abizena + "-ri eman zaio.";
             String sqlMug = "INSERT INTO MUGIMENDUA (deskribapena, id_artikulua, id_langile) VALUES (?, ?, ?)";
             try (PreparedStatement ps = con.prepareStatement(sqlMug)) {
@@ -110,7 +109,7 @@ public class EmanaldiaDAO {
             String izenOfiziala, String telefonoa, String emaila,
             String helbidea, String oharrak, int idLangile, String dokumentuBidea) {
         if (ModoKudeatzailea.isOffline()) {
-            return BiltegiLocala.getInstance().formalizatuErakundea(idArtikulua, ift, izenOfiziala, telefonoa, emaila, helbidea, oharrak, idLangile, dokumentuBidea);
+            return BiltegiLocala.formalizatuErakundea(idArtikulua, ift, izenOfiziala, telefonoa, emaila, helbidea, oharrak, idLangile, dokumentuBidea);
         }
         Connection con = null;
         try {
@@ -156,12 +155,21 @@ public class EmanaldiaDAO {
         } catch (SQLException e) {
             LOG.log(Level.SEVERE, "formalizatuErakundea: datu-baseko errorea", e);
             if (con != null) {
-                try { con.rollback(); } catch (SQLException ex) { LOG.log(Level.SEVERE, "rollback errorea", ex); }
+                try {
+                    con.rollback();
+                } catch (SQLException ex) {
+                    LOG.log(Level.SEVERE, "rollback errorea", ex);
+                }
             }
             return false;
         } finally {
             if (con != null) {
-                try { con.setAutoCommit(true); con.close(); } catch (SQLException ex) { LOG.log(Level.WARNING, "itxiera errorea", ex); }
+                try {
+                    con.setAutoCommit(true);
+                    con.close();
+                } catch (SQLException ex) {
+                    LOG.log(Level.WARNING, "itxiera errorea", ex);
+                }
             }
         }
     }
@@ -190,7 +198,9 @@ public class EmanaldiaDAO {
             ps.setString(3, helbidea.isEmpty() ? null : helbidea);
             ps.executeUpdate();
             ResultSet gen = ps.getGeneratedKeys();
-            if (!gen.next()) return -1;
+            if (!gen.next()) {
+                return -1;
+            }
             idH = gen.getInt(1);
         }
 

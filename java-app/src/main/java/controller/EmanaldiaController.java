@@ -75,6 +75,7 @@ public class EmanaldiaController implements Initializable {
     private File archivoSinadura;
     private int erreklamazioId = -1;
     private StackPane contentArea = null;
+    private String atzeraFxmlPath = null;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -119,6 +120,33 @@ public class EmanaldiaController implements Initializable {
                 artikuluaHautatu();
             }
         }
+    }
+
+    public void setIraungitakoa(Artikulua artikulua, boolean erakundeaDa,
+                                String aurkIzena, String aurkAbizena,
+                                String aurkTelefonoa, String aurkEmaila,
+                                StackPane contentArea) {
+        this.contentArea = contentArea;
+        this.atzeraFxmlPath = "/view/Iraungitakoak.fxml";
+        cbArtikulua.getItems().clear();
+        artikuluak.clear();
+        artikuluak.add(artikulua);
+        cbArtikulua.getItems().add(artikulua.getArtikuluKodea() + " – " + artikulua.getIzenburua());
+        cbArtikulua.getSelectionModel().selectFirst();
+        artikuluaHautatu();
+        lblArtikuluEgoera.setText("Iraungita");
+        cbArtikulua.setDisable(true);
+
+        if (erakundeaDa) {
+            if (rbErakundea != null) rbErakundea.setSelected(true);
+        } else {
+            if (rbPertsona != null) rbPertsona.setSelected(true);
+            if (aurkIzena != null && txtIzena != null) txtIzena.setText(aurkIzena);
+            if (aurkAbizena != null && txtAbizena != null) txtAbizena.setText(aurkAbizena);
+            if (aurkTelefonoa != null && txtTelefonoa != null) txtTelefonoa.setText(aurkTelefonoa);
+            if (aurkEmaila != null && txtEmaila != null) txtEmaila.setText(aurkEmaila);
+        }
+        aldatuHartzaileMota();
     }
 
     @FXML
@@ -211,6 +239,8 @@ public class EmanaldiaController implements Initializable {
             if (erreklamazioId > 0) {
                 ErreklamazioaDAO.updateEgoera(String.valueOf(erreklamazioId), "ebatzita");
                 UIKudeatzailea.kargatuPanela(contentArea, "/view/Erreklamazioak.fxml");
+            } else if (atzeraFxmlPath != null && contentArea != null) {
+                UIKudeatzailea.kargatuPanela(contentArea, atzeraFxmlPath);
             } else {
                 garbitu();
                 erakutsiErrorea("Emanaldia ondo formalizatu da.");
@@ -223,7 +253,8 @@ public class EmanaldiaController implements Initializable {
     @FXML
     private void utzi() {
         if (contentArea != null) {
-            UIKudeatzailea.kargatuPanela(contentArea, "/view/Erreklamazioak.fxml");
+            String dest = (atzeraFxmlPath != null) ? atzeraFxmlPath : "/view/Erreklamazioak.fxml";
+            UIKudeatzailea.kargatuPanela(contentArea, dest);
         } else {
             garbitu();
         }
