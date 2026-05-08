@@ -15,6 +15,8 @@ import utils.AppConfig;
 
 /**
  * Artikuluaren argazkia eta deskribapena erakusten dituen popup kontroladorea.
+ * 
+ * @author Yeray Garrido Parra
  */
 public class IrudiaPopupController implements Initializable {
 
@@ -23,6 +25,12 @@ public class IrudiaPopupController implements Initializable {
     @FXML private Label lblDeskribapena;
     @FXML private Label lblNoImage;
 
+    /**
+     * Kontroladorea hasieratzen du. Ezinbestekoa Initializable interfazea inplementatzean.
+     * 
+     * @param url FXML fitxategiaren kokapena
+     * @param rb Erabilitako baliabide-sorta (hizkuntzak, etab.)
+     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
     }
@@ -65,6 +73,9 @@ public class IrudiaPopupController implements Initializable {
         }
     }
 
+    /**
+     * Popup leihoa ixten du dagokion botoia sakatzean.
+     */
     @FXML
     private void itxi() {
         Stage stage = (Stage) lblKodea.getScene().getWindow();
