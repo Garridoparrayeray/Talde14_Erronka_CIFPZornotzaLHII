@@ -167,158 +167,23 @@ public class Artikulua implements Serializable {
     }
 
     // Getters & Setters
-    /**
-     * Artikuluaren datu-baseko ID zenbakia itzultzen du.
-     *
-     * @return Artikuluaren IDa
-     */
-    public int getArtikuluId() {
-        return artikuluId;
-    }
-
-    /**
-     * Artikuluaren kode bakarra itzultzen du.
-     *
-     * @return Artikuluaren kode testua (adib. G-001-26)
-     */
-    public String getArtikuluKodea() {
-        return artikuluKodea;
-    }
-
-    /**
-     * Artikuluaren izen laburra itzultzen du.
-     *
-     * @return Izenburua
-     */
-    public String getIzenburua() {
-        return izenburua;
-    }
-
-    /**
-     * Artikuluaren izen laburra ezartzen du.
-     *
-     * @param izenburua Ezarri beharreko izenburua
-     */
-    public void setIzenburua(String izenburua) {
-        this.izenburua = izenburua;
-    }
-
-    /**
-     * Artikuluaren deskripzio osoa itzultzen du.
-     *
-     * @return Deskribapena
-     */
-    public String getDeskribapena() {
-        return deskribapena;
-    }
-
-    /**
-     * Artikuluaren deskribapena ezartzen du.
-     *
-     * @param deskribapena Ezarri beharreko deskribapena
-     */
-    public void setDeskribapena(String deskribapena) {
-        this.deskribapena = deskribapena;
-    }
-
-    /**
-     * Artikuluaren markaren izena itzultzen du.
-     *
-     * @return Marka
-     */
-    public String getMarka() {
-        return marka;
-    }
-
-    /**
-     * Artikuluaren kolorea itzultzen du.
-     *
-     * @return Kolorea
-     */
-    public String getKolorea() {
-        return kolorea;
-    }
-
-    /**
-     * Biltegira sartu zen data itzultzen du.
-     *
-     * @return Sarrera-data
-     */
-    public Date getSarreraData() {
-        return sarreraData;
-    }
-
-    /**
-     * Artikuluaren gordailutze-epearen azken data itzultzen du.
-     *
-     * @return Iraungitze-data
-     */
-    public Date getIraungitzeData() {
-        return iraungitzeData;
-    }
-
-    /**
-     * Argazkiaren fitxategi-bidea itzultzen du.
-     *
-     * @return Argazkiaren bidea
-     */
-    public String getArgazkiBidea() {
-        return argazkiBidea;
-    }
-
-    /**
-     * Argazkiaren fitxategi-bidea ezartzen du.
-     *
-     * @param argazkiBidea Ezarri beharreko argazki-bidea
-     */
-    public void setArgazkiBidea(String argazkiBidea) {
-        this.argazkiBidea = argazkiBidea;
-    }
-
-    /**
-     * Artikuluaren uneko egoera itzultzen du.
-     *
-     * @return Egoera enumerazioa
-     */
-    public EgoeraArtikulua getEgoera() {
-        return egoera;
-    }
-
-    /**
-     * Artikuluari lotutako kategoria itzultzen du.
-     *
-     * @return Kategoria objektua
-     */
-    public Kategoria getKategoria() {
-        return kategoria;
-    }
-
-    /**
-     * Artikuluaren kategoria ezartzen du.
-     *
-     * @param kategoria Ezarri beharreko kategoria
-     */
-    public void setKategoria(Kategoria kategoria) {
-        this.kategoria = kategoria;
-    }
-
-    /**
-     * Artikuluari lotutako kokalekua itzultzen du.
-     *
-     * @return Kokalekua objektua
-     */
-    public Kokalekua getKokalekua() {
-        return kokalekua;
-    }
-
-    /**
-     * Artikuluaren kokalekua ezartzen du.
-     *
-     * @param kokalekua Ezarri beharreko kokalekua
-     */
-    public void setKokalekua(Kokalekua kokalekua) {
-        this.kokalekua = kokalekua;
-    }
+    public int getArtikuluId() { return artikuluId; }
+    public String getArtikuluKodea() { return artikuluKodea; }
+    public String getIzenburua() { return izenburua; }
+    public void setIzenburua(String izenburua) { this.izenburua = izenburua; }
+    public String getDeskribapena() { return deskribapena; }
+    public void setDeskribapena(String deskribapena) { this.deskribapena = deskribapena; }
+    public String getMarka() { return marka; }
+    public String getKolorea() { return kolorea; }
+    public Date getSarreraData() { return sarreraData; }
+    public Date getIraungitzeData() { return iraungitzeData; }
+    public String getArgazkiBidea() { return argazkiBidea; }
+    public void setArgazkiBidea(String argazkiBidea) { this.argazkiBidea = argazkiBidea; }
+    public EgoeraArtikulua getEgoera() { return egoera; }
+    public Kategoria getKategoria() { return kategoria; }
+    public void setKategoria(Kategoria kategoria) { this.kategoria = kategoria; }
+    public Kokalekua getKokalekua() { return kokalekua; }
+    public void setKokalekua(Kokalekua kokalekua) { this.kokalekua = kokalekua; }
 
     @Override
     public String toString() {

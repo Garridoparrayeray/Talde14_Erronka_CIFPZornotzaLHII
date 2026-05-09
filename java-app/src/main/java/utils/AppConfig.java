@@ -5,8 +5,8 @@ import java.io.InputStream;
 import java.util.Properties;
 
 /**
- * Konfigurazioaren irakurketa zentralizatzen duen klasea.
- * Lehentasuna: ingurune-aldagaiak > application.properties > balioak lehenetsiak.
+ * Konfigurazioaren irakurketa zentralizatzen duen klasea. Lehentasuna:
+ * ingurune-aldagaiak > application.properties > balioak lehenetsiak.
  */
 public class AppConfig {
 
@@ -29,7 +29,9 @@ public class AppConfig {
         return PROPS.getProperty(key, defVal);
     }
 
-    /** Partekatutako datuak karpetaren bide absolutua. */
+    /**
+     * Partekatutako datuak karpetaren bide absolutua.
+     */
     public static String getExportBidea() {
         String base = get("EXPORT_BIDEA", "partekatutako_datuak");
         File f = new File(base);
@@ -39,17 +41,24 @@ public class AppConfig {
         return f.getAbsolutePath();
     }
 
-    /** Irudien azpikarpeta (exportBidea/irudiak) - XML/web biderako. */
+    /**
+     * Irudien azpikarpeta (exportBidea/irudiak) - XML/web biderako.
+     */
     public static String getIrudiakBidea() {
         return getExportBidea() + File.separator + "irudiak";
     }
 
-    /** XML fitxategiaren bide osoa. */
+    /**
+     * XML fitxategiaren bide osoa.
+     */
     public static String getXmlBidea() {
         return getExportBidea() + File.separator + "artikuluak.xml";
     }
 
-    /** artikulu_irudiak/ karpeta - aplikazioak erabiltzen duen argazki-biltegi nagusia. */
+    /**
+     * artikulu_irudiak/ karpeta - aplikazioak erabiltzen duen argazki-biltegi
+     * nagusia.
+     */
     public static String getArtikuluIrudiakBidea() {
         String val = get("IRUDIAK_BIDEA", "artikulu_irudiak");
         File f = new File(val);
@@ -57,5 +66,13 @@ public class AppConfig {
             f = new File(System.getProperty("user.dir"), val);
         }
         return f.getAbsolutePath();
+    }
+
+    /**
+     * Sinadura dokumentuen karpeta - aplikazioak erabiltzen duen biltegi
+     * nagusia.
+     */
+    public static String getSinaduraBidea() {
+        return getExportBidea() + File.separator + "sinadurak";
     }
 }

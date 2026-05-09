@@ -3,6 +3,8 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
@@ -13,30 +15,14 @@
 <HBox prefHeight="900.0" prefWidth="1440.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MainController">
    <children>
 
-      <VBox prefWidth="260.0" spacing="20.0" styleClass="sidebar, bg-white" HBox.hgrow="NEVER">
+      <VBox minWidth="260.0" prefWidth="260.0" maxWidth="260.0" spacing="20.0" styleClass="sidebar, bg-white" HBox.hgrow="NEVER">
          <children>
 
             <!-- Logo -->
-            <HBox alignment="CENTER_LEFT" spacing="12.0">
-               <children>
-                  <AnchorPane prefHeight="35.0" prefWidth="35.0" style="-fx-background-radius: 6;" styleClass="bg-primary">
-                     <children>
-                        <Label layoutX="8.0" layoutY="8.0" styleClass="text-white, font-bold" text="ER" />
-                     </children>
-                  </AnchorPane>
-                  <VBox alignment="CENTER_LEFT">
-                     <children>
-                        <Label styleClass="text-dark, font-bold" text="ERRONKA">
-                           <font><Font size="14.0" /></font>
-                        </Label>
-                        <Label styleClass="text-muted" text="BERMEOKO UDALA">
-                           <font><Font size="10.0" /></font>
-                        </Label>
-                     </children>
-                  </VBox>
-               </children>
+            <ImageView fitWidth="180.0" preserveRatio="true" smooth="true">
+               <image><Image url="@/bermeoko_udala_logotipoa.jpeg" /></image>
                <VBox.margin><Insets bottom="10.0" /></VBox.margin>
-            </HBox>
+            </ImageView>
 
             <!-- Nabigazio botoiak -->
             <VBox spacing="5.0" VBox.vgrow="ALWAYS">
@@ -51,6 +37,7 @@
                   <Button fx:id="btnErreklamazioak"  onAction="#loadErreklamazioak" maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="nav-item" text="Erreklamazioak" />
                   <Button fx:id="btnEmanaldia"       onAction="#loadEmanaldia"      maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="nav-item" text="Emanaldia" />
                   <Button fx:id="btnGalduDabenak"   onAction="#loadGalduDabenak"   maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="nav-item" text="Galdu dabenak" />
+                  <Button fx:id="btnBabesKopia" onAction="#eginBabesKopia" maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="nav-item" text="Babes-kopia egin" />
                </children>
             </VBox>
 

@@ -6,7 +6,6 @@ import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
 import dao.LangileaDAO;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -14,9 +13,9 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.stage.Stage;
 import model.Langilea;
 import utils.LogKudeatzailea;
+import utils.UIKudeatzailea;
 
 /**
  * Langile bat editatzeko elkarrizketa-leihoaren kontroladorea.
@@ -43,7 +42,6 @@ public class LangileaEdituController implements Initializable {
     private Button btnUtzi;
 
     private Langilea langilea;
-    private Runnable onUpdateCallback;
     private List<String[]> rolak;
 
     @Override
@@ -55,7 +53,8 @@ public class LangileaEdituController implements Initializable {
     }
 
     /**
-     * Editatu beharreko langilea ezartzen du eta formularioko eremuak betetzen ditu.
+     * Editatu beharreko langilea ezartzen du eta formularioko eremuak betetzen
+     * ditu.
      *
      * @param l Editatu beharreko langilea
      */
@@ -68,21 +67,11 @@ public class LangileaEdituController implements Initializable {
     }
 
     /**
-     * Eguneraketa egin ondoren deitu beharreko callback-a ezartzen du.
-     *
-     * @param callback Langilea gordetzean exekutatuko den funtzioa
-     */
-    public void setOnUpdateCallback(Runnable callback) {
-        this.onUpdateCallback = callback;
-    }
-
-    /**
-     * Formularioko datuak egiaztatzen ditu eta langilearen aldaketak datu-basean gordetzen ditu.
-     *
-     * @param event Botoiaren ekintza-gertaera
+     * Formularioko datuak egiaztatzen ditu eta langilearen aldaketak
+     * datu-basean gordetzen ditu.
      */
     @FXML
-    public void eguneratu(ActionEvent event) {
+    private void eguneratu() {
         String izena = txtIzena.getText().trim();
         String abizena = txtAbizena.getText().trim();
         String erabiltzailea = txtErabiltzailea.getText().trim();
@@ -90,7 +79,7 @@ public class LangileaEdituController implements Initializable {
         String pasahitzaBerria = txtPasahitza != null ? txtPasahitza.getText() : "";
 
         if (izena.isEmpty() || abizena.isEmpty() || erabiltzailea.isEmpty() || rolaDeskribapena == null) {
-            erakutsiErrorea("Eremu guztiak bete behar dira.");
+            UIKudeatzailea.erakutsiFormularioErrorea(lblErrorea, "Eremu guztiak bete behar dira.");
             return;
         }
 
@@ -105,41 +94,22 @@ public class LangileaEdituController implements Initializable {
         boolean ondo = LangileaDAO.eguneratu(langilea.getLangileId(), izena, abizena, erabiltzailea, idRola, pasahitzaBerria);
 
         if (ondo) {
-            if (onUpdateCallback != null) {
-                onUpdateCallback.run();
-            }
-            itxiLeihoa();
+            itxi();
         } else {
-            erakutsiErrorea("Errorea gertatu da datu-basean eguneratzean.");
+            UIKudeatzailea.erakutsiFormularioErrorea(lblErrorea, "Errorea gertatu da datu-basean eguneratzean.");
         }
     }
 
-    /**
-     * Aldaketak gorde gabe leihoa ixten du.
-     *
-     * @param event Botoiaren ekintza-gertaera
-     */
+    /** Aldaketak gorde gabe leihoa ixten du. */
     @FXML
-    public void utzi(ActionEvent event) {
-        itxiLeihoa();
+    private void utzi() {
+        itxi();
     }
 
     /**
-     * Errore-mezu bat erakusten du formularioaren azpian.
-     *
-     * @param mezua Erakutsi beharreko testua
+     * Langileen zerrendara itzultzen da.
      */
-    private void erakutsiErrorea(String mezua) {
-        lblErrorea.setText(mezua);
-        lblErrorea.setVisible(true);
-        lblErrorea.setManaged(true);
-    }
-
-    /**
-     * Leiho hau ixten du.
-     */
-    private void itxiLeihoa() {
-        Stage stage = (Stage) btnUtzi.getScene().getWindow();
-        stage.close();
+    private void itxi() {
+        UIKudeatzailea.kargatuPanela("/view/Langileak.fxml");
     }
 }

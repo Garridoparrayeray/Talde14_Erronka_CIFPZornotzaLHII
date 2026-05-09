@@ -30,6 +30,8 @@ public class LangileaDAO {
 
     /**
      * Langile guztiak itzultzen ditu datu-basetik (taulan erakusteko).
+     *
+     * @return Langile guztien zerrenda; hutsik egon daiteke
      */
     public static List<Langilea> getGuztiak() {
         if (ModoKudeatzailea.isOffline()) {
@@ -62,11 +64,11 @@ public class LangileaDAO {
      *
      * @return Rol zerrenda, bakoitza String[]{id, deskribapena} gisa
      */
-    public static ArrayList<String[]> getRolak() {
+    public static List<String[]> getRolak() {
         if (ModoKudeatzailea.isOffline()) {
             return new ArrayList<>(BiltegiLocala.getRolak());
         }
-        ArrayList<String[]> zerrenda = new ArrayList<>();
+        List<String[]> zerrenda = new ArrayList<>();
         String sql = "SELECT id_rola, deskribapena FROM ROLA ORDER BY id_rola";
         try (Connection con = DBConexioa.getKonexioa(); PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
@@ -83,6 +85,13 @@ public class LangileaDAO {
 
     /**
      * Langile berria gordetzen du datu-basean pasahitza BCrypt bidez zifratuta.
+     *
+     * @param izena          Langilearen izena
+     * @param abizena        Langilearen abizena
+     * @param erabiltzailea  Erabiltzaile-izena (bakarra izan behar da)
+     * @param pasahitza      Argizko pasahitza (hash eginda gordeko da)
+     * @param idRola         Langileari esleitu beharreko rolaren IDa
+     * @return Ondo gorde bada true, bestela false
      */
     public static boolean gehitu(String izena, String abizena, String erabiltzailea, String pasahitza, int idRola) {
         if (ModoKudeatzailea.isOffline()) {
@@ -104,10 +113,12 @@ public class LangileaDAO {
     }
 
     /**
-     * Erabiltzailea eta pasahitza egiaztatzen du.
+     * Erabiltzailea eta pasahitza egiaztatzen ditu eta dagokion Langilea objektua
+     * itzultzen du.
      *
-     * @return Langilea (edo Administratzailea) ala null autentifikazioa huts
-     * egiten badu.
+     * @param erabiltzailea Saioa hasteko erabiltzaile-izena
+     * @param pasahitza     Argizko pasahitza BCrypt bidez egiaztatuko dena
+     * @return Langilea (edo Administratzailea) ondo autentifikatu bada, null bestela
      */
     public static Langilea login(String erabiltzailea, String pasahitza) {
         if (ModoKudeatzailea.isOffline()) {
@@ -168,6 +179,17 @@ public class LangileaDAO {
         return eguneratu(id, izena, abizena, erabiltzailea, idRola, null);
     }
 
+    /**
+     * Langilearen datuak eguneratzen ditu, aukeran pasahitza ere aldatuz.
+     *
+     * @param id               Langilearen identifikatzailea
+     * @param izena            Langilearen izen berria
+     * @param abizena          Langilearen abizen berria
+     * @param erabiltzailea    Erabiltzaile izen berria
+     * @param idRola           Rolaren ID berria
+     * @param pasahitzaBerria  Pasahitz berria (null edo hutsa bada, ez da aldatzen)
+     * @return true ondo eguneratu bada, false bestela
+     */
     public static boolean eguneratu(int id, String izena, String abizena, String erabiltzailea, int idRola, String pasahitzaBerria) {
         if (ModoKudeatzailea.isOffline()) {
             return BiltegiLocala.langileaEguneratu(id, izena, abizena, erabiltzailea, idRola, pasahitzaBerria);

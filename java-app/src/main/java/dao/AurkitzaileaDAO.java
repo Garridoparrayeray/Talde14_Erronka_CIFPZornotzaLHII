@@ -15,6 +15,8 @@ import utils.ModoKudeatzailea;
 
 /**
  * AURKITZAILEA taulako eragiketak kudeatzen dituen DAO klasea.
+ *
+ * @author Yeray Garrido
  */
 public class AurkitzaileaDAO {
 
@@ -23,7 +25,13 @@ public class AurkitzaileaDAO {
     /**
      * Aurkitzailearen datuak gordetzen ditu artikuluarekin lotuta.
      *
-     * @return Ondo gorde bada true
+     * @param idArtikulua  Aurkitzailearekin lotutako artikuluaren kodea
+     * @param izena        Aurkitzailearen izena
+     * @param abizena      Aurkitzailearen abizena
+     * @param telefonoa    Aurkitzailearen telefonoa (hutsik bada null gordetzen da)
+     * @param emaila       Aurkitzailearen helbide elektronikoa (hutsik bada null)
+     * @param aurkipenLekua Objektua aurkitu zen lekua (hutsik bada null)
+     * @return Ondo gorde bada true, bestela false
      */
     public static boolean gehitu(String idArtikulua, String izena, String abizena,
             String telefonoa, String emaila, String aurkipenLekua) {
@@ -35,9 +43,21 @@ public class AurkitzaileaDAO {
         try (Connection con = DBConexioa.getKonexioa(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, izena);
             ps.setString(2, abizena);
-            ps.setString(3, telefonoa.isEmpty() ? null : telefonoa);
-            ps.setString(4, emaila.isEmpty() ? null : emaila);
-            ps.setString(5, aurkipenLekua.isEmpty() ? null : aurkipenLekua);
+            if (telefonoa.isEmpty()) {
+                ps.setNull(3, java.sql.Types.VARCHAR);
+            } else {
+                ps.setString(3, telefonoa);
+            }
+            if (emaila.isEmpty()) {
+                ps.setNull(4, java.sql.Types.VARCHAR);
+            } else {
+                ps.setString(4, emaila);
+            }
+            if (aurkipenLekua.isEmpty()) {
+                ps.setNull(5, java.sql.Types.VARCHAR);
+            } else {
+                ps.setString(5, aurkipenLekua);
+            }
             ps.setString(6, idArtikulua);
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -49,7 +69,8 @@ public class AurkitzaileaDAO {
     /**
      * Artikulu baten aurkitzailearen datuak itzultzen ditu.
      *
-     * @return Aurkitzailea edo null ez bada
+     * @param idArtikulua Aurkitzailea bilatu beharreko artikuluaren kodea
+     * @return Aurkitzailea objektua, edo null ez bada existitzen
      */
     public static Aurkitzailea getByArtikulua(String idArtikulua) {
         if (ModoKudeatzailea.isOffline()) {

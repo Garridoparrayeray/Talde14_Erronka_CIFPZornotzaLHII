@@ -13,16 +13,12 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
-import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.StackPane;
 import model.Kokalekua;
 import utils.LogKudeatzailea;
 import utils.UIKudeatzailea;
@@ -37,8 +33,6 @@ public class KokalekuakController implements Initializable {
     private static final Logger LOG = LogKudeatzailea.lortu(KokalekuakController.class);
 
     @FXML
-    private StackPane contentArea;
-    @FXML
     private TableView<Kokalekua> taula;
     @FXML
     private TableColumn<Kokalekua, String> colId;
@@ -51,6 +45,13 @@ public class KokalekuakController implements Initializable {
     @FXML
     private TableColumn<Kokalekua, String> colMota;
 
+    /**
+     * Kontroladorea hasieratzen du: taula-zutabeak konfiguratzen ditu eta
+     * kokalekuak kargatzen ditu.
+     *
+     * @param url FXML fitxategiaren kokapena
+     * @param rb  Erabilitako baliabide-sorta
+     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         colId.setCellValueFactory(c -> new SimpleStringProperty(String.valueOf(c.getValue().getKokalekuId())));
@@ -77,11 +78,10 @@ public class KokalekuakController implements Initializable {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/KokalekuaBerria.fxml"));
             Node nodoa = loader.load();
-            KokalekuaBerriController ctrl = loader.getController();
-            ctrl.setContentArea(contentArea);
-            UIKudeatzailea.kargatuPanela(contentArea, nodoa);
+            UIKudeatzailea.kargatuPanela(nodoa);
         } catch (Exception e) {
             LOG.log(Level.SEVERE, "kokalekuaBerria: errorea", e);
+            UIKudeatzailea.erakutsiToast("Errorea: ezin izan da formularioa kargatu.", false);
         }
     }
 
@@ -93,27 +93,17 @@ public class KokalekuakController implements Initializable {
         Kokalekua sel = taula.getSelectionModel().getSelectedItem();
 
         if (sel == null) {
-            erakutsiAlerta(Alert.AlertType.WARNING, "Kontuz", "Aukeratu kokaleku bat taulan ezabatzeko.");
+            UIKudeatzailea.erakutsiToast("Aukeratu kokaleku bat taulan ezabatzeko.", false);
             return;
         }
 
-        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
-        confirm.setTitle("Kokalekua ezabatu");
-        confirm.setHeaderText("Kokalekua behin betiko ezabatuko da");
-        confirm.setContentText("Ziur zaude kokaleku hau ezabatu nahi duzula?");
-        confirm.initOwner(taula.getScene().getWindow());
-
-        confirm.showAndWait().ifPresent(btn -> {
-            if (btn == ButtonType.OK) {
-                boolean ondo = KokalekuaDAO.ezabatu(sel.getKokalekuId());
-                if (ondo) {
-                    kargatu();
-                    erakutsiAlerta(Alert.AlertType.INFORMATION, "Eginda", "Kokalekua ondo ezabatu da.");
-                } else {
-                    erakutsiAlerta(Alert.AlertType.ERROR, "Errorea", "Ezin izan da kokalekua ezabatu. Agian objektuekin lotuta dago.");
-                }
-            }
-        });
+        boolean ondo = KokalekuaDAO.ezabatu(sel.getKokalekuId());
+        if (ondo) {
+            kargatu();
+            UIKudeatzailea.erakutsiToast("Kokalekua ezabatu da.", true);
+        } else {
+            UIKudeatzailea.erakutsiToast("Ezin izan da kokalekua ezabatu. Agian objektuekin lotuta dago.", false);
+        }
     }
 
     /**
@@ -125,20 +115,14 @@ public class KokalekuakController implements Initializable {
         Kokalekua sel = taula.getSelectionModel().getSelectedItem();
 
         if (sel == null) {
-            erakutsiAlerta(Alert.AlertType.WARNING, "Kontuz", "Aukeratu kokaleku bat taulan editatzeko.");
+            UIKudeatzailea.erakutsiToast("Aukeratu kokaleku bat taulan editatzeko.", false);
             return;
         }
-
-        Dialog<ButtonType> dialog = new Dialog<>();
-        dialog.setTitle("Kokalekua editatu");
-        dialog.setHeaderText("Aldatu kokalekuaren datuak");
-        dialog.initOwner(taula.getScene().getWindow());
-        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
 
         GridPane grid = new GridPane();
         grid.setHgap(10);
         grid.setVgap(10);
-        grid.setPadding(new Insets(20, 20, 10, 10));
+        grid.setPadding(new Insets(10, 10, 10, 0));
 
         TextField txtArmairua = new TextField(sel.getArmairua());
         txtArmairua.setPromptText("Armairua");
@@ -155,41 +139,19 @@ public class KokalekuakController implements Initializable {
         grid.add(txtApala, 1, 1);
         grid.add(chkBha, 1, 2);
 
-        dialog.getDialogPane().setContent(grid);
-
-        dialog.setResultConverter(dialogButton -> {
-            if (dialogButton == ButtonType.OK) {
-                boolean ondo = KokalekuaDAO.eguneratu(
-                        sel.getKokalekuId(),
-                        txtArmairua.getText().trim(),
-                        txtApala.getText().trim(),
-                        chkBha.isSelected()
-                );
-                if (ondo) {
-                    kargatu();
-                    erakutsiAlerta(Alert.AlertType.INFORMATION, "Eginda", "Kokalekua ondo eguneratu da.");
-                } else {
-                    erakutsiAlerta(Alert.AlertType.ERROR, "Errorea", "Ezin izan da kokalekua eguneratu.");
-                }
+        UIKudeatzailea.erakutsiFormOverlay("Kokalekua editatu", grid, () -> {
+            boolean ondo = KokalekuaDAO.eguneratu(
+                    sel.getKokalekuId(),
+                    txtArmairua.getText().trim(),
+                    txtApala.getText().trim(),
+                    chkBha.isSelected()
+            );
+            if (ondo) {
+                kargatu();
+                UIKudeatzailea.erakutsiToast("Kokalekua ondo eguneratu da.", true);
+            } else {
+                UIKudeatzailea.erakutsiToast("Ezin izan da kokalekua eguneratu.", false);
             }
-            return null;
         });
-
-        dialog.showAndWait();
-    }
-
-    /**
-     * Erabiltzaileari mezu-koadro bat erakusten dio.
-     *
-     * @param mota    Alertaren mota (INFORMATION, WARNING, ERROR...)
-     * @param titulua Alertaren izenburua
-     * @param mezua   Erakutsi beharreko testua
-     */
-    private void erakutsiAlerta(Alert.AlertType mota, String titulua, String mezua) {
-        Alert alert = new Alert(mota);
-        alert.setTitle(titulua);
-        alert.setHeaderText(null);
-        alert.setContentText(mezua);
-        alert.showAndWait();
     }
 }

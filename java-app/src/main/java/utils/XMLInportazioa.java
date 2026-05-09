@@ -21,28 +21,39 @@ import model.EgoeraArtikulua;
 
 /**
  * XML fitxategi batetik artikuluen datuak irakurri eta datu-basea eguneratzen
- * duen utilitate estatikoa.
- * Artikulu bakoitzaren egoera XML-tik hartzen da eta DB-n eguneratzen da,
- * artikulua dagoeneko existitzen bada soilik.
+ * duen utilitate estatikoa. Artikulu bakoitzaren egoera XML-tik hartzen da eta
+ * DB-n eguneratzen da, artikulua dagoeneko existitzen bada soilik.
  */
 public class XMLInportazioa {
 
     private static final Logger LOG = LogKudeatzailea.lortu(XMLInportazioa.class);
 
-    private XMLInportazioa() {}
+    private XMLInportazioa() {
+    }
 
     /**
-     * Emaitza-laburpena.
+     * Inportazio-prozesuaren emaitza-laburpena gordetzen duen barneko klasea.
      */
     public static class Emaitza {
+
+        /** Ondo eguneratutako artikuluen kopurua. */
         public final int eguneratuak;
+        /** Saltatu diren edo huts egin duten artikuluen kopurua. */
         public final int saltaturak;
+        /** Artikulu bakoitzaren emaitza deskribatzen duten mezuen zerrenda. */
         public final List<String> mezuak;
 
+        /**
+         * Emaitza-objektua sortzen du inportazioaren laburpenarekin.
+         *
+         * @param eguneratuak Eguneratutako artikuluen kopurua
+         * @param saltaturak  Saltatutako edo huts egindakoen kopurua
+         * @param mezuak      Eragiketa bakoitzaren deskribapena duten mezuak
+         */
         Emaitza(int eguneratuak, int saltaturak, List<String> mezuak) {
             this.eguneratuak = eguneratuak;
-            this.saltaturak  = saltaturak;
-            this.mezuak      = mezuak;
+            this.saltaturak = saltaturak;
+            this.mezuak = mezuak;
         }
     }
 
@@ -54,7 +65,7 @@ public class XMLInportazioa {
      */
     public static Emaitza inportatu(File fitxategia) {
         int eguneratuak = 0;
-        int saltaturak  = 0;
+        int saltaturak = 0;
         List<String> mezuak = new ArrayList<>();
 
         try {
@@ -69,7 +80,7 @@ public class XMLInportazioa {
 
             for (int i = 0; i < artikuluNodes.getLength(); i++) {
                 Element el = (Element) artikuluNodes.item(i);
-                String id     = testua(el, "id");
+                String id = testua(el, "id");
                 String egoera = testua(el, "egoera");
 
                 if (id.isEmpty()) {
@@ -112,10 +123,16 @@ public class XMLInportazioa {
         return new Emaitza(eguneratuak, saltaturak, mezuak);
     }
 
+    /**
+     * Artikulu baten egoera datu-basean eguneratzen du.
+     *
+     * @param kodea    Eguneratu beharreko artikuluaren kodea
+     * @param dbEgoera DB-n gordetzeko egoera balioa
+     * @return Ondo eguneratu bada true, bestela false
+     */
     private static boolean eguneratuEgoera(String kodea, String dbEgoera) {
         String sql = "UPDATE ARTIKULUA SET egoera=? WHERE id_artikulua=?";
-        try (Connection con = utils.DBConexioa.getKonexioa();
-             PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = utils.DBConexioa.getKonexioa(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, dbEgoera);
             ps.setString(2, kodea);
             return ps.executeUpdate() > 0;
@@ -125,19 +142,40 @@ public class XMLInportazioa {
         }
     }
 
+    /**
+     * XML-ko egoera balioa DB-ko egoera balioetara mapatu egiten du.
+     *
+     * @param xmlEgoera XML fitxategitik irakurritako egoera testua
+     * @return DB-ko egoera balioa, edo null ezezaguna bada
+     */
     private static String xmlEgoeraMapatu(String xmlEgoera) {
-        if (xmlEgoera == null) return null;
+        if (xmlEgoera == null) {
+            return null;
+        }
         switch (xmlEgoera.toUpperCase()) {
-            case "BILTEGIAN": return "aurkitua";
-            case "ITZULITA":  return "bueltatua";
-            case "IRAUNGITA": return "iraungita";
-            default:          return null;
+            case "BILTEGIAN":
+                return "aurkitua";
+            case "ITZULITA":
+                return "bueltatua";
+            case "IRAUNGITA":
+                return "iraungita";
+            default:
+                return null;
         }
     }
 
+    /**
+     * XML elementu baten etiketa-edukia testu gisa itzultzen du.
+     *
+     * @param el      Edukia irakurri beharreko XML elementua
+     * @param etiketa Bilatu beharreko etiketa-izena
+     * @return Etiketaren testua (trim eginda), edo kate hutsa existitzen ez bada
+     */
     private static String testua(Element el, String etiketa) {
         NodeList nl = el.getElementsByTagName(etiketa);
-        if (nl.getLength() == 0) return "";
+        if (nl.getLength() == 0) {
+            return "";
+        }
         String val = nl.item(0).getTextContent();
         return val != null ? val.trim() : "";
     }

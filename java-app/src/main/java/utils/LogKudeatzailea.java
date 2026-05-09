@@ -80,6 +80,12 @@ public class LogKudeatzailea {
         return Logger.getLogger(klasea.getName());
     }
 
+    /**
+     * Log erregistroak formateatzeko Formatter bat sortzen du. Formatua:
+     * [data ordua] [maila] KlaseIzena: mezua.
+     *
+     * @return Konfiguratutako Formatter instantzia
+     */
     private static Formatter sortuFormatzailea() {
         return new SimpleFormatter() {
             private static final String FORMATUA = "[%1$tF %1$tT] [%2$-7s] %3$s: %4$s%n";

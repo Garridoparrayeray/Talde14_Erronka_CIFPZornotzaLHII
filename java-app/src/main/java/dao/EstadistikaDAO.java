@@ -37,6 +37,11 @@ public class EstadistikaDAO {
         return kontatuEgoera("aurkitua");
     }
 
+    /**
+     * Itzulitako artikulu kopurua itzultzen du.
+     *
+     * @return Itzulitako artikulu kopurua
+     */
     public static int bueltatakoKopurua() {
         if (ModoKudeatzailea.isOffline()) {
             return BiltegiLocala.bueltatakoKopurua();
@@ -44,6 +49,11 @@ public class EstadistikaDAO {
         return kontatuEgoera("bueltatua");
     }
 
+    /**
+     * Iraungitako artikulu kopurua itzultzen du.
+     *
+     * @return Iraungitako artikulu kopurua
+     */
     public static int iraungituakKopurua() {
         if (ModoKudeatzailea.isOffline()) {
             return BiltegiLocala.iraungituakKopurua();
@@ -51,6 +61,11 @@ public class EstadistikaDAO {
         return kontatuEgoera("iraungita");
     }
 
+    /**
+     * Hurrengo 30 egunetan iraungitzear dauden artikulu kopurua itzultzen du.
+     *
+     * @return Iraungitzear dauden artikulu kopurua
+     */
     public static int iraungitzearKopurua() {
         if (ModoKudeatzailea.isOffline()) {
             return BiltegiLocala.iraungitzearKopurua();
@@ -60,6 +75,11 @@ public class EstadistikaDAO {
         return kontatuSql(sql);
     }
 
+    /**
+     * Irekitako erreklamazio kopurua itzultzen du.
+     *
+     * @return Irekitako erreklamazio kopurua
+     */
     public static int erreklamazioIrekiakKopurua() {
         if (ModoKudeatzailea.isOffline()) {
             return BiltegiLocala.erreklamazioIrekiakKopurua();
@@ -67,6 +87,11 @@ public class EstadistikaDAO {
         return kontatuSql("SELECT COUNT(*) FROM ERREKLAMAZIOA WHERE errek_egoera = 'irekita'");
     }
 
+    /**
+     * Sistemako langile guztien kopurua itzultzen du.
+     *
+     * @return Langile kopurua
+     */
     public static int langileKopurua() {
         if (ModoKudeatzailea.isOffline()) {
             return BiltegiLocala.langileKopurua();
@@ -74,6 +99,11 @@ public class EstadistikaDAO {
         return kontatuSql("SELECT COUNT(*) FROM LANGILEA");
     }
 
+    /**
+     * Datu-baseko artikulu guztien kopurua itzultzen du.
+     *
+     * @return Artikulu guztien kopurua
+     */
     public static int artikuluGuztienKopurua() {
         if (ModoKudeatzailea.isOffline()) {
             return BiltegiLocala.artikuluGuztienKopurua();
@@ -81,6 +111,11 @@ public class EstadistikaDAO {
         return kontatuSql("SELECT COUNT(*) FROM ARTIKULUA");
     }
 
+    /**
+     * Kategorien kopurua itzultzen du.
+     *
+     * @return Kategoria kopurua
+     */
     public static int kategoriaKopurua() {
         if (ModoKudeatzailea.isOffline()) {
             return BiltegiLocala.kategoriaKopurua();
@@ -88,6 +123,11 @@ public class EstadistikaDAO {
         return kontatuSql("SELECT COUNT(*) FROM KATEGORIA");
     }
 
+    /**
+     * Kokalekuen kopurua itzultzen du.
+     *
+     * @return Kokaleku kopurua
+     */
     public static int kokalekuakKopurua() {
         if (ModoKudeatzailea.isOffline()) {
             return BiltegiLocala.kokalekuakKopurua();
@@ -95,6 +135,11 @@ public class EstadistikaDAO {
         return kontatuSql("SELECT COUNT(*) FROM KOKALEKUA");
     }
 
+    /**
+     * Azken 10 mugimenduen zerrenda itzultzen du, data deszendentearen arabera.
+     *
+     * @return Azken mugimenduak AzkenMugimendua zerrenda gisa
+     */
     public static List<AzkenMugimendua> azkenMugimenduak() {
         if (ModoKudeatzailea.isOffline()) {
             return BiltegiLocala.getAzkenMugimenduak();

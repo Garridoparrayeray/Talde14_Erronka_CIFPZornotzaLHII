@@ -40,16 +40,32 @@ public class XMLExportazioa {
         private final String eremua;
         private final String balioa;
 
+        /**
+         * Salbuespena sortzen du eremu eta balio problematikoarekin.
+         *
+         * @param eremua XML eremu okerrarena izena
+         * @param balioa Patroia betetzen ez duen balioa
+         */
         public XMLPatroiException(String eremua, String balioa) {
             super("XML baliogabea — '" + eremua + "' eremua ez du patroia betetzen: [" + balioa + "]");
             this.eremua = eremua;
             this.balioa = balioa;
         }
 
+        /**
+         * Patroia betetzen ez duen eremu-izena itzultzen du.
+         *
+         * @return Eremu-izena
+         */
         public String getEremua() {
             return eremua;
         }
 
+        /**
+         * Patroia betetzen ez duen balioa itzultzen du.
+         *
+         * @return Baliogabeko balioa
+         */
         public String getBalioa() {
             return balioa;
         }
@@ -108,7 +124,6 @@ public class XMLExportazioa {
         try {
             File fitxategia = new File(bidea);
             File karpeta = fitxategia.getParentFile();
-            // Si la carpeta padre existe en la ruta y no está creada físicamente, la creamos
             if (karpeta != null && !karpeta.exists()) {
                 karpeta.mkdirs();
             }
@@ -123,19 +138,28 @@ public class XMLExportazioa {
     }
 
     // ─── Laguntzaileak ────────────────────────────────────────────────────────
+    /**
+     * Balio bat adierazpen erregularraren patroiaren aurka egiaztatzen du.
+     *
+     * @param eremua   Egiaztatzen den eremu-izena (erroreen mezuetarako)
+     * @param balioa   Egiaztatu beharreko testua
+     * @param patroia  Aplikatu beharreko adierazpen erregularra
+     * @throws XMLPatroiException Balioa null bada edo patroia ez badu betetzen
+     */
     private static void balioztatu(String eremua, String balioa, Pattern patroia)
             throws XMLPatroiException {
         if (balioa == null || !patroia.matcher(balioa).matches()) {
-            String exBalioa;
-            if (balioa != null) {
-                exBalioa = balioa;
-            } else {
-                exBalioa = "null";
-            }
-            throw new XMLPatroiException(eremua, exBalioa);
+            throw new XMLPatroiException(eremua, balioa != null ? balioa : "null");
         }
     }
 
+    /**
+     * Testu bat XML-erako bihurketa egiten du karaktere bereziak ihes sekuentziekin
+     * ordezkatuz.
+     *
+     * @param s Bihurtu beharreko testua (null onartzen da)
+     * @return XML-bateragarria den testua; null bada, kate hutsa itzultzen du
+     */
     private static String esc(String s) {
         if (s == null) {
             return "";

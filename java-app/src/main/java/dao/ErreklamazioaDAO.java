@@ -47,30 +47,11 @@ public class ErreklamazioaDAO {
         try (Connection conn = utils.DBConexioa.getKonexioa(); PreparedStatement pstmt = conn.prepareStatement(sql); ResultSet rs = pstmt.executeQuery()) {
 
             while (rs.next()) {
-                String nan = rs.getString("nan");
-                if (nan == null) {
-                    nan = "";
-                }
-
-                String jabeIzena = rs.getString("jabe_izena");
-                if (jabeIzena == null) {
-                    jabeIzena = "";
-                }
-
-                String jabeAbizena = rs.getString("jabe_abizena");
-                if (jabeAbizena == null) {
-                    jabeAbizena = "";
-                }
-
-                String telefonoa = rs.getString("telefonoa");
-                if (telefonoa == null) {
-                    telefonoa = "";
-                }
-
-                String emaila = rs.getString("emaila");
-                if (emaila == null) {
-                    emaila = "";
-                }
+                String nan = rs.getString("nan") != null ? rs.getString("nan") : "";
+                String jabeIzena = rs.getString("jabe_izena") != null ? rs.getString("jabe_izena") : "";
+                String jabeAbizena = rs.getString("jabe_abizena") != null ? rs.getString("jabe_abizena") : "";
+                String telefonoa = rs.getString("telefonoa") != null ? rs.getString("telefonoa") : "";
+                String emaila = rs.getString("emaila") != null ? rs.getString("emaila") : "";
 
                 model.Jabea jabea = new model.Jabea(
                         nan,
@@ -89,13 +70,11 @@ public class ErreklamazioaDAO {
                 }
 
                 String egoeraStr = rs.getString("errek_egoera");
-                if (egoeraStr != null) {
-                    if (!egoeraStr.isEmpty()) {
-                        try {
-                            erreklamazioa.setEgoera(EgoeraErreklamazioa.valueOf(egoeraStr.toUpperCase()));
-                        } catch (IllegalArgumentException ex) {
-                            erreklamazioa.setEgoera(EgoeraErreklamazioa.IREKITA);
-                        }
+                if (egoeraStr != null && !egoeraStr.isEmpty()) {
+                    try {
+                        erreklamazioa.setEgoera(EgoeraErreklamazioa.valueOf(egoeraStr.toUpperCase()));
+                    } catch (IllegalArgumentException ex) {
+                        erreklamazioa.setEgoera(EgoeraErreklamazioa.IREKITA);
                     }
                 }
 

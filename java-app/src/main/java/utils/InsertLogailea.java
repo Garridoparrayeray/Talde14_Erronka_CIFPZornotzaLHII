@@ -30,11 +30,17 @@ public class InsertLogailea {
         try {
             Files.createDirectories(Paths.get(AppConfig.getExportBidea()));
             try (PrintWriter pw = new PrintWriter(new FileWriter(bidea, true))) {
+                String emaitzaTestua;
+                if (emaitza) {
+                    emaitzaTestua = "OK";
+                } else {
+                    emaitzaTestua = "HUTS";
+                }
                 pw.printf("[%s] INSERT INTO %s | ID: %-15s | %s%n",
                         LocalDateTime.now().format(FMT),
                         taula,
                         kodea,
-                        emaitza ? "OK" : "HUTS");
+                        emaitzaTestua);
             }
         } catch (IOException e) {
             System.err.println("InsertLogailea: ezin idatzi — " + e.getMessage());

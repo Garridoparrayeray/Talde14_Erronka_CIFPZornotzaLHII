@@ -82,115 +82,21 @@ public class Langilea implements Serializable {
         return null;
     }
 
-    /**
-     * Langilearen datu-baseko IDa itzultzen du.
-     *
-     * @return Langilearen IDa
-     */
-    public int getLangileId() {
-        return langileId;
-    }
-
-    /**
-     * Langilearen izena itzultzen du.
-     *
-     * @return Izena
-     */
-    public String getIzena() {
-        return izena;
-    }
-
-    /**
-     * Langilearen izena ezartzen du.
-     *
-     * @param izena Ezarri beharreko izena
-     */
-    public void setIzena(String izena) {
-        this.izena = izena;
-    }
-
-    /**
-     * Langilearen abizena itzultzen du.
-     *
-     * @return Abizena
-     */
-    public String getAbizena() {
-        return abizena;
-    }
-
-    /**
-     * Langilearen abizena ezartzen du.
-     *
-     * @param abizena Ezarri beharreko abizena
-     */
-    public void setAbizena(String abizena) {
-        this.abizena = abizena;
-    }
-
-    /**
-     * Langilearen izen eta abizena elkarturik itzultzen du.
-     *
-     * @return Izen osoa
-     */
-    public String getIzenOsoa() {
-        return izena + " " + abizena;
-    }
-
-    /**
-     * Saioa hasteko erabiltzaile-izena itzultzen du.
-     *
-     * @return Erabiltzaile-izena
-     */
-    public String getErabiltzailea() {
-        return erabiltzailea;
-    }
-
-    /**
-     * Saioa hasteko erabiltzaile-izena ezartzen du.
-     *
-     * @param erabiltzailea Ezarri beharreko erabiltzaile-izena
-     */
-    public void setErabiltzailea(String erabiltzailea) {
-        this.erabiltzailea = erabiltzailea;
-    }
-
-    /**
-     * Langilearen pasahitzaren BCrypt hash-a itzultzen du.
-     * Offline autentifikaziorako erabiltzen da {@code BiltegiLocala}-n.
-     *
-     * @return Pasahitzaren hash-a
-     */
-    public String getPasahitzaHash() {
-        return pasahitzaHash;
-    }
-
-    /**
-     * Langilearen pasahitzaren hash-a ezartzen du.
-     * Pasahitza aldatzean {@code BiltegiLocala}-k deitzen du.
-     *
-     * @param hash BCrypt hash berria
-     */
-    public void setPasahitzaHash(String hash) {
-        this.pasahitzaHash = hash;
-    }
-
-    /**
-     * Langilearen rola itzultzen du.
-     *
-     * @return Rola testua
-     */
-    public String getRola() {
-        return rola;
-    }
-
-    /**
-     * Langilearen rola ezartzen du.
-     *
-     * @param rola Ezarri beharreko rola
-     */
-    public void setRola(String rola) {
-        this.rola = rola;
-    }
+    public int getLangileId() { return langileId; }
+    public String getIzena() { return izena; }
+    public void setIzena(String izena) { this.izena = izena; }
+    public String getAbizena() { return abizena; }
+    public void setAbizena(String abizena) { this.abizena = abizena; }
+    /** Izena eta abizena elkarturik itzultzen du. */
+    public String getIzenOsoa() { return izena + " " + abizena; }
+    public String getErabiltzailea() { return erabiltzailea; }
+    public void setErabiltzailea(String erabiltzailea) { this.erabiltzailea = erabiltzailea; }
+    /** BCrypt hash-a itzultzen du; offline autentifikaziorako. */
+    public String getPasahitzaHash() { return pasahitzaHash; }
+    /** BCrypt hash berria ezartzen du pasahitza aldatzean. */
+    public void setPasahitzaHash(String hash) { this.pasahitzaHash = hash; }
+    public String getRola() { return rola; }
+    public void setRola(String rola) { this.rola = rola; }
 
     /**
      * Langilea administratzailea den egiaztatzen du erola konparatuz.

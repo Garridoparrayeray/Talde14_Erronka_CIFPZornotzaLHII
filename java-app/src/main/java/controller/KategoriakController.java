@@ -2,7 +2,6 @@ package controller;
 
 import java.net.URL;
 import java.util.List;
-import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -14,15 +13,11 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import model.Kategoria;
 import model.KategoriaKopurua;
@@ -39,15 +34,23 @@ public class KategoriakController implements Initializable {
     private static final Logger LOG = LogKudeatzailea.lortu(KategoriakController.class);
 
     @FXML
-    private StackPane contentArea;
-    @FXML
     private VBox vboxKategoriak;
 
+    /**
+     * Kontroladorea hasieratzen du eta kategoriak kargatzen ditu.
+     *
+     * @param url FXML fitxategiaren kokapena
+     * @param rb  Erabilitako baliabide-sorta
+     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         kargatu();
     }
 
+    /**
+     * Kategoriak datu-basetik kargatzen ditu eta txartelak dinamikoki sortzen ditu
+     * VBox panelean, hiru zutabetan antolatuta.
+     */
     private void kargatu() {
         vboxKategoriak.getChildren().clear();
 
@@ -118,7 +121,7 @@ public class KategoriakController implements Initializable {
         Button btnEzabatu = new Button("Ezabatu");
         btnEzabatu.getStyleClass().add("btn-danger");
         btnEzabatu.setStyle("-fx-padding: 4 12; -fx-font-size: 11px;");
-        btnEzabatu.setOnAction(e -> ezabatuKategoria(k));
+        btnEzabatu.setOnAction(e -> ezabatuKategoria(k, kopurua));
 
         HBox botoiak = new HBox(8, btnEdita, btnEzabatu);
         botoiak.setAlignment(javafx.geometry.Pos.CENTER_RIGHT);
@@ -132,44 +135,27 @@ public class KategoriakController implements Initializable {
         return txartela;
     }
 
-    /**
-     * Kategoria baten izena aldatzeko elkarrizketa-koadroa irekitzen du.
-     *
-     * @param k Editatu beharreko kategoria
-     */
     private void editatuKategoria(Kategoria k) {
-        TextInputDialog dlg = new TextInputDialog(k.getIzena());
-        dlg.setTitle("Kategoria editatu");
-        dlg.setHeaderText(null);
-        dlg.setContentText("Kategoriaren izena:");
-        dlg.initOwner(vboxKategoriak.getScene().getWindow());
-        Optional<String> result = dlg.showAndWait();
-        result.ifPresent(izena -> {
-            String trimmed = izena.trim();
-            if (!trimmed.isEmpty()) {
-                KategoriaDAO.aldatuIzena(k.getKategoriaId(), trimmed);
-                kargatu();
-            }
-        });
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/KategoriaEditu.fxml"));
+            Node nodoa = loader.load();
+            KategoriaEdituController ctrl = loader.getController();
+            ctrl.setKategoria(k);
+            UIKudeatzailea.kargatuPanela(nodoa);
+        } catch (Exception e) {
+            LOG.log(Level.SEVERE, "editatuKategoria: FXML kargatzean errorea", e);
+            UIKudeatzailea.erakutsiToast("Errorea: ezin izan da editatzeko formularioa kargatu.", false);
+        }
     }
 
-    /**
-     * Baieztapen-alerta erakutsi eta kategoria ezabatzen du onartu bada.
-     *
-     * @param k Ezabatu beharreko kategoria
-     */
-    private void ezabatuKategoria(Kategoria k) {
-        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
-        confirm.setTitle("Kategoria ezabatu");
-        confirm.setHeaderText(null);
-        confirm.setContentText("'" + k.getIzena() + "' kategoria ezabatuko da. Ziur zaude?");
-        confirm.initOwner(vboxKategoriak.getScene().getWindow());
-        confirm.showAndWait().ifPresent(btn -> {
-            if (btn == ButtonType.OK) {
-                KategoriaDAO.ezabatu(k.getKategoriaId());
-                kargatu();
-            }
-        });
+    private void ezabatuKategoria(Kategoria k, int kopurua) {
+        if (kopurua > 0) {
+            UIKudeatzailea.erakutsiToast("Ezin da ezabatu: kategoriak " + kopurua + " artikulu ditu.", false);
+            return;
+        }
+        KategoriaDAO.ezabatu(k.getKategoriaId());
+        kargatu();
+        UIKudeatzailea.erakutsiToast("Kategoria ezabatu da.", true);
     }
 
     /**
@@ -180,11 +166,10 @@ public class KategoriakController implements Initializable {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/KategoriaBerria.fxml"));
             Node nodoa = loader.load();
-            KategoriaBerriController ctrl = loader.getController();
-            ctrl.setContentArea(contentArea);
-            UIKudeatzailea.kargatuPanela(contentArea, nodoa);
+            UIKudeatzailea.kargatuPanela(nodoa);
         } catch (Exception e) {
             LOG.log(Level.SEVERE, "kategoriaBerria: FXML kargatzean errorea", e);
+            UIKudeatzailea.erakutsiToast("Errorea: ezin izan da formularioa kargatu.", false);
         }
     }
 }

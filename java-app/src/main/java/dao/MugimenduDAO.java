@@ -55,6 +55,8 @@ public class MugimenduDAO {
     /**
      * Mugimenduen erregistro guztiak itzultzen ditu auditoria taulako ordena
      * deszendentearekin.
+     *
+     * @return MugimenduLerroa objektuen zerrenda, denbora-ordenan beherantz; hutsik egon daiteke
      */
     public static List<MugimenduLerroa> getGuztiak() {
         if (ModoKudeatzailea.isOffline()) {

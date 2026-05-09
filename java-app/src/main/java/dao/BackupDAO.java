@@ -9,6 +9,7 @@ import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+import utils.AppConfig;
 import utils.DBConexioa;
 import utils.ModoKudeatzailea;
 
@@ -29,7 +30,7 @@ public class BackupDAO {
      * Datu-basearen babes-kopia SQL fitxategi batean gordetzen du.
      *
      * @return Sortutako fitxategiaren bide osoa
-     * @throws Exception Idazketa edo konexio errorea
+     * @throws Exception Offline moduan deitzen bada edo IO/SQL errorea gertatzen bada
      */
     public static String eginBabesKopia() throws Exception {
         if (ModoKudeatzailea.isOffline()) {
@@ -38,12 +39,11 @@ public class BackupDAO {
 
         String data = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmm"));
 
-        File exportDir = new File("/app/exportazioak");
+        File exportDir = new File(AppConfig.getExportBidea());
         if (!exportDir.exists()) {
-            exportDir = new File(System.getProperty("user.home") + "/galdutakoak_backups");
             exportDir.mkdirs();
         }
-        String fitxategiIzena = exportDir.getAbsolutePath() + "/backup_" + data + ".sql";
+        String fitxategiIzena = exportDir.getAbsolutePath() + File.separator + "backup_" + data + ".sql";
 
         try (FileWriter fw = new FileWriter(fitxategiIzena); Connection con = DBConexioa.getKonexioa(); Statement st = con.createStatement()) {
 
@@ -77,6 +77,8 @@ public class BackupDAO {
                 }
                 fw.write("\n");
             }
+        } catch (Exception e) {
+            throw new Exception("Babes-kopian errorea: " + e.getMessage(), e);
         }
         return fitxategiIzena;
     }

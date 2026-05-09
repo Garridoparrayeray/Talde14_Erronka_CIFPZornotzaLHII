@@ -46,34 +46,9 @@ public class EmanaldiaDAO {
                 return false;
             }
 
-            String sqlEm = "INSERT INTO EMANALDIA (emate_data, oharrak, dokumentu_bidea, id_artikulua, id_hartzailea, id_langile) "
-                    + "VALUES (CURDATE(), ?, ?, ?, ?, ?)";
-            try (PreparedStatement ps = con.prepareStatement(sqlEm)) {
-                ps.setString(1, oharrak.isEmpty() ? null : oharrak);
-                ps.setString(2, dokumentuBidea);
-                ps.setString(3, idArtikulua);
-                ps.setInt(4, idHartzailea);
-                if (idLangile > 0) {
-                    ps.setInt(5, idLangile);
-                } else {
-                    ps.setNull(5, java.sql.Types.INTEGER);
-                }
-                ps.executeUpdate();
-            }
-
             // ARTIKULUA egoera trg_emanaldia_eguneratu_artikulua triggerrak aldatzen du
             String deskMug = "Artikulua " + izena + " " + abizena + "-ri eman zaio.";
-            String sqlMug = "INSERT INTO MUGIMENDUA (deskribapena, id_artikulua, id_langile) VALUES (?, ?, ?)";
-            try (PreparedStatement ps = con.prepareStatement(sqlMug)) {
-                ps.setString(1, deskMug);
-                ps.setString(2, idArtikulua);
-                if (idLangile > 0) {
-                    ps.setInt(3, idLangile);
-                } else {
-                    ps.setNull(3, java.sql.Types.INTEGER);
-                }
-                ps.executeUpdate();
-            }
+            gordeEmanaldiaEtaMugimendua(con, idArtikulua, idHartzailea, deskMug, idLangile, oharrak, dokumentuBidea);
 
             con.commit();
             return true;
@@ -122,33 +97,8 @@ public class EmanaldiaDAO {
                 return false;
             }
 
-            String sqlEm = "INSERT INTO EMANALDIA (emate_data, oharrak, dokumentu_bidea, id_artikulua, id_hartzailea, id_langile) "
-                    + "VALUES (CURDATE(), ?, ?, ?, ?, ?)";
-            try (PreparedStatement ps = con.prepareStatement(sqlEm)) {
-                ps.setString(1, oharrak.isEmpty() ? null : oharrak);
-                ps.setString(2, dokumentuBidea);
-                ps.setString(3, idArtikulua);
-                ps.setInt(4, idHartzailea);
-                if (idLangile > 0) {
-                    ps.setInt(5, idLangile);
-                } else {
-                    ps.setNull(5, java.sql.Types.INTEGER);
-                }
-                ps.executeUpdate();
-            }
-
             String deskMug = "Artikulua " + izenOfiziala + " erakundeari eman zaio.";
-            String sqlMug = "INSERT INTO MUGIMENDUA (deskribapena, id_artikulua, id_langile) VALUES (?, ?, ?)";
-            try (PreparedStatement ps = con.prepareStatement(sqlMug)) {
-                ps.setString(1, deskMug);
-                ps.setString(2, idArtikulua);
-                if (idLangile > 0) {
-                    ps.setInt(3, idLangile);
-                } else {
-                    ps.setNull(3, java.sql.Types.INTEGER);
-                }
-                ps.executeUpdate();
-            }
+            gordeEmanaldiaEtaMugimendua(con, idArtikulua, idHartzailea, deskMug, idLangile, oharrak, dokumentuBidea);
 
             con.commit();
             return true;
@@ -174,6 +124,42 @@ public class EmanaldiaDAO {
         }
     }
 
+    private static void gordeEmanaldiaEtaMugimendua(Connection con, String idArtikulua, int idHartzailea,
+            String mugimenduDesk, int idLangile, String oharrak, String dokumentuBidea) throws SQLException {
+
+        String sqlEm = "INSERT INTO EMANALDIA (emate_data, oharrak, dokumentu_bidea, id_artikulua, id_hartzailea, id_langile) "
+                + "VALUES (CURDATE(), ?, ?, ?, ?, ?)";
+        try (PreparedStatement ps = con.prepareStatement(sqlEm)) {
+            if (oharrak.isEmpty()) {
+                ps.setNull(1, java.sql.Types.VARCHAR);
+            } else {
+                ps.setString(1, oharrak);
+            }
+            ps.setString(2, dokumentuBidea);
+            ps.setString(3, idArtikulua);
+            ps.setInt(4, idHartzailea);
+            if (idLangile > 0) {
+                ps.setInt(5, idLangile);
+            } else {
+                ps.setNull(5, java.sql.Types.INTEGER);
+            }
+            ps.executeUpdate();
+        }
+
+        // ARTIKULUA egoera trg_emanaldia_eguneratu_artikulua triggerrak aldatzen du
+        String sqlMug = "INSERT INTO MUGIMENDUA (deskribapena, id_artikulua, id_langile) VALUES (?, ?, ?)";
+        try (PreparedStatement ps = con.prepareStatement(sqlMug)) {
+            ps.setString(1, mugimenduDesk);
+            ps.setString(2, idArtikulua);
+            if (idLangile > 0) {
+                ps.setInt(3, idLangile);
+            } else {
+                ps.setNull(3, java.sql.Types.INTEGER);
+            }
+            ps.executeUpdate();
+        }
+    }
+
     /**
      * IFZ bidez erakundea bilatzen du edo sortu egiten du.
      *
@@ -193,9 +179,21 @@ public class EmanaldiaDAO {
         String sqlH = "INSERT INTO HARTZAILEA (telefonoa, emaila, helbidea) VALUES (?, ?, ?)";
         int idH;
         try (PreparedStatement ps = con.prepareStatement(sqlH, Statement.RETURN_GENERATED_KEYS)) {
-            ps.setString(1, telefonoa.isEmpty() ? null : telefonoa);
-            ps.setString(2, emaila.isEmpty() ? null : emaila);
-            ps.setString(3, helbidea.isEmpty() ? null : helbidea);
+            if (telefonoa.isEmpty()) {
+                ps.setNull(1, java.sql.Types.VARCHAR);
+            } else {
+                ps.setString(1, telefonoa);
+            }
+            if (emaila.isEmpty()) {
+                ps.setNull(2, java.sql.Types.VARCHAR);
+            } else {
+                ps.setString(2, emaila);
+            }
+            if (helbidea.isEmpty()) {
+                ps.setNull(3, java.sql.Types.VARCHAR);
+            } else {
+                ps.setString(3, helbidea);
+            }
             ps.executeUpdate();
             ResultSet gen = ps.getGeneratedKeys();
             if (!gen.next()) {
@@ -236,9 +234,21 @@ public class EmanaldiaDAO {
         String sqlH = "INSERT INTO HARTZAILEA (telefonoa, emaila, helbidea) VALUES (?, ?, ?)";
         int idH;
         try (PreparedStatement ps = con.prepareStatement(sqlH, Statement.RETURN_GENERATED_KEYS)) {
-            ps.setString(1, telefonoa.isEmpty() ? null : telefonoa);
-            ps.setString(2, emaila.isEmpty() ? null : emaila);
-            ps.setString(3, helbidea.isEmpty() ? null : helbidea);
+            if (telefonoa.isEmpty()) {
+                ps.setNull(1, java.sql.Types.VARCHAR);
+            } else {
+                ps.setString(1, telefonoa);
+            }
+            if (emaila.isEmpty()) {
+                ps.setNull(2, java.sql.Types.VARCHAR);
+            } else {
+                ps.setString(2, emaila);
+            }
+            if (helbidea.isEmpty()) {
+                ps.setNull(3, java.sql.Types.VARCHAR);
+            } else {
+                ps.setString(3, helbidea);
+            }
             ps.executeUpdate();
             ResultSet gen = ps.getGeneratedKeys();
             if (!gen.next()) {

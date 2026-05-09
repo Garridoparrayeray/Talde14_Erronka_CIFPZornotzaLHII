@@ -27,6 +27,8 @@ public class KokalekuaDAO {
     /**
      * Datu-basetik kokaleku guztiak lortzen ditu, bakoitzeko artikulu
      * kopuruarekin.
+     *
+     * @return Kokalekua objektuen zerrenda; hutsik egon daiteke
      */
     public static List<Kokalekua> getGuztiak() {
         if (ModoKudeatzailea.isOffline()) {
@@ -57,13 +59,16 @@ public class KokalekuaDAO {
     }
 
     /**
-     * Kokaleku guztiak Kokalekua objektu gisa itzultzen ditu (ComboBox-erako).
+     * Kokaleku guztiak Kokalekua objektu gisa itzultzen ditu (ComboBox-erako),
+     * artikulu kopururik gabe.
+     *
+     * @return Kokalekua objektuen zerrenda; hutsik egon daiteke
      */
     public static List<Kokalekua> getZerrenda() {
         if (ModoKudeatzailea.isOffline()) {
             return BiltegiLocala.getKokalekuakZerrenda();
         }
-        List<Kokalekua> zerrenda = new ArrayList<Kokalekua>();
+        List<Kokalekua> zerrenda = new ArrayList<>();
         String sql = "SELECT id_kokalekua, armairua, apala, bha_da FROM KOKALEKUA ORDER BY id_kokalekua";
         try (Connection con = DBConexioa.getKonexioa(); PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
@@ -79,6 +84,11 @@ public class KokalekuaDAO {
 
     /**
      * Kokaleku berria gordetzen du datu-basean.
+     *
+     * @param armairua Armairuaren kodea (letra larriz normalizatua)
+     * @param apala    Apalaren identifikatzailea
+     * @param bhaDa    true bada Bolumen Handiko Armairua
+     * @return Ondo gorde bada true, bestela false
      */
     public static boolean gehitu(String armairua, String apala, boolean bhaDa) {
         if (ModoKudeatzailea.isOffline()) {
@@ -98,6 +108,12 @@ public class KokalekuaDAO {
 
     /**
      * Kokaleku baten datuak eguneratzen ditu datu-basean.
+     *
+     * @param id       Eguneratu beharreko kokalekuaren IDa
+     * @param armairua Armairuaren kode berria
+     * @param apala    Apalaren identifikatzaile berria
+     * @param bhaDa    true bada Bolumen Handiko Armairua
+     * @return Ondo eguneratu bada true, bestela false
      */
     public static boolean eguneratu(int id, String armairua, String apala, boolean bhaDa) {
         if (ModoKudeatzailea.isOffline()) {
@@ -118,6 +134,9 @@ public class KokalekuaDAO {
 
     /**
      * Kokaleku bat datu-basetik ezabatzen du.
+     *
+     * @param id Ezabatu beharreko kokalekuaren IDa
+     * @return Ondo ezabatu bada true, bestela false
      */
     public static boolean ezabatu(int id) {
         if (ModoKudeatzailea.isOffline()) {

@@ -49,10 +49,8 @@
                           <columns>
                             <TableColumn fx:id="colLangilea"      prefWidth="200.0" text="LANGILEA" />
                             <TableColumn fx:id="colErabiltzailea" prefWidth="150.0" text="ERABILTZAILEA" />
-                            <TableColumn fx:id="colSaila"         prefWidth="150.0" text="SAILA" />
                             <TableColumn fx:id="colRola"          prefWidth="120.0" text="ROLA" />
                             <TableColumn fx:id="colEgoera"        prefWidth="100.0" text="EGOERA" />
-                            <TableColumn fx:id="colAzkenSarrera"  prefWidth="150.0" text="AZKEN SARRERA" />
                           </columns>
                            <columnResizePolicy>
                               <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />

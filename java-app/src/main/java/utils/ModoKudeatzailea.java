@@ -8,6 +8,8 @@ import dao.ArtikuluaDAO;
 /**
  * DB konexioa detektatu eta online/offline modua kudeatzen duen klase
  * estatikoa.
+ *
+ * @author Yeray Garrido
  */
 public class ModoKudeatzailea {
 
