@@ -102,7 +102,7 @@ src/main/java/
 ├── model/        → Eredu-klaseak — Hartzailea (abstraktoa), Jabea, Erakundea,
 │                   Artikulua, Langilea, Administratzailea, Erreklamazioa…
 ├── dao/          → Datu-basera sarbidea (CRUD)
-├── utils/        → DBConexioa, AppConfig, BiltegiLocala, LogKudeatzailea,
+├── utils/        → DBKonexioa, AppConfig, BiltegiLokala, LogKudeatzailea,
 │                   XMLExportazioa, XMLInportazioa, InsertLogailea, UIKudeatzailea
 └── view/         → FXML leihoak + style.css (MVC: V)
 ```
@@ -326,7 +326,7 @@ docker compose down -v   # KONTUZ: datuak ezabatzen dira
 ```
 erronka-bermeo/
 │
-├── 📁 db/
+├──  db/
 │   └── init/
 │       ├── 01-schema.sql          ← Taula guztiak
 │       ├── 02-roles.sql           ← Rolak eta DB erabiltzaileak
@@ -334,7 +334,7 @@ erronka-bermeo/
 │       ├── 04-trigger.sql         ← Triggerrak (UPDATE + DELETE)
 │       └── 05-procedures.sql      ← Gordetako prozedurak
 │
-├── 📁 java-app/
+├──  java-app/
 │   ├── Dockerfile
 │   ├── pom.xml
 │   ├── build-windows.bat          ← Windows .exe sortzeko scripta
@@ -346,7 +346,7 @@ erronka-bermeo/
 │       ├── utils/                 ← Laguntzaileak (DB, XML, Log, Offline)
 │       └── view/                  ← FXML + style.css (23 pantaila)
 │
-├── 📁 frontend/
+├──  frontend/
 │   ├── index.html                 ← Orri nagusia (responsive, Bootstrap)
 │   ├── css/style.css
 │   ├── js/
@@ -356,7 +356,7 @@ erronka-bermeo/
 │   ├── xpath/                     ← XPath kontsultak
 │   └── xquery/                    ← XQuery kontsultak
 │
-├── 📁 dokumentazioa/
+├──  dokumentazioa/
 │   ├── GarapenIngurunea/          ← Klase, erabilera-kasu, sekuentzi diagramak
 │   ├── DatuBaseak/                ← E-R eta diseinu logikoa
 │   ├── Programazioa/              ← Mockup-a, eskuliburua
@@ -364,9 +364,9 @@ erronka-bermeo/
 │   ├── Digitalizazioa/            ← Dashboard, datuen bizi-zikloa
 │   └── Jasangarritasuna/          ← Auditoretza txostena
 │
-├── 📁 partekatutako_datuak/       ← artikuluak.xml + insert_log.txt
-├── 📁 artikulu_irudiak/           ← Objektuen argazkiak
-├── 📁 logs/                       ← JavaFX log fitxategiak
+├──  partekatutako_datuak/       ← artikuluak.xml + insert_log.txt
+├──  artikulu_irudiak/           ← Objektuen argazkiak
+├──  logs/                       ← JavaFX log fitxategiak
 │
 ├── .env                           ← DB kredentzialak
 ├── docker-compose.yml
@@ -403,7 +403,7 @@ erronka-bermeo/
 | | Salbuespen pertsonalizatua | `utils/XMLExportazioa.java` (XMLPatroiException) |
 | | ArrayList + datu-egitura dinamikoak | `controller/KategoriakController.java` eta beste |
 | | INSERT emaitzak fitxategira | `utils/InsertLogailea.java` → `insert_log.txt` |
-| | Segurtasun-kopia (offline) | `utils/BiltegiLocala.java` |
+| | Segurtasun-kopia (offline) | `utils/BiltegiLokala.java` |
 | | Bi erabiltzaile-modu | `utils/Sesio.java` (admin / langile) |
 | | XML kudeaketa + regex balidazioa | `utils/XMLExportazioa.java`, `utils/XMLInportazioa.java` |
 | | MVC mezuak (OK/EZ OK) | `utils/UIKudeatzailea.java` (toast sistema) |

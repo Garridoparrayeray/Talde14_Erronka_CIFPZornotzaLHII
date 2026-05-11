@@ -158,7 +158,7 @@ Lo **nuevo** en este proyecto:
 - **Usuario de solo lectura para la web** (`bezero_web`): acceso restringido para el portal público.
 
 **Configuración de conexión en el proyecto:**  
-La clase `DBConexioa.java` busca la conexión en este orden:
+La clase `DBKonexioa.java` busca la conexión en este orden:
 1. Variables de entorno (`DB_URL`, `DB_USER`, `DB_PASS`) — usado dentro de Docker
 2. Fichero `application.properties` — usado en desarrollo local
 3. Si no encuentra ninguna, activa el **modo offline**
@@ -1230,15 +1230,15 @@ InbentarioController → ArtikuluaDAO → MariaDB
 
 **Singleton:**  
 Garantiza que solo exista **una instancia** de una clase en toda la aplicación.
-- `DBConexioa`: una sola conexión a la BD compartida por toda la app
+- `DBKonexioa`: una sola conexión a la BD compartida por toda la app
 - `Sesio`: un único estado de sesión de usuario
 - `LogKudeatzailea`: un único sistema de logging
 
-**Clase estática pura (`BiltegiLocala`):**  
-`BiltegiLocala` es completamente estática — todos sus métodos son `static` y no existe ninguna instancia. Centraliza toda la lógica de almacén local en métodos de clase directamente accesibles.
+**Clase estática pura (`BiltegiLokala`):**  
+`BiltegiLokala` es completamente estática — todos sus métodos son `static` y no existe ninguna instancia. Centraliza toda la lógica de almacén local en métodos de clase directamente accesibles.
 
 **Strategy (Modo Online/Offline):**  
-Los DAOs comprueban `ModoKudeatzailea.isOffline()` y delegan a `BiltegiLocala` (almacén local estático) o a la BD según corresponda. El controlador no sabe en qué modo está.
+Los DAOs comprueban `ModoKudeatzailea.isOffline()` y delegan a `BiltegiLokala` (almacén local estático) o a la BD según corresponda. El controlador no sabe en qué modo está.
 
 **Herencia:**  
 `Hartzailea` (abstracto) → `Jabea` y `Erakundea`  
@@ -1297,14 +1297,14 @@ Cada DAO contiene métodos estáticos que ejecutan las consultas SQL y devuelven
 public static List<Artikulua> getGuztiak() {
     // 1. Comprobar modo offline
     if (ModoKudeatzailea.isOffline()) {
-        return BiltegiLocala.getArtikuluak();  // almacén local estático
+        return BiltegiLokala.getArtikuluak();  // almacén local estático
     }
 
     // 2. Conectar y ejecutar SQL
     List<Artikulua> lista = new ArrayList<>();
     String sql = "SELECT * FROM ARTIKULUA ORDER BY sarrera_data DESC";
     
-    try (Connection con = DBConexioa.getKonexioa();
+    try (Connection con = DBKonexioa.getKonexioa();
          PreparedStatement ps = con.prepareStatement(sql);
          ResultSet rs = ps.executeQuery()) {
         
@@ -1345,10 +1345,10 @@ public static List<Artikulua> getGuztiak() {
 
 Ubicación: `java-app/src/main/java/utils/`
 
-**`DBConexioa.java` — Singleton de conexión:**
+**`DBKonexioa.java` — Singleton de conexión:**
 
 ```java
-public class DBConexioa {
+public class DBKonexioa {
     private static Connection konexioa = null;
     
     public static Connection getKonexioa() throws SQLException {
@@ -1400,11 +1400,11 @@ UIKudeatzailea.aldatuLeihoa(boton, "/view/MainLayout.fxml", true);
 // Se ejecuta al arrancar la app
 public static void detektatu() {
     try {
-        DBConexioa.getKonexioa();
+        DBKonexioa.getKonexioa();
         offline = false;  // BD disponible
     } catch (SQLException e) {
         offline = true;   // Sin BD — activar modo offline
-        BiltegiLocala.kargatu();   // carga datos del store.dat si existe
+        BiltegiLokala.kargatu();   // carga datos del store.dat si existe
     }
 }
 ```
@@ -1639,9 +1639,9 @@ $OFFLINE_DATA_PATH/store.dat      (si la variable de entorno está definida)
 
 ---
 
-### 8.2 `BiltegiLocala` — cómo funciona
+### 8.2 `BiltegiLokala` — cómo funciona
 
-`BiltegiLocala` es la clase que gestiona el almacén local. Tiene dos roles:
+`BiltegiLokala` es la clase que gestiona el almacén local. Tiene dos roles:
 1. **Caché**: copia de los datos reales de la BD, siempre actualizada
 2. **Fallback offline**: los DAOs la usan si la BD no está disponible
 
@@ -1666,13 +1666,13 @@ App se cierra → Main.stop() (automático en JavaFX)
     └── Offline → gorde() → conserva los datos que había
 ```
 
-**Cómo los DAOs usan BiltegiLocala de forma transparente:**
+**Cómo los DAOs usan BiltegiLokala de forma transparente:**
 
 ```java
 // En cada DAO — el controlador nunca sabe en qué modo está
 public static List<Artikulua> getGuztiak() {
     if (ModoKudeatzailea.isOffline()) {
-        return BiltegiLocala.getArtikuluak();  // clase estática, sin getInstance()
+        return BiltegiLokala.getArtikuluak();  // clase estática, sin getInstance()
     }
     // Código SQL normal para la BD
     String sql = "SELECT * FROM ARTIKULUA ...";
@@ -1681,7 +1681,7 @@ public static List<Artikulua> getGuztiak() {
 ```
 
 **Implementación como clase estática:**  
-`BiltegiLocala` no usa `getInstance()` ni patrón Singleton. Todos sus campos son `static` (un único mapa en la JVM) y se accede directamente: `BiltegiLocala.getArtikuluak()`, `BiltegiLocala.login(user, pass)`, etc. Esto simplifica el acceso desde cualquier DAO.
+`BiltegiLokala` no usa `getInstance()` ni patrón Singleton. Todos sus campos son `static` (un único mapa en la JVM) y se accede directamente: `BiltegiLokala.getArtikuluak()`, `BiltegiLokala.login(user, pass)`, etc. Esto simplifica el acceso desde cualquier DAO.
 
 ---
 
@@ -1854,7 +1854,7 @@ Toda la base de código está documentada con Javadoc **íntegramente en euskera
 | `controller` | AdminController, AdminPanelaController, ArtikuluaEdituController, ErreklamazioaBerriController, ErreklamazioakController, InbentarioController, IraungitakoakController, IrudiaPopupController, KategoriaBerriController, KategoriakController, KokalekuaBerriController, KokalekuakController, LangileBerriController, LangileaEdituController, LangileakController, LoginController, MainController |
 | `dao` | ArtikuluaDAO, AurkitzaileaDAO, BackupDAO, EmanaldiaDAO, ErreklamazioaDAO, EstadistikaDAO, KategoriaDAO, KokalekuaDAO, LangileaDAO, MugimenduDAO |
 | `model` | Artikulua, Aurkitzailea, AzkenMugimendua, Emanaldia, Erakundea, Erreklamazioa, Hartzailea, Jabea, Jakinarazpena, Kategoria, KategoriaKopurua, Kokalekua, Langilea, MugimenduLerroa |
-| `utils` | AppConfig, BiltegiLocala, DBConexioa, LogKudeatzailea, ModoKudeatzailea, Sesio, UIKudeatzailea, XMLExportazioa, XMLInportazioa |
+| `utils` | AppConfig, BiltegiLokala, DBKonexioa, LogKudeatzailea, ModoKudeatzailea, Sesio, UIKudeatzailea, XMLExportazioa, XMLInportazioa |
 
 **Ejemplo de Javadoc en euskera:**
 
