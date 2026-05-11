@@ -11,6 +11,7 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
@@ -41,7 +42,7 @@
                         <DatePicker prefWidth="150.0" promptText="12/04/2026" styleClass="date-picker" />
                         <DatePicker prefWidth="150.0" promptText="19/04/2026" styleClass="date-picker" />
 
-                        <Button mnemonicParsing="false" styleClass="btn-outline" text="CSV esportatu" />
+                        <Button mnemonicParsing="false" onAction="#exportatuCSV" styleClass="btn-outline" text="CSV esportatu" />
                      </children>
                   </HBox>
                   <TableView fx:id="taula" styleClass="table-view" VBox.vgrow="ALWAYS">

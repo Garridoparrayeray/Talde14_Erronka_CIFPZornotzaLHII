@@ -3,7 +3,6 @@ package controller;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import dao.LangileaDAO;
@@ -13,7 +12,6 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.StackPane;
 import utils.LogKudeatzailea;
 import utils.UIKudeatzailea;
 
@@ -23,8 +21,8 @@ import utils.UIKudeatzailea;
  * @author Yeray Garrido
  */
 public class LangileBerriController implements Initializable {
-    private static final Logger LOG = LogKudeatzailea.lortu(LangileBerriController.class);
 
+    private static final Logger LOG = LogKudeatzailea.lortu(LangileBerriController.class);
 
     @FXML
     private TextField txtIzena;
@@ -41,21 +39,18 @@ public class LangileBerriController implements Initializable {
     @FXML
     private Label lblErrorea;
 
-    private StackPane contentArea;
     private List<String[]> rolak;
 
     /**
-     * Itzultzean erabili beharreko StackPane ezartzen du.
+     * Kontroladorea hasieratzen du: errore-etiketa ezkutatzen du eta rol zerrenda
+     * ComboBox-ean betetzen du.
      *
-     * @param contentArea Formularioa kargatuta dagoen gunea
+     * @param url FXML fitxategiaren kokapena
+     * @param rb  Erabilitako baliabide-sorta
      */
-    public void setContentArea(StackPane contentArea) {
-        this.contentArea = contentArea;
-    }
-
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        ezkutuErrorea();
+        UIKudeatzailea.ezkutuFormularioErrorea(lblErrorea);
         rolak = LangileaDAO.getRolak();
         for (String[] r : rolak) {
             cbRola.getItems().add(r[1]);
@@ -79,15 +74,15 @@ public class LangileBerriController implements Initializable {
         int rolIdx = cbRola.getSelectionModel().getSelectedIndex();
 
         if (izena.isEmpty() || abizena.isEmpty() || erabiltzailea.isEmpty() || pasahitza.isEmpty()) {
-            erakutsiErrorea("(*) Eremu guztiak bete behar dira.");
+            UIKudeatzailea.erakutsiFormularioErrorea(lblErrorea, "(*) Eremu guztiak bete behar dira.");
             return;
         }
         if (!pasahitza.equals(pasahitzaBerresti)) {
-            erakutsiErrorea("Pasahitzak ez datoz bat.");
+            UIKudeatzailea.erakutsiFormularioErrorea(lblErrorea, "Pasahitzak ez datoz bat.");
             return;
         }
         if (rolIdx < 0) {
-            erakutsiErrorea("Hautatu rol bat.");
+            UIKudeatzailea.erakutsiFormularioErrorea(lblErrorea, "Hautatu rol bat.");
             return;
         }
 
@@ -96,7 +91,7 @@ public class LangileBerriController implements Initializable {
         if (ok) {
             itxi();
         } else {
-            erakutsiErrorea("Errorea gordetzean. Erabiltzaile izena dagoeneko existitu daiteke.");
+            UIKudeatzailea.erakutsiFormularioErrorea(lblErrorea, "Errorea gordetzean. Erabiltzaile izena dagoeneko existitu daiteke.");
         }
     }
 
@@ -108,18 +103,10 @@ public class LangileBerriController implements Initializable {
         itxi();
     }
 
-    private void erakutsiErrorea(String mezua) {
-        lblErrorea.setText(mezua);
-        lblErrorea.setVisible(true);
-        lblErrorea.setManaged(true);
-    }
-
-    private void ezkutuErrorea() {
-        lblErrorea.setVisible(false);
-        lblErrorea.setManaged(false);
-    }
-
+    /**
+     * Langileen zerrendara itzultzen da formularioa itxiz.
+     */
     private void itxi() {
-        UIKudeatzailea.kargatuPanela(contentArea, "/view/Langileak.fxml");
+        UIKudeatzailea.kargatuPanela("/view/Langileak.fxml");
     }
 }

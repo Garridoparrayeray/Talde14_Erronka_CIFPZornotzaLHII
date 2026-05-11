@@ -39,7 +39,7 @@
 
 /* --- 3b. KPI TXARTELAK --- */
 .kpi-label {
-    -fx-text-fill: #6B7280;
+    -fx-text-fill: #374151;
     -fx-font-size: 11px;
     -fx-font-weight: bold;
 }
@@ -63,7 +63,7 @@
 }
 
 .text-muted {
-    -fx-text-fill: #6B7280;
+    -fx-text-fill: #4B5563;
 }
 
 .font-bold {
@@ -77,7 +77,7 @@
 }
 
 .font-subtitle {
-    -fx-text-fill: #6B7280;
+    -fx-text-fill: #374151;
     -fx-font-size: 14px;
 }
 
@@ -114,7 +114,7 @@
     -fx-background-color: transparent;
     -fx-border-color: #D1D5DB;
     -fx-border-radius: 6px;
-    -fx-text-fill: #374151;
+    -fx-text-fill: #111827;
     -fx-padding: 12px 20px;
     -fx-cursor: hand;
 }
@@ -125,7 +125,7 @@
 /* -------- NABIGAZIO BOTOIAK ------*/
 .nav-item {
     -fx-background-color: transparent;
-    -fx-text-fill: #4B5563;
+    -fx-text-fill: #1F2937;
     -fx-alignment: CENTER_LEFT;
     -fx-padding: 10px 15px;
     -fx-background-radius: 6px;
@@ -195,7 +195,7 @@
     -fx-padding: 10px 5px;
 }
 .table-view .column-header .label {
-    -fx-text-fill: #6B7280;
+    -fx-text-fill: #374151;
     -fx-font-weight: bold;
     -fx-font-size: 12px;
 }

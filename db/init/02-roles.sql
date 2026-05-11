@@ -15,7 +15,7 @@ CREATE ROLE IF NOT EXISTS 'ikusle_rola';
 -- ---------------------------------------------------------------------
 -- 2. BAIMENAK ESLEITU
 -- ---------------------------------------------------------------------
-
+ 
 -- Admin: dena
 GRANT ALL PRIVILEGES ON erronka_galduak.* TO 'admin_rola';
 
@@ -34,7 +34,7 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON erronka_galduak.AURKITZAILEA  TO 'langil
 GRANT SELECT ON erronka_galduak.LANGILEA TO 'langile_rola';
 GRANT SELECT ON erronka_galduak.ROLA     TO 'langile_rola';
 
--- Ikuslea: artikuluak erregistratu soilik
+-- Ikuslea: artikuluak erregistratu eta ikusi soilik
 GRANT SELECT ON erronka_galduak.KATEGORIA  TO 'ikusle_rola';
 GRANT SELECT ON erronka_galduak.KOKALEKUA  TO 'ikusle_rola';
 GRANT SELECT ON erronka_galduak.ROLA       TO 'ikusle_rola';

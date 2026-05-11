@@ -28,7 +28,9 @@ public class Erakundea extends Hartzailea {
     }
 
     /**
-     * @return Erakundearen IFZ identifikazio gisa
+     * Erakundearen identifikazioa IFZ gisa itzultzen du.
+     *
+     * @return IFZ testua
      */
     @Override
     public String getIdentifikazioa() {

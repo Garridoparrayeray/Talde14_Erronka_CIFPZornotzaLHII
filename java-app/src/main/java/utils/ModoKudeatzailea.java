@@ -8,6 +8,8 @@ import dao.ArtikuluaDAO;
 /**
  * DB konexioa detektatu eta online/offline modua kudeatzen duen klase
  * estatikoa.
+ *
+ * @author Yeray Garrido
  */
 public class ModoKudeatzailea {
 
@@ -19,12 +21,12 @@ public class ModoKudeatzailea {
 
     /**
      * Abiaraztean DB konexioa egiaztatu eta modua ezartzen du. Online bada,
-     * BiltegiLocala DB-tik sinkronizatzen du hurrengo offline-erako. DB
+     * BiltegiLokala DB-tik sinkronizatzen du hurrengo offline-erako. DB
      * eskuragarri ez bada, offline modura aldatzen da automatikoki.
      */
     public static void detektatu() {
         try {
-            java.sql.Connection con = DBConexioa.getKonexioa();
+            java.sql.Connection con = DBKonexioa.getKonexioa();
             offlineModo = (con == null || con.isClosed());
         } catch (Exception e) {
             LOG.log(Level.INFO, "DB ez dago eskuragarri, offline modura: {0}", e.getMessage());
@@ -32,11 +34,11 @@ public class ModoKudeatzailea {
         }
         if (offlineModo) {
             LOG.info("OFFLINE modua aktibo — store.dat fitxategia erabiltzen da.");
-            BiltegiLocala.hasieratu();
+            BiltegiLokala.hasieratu();
         } else {
             LOG.info("ONLINE modua aktibo — DB konexioa erabiliko da.");
             ArtikuluaDAO.iraungituakEguneratu();
-            BiltegiLocala.sincronizatuDBtik();
+            BiltegiLokala.sincronizatuDBtik();
         }
     }
 
@@ -51,14 +53,14 @@ public class ModoKudeatzailea {
 
     /**
      * Offline modua eskuz ezartzen du (probetarako edo konexio-aldaketetarako).
-     * Offline modura aldatzen bada, BiltegiLocala instantziatzen du.
+     * Offline modura aldatzen bada, BiltegiLokala instantziatzen du.
      *
      * @param offline true offline modura aldatzeko; false online jartzeko
      */
     public static void setOffline(boolean offline) {
         offlineModo = offline;
         if (offline) {
-            BiltegiLocala.hasieratu();
+            BiltegiLokala.hasieratu();
         }
     }
 }

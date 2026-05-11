@@ -2,11 +2,10 @@ package controller;
 
 import java.net.URL;
 import java.time.LocalDate;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.logging.Logger;
-
 import dao.ErreklamazioaDAO;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
@@ -18,7 +17,6 @@ import javafx.scene.control.TableView;
 import javafx.scene.layout.HBox;
 import model.EgoeraErreklamazioa;
 import model.Erreklamazioa;
-import utils.LogKudeatzailea;
 import utils.UIKudeatzailea;
 
 /**
@@ -28,8 +26,6 @@ import utils.UIKudeatzailea;
  * @author Yeray Garrido
  */
 public class GalduDabenakController implements Initializable {
-
-    private static final Logger LOG = LogKudeatzailea.lortu(GalduDabenakController.class);
 
     @FXML
     private TableView<Erreklamazioa> taula;
@@ -65,6 +61,13 @@ public class GalduDabenakController implements Initializable {
 
     private List<Erreklamazioa> guztiak;
 
+    /**
+     * Kontroladorea hasieratzen du: taula-zutabeak konfiguratzen ditu eta
+     * erreklamazioak kargatzen ditu.
+     *
+     * @param url FXML fitxategiaren kokapena
+     * @param rb  Erabilitako baliabide-sorta
+     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         colZbk.setCellValueFactory(c -> new SimpleStringProperty(String.valueOf(c.getValue().getErreklamazioId())));
@@ -105,7 +108,7 @@ public class GalduDabenakController implements Initializable {
                     continue;
                 }
                 if (e.getErreklamazioData() != null) {
-                    LocalDate data = new java.sql.Date(e.getErreklamazioData().getTime()).toLocalDate();
+                    LocalDate data = new Date(e.getErreklamazioData().getTime()).toLocalDate();
                     LocalDate hasiera = dpHasiera.getValue();
                     LocalDate amaiera = dpAmaiera.getValue();
                     if (hasiera != null && data.isBefore(hasiera)) {

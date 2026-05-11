@@ -1,77 +1,202 @@
 package utils;
 
+import javafx.animation.PauseTransition;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 /**
- * Interfaze grafikoaren kudeaketa errazteko klase laguntzailea. Erroreak
- * erakutsi, panelak kargatu eta leihoak aldatzeko metodoak eskaintzen ditu.
+ * Interfaze grafikoaren kudeaketa errazteko klase laguntzailea.
  *
  * @author Yeray Garrido
  */
 public class UIKudeatzailea {
 
+    private static StackPane unekoEdukiGunea;
+
     /**
-     * Errore mezu bat erakusten du pantailan Alert leiho baten bidez.
+     * Eduki-gune globalaren erreferentzia ezartzen du overlay eta panel
+     * eragiketak egiteko.
      *
-     * @param titulua Alerta leihoaren titulua
-     * @param mezua Erakutsi beharreko errore mezua
+     * @param edukiGunea Erregistratu beharreko StackPane nagusia
      */
-    public static void erakutsiErrorea(String titulua, String mezua) {
-        Alert alerta = new Alert(Alert.AlertType.ERROR);
-        alerta.setTitle(titulua);
-        alerta.setHeaderText(null);
-        alerta.setContentText(mezua);
-        alerta.showAndWait();
+    public static void setEdukiGunea(StackPane edukiGunea) {
+        unekoEdukiGunea = edukiGunea;
+    }
+
+    // ─── OVERLAY OINARRIA ────────────────────────────────────────────────────
+    private static StackPane sortuOinarriaEdukiarekin(String titulua, Node edukia, Node... botoiak) {
+        StackPane overlay = new StackPane();
+        overlay.setStyle("-fx-background-color: rgba(0,0,0,0.45);");
+        overlay.setMaxWidth(Double.MAX_VALUE);
+        overlay.setMaxHeight(Double.MAX_VALUE);
+
+        Label lblTit = new Label(titulua);
+        lblTit.setStyle("-fx-font-size:16px;-fx-font-weight:bold;-fx-text-fill:#111827;");
+
+        HBox btnBox = new HBox(10);
+        btnBox.setAlignment(Pos.CENTER_RIGHT);
+        btnBox.getChildren().addAll(botoiak);
+
+        VBox karta = new VBox(16, lblTit, edukia, btnBox);
+        karta.setMaxWidth(420);
+        karta.setStyle("-fx-background-color:white;-fx-background-radius:10;"
+                + "-fx-padding:30;-fx-effect:dropshadow(gaussian,rgba(0,0,0,0.25),20,0,0,4);");
+        StackPane.setAlignment(karta, Pos.CENTER);
+        overlay.getChildren().add(karta);
+        return overlay;
+    }
+
+    private static Button btnPrimario(String testua) {
+        Button b = new Button(testua);
+        b.setStyle("-fx-background-color:#3457D5;-fx-text-fill:white;-fx-font-weight:bold;"
+                + "-fx-background-radius:6;-fx-padding:9 20;-fx-cursor:hand;");
+        return b;
+    }
+
+    private static Button btnOutline(String testua) {
+        Button b = new Button(testua);
+        b.setStyle("-fx-background-color:transparent;-fx-border-color:#D1D5DB;"
+                + "-fx-border-radius:6;-fx-text-fill:#374151;"
+                + "-fx-padding:9 20;-fx-cursor:hand;");
+        return b;
     }
 
     /**
-     * FXML panel bat kargatzen du zehaztutako StackPane gunean.
+     * Overlay bat erakusten du eduki librea duena (TextField, GridPane...).
+     * "Gorde" sakatzean {@code onGorde} deitzen da; "Utzi" sakatzean itxi.
      *
-     * @param edukiGunea Panela kargatuko den gunea
+     * @param titulua Dialogoaren titulua
+     * @param edukia Formularioko edukia (Node)
+     * @param onGorde Gorde sakatzean exekutatzen den ekintza
+     */
+    public static void erakutsiFormOverlay(String titulua, Node edukia, Runnable onGorde) {
+        if (unekoEdukiGunea == null) {
+            return;
+        }
+        Button btnUtzi = btnOutline("Utzi");
+        Button btnGorde = btnPrimario("Gorde");
+        StackPane overlay = sortuOinarriaEdukiarekin(titulua, edukia, btnUtzi, btnGorde);
+        unekoEdukiGunea.getChildren().add(overlay);
+        btnUtzi.setOnAction(e -> unekoEdukiGunea.getChildren().remove(overlay));
+        btnGorde.setOnAction(e -> {
+            unekoEdukiGunea.getChildren().remove(overlay);
+            onGorde.run();
+        });
+    }
+
+    /**
+     * Pantailaren gainean agertzen den mezu labur bat erakusten du 3 segundoz,
+     * leihorik ireki gabe.
+     *
+     * @param mezua Erakutsi beharreko testua
+     * @param arrakasta true → berde (OK); false → gorri (errorea)
+     */
+    public static void erakutsiToast(String mezua, boolean arrakasta) {
+        if (unekoEdukiGunea == null) {
+            return;
+        }
+        Label toast = new Label(mezua);
+        toast.setMaxWidth(Double.MAX_VALUE);
+        toast.setAlignment(Pos.CENTER);
+        toast.setWrapText(true);
+        if (arrakasta) {
+            toast.setStyle("-fx-background-color:#DEF7EC;-fx-text-fill:#03543F;"
+                    + "-fx-padding:12 20;-fx-font-weight:bold;-fx-font-size:13px;");
+        } else {
+            toast.setStyle("-fx-background-color:#FDE8E8;-fx-text-fill:#9B1C1C;"
+                    + "-fx-padding:12 20;-fx-font-weight:bold;-fx-font-size:13px;");
+        }
+        StackPane.setAlignment(toast, Pos.TOP_CENTER);
+        unekoEdukiGunea.getChildren().add(toast);
+        PauseTransition pausa = new PauseTransition(Duration.seconds(3));
+        pausa.setOnFinished(e -> unekoEdukiGunea.getChildren().remove(toast));
+        pausa.play();
+    }
+
+    // ─── PANELAK ─────────────────────────────────────────────────────────────
+    /**
+     * FXML panel bat kargatzen du aurrez erregistratutako gune nagusian.
+     *
      * @param fxmlBidea FXML fitxategiaren bidea
      */
-    public static void kargatuPanela(StackPane edukiGunea, String fxmlBidea) {
+    public static void kargatuPanela(String fxmlBidea) {
+        if (unekoEdukiGunea == null) {
+            return;
+        }
         try {
-            kargatuPanela(edukiGunea, (Node) FXMLLoader.load(UIKudeatzailea.class.getResource(fxmlBidea)));
+            Node nodoa = FXMLLoader.load(UIKudeatzailea.class.getResource(fxmlBidea));
+            kargatuPanela(nodoa);
         } catch (Exception e) {
-            erakutsiErrorea("Errorea bista kargatzean",
-                    "Ezin izan da kargatu: " + fxmlBidea + "\n\nArrazoia: " + e.getMessage());
+            erakutsiToast("Errorea bista kargatzean: " + fxmlBidea, false);
         }
     }
 
     /**
-     * Aurretik kargatutako nodo bat StackPane gunean kokatzen du.
+     * Nodo bat kargatzen du aurrez erregistratutako gune nagusian.
      *
-     * @param edukiGunea Panela kokatuko den gunea
      * @param nodoa Dagoeneko kargatutako nodo grafikoa
      */
-    public static void kargatuPanela(StackPane edukiGunea, Node nodoa) {
-        edukiGunea.getChildren().setAll(nodoa);
+    public static void kargatuPanela(Node nodoa) {
+        if (unekoEdukiGunea != null) {
+            unekoEdukiGunea.getChildren().setAll(nodoa);
+        }
+    }
+
+    // ─── FORMULARIO ERROREAK ─────────────────────────────────────────────────
+    /**
+     * Formulario-errore etiketa bete eta ikusgai jartzen du.
+     *
+     * @param lblErrorea Ikusgai jarri beharreko errore-etiketa
+     * @param mezua      Erakutsi beharreko errore-mezua
+     */
+    public static void erakutsiFormularioErrorea(Label lblErrorea, String mezua) {
+        if (lblErrorea != null) {
+            lblErrorea.setText(mezua);
+            lblErrorea.setVisible(true);
+            lblErrorea.setManaged(true);
+        }
     }
 
     /**
-     * TableColumn bateko testua hitz-jauziarekin erakusten du, "..." moztu gabe.
-     * Deskribapen luzeak dituzten zutabeetarako erabili initialize() barruan.
+     * Formulario-errore etiketa ezkutatzen du eta espazio-lekua askatzen du.
      *
-     * @param <T>     Taulako errenkadaren mota generikoa
-     * @param zutabea Testu osoa erakutsi nahi den zutabea
+     * @param lblErrorea Ezkutatu beharreko errore-etiketa
+     */
+    public static void ezkutuFormularioErrorea(Label lblErrorea) {
+        if (lblErrorea != null) {
+            lblErrorea.setVisible(false);
+            lblErrorea.setManaged(false);
+        }
+    }
+
+    // ─── TAULA ZELULAK ───────────────────────────────────────────────────────
+    /**
+     * Taula-zutabe baten zelulak testua bilduz errendatzeko konfiguratzen du.
+     *
+     * @param <T>     Taularen errenkada-mota
+     * @param zutabea Konfiguratu beharreko zutabea
      */
     public static <T> void ehundatuZelulak(TableColumn<T, String> zutabea) {
         zutabea.setCellFactory(col -> new TableCell<T, String>() {
             private final Text testua = new Text();
+
             {
                 testua.wrappingWidthProperty().bind(col.widthProperty().subtract(10));
                 setGraphic(testua);
             }
+
             @Override
             protected void updateItem(String item, boolean empty) {
                 super.updateItem(item, empty);
@@ -84,33 +209,25 @@ public class UIKudeatzailea {
         });
     }
 
+    // ─── LEIHO ALDAKETA ──────────────────────────────────────────────────────
     /**
-     * Leiho berri bat kargatzen du eta uneko leihoa ordezkatzen du.
+     * Uneko leihoaren erroa FXML berri batez ordezkatzen du, aukeran
+     * maximizatuz.
      *
-     * @param egungoNodoa Uneko leihoaren edozein nodo (Stage lortzeko)
-     * @param fxmlBidea   Leiho berriaren FXML bidea
-     * @param maximizatu  Leihoa maximizatuta agertuko den ala ez
+     * @param egungoNodoa Uneko eszena-grafoko edozein nodo (Stage lortzeko)
+     * @param fxmlBidea   Kargatu beharreko FXML fitxategiaren bidea
+     * @param maximizatu  true bada leihoa maximizatu egiten du
      */
     public static void aldatuLeihoa(Node egungoNodoa, String fxmlBidea, boolean maximizatu) {
         try {
             Parent erroa = FXMLLoader.load(UIKudeatzailea.class.getResource(fxmlBidea));
             Stage leihoa = (Stage) egungoNodoa.getScene().getWindow();
-
-            // Uneko dimentsioak gorde — Scene berria sortzean leihoa ez jauzi dadin
-            boolean zenMaximizatua = leihoa.isMaximized();
-            double zabalera = leihoa.getScene().getWidth();
-            double altuera = leihoa.getScene().getHeight();
-
-            // Maximizazioa kendu Scene aldatu aurretik (Windows-en beharrezkoa)
-            leihoa.setMaximized(false);
-            leihoa.setScene(new Scene(erroa, zabalera, altuera));
-
-            if (maximizatu || zenMaximizatua) {
+            leihoa.getScene().setRoot(erroa);
+            if (maximizatu) {
                 leihoa.setMaximized(true);
             }
         } catch (Exception e) {
-            erakutsiErrorea("Errorea leihoa aldatzean",
-                    "Ezin izan da kargatu: " + fxmlBidea + "\n\nArrazoia: " + e.getMessage());
+            erakutsiToast("Errorea leihoa aldatzean: " + fxmlBidea, false);
         }
     }
 }

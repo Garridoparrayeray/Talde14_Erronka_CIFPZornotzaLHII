@@ -3,7 +3,6 @@ package controller;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -16,14 +15,11 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -36,13 +32,12 @@ import utils.XMLInportazioa;
 /**
  * Inbentarioko artikuluen zerrenda, bilaketa-filtroak, edizio eta ezabaketa
  * kudeatzen dituen kontroladorea.
+ *
+ * @author Yeray Garrido
  */
 public class InbentarioController implements Initializable {
 
     private static final Logger LOG = LogKudeatzailea.lortu(InbentarioController.class);
-
-    @FXML
-    private StackPane contentArea;
 
     @FXML
     private TableView<Artikulua> taula;
@@ -76,7 +71,15 @@ public class InbentarioController implements Initializable {
     private Button btnIrudia;
 
     private List<Artikulua> guztiak;
+    private boolean betetzean = false;
 
+    /**
+     * Kontroladorea hasieratzen du: zutabeak konfiguratzen ditu, egoera-filtroa
+     * betetzen du, botoi-egoera sinkronizatzen du eta artikuluak kargatzen ditu.
+     *
+     * @param url FXML fitxategiaren kokapena
+     * @param rb  Erabilitako baliabide-sorta
+     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         colKodea.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getArtikuluKodea()));
@@ -129,12 +132,14 @@ public class InbentarioController implements Initializable {
             ctrl.kargatu(sel);
 
             Stage stage = new Stage();
+            stage.initOwner(taula.getScene().getWindow());
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.setTitle(sel.getArtikuluKodea() + " — argazkia");
             stage.setScene(new Scene(root));
             stage.show();
         } catch (Exception e) {
             LOG.log(Level.SEVERE, "ikusiIrudia: popup errorea", e);
+            UIKudeatzailea.erakutsiToast("Errorea: ezin izan da irudia erakutsi.", false);
         }
     }
 
@@ -151,13 +156,13 @@ public class InbentarioController implements Initializable {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/ArtikuluaEditu.fxml"));
             Node nodoa = loader.load();
-            ArtikuluaEdituController ctrl = loader.getController();
+            ArtikuluaEditatuController ctrl = loader.getController();
 
-            ctrl.kargatu(sel, contentArea);
-
-            UIKudeatzailea.kargatuPanela(contentArea, nodoa);
+            ctrl.kargatu(sel);
+            UIKudeatzailea.kargatuPanela(nodoa);
         } catch (Exception e) {
             LOG.log(Level.SEVERE, "editatu: FXML kargatzean errorea", e);
+            UIKudeatzailea.erakutsiToast("Errorea: ezin izan da editatzeko formularioa kargatu.", false);
         }
     }
 
@@ -171,23 +176,13 @@ public class InbentarioController implements Initializable {
             return;
         }
 
-        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
-        confirm.setTitle("Ezabatu");
-        confirm.setHeaderText("Artikulua ezabatu: " + sel.getArtikuluKodea());
-        confirm.setContentText("Ziur zaude? Eragiketa hau ezin da desegin.");
-        Optional<ButtonType> resp = confirm.showAndWait();
-
-        if (resp.isPresent() && resp.get() == ButtonType.OK) {
-            boolean ok = ArtikuluaDAO.ezabatu(sel.getArtikuluKodea());
-            if (ok) {
-                XMLExportazioa.exportatu();
-                kargatu();
-            } else {
-                Alert err = new Alert(Alert.AlertType.ERROR);
-                err.setHeaderText("Ezin da ezabatu");
-                err.setContentText("Artikuluak emanaldia edo mugimendua dauka. Ezin da ezabatu.");
-                err.showAndWait();
-            }
+        boolean ok = ArtikuluaDAO.ezabatu(sel.getArtikuluKodea());
+        if (ok) {
+            XMLExportazioa.exportatu();
+            kargatu();
+            UIKudeatzailea.erakutsiToast("Artikulua ezabatu da.", true);
+        } else {
+            UIKudeatzailea.erakutsiToast("Ezin da ezabatu: artikuluak emanaldia edo mugimendua dauka.", false);
         }
     }
 
@@ -198,11 +193,7 @@ public class InbentarioController implements Initializable {
     @FXML
     private void exportatuXML() {
         XMLExportazioa.exportatu();
-        Alert info = new Alert(Alert.AlertType.INFORMATION);
-        info.setTitle("XML Exportazioa");
-        info.setHeaderText(null);
-        info.setContentText("XML fitxategia eguneratu da:\n" + utils.AppConfig.getXmlBidea());
-        info.showAndWait();
+        UIKudeatzailea.erakutsiToast("XML fitxategia eguneratu da.", true);
     }
 
     /**
@@ -221,38 +212,56 @@ public class InbentarioController implements Initializable {
 
         XMLInportazioa.Emaitza emaitza = XMLInportazioa.inportatu(fitxategia);
 
-        Alert info = new Alert(Alert.AlertType.INFORMATION);
-        info.setTitle("XML Inportazioa");
-        info.setHeaderText("Eguneratuak: " + emaitza.eguneratuak + "  |  Saltaturak: " + emaitza.saltaturak);
-        info.setContentText(String.join("\n", emaitza.mezuak));
-        info.showAndWait();
+        UIKudeatzailea.erakutsiToast("XML: " + emaitza.eguneratuak + " eguneratu, "
+                + emaitza.saltaturak + " saltatuta.", emaitza.eguneratuak > 0 || emaitza.saltaturak >= 0);
         kargatu();
     }
 
     // ─── Bilaketa / kargaketa ────────────────────────────────────────────────
+    /**
+     * Kategoria ComboBox-a artikuluen kategoria esklusiboekin betetzen du.
+     */
     private void beteteKategoriaCombo() {
-        cbKategoria.getItems().clear();
-        cbKategoria.getItems().add("Kategoria guztiak");
-        for (Artikulua a : guztiak) {
-            String kat = a.getKategoriaIzena();
-            if (!kat.equals("—") && !cbKategoria.getItems().contains(kat)) {
-                cbKategoria.getItems().add(kat);
+        betetzean = true;
+        try {
+            cbKategoria.getItems().clear();
+            cbKategoria.getItems().add("Kategoria guztiak");
+            for (Artikulua a : guztiak) {
+                String kat = a.getKategoriaIzena();
+                if (!kat.equals("—") && !cbKategoria.getItems().contains(kat)) {
+                    cbKategoria.getItems().add(kat);
+                }
             }
+            cbKategoria.getSelectionModel().selectFirst();
+        } finally {
+            betetzean = false;
         }
-        cbKategoria.getSelectionModel().selectFirst();
     }
 
+    /**
+     * Artikulu guztiak datu-basetik kargatzen ditu eta taula eguneratzen du.
+     */
     private void kargatu() {
         guztiak = ArtikuluaDAO.getGuztiak();
-        erakutsiDatuak(guztiak);
         beteteKategoriaCombo();
+        cbEgoera.getSelectionModel().selectFirst();
+        erakutsiDatuak(guztiak);
         desaktibatiBotoiak();
     }
 
+    /**
+     * Emandako artikulu zerrenda taulan erakusten du.
+     *
+     * @param datuak Erakutsi beharreko artikuluen zerrenda
+     */
     private void erakutsiDatuak(List<Artikulua> datuak) {
         taula.getItems().setAll(datuak);
     }
 
+    /**
+     * Editatu, ezabatu eta irudi botoiak desaktibatzen ditu artikulurik
+     * hautatu ez denean.
+     */
     private void desaktibatiBotoiak() {
         if (btnEditatu != null) {
             btnEditatu.setDisable(true);
@@ -265,9 +274,13 @@ public class InbentarioController implements Initializable {
         }
     }
 
+    /**
+     * Testu, kategoria eta egoera-iragazkien arabera artikuluen zerrenda
+     * iragazten du eta emaitzak taulan erakusten ditu.
+     */
     @FXML
     private void bilatu() {
-        if (guztiak == null) {
+        if (guztiak == null || betetzean) {
             return;
         }
         String testua = txtBilaketa.getText().trim().toLowerCase();
@@ -289,6 +302,10 @@ public class InbentarioController implements Initializable {
         erakutsiDatuak(iragaziak);
     }
 
+    /**
+     * Bilaketa-iragazkiak garbitzen ditu eta artikulu guztiak berriro erakusten
+     * ditu.
+     */
     @FXML
     private void garbitu() {
         txtBilaketa.clear();

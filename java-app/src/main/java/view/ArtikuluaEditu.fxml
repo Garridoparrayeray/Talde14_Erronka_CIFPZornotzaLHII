@@ -8,13 +8,14 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 
 <VBox prefWidth="520.0" spacing="18.0" styleClass="bg-light"
       stylesheets="@style.css"
       xmlns="http://javafx.com/javafx/21"
       xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="controller.ArtikuluaEdituController">
+      fx:controller="controller.ArtikuluaEditatuController">
    <children>
 
       <!-- Goiburua -->

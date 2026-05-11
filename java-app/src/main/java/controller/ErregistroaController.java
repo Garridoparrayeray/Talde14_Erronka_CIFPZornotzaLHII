@@ -6,7 +6,6 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -32,40 +31,59 @@ import utils.XMLExportazioa;
 
 /**
  * Artikulu berri bat erregistratzeko formularioaren kontroladorea.
+ *
+ * @author Yeray Garrido
  */
 public class ErregistroaController implements Initializable {
 
     private static final Logger LOG = LogKudeatzailea.lortu(ErregistroaController.class);
 
     // Artikuluaren eremuak
-    @FXML private TextField txtIzena;
-    @FXML private ComboBox<Kategoria> cbKategoria;
-    @FXML private TextArea txtDeskribapena;
-    @FXML private TextField txtAurkipenLekua;
-    @FXML private DatePicker dpSarreraData;
-    @FXML private CheckBox chkIragankorra;
-    @FXML private ComboBox<Kokalekua> cbKokalekua;
+    @FXML
+    private TextField txtIzena;
+    @FXML
+    private ComboBox<Kategoria> cbKategoria;
+    @FXML
+    private TextArea txtDeskribapena;
+    @FXML
+    private TextField txtAurkipenLekua;
+    @FXML
+    private DatePicker dpSarreraData;
+    @FXML
+    private CheckBox chkIragankorra;
+    @FXML
+    private ComboBox<Kokalekua> cbKokalekua;
 
     // Aurkitzailearen eremuak
-    @FXML private TextField txtAurkIzena;
-    @FXML private TextField txtAurkAbizena;
-    @FXML private TextField txtAurkTelefonoa;
-    @FXML private TextField txtAurkEmaila;
+    @FXML
+    private TextField txtAurkIzena;
+    @FXML
+    private TextField txtAurkAbizena;
+    @FXML
+    private TextField txtAurkTelefonoa;
+    @FXML
+    private TextField txtAurkEmaila;
 
     // Argazkia
-    @FXML private Label lblArgazkiIzena;
+    @FXML
+    private Label lblArgazkiIzena;
 
-    @FXML private Label lblErrorea;
+    @FXML
+    private Label lblErrorea;
 
     private File argazkiFile;
 
+    /**
+     * Kontroladorea hasieratzen du: kategoria eta kokaleku konboboxak betetzen
+     * ditu eta sarrera-data gaurko datarekin ezartzen du.
+     *
+     * @param url FXML fitxategiaren kokapena
+     * @param rb  Erabilitako baliabide-sorta
+     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        ArrayList<Kategoria> kategoriak = new ArrayList<>(KategoriaDAO.getGuztiak());
-        cbKategoria.getItems().setAll(kategoriak);
-
-        ArrayList<Kokalekua> kokalekuak = new ArrayList<>(KokalekuaDAO.getZerrenda());
-        cbKokalekua.getItems().setAll(kokalekuak);
+        cbKategoria.getItems().setAll(KategoriaDAO.getGuztiak());
+        cbKokalekua.getItems().setAll(KokalekuaDAO.getZerrenda());
 
         dpSarreraData.setValue(LocalDate.now());
         ezkutuErrorea();
@@ -91,7 +109,8 @@ public class ErregistroaController implements Initializable {
     }
 
     /**
-     * Formularioko datuak egiaztatzen ditu eta artikulua datu-basean gordetzen du.
+     * Formularioko datuak egiaztatzen ditu eta artikulua datu-basean gordetzen
+     * du.
      */
     @FXML
     private void erregistratu() {
@@ -104,24 +123,36 @@ public class ErregistroaController implements Initializable {
             return;
         }
 
-        // Aurkitzailearen datuak (izena + abizena derrigorrez)
-        String aurkIzena = txtAurkIzena != null ? txtAurkIzena.getText().trim() : "";
-        String aurkAbizena = txtAurkAbizena != null ? txtAurkAbizena.getText().trim() : "";
+        String aurkIzena = "";
+        if (txtAurkIzena != null) {
+            aurkIzena = txtAurkIzena.getText().trim();
+        }
+        String aurkAbizena = "";
+        if (txtAurkAbizena != null) {
+            aurkAbizena = txtAurkAbizena.getText().trim();
+        }
         if (aurkIzena.isEmpty() || aurkAbizena.isEmpty()) {
             erakutsiErrorea("Aurkitzailearen izena eta abizena bete behar dira.");
             return;
         }
-        String aurkTelefonoa = txtAurkTelefonoa != null ? txtAurkTelefonoa.getText().trim() : "";
-        String aurkEmaila = txtAurkEmaila != null ? txtAurkEmaila.getText().trim() : "";
-
-        String aurkipenLekua = txtAurkipenLekua != null ? txtAurkipenLekua.getText().trim() : "";
-
-        java.sql.Date sarreraData;
-        if (dpSarreraData.getValue() != null) {
-            sarreraData = java.sql.Date.valueOf(dpSarreraData.getValue());
-        } else {
-            sarreraData = java.sql.Date.valueOf(LocalDate.now());
+        String aurkTelefonoa = "";
+        if (txtAurkTelefonoa != null) {
+            aurkTelefonoa = txtAurkTelefonoa.getText().trim();
         }
+        String aurkEmaila = "";
+        if (txtAurkEmaila != null) {
+            aurkEmaila = txtAurkEmaila.getText().trim();
+        }
+        String aurkipenLekua = "";
+        if (txtAurkipenLekua != null) {
+            aurkipenLekua = txtAurkipenLekua.getText().trim();
+        }
+
+        LocalDate dataLoc = dpSarreraData.getValue();
+        if (dataLoc == null) {
+            dataLoc = LocalDate.now();
+        }
+        java.sql.Date sarreraData = java.sql.Date.valueOf(dataLoc);
 
         int idKat = kategoria.getKategoriaId();
         int idKok = 0;
@@ -161,8 +192,8 @@ public class ErregistroaController implements Initializable {
     }
 
     /**
-     * Argazki fitxategia artikulu_irudiak/ karpetara kopiatzen du.
-     * DB-n fitxategi-izena soilik gordetzen da (bidea gabe).
+     * Argazki fitxategia artikulu_irudiak/ karpetara kopiatzen du. DB-n
+     * fitxategi-izena soilik gordetzen da (bidea gabe).
      *
      * @return Fitxategi-izena (adib. img_1234567.jpg) edo null errorea bada
      */
@@ -197,16 +228,30 @@ public class ErregistroaController implements Initializable {
         txtIzena.clear();
         cbKategoria.setValue(null);
         txtDeskribapena.clear();
-        if (txtAurkipenLekua != null) txtAurkipenLekua.clear();
+        if (txtAurkipenLekua != null) {
+            txtAurkipenLekua.clear();
+        }
         dpSarreraData.setValue(LocalDate.now());
-        if (chkIragankorra != null) chkIragankorra.setSelected(false);
+        if (chkIragankorra != null) {
+            chkIragankorra.setSelected(false);
+        }
         cbKokalekua.setValue(null);
-        if (txtAurkIzena != null) txtAurkIzena.clear();
-        if (txtAurkAbizena != null) txtAurkAbizena.clear();
-        if (txtAurkTelefonoa != null) txtAurkTelefonoa.clear();
-        if (txtAurkEmaila != null) txtAurkEmaila.clear();
+        if (txtAurkIzena != null) {
+            txtAurkIzena.clear();
+        }
+        if (txtAurkAbizena != null) {
+            txtAurkAbizena.clear();
+        }
+        if (txtAurkTelefonoa != null) {
+            txtAurkTelefonoa.clear();
+        }
+        if (txtAurkEmaila != null) {
+            txtAurkEmaila.clear();
+        }
         argazkiFile = null;
-        if (lblArgazkiIzena != null) lblArgazkiIzena.setText("Ez da irudirik hautatu.");
+        if (lblArgazkiIzena != null) {
+            lblArgazkiIzena.setText("Ez da irudirik hautatu.");
+        }
         ezkutuErrorea();
     }
 

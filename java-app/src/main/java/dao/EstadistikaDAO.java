@@ -11,8 +11,8 @@ import java.util.logging.Logger;
 
 import model.AzkenMugimendua;
 import model.KategoriaKopurua;
-import utils.BiltegiLocala;
-import utils.DBConexioa;
+import utils.BiltegiLokala;
+import utils.DBKonexioa;
 import utils.LogKudeatzailea;
 import utils.ModoKudeatzailea;
 
@@ -32,79 +32,124 @@ public class EstadistikaDAO {
      */
     public static int biltegianKopurua() {
         if (ModoKudeatzailea.isOffline()) {
-            return BiltegiLocala.biltegianKopurua();
+            return BiltegiLokala.biltegianKopurua();
         }
         return kontatuEgoera("aurkitua");
     }
 
+    /**
+     * Itzulitako artikulu kopurua itzultzen du.
+     *
+     * @return Itzulitako artikulu kopurua
+     */
     public static int bueltatakoKopurua() {
         if (ModoKudeatzailea.isOffline()) {
-            return BiltegiLocala.bueltatakoKopurua();
+            return BiltegiLokala.bueltatakoKopurua();
         }
         return kontatuEgoera("bueltatua");
     }
 
+    /**
+     * Iraungitako artikulu kopurua itzultzen du.
+     *
+     * @return Iraungitako artikulu kopurua
+     */
     public static int iraungituakKopurua() {
         if (ModoKudeatzailea.isOffline()) {
-            return BiltegiLocala.iraungituakKopurua();
+            return BiltegiLokala.iraungituakKopurua();
         }
         return kontatuEgoera("iraungita");
     }
 
+    /**
+     * Hurrengo 30 egunetan iraungitzear dauden artikulu kopurua itzultzen du.
+     *
+     * @return Iraungitzear dauden artikulu kopurua
+     */
     public static int iraungitzearKopurua() {
         if (ModoKudeatzailea.isOffline()) {
-            return BiltegiLocala.iraungitzearKopurua();
+            return BiltegiLokala.iraungitzearKopurua();
         }
         String sql = "SELECT COUNT(*) FROM ARTIKULUA "
                 + "WHERE egoera = 'aurkitua' AND iraungitze_data BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 30 DAY)";
         return kontatuSql(sql);
     }
 
+    /**
+     * Irekitako erreklamazio kopurua itzultzen du.
+     *
+     * @return Irekitako erreklamazio kopurua
+     */
     public static int erreklamazioIrekiakKopurua() {
         if (ModoKudeatzailea.isOffline()) {
-            return BiltegiLocala.erreklamazioIrekiakKopurua();
+            return BiltegiLokala.erreklamazioIrekiakKopurua();
         }
         return kontatuSql("SELECT COUNT(*) FROM ERREKLAMAZIOA WHERE errek_egoera = 'irekita'");
     }
 
+    /**
+     * Sistemako langile guztien kopurua itzultzen du.
+     *
+     * @return Langile kopurua
+     */
     public static int langileKopurua() {
         if (ModoKudeatzailea.isOffline()) {
-            return BiltegiLocala.langileKopurua();
+            return BiltegiLokala.langileKopurua();
         }
         return kontatuSql("SELECT COUNT(*) FROM LANGILEA");
     }
 
+    /**
+     * Datu-baseko artikulu guztien kopurua itzultzen du.
+     *
+     * @return Artikulu guztien kopurua
+     */
     public static int artikuluGuztienKopurua() {
         if (ModoKudeatzailea.isOffline()) {
-            return BiltegiLocala.artikuluGuztienKopurua();
+            return BiltegiLokala.artikuluGuztienKopurua();
         }
         return kontatuSql("SELECT COUNT(*) FROM ARTIKULUA");
     }
 
+    /**
+     * Kategorien kopurua itzultzen du.
+     *
+     * @return Kategoria kopurua
+     */
     public static int kategoriaKopurua() {
         if (ModoKudeatzailea.isOffline()) {
-            return BiltegiLocala.kategoriaKopurua();
+            return BiltegiLokala.kategoriaKopurua();
         }
         return kontatuSql("SELECT COUNT(*) FROM KATEGORIA");
     }
 
+    /**
+     * Kokalekuen kopurua itzultzen du.
+     *
+     * @return Kokaleku kopurua
+     */
     public static int kokalekuakKopurua() {
         if (ModoKudeatzailea.isOffline()) {
-            return BiltegiLocala.kokalekuakKopurua();
+            return BiltegiLokala.kokalekuakKopurua();
         }
         return kontatuSql("SELECT COUNT(*) FROM KOKALEKUA");
     }
 
+    /**
+     * Azken 10 mugimenduen zerrenda itzultzen du, data deszendentearen arabera.
+     *
+     * @return Azken mugimenduak AzkenMugimendua zerrenda gisa
+     */
     public static List<AzkenMugimendua> azkenMugimenduak() {
         if (ModoKudeatzailea.isOffline()) {
-            return BiltegiLocala.getAzkenMugimenduak();
+            return BiltegiLokala.getAzkenMugimenduak();
         }
         List<AzkenMugimendua> zerrenda = new ArrayList<>();
         String sql = "SELECT m.id_artikulua, m.deskribapena, m.data, "
                 + "COALESCE(CONCAT(l.izena,' ',l.abizena), '—') AS langilea "
                 + "FROM MUGIMENDUA m LEFT JOIN LANGILEA l ON m.id_langile = l.id_langile "
                 + "ORDER BY m.data DESC LIMIT 10";
-        try (Connection con = DBConexioa.getKonexioa(); PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+        try (Connection con = DBKonexioa.getKonexioa(); PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 zerrenda.add(new AzkenMugimendua(
                         rs.getString("id_artikulua"),
@@ -126,13 +171,13 @@ public class EstadistikaDAO {
      */
     public static List<KategoriaKopurua> kategoriaKopuruak() {
         if (ModoKudeatzailea.isOffline()) {
-            return BiltegiLocala.kategoriaKopuruak();
+            return BiltegiLokala.kategoriaKopuruak();
         }
         List<KategoriaKopurua> zerrenda = new ArrayList<>();
         String sql = "SELECT k.izena, COUNT(a.id_artikulua) AS kop "
                 + "FROM KATEGORIA k LEFT JOIN ARTIKULUA a ON k.id_kategoria = a.id_kategoria "
                 + "GROUP BY k.id_kategoria, k.izena ORDER BY kop DESC";
-        try (Connection con = DBConexioa.getKonexioa(); PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+        try (Connection con = DBKonexioa.getKonexioa(); PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 zerrenda.add(new KategoriaKopurua(rs.getString("izena"), rs.getInt("kop")));
             }
@@ -142,21 +187,6 @@ public class EstadistikaDAO {
         return zerrenda;
     }
 
-    /**
-     * Datu-basearekiko konexioa ondo dabilen egiaztatzen du.
-     *
-     * @return Konexioa badago true, bestela false
-     */
-    public static boolean dbKonexioaEgiaztatu() {
-        if (ModoKudeatzailea.isOffline()) {
-            return false;
-        }
-        try (Connection con = DBConexioa.getKonexioa()) {
-            return con != null && !con.isClosed();
-        } catch (SQLException e) {
-            return false;
-        }
-    }
 
     /**
      * Emandako egoera batean dauden artikuluak kontatzen ditu.
@@ -166,7 +196,7 @@ public class EstadistikaDAO {
      */
     private static int kontatuEgoera(String egoera) {
         String sql = "SELECT COUNT(*) FROM ARTIKULUA WHERE egoera = ?";
-        try (Connection con = DBConexioa.getKonexioa(); PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = DBKonexioa.getKonexioa(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, egoera);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
@@ -186,7 +216,7 @@ public class EstadistikaDAO {
      * @return Kontatutako kopurua, edo 0 errorea bada
      */
     private static int kontatuSql(String sql) {
-        try (Connection con = DBConexioa.getKonexioa(); PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+        try (Connection con = DBKonexioa.getKonexioa(); PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
             if (rs.next()) {
                 return rs.getInt(1);
             }
