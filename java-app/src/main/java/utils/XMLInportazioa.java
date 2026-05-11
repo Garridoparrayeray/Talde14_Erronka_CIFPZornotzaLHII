@@ -23,6 +23,8 @@ import model.EgoeraArtikulua;
  * XML fitxategi batetik artikuluen datuak irakurri eta datu-basea eguneratzen
  * duen utilitate estatikoa. Artikulu bakoitzaren egoera XML-tik hartzen da eta
  * DB-n eguneratzen da, artikulua dagoeneko existitzen bada soilik.
+ *
+ * @author Yeray Garrido
  */
 public class XMLInportazioa {
 
@@ -36,19 +38,25 @@ public class XMLInportazioa {
      */
     public static class Emaitza {
 
-        /** Ondo eguneratutako artikuluen kopurua. */
+        /**
+         * Ondo eguneratutako artikuluen kopurua.
+         */
         public final int eguneratuak;
-        /** Saltatu diren edo huts egin duten artikuluen kopurua. */
+        /**
+         * Saltatu diren edo huts egin duten artikuluen kopurua.
+         */
         public final int saltaturak;
-        /** Artikulu bakoitzaren emaitza deskribatzen duten mezuen zerrenda. */
+        /**
+         * Artikulu bakoitzaren emaitza deskribatzen duten mezuen zerrenda.
+         */
         public final List<String> mezuak;
 
         /**
          * Emaitza-objektua sortzen du inportazioaren laburpenarekin.
          *
          * @param eguneratuak Eguneratutako artikuluen kopurua
-         * @param saltaturak  Saltatutako edo huts egindakoen kopurua
-         * @param mezuak      Eragiketa bakoitzaren deskribapena duten mezuak
+         * @param saltaturak Saltatutako edo huts egindakoen kopurua
+         * @param mezuak Eragiketa bakoitzaren deskribapena duten mezuak
          */
         Emaitza(int eguneratuak, int saltaturak, List<String> mezuak) {
             this.eguneratuak = eguneratuak;
@@ -90,8 +98,13 @@ public class XMLInportazioa {
                 }
 
                 // DB-n existitzen den egiaztatu
-                boolean existitzen = dbArtikuluak.stream()
-                        .anyMatch(a -> a.getArtikuluKodea().equals(id));
+                boolean existitzen = false;
+                for (Artikulua a : dbArtikuluak) {
+                    if (a.getArtikuluKodea().equals(id)) {
+                        existitzen = true;
+                        break;
+                    }
+                }
                 if (!existitzen) {
                     saltaturak++;
                     mezuak.add("Saltatu (ez da existitzen): " + id);
@@ -126,13 +139,13 @@ public class XMLInportazioa {
     /**
      * Artikulu baten egoera datu-basean eguneratzen du.
      *
-     * @param kodea    Eguneratu beharreko artikuluaren kodea
+     * @param kodea Eguneratu beharreko artikuluaren kodea
      * @param dbEgoera DB-n gordetzeko egoera balioa
      * @return Ondo eguneratu bada true, bestela false
      */
     private static boolean eguneratuEgoera(String kodea, String dbEgoera) {
         String sql = "UPDATE ARTIKULUA SET egoera=? WHERE id_artikulua=?";
-        try (Connection con = utils.DBConexioa.getKonexioa(); PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = DBKonexioa.getKonexioa(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, dbEgoera);
             ps.setString(2, kodea);
             return ps.executeUpdate() > 0;
@@ -167,9 +180,10 @@ public class XMLInportazioa {
     /**
      * XML elementu baten etiketa-edukia testu gisa itzultzen du.
      *
-     * @param el      Edukia irakurri beharreko XML elementua
+     * @param el Edukia irakurri beharreko XML elementua
      * @param etiketa Bilatu beharreko etiketa-izena
-     * @return Etiketaren testua (trim eginda), edo kate hutsa existitzen ez bada
+     * @return Etiketaren testua (trim eginda), edo kate hutsa existitzen ez
+     * bada
      */
     private static String testua(Element el, String etiketa) {
         NodeList nl = el.getElementsByTagName(etiketa);
@@ -177,6 +191,9 @@ public class XMLInportazioa {
             return "";
         }
         String val = nl.item(0).getTextContent();
-        return val != null ? val.trim() : "";
+        if (val == null) {
+            return "";
+        }
+        return val.trim();
     }
 }

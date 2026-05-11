@@ -8,12 +8,14 @@ import java.nio.file.Files;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import dao.BackupDAO;
 import dao.EstadistikaDAO;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import utils.AppConfig;
+import utils.DBKonexioa;
 import utils.LogKudeatzailea;
 import utils.Sesio;
 import utils.UIKudeatzailea;
@@ -48,8 +50,8 @@ public class AdminPanelaController implements Initializable {
     private AdminController adminController;
 
     /**
-     * AdminController erreferentzia ezartzen du, bista-aldaketa eskaerak
-     * gune nagusiari bidaltzeko.
+     * AdminController erreferentzia ezartzen du, bista-aldaketa eskaerak gune
+     * nagusiari bidaltzeko.
      *
      * @param adminController Nagusiko AdminController instantzia
      */
@@ -62,7 +64,7 @@ public class AdminPanelaController implements Initializable {
      * azken babes-kopiaren data erakusten ditu.
      *
      * @param url FXML fitxategiaren kokapena
-     * @param rb  Erabilitako baliabide-sorta
+     * @param rb Erabilitako baliabide-sorta
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -75,7 +77,7 @@ public class AdminPanelaController implements Initializable {
         lblKategoriak.setText(String.valueOf(EstadistikaDAO.kategoriaKopurua()));
         lblKokalekuak.setText(String.valueOf(EstadistikaDAO.kokalekuakKopurua()));
 
-        boolean konektatuta = EstadistikaDAO.dbKonexioaEgiaztatu();
+        boolean konektatuta = DBKonexioa.egiaztatu();
         ezarriDbEgoera(konektatuta);
 
         lblAzkenKopia.setText(irakurriAzkenKopiaData());
@@ -86,7 +88,7 @@ public class AdminPanelaController implements Initializable {
      */
     @FXML
     public void egiaztatuKonexioa() {
-        boolean ok = EstadistikaDAO.dbKonexioaEgiaztatu();
+        boolean ok = DBKonexioa.egiaztatu();
         ezarriDbEgoera(ok);
     }
 
@@ -122,10 +124,10 @@ public class AdminPanelaController implements Initializable {
                     return data;
                 }
             } catch (IOException e) {
-                // erorketa silentea — "Inoiz ez" itzuliko du
+                LOG.log(Level.WARNING, "irakurriAzkenKopiaData: errorea", e);
             }
         }
-        return "Inoiz ez";
+        return "Ez dago azken kopiarik";
     }
 
     private static void gordaAzkenKopiaData(String data) {
@@ -135,7 +137,7 @@ public class AdminPanelaController implements Initializable {
             Files.writeString(new File(dir, KOPIA_FITXATEGIA).toPath(),
                     data, StandardCharsets.UTF_8);
         } catch (IOException e) {
-            // ez da kritikotzat hartzen
+            LOG.log(Level.WARNING, "gordaAzkenKopiaData: errorea", e);
         }
     }
 
@@ -143,7 +145,7 @@ public class AdminPanelaController implements Initializable {
      * Langile berri bat gehitzeko bista kargatzen du AdminController bidez.
      */
     @FXML
-    private void handleLangileBerria() {
+    private void LangileBerriaShorcut() {
         if (adminController != null) {
             adminController.loadLangileBerria();
         }
@@ -153,7 +155,7 @@ public class AdminPanelaController implements Initializable {
      * Kategoria berri bat gehitzeko bista kargatzen du AdminController bidez.
      */
     @FXML
-    private void handleKategoriaBerria() {
+    private void KategoriaBerriaShorcut() {
         if (adminController != null) {
             adminController.loadKategoriaBerria();
         }

@@ -34,9 +34,9 @@ import utils.XMLExportazioa;
  *
  * @author Yeray Garrido
  */
-public class ArtikuluaEdituController implements Initializable {
+public class ArtikuluaEditatuController implements Initializable {
 
-    private static final Logger LOG = LogKudeatzailea.lortu(ArtikuluaEdituController.class);
+    private static final Logger LOG = LogKudeatzailea.lortu(ArtikuluaEditatuController.class);
 
     @FXML
     private Label lblTitulua;
@@ -142,8 +142,14 @@ public class ArtikuluaEdituController implements Initializable {
             return;
         }
 
-        int idKat = cbKategoria.getValue() != null ? cbKategoria.getValue().getKategoriaId() : 0;
-        int idKok = cbKokalekua.getValue() != null ? cbKokalekua.getValue().getKokalekuId() : 0;
+        int idKat = 0;
+        if (cbKategoria.getValue() != null) {
+            idKat = cbKategoria.getValue().getKategoriaId();
+        }
+        int idKok = 0;
+        if (cbKokalekua.getValue() != null) {
+            idKok = cbKokalekua.getValue().getKokalekuId();
+        }
 
         String argazkiBidea = artikulua.getArgazkiBidea();
         if (argazkiFile != null) {

@@ -55,11 +55,11 @@ public class AdminController implements Initializable {
     private List<Button> navBotoiak;
 
     /**
-     * Kontroladorea hasieratzen du: nabigazio-botoiak ezartzen ditu, saio-datuak
-     * erakusten ditu eta administrazio-panela kargatzen du.
+     * Kontroladorea hasieratzen du: nabigazio-botoiak ezartzen ditu,
+     * saio-datuak erakusten ditu eta administrazio-panela kargatzen du.
      *
-     * @param url  FXML fitxategiaren kokapena
-     * @param rb   Erabilitako baliabide-sorta
+     * @param url FXML fitxategiaren kokapena
+     * @param rb Erabilitako baliabide-sorta
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -93,8 +93,8 @@ public class AdminController implements Initializable {
     }
 
     /**
-     * Administrazio-panelaren FXML nodoa kargatzen du eta AdminController erreferentzia
-     * kontroladoreari pasatzen dio.
+     * Administrazio-panelaren FXML nodoa kargatzen du eta AdminController
+     * erreferentzia kontroladoreari pasatzen dio.
      */
     private void kargatuAdminPanela() {
         try {

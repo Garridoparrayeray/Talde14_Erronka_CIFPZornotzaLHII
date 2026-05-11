@@ -101,8 +101,8 @@
 
                         <HBox spacing="15.0">
                            <children>
-                              <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleLangileBerria" styleClass="btn-outline" text="+ Langile berria" HBox.hgrow="ALWAYS" />
-                              <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleKategoriaBerria" styleClass="btn-outline" text="+ Kategoria berria" HBox.hgrow="ALWAYS" />
+                              <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#LangileBerriaShorcut" styleClass="btn-outline" text="+ Langile berria" HBox.hgrow="ALWAYS" />
+                              <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#KategoriaBerriaShorcut" styleClass="btn-outline" text="+ Kategoria berria" HBox.hgrow="ALWAYS" />
                            </children>
                         </HBox>
                         <HBox spacing="15.0">

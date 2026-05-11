@@ -13,16 +13,17 @@ import org.mindrot.jbcrypt.BCrypt;
 
 import model.Administratzailea;
 import model.Langilea;
-import utils.BiltegiLocala;
-import utils.DBConexioa;
+import utils.BiltegiLokala;
+import utils.DBKonexioa;
 import utils.LogKudeatzailea;
 import utils.ModoKudeatzailea;
 
 /**
- * Langileen datu-baseko eragiketak kudeatzen dituen DAO klasea.
+ * Langileen datu-baseko eragiketak kudeatzen dituen DAO klasea. Langileak
+ * lortzeko, gehitzeko, eguneratzeko, ezabatzeko eta autentifikatzeko metodoak
+ * eskaintzen ditu.
  *
- * @author Eder Martin Langileak datu-basetik lortzeko, langile berriak
- * gehitzeko eta autentifikatzeko metodoak ditu.
+ * @author Eder Martin
  */
 public class LangileaDAO {
 
@@ -35,13 +36,13 @@ public class LangileaDAO {
      */
     public static List<Langilea> getGuztiak() {
         if (ModoKudeatzailea.isOffline()) {
-            return BiltegiLocala.getLangileak();
+            return BiltegiLokala.getLangileak();
         }
         List<Langilea> zerrenda = new ArrayList<>();
         String sql = "SELECT l.id_langile, l.izena, l.abizena, l.erabiltzailea, l.pasahitza_hash, r.deskribapena AS rola "
                 + "FROM LANGILEA l JOIN ROLA r ON l.id_rola = r.id_rola "
                 + "ORDER BY l.id_langile";
-        try (Connection con = DBConexioa.getKonexioa(); PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+        try (Connection con = DBKonexioa.getKonexioa(); PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 Langilea l = new Langilea(
                         rs.getInt("id_langile"),
@@ -66,11 +67,11 @@ public class LangileaDAO {
      */
     public static List<String[]> getRolak() {
         if (ModoKudeatzailea.isOffline()) {
-            return new ArrayList<>(BiltegiLocala.getRolak());
+            return new ArrayList<>(BiltegiLokala.getRolak());
         }
         List<String[]> zerrenda = new ArrayList<>();
         String sql = "SELECT id_rola, deskribapena FROM ROLA ORDER BY id_rola";
-        try (Connection con = DBConexioa.getKonexioa(); PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+        try (Connection con = DBKonexioa.getKonexioa(); PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 zerrenda.add(new String[]{
                     rs.getString("id_rola"),
@@ -86,26 +87,30 @@ public class LangileaDAO {
     /**
      * Langile berria gordetzen du datu-basean pasahitza BCrypt bidez zifratuta.
      *
-     * @param izena          Langilearen izena
-     * @param abizena        Langilearen abizena
-     * @param erabiltzailea  Erabiltzaile-izena (bakarra izan behar da)
-     * @param pasahitza      Argizko pasahitza (hash eginda gordeko da)
-     * @param idRola         Langileari esleitu beharreko rolaren IDa
+     * @param izena Langilearen izena
+     * @param abizena Langilearen abizena
+     * @param erabiltzailea Erabiltzaile-izena (bakarra izan behar da)
+     * @param pasahitza Argizko pasahitza (hash eginda gordeko da)
+     * @param idRola Langileari esleitu beharreko rolaren IDa
      * @return Ondo gorde bada true, bestela false
      */
     public static boolean gehitu(String izena, String abizena, String erabiltzailea, String pasahitza, int idRola) {
         if (ModoKudeatzailea.isOffline()) {
-            return BiltegiLocala.langileaGehitu(izena, abizena, erabiltzailea, pasahitza, idRola);
+            return BiltegiLokala.langileaGehitu(izena, abizena, erabiltzailea, pasahitza, idRola);
         }
         String hash = BCrypt.hashpw(pasahitza, BCrypt.gensalt(10));
         String sql = "INSERT INTO LANGILEA (izena, abizena, erabiltzailea, pasahitza_hash, id_rola) VALUES (?, ?, ?, ?, ?)";
-        try (Connection con = DBConexioa.getKonexioa(); PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = DBKonexioa.getKonexioa(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, izena);
             ps.setString(2, abizena);
             ps.setString(3, erabiltzailea);
             ps.setString(4, hash);
             ps.setInt(5, idRola);
-            return ps.executeUpdate() > 0;
+            boolean ok = ps.executeUpdate() > 0;
+            if (ok) {
+                LOG.log(Level.INFO, "gehitu: OK - {0}", erabiltzailea);
+            }
+            return ok;
         } catch (SQLException e) {
             LOG.log(Level.SEVERE, "gehitu: errorea", e);
             return false;
@@ -113,22 +118,23 @@ public class LangileaDAO {
     }
 
     /**
-     * Erabiltzailea eta pasahitza egiaztatzen ditu eta dagokion Langilea objektua
-     * itzultzen du.
+     * Erabiltzailea eta pasahitza egiaztatzen ditu eta dagokion Langilea
+     * objektua itzultzen du.
      *
      * @param erabiltzailea Saioa hasteko erabiltzaile-izena
-     * @param pasahitza     Argizko pasahitza BCrypt bidez egiaztatuko dena
-     * @return Langilea (edo Administratzailea) ondo autentifikatu bada, null bestela
+     * @param pasahitza Argizko pasahitza BCrypt bidez egiaztatuko dena
+     * @return Langilea (edo Administratzailea) ondo autentifikatu bada, null
+     * bestela
      */
     public static Langilea login(String erabiltzailea, String pasahitza) {
         if (ModoKudeatzailea.isOffline()) {
-            return BiltegiLocala.login(erabiltzailea, pasahitza);
+            return BiltegiLokala.login(erabiltzailea, pasahitza);
         }
         String sql = "SELECT l.id_langile, l.izena, l.abizena, l.erabiltzailea, l.pasahitza_hash, r.deskribapena AS rola "
                 + "FROM LANGILEA l JOIN ROLA r ON l.id_rola = r.id_rola "
                 + "WHERE l.erabiltzailea = ?";
 
-        try (Connection con = DBConexioa.getKonexioa(); PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = DBKonexioa.getKonexioa(); PreparedStatement ps = con.prepareStatement(sql)) {
 
             ps.setString(1, erabiltzailea);
             try (ResultSet rs = ps.executeQuery()) {
@@ -182,17 +188,18 @@ public class LangileaDAO {
     /**
      * Langilearen datuak eguneratzen ditu, aukeran pasahitza ere aldatuz.
      *
-     * @param id               Langilearen identifikatzailea
-     * @param izena            Langilearen izen berria
-     * @param abizena          Langilearen abizen berria
-     * @param erabiltzailea    Erabiltzaile izen berria
-     * @param idRola           Rolaren ID berria
-     * @param pasahitzaBerria  Pasahitz berria (null edo hutsa bada, ez da aldatzen)
+     * @param id Langilearen identifikatzailea
+     * @param izena Langilearen izen berria
+     * @param abizena Langilearen abizen berria
+     * @param erabiltzailea Erabiltzaile izen berria
+     * @param idRola Rolaren ID berria
+     * @param pasahitzaBerria Pasahitz berria (null edo hutsa bada, ez da
+     * aldatzen)
      * @return true ondo eguneratu bada, false bestela
      */
     public static boolean eguneratu(int id, String izena, String abizena, String erabiltzailea, int idRola, String pasahitzaBerria) {
         if (ModoKudeatzailea.isOffline()) {
-            return BiltegiLocala.langileaEguneratu(id, izena, abizena, erabiltzailea, idRola, pasahitzaBerria);
+            return BiltegiLokala.langileaEguneratu(id, izena, abizena, erabiltzailea, idRola, pasahitzaBerria);
         }
         StringBuilder sql = new StringBuilder("UPDATE LANGILEA SET izena=?, abizena=?, erabiltzailea=?, id_rola=?");
         boolean pasahitzaAldatu = pasahitzaBerria != null && !pasahitzaBerria.isEmpty();
@@ -201,7 +208,7 @@ public class LangileaDAO {
         }
         sql.append(" WHERE id_langile=?");
 
-        try (Connection con = DBConexioa.getKonexioa(); PreparedStatement ps = con.prepareStatement(sql.toString())) {
+        try (Connection con = DBKonexioa.getKonexioa(); PreparedStatement ps = con.prepareStatement(sql.toString())) {
             ps.setString(1, izena);
             ps.setString(2, abizena);
             ps.setString(3, erabiltzailea);
@@ -212,7 +219,11 @@ public class LangileaDAO {
                 ps.setString(idx++, hash);
             }
             ps.setInt(idx, id);
-            return ps.executeUpdate() > 0;
+            boolean ok = ps.executeUpdate() > 0;
+            if (ok) {
+                LOG.log(Level.INFO, "eguneratu: OK - id={0}", id);
+            }
+            return ok;
         } catch (SQLException e) {
             LOG.log(Level.SEVERE, "eguneratu: errorea", e);
             return false;
@@ -227,12 +238,16 @@ public class LangileaDAO {
      */
     public static boolean ezabatu(int id) {
         if (ModoKudeatzailea.isOffline()) {
-            return BiltegiLocala.langileaEzabatu(id);
+            return BiltegiLokala.langileaEzabatu(id);
         }
         String sql = "DELETE FROM LANGILEA WHERE id_langile = ?";
-        try (Connection con = DBConexioa.getKonexioa(); PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = DBKonexioa.getKonexioa(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, id);
-            return ps.executeUpdate() > 0;
+            boolean ok = ps.executeUpdate() > 0;
+            if (ok) {
+                LOG.log(Level.INFO, "ezabatu: OK - id={0}", id);
+            }
+            return ok;
         } catch (SQLException e) {
             LOG.log(Level.SEVERE, "ezabatu: errorea", e);
             return false;

@@ -11,7 +11,11 @@ import javafx.scene.control.TextField;
 import model.Kategoria;
 import utils.UIKudeatzailea;
 
-/** Kategoria bat editatzeko pantailaren kontroladorea. */
+/**
+ * Kategoria bat editatzeko pantailaren kontroladorea.
+ *
+ * @author Yeray Garrido
+ */
 public class KategoriaEdituController implements Initializable {
 
     @FXML private TextField txtIzena;
@@ -19,15 +23,28 @@ public class KategoriaEdituController implements Initializable {
 
     private Kategoria kategoria;
 
+    /**
+     * Kontroladorea hasieratzen du; ez du hasierako ekintza berezirik.
+     *
+     * @param url FXML fitxategiaren kokapena
+     * @param rb  Erabilitako baliabide-sorta
+     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {}
 
-    /** Editatu beharreko kategoria ezartzen du eta formularioa betetzen du. */
+    /**
+     * Editatu beharreko kategoria ezartzen du eta formularioa betetzen du.
+     *
+     * @param k Editatu beharreko kategoria
+     */
     public void setKategoria(Kategoria k) {
         this.kategoria = k;
         txtIzena.setText(k.getIzena());
     }
 
+    /**
+     * Formularioko izena egiaztatzen du eta kategoria datu-basean eguneratzen du.
+     */
     @FXML
     private void eguneratu() {
         String izena = txtIzena.getText().trim();
@@ -44,11 +61,13 @@ public class KategoriaEdituController implements Initializable {
         }
     }
 
+    /** Aldaketak gorde gabe zerrendara itzultzen du. */
     @FXML
     private void utzi() {
         itxi();
     }
 
+    /** Kategorien zerrendara itzultzen da formularioa itxiz. */
     private void itxi() {
         UIKudeatzailea.kargatuPanela("/view/Kategoriak.fxml");
     }

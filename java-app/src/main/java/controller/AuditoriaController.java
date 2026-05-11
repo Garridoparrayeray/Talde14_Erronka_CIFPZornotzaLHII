@@ -40,6 +40,13 @@ public class AuditoriaController implements Initializable {
     @FXML
     private TableColumn<MugimenduLerroa, String> colXehetasunak;
 
+    /**
+     * Kontroladorea hasieratzen du: taula-zutabeak konfiguratzen ditu eta
+     * mugimenduen datuak kargatzen ditu.
+     *
+     * @param url FXML fitxategiaren kokapena
+     * @param rb  Erabilitako baliabide-sorta
+     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         colData.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getData()));

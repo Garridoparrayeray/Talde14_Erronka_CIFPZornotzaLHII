@@ -1,7 +1,7 @@
 /* ==========================================================================
-   1. TOKIKO LETRA-TIPOAK
+   1. FUENTES LOCALES
    ========================================================================== */
-/* inter-300 - latindarra */
+/* inter-300 - latin */
 @font-face {
   font-display: swap; 
   font-family: 'Inter';
@@ -83,7 +83,7 @@
 }
 
 /* ==========================================================================
-   2. OINARRIA ETA ALDAGAIAK
+   2. BASE Y VARIABLES
    ========================================================================== */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -119,7 +119,7 @@
 
 html { scroll-behavior: smooth; }
 
-/* 1. Gorputza zutabe malgua izan dadin, pantailaren altuera osoa hartzeko */
+/* 1. Cambiamos el body para que sea una columna flexible que ocupe siempre el 100% del alto de la pantalla */
 body {
   font-family: var(--font-body);
   background: var(--white);
@@ -127,26 +127,26 @@ body {
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
   
-  /* -- OINARENTZAT GEHITUA -- */
+  /* -- AÑADIDO PARA EL FOOTER -- */
   display: flex;
   flex-direction: column;
   min-height: 100vh;
 }
 
-/* 2. Eduki nagusia handitzeko (flex: 1) eta oina behera bultzatzeko */
+/* 2. Le decimos al main que crezca (flex: 1) para rellenar todo el hueco vacío y empujar el footer hacia abajo */
 main {
   flex: 1;
   display: flex;
   flex-direction: column;
 }
 
-/* Padding berezia katalogo-orriarentzat */
+/* Padding especial para la página de catálogo (ajustar si es necesario) */
 body.catalog-page {
   padding-top: 80px;
 }
 
 /* ==========================================================================
-   3. NABIGAZIO-BARRA (KOMUNA)
+   3. NAVBAR (COMÚN)
    ========================================================================== */
 .navbar {
   position: fixed;
@@ -272,7 +272,7 @@ body.catalog-page {
 .nav-cta:hover { background: var(--blue-700); transform: translateY(-1px); box-shadow: 0 4px 18px rgba(59,91,219,.35); }
 
 /* ==========================================================================
-   4. HASIERAKO ORRIA (HERO ETA ATALAK)
+   4. PÁGINA DE INICIO (HERO Y SECCIONES)
    ========================================================================== */
 .hero {
   padding-top: 130px;
@@ -379,7 +379,7 @@ body.catalog-page {
   font-size: 17px;
   font-weight: 300;
   line-height: 1.65;
-  color: var(--gray-500);
+  color: var(--gray-700);
   max-width: 440px;
   margin-bottom: 36px;
   opacity: 0;
@@ -667,8 +667,8 @@ textarea.form-control {
 .section-subtitle {
   font-size: 16px;
   font-weight: 300;
-  line-height: 1.7;
-  color: var(--gray-500);
+  line-height: 1.6;
+  color: var(--gray-700);
   max-width: 520px;
   margin-bottom: 60px;
 }
@@ -747,7 +747,7 @@ textarea.form-control {
 .step-desc {
   font-size: 14px;
   line-height: 1.65;
-  color: var(--gray-500);
+  color: var(--gray-700);
   font-weight: 300;
 }
 
@@ -796,7 +796,7 @@ textarea.form-control {
 .cat-count { font-size: 11px; color: var(--gray-400, #9ca3bb); margin-top: 3px; }
 
 /* ==========================================================================
-   5. KATALOGOA / OBJEKTU-ZERRENDA (Estilo espezifikoak)
+   5. CATÁLOGO / OBJEKTU-ZERRENDA (Estilos específicos)
    ========================================================================== */
 .btn-back {
   text-decoration: none;
@@ -1006,7 +1006,7 @@ textarea.form-control {
 }
 
 /* ==========================================================================
-   6. OINA (KOMUNA)
+   6. FOOTER (COMÚN)
    ========================================================================== */
 footer {
   background: #12131A;
@@ -1118,7 +1118,7 @@ footer {
 }
 
 /* ==========================================================================
-   7. IRISGARRITASUNA ETA MOLDAGARRITASUNA (MEDIA QUERIES)
+   7. ACCESIBILIDAD Y RESPONSIVE (MEDIA QUERIES)
    ========================================================================== */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
@@ -1155,7 +1155,7 @@ footer {
 }
 
 @media (max-width: 540px) {
-  /* --- Nabigazio-barra moldagarria --- */
+  /* --- Navbar Responsive --- */
   .logo-mark { width: 32px; height: 32px; }
   .logo-mark svg { width: 16px; height: 16px; }
   .nav-right { gap: 8px; }
@@ -1163,14 +1163,14 @@ footer {
   .lang-btn { padding: 4px 8px; font-size: 11px; }
   .nav-cta { padding: 8px 12px; font-size: 12px; }
   
-  /* --- Mugikorrerako doikuntza orokorrak --- */
+  /* --- Ajustes generales móvil --- */
   .hero-title { font-size: clamp(32px, 8vw, 40px); }
   .section { padding: 60px 16px; }
   .cat-grid { grid-template-columns: repeat(2, 1fr); }
   .form-inner { padding: 32px 20px; }
 }
 
-/* --- MUGIKORREKO MENUAREN ESTILOAK (Komuna) --- */
+/* --- ESTILOS MENÚ MÓVIL (Común) --- */
 .menu-toggle {
   display: none;
   background: var(--blue-50);
@@ -1212,7 +1212,7 @@ footer {
   color: var(--blue-600);
 }
 /* ==========================================================================
-   8. MODU ILUNA (DARK THEME)
+   8. MODO OSCURO (DARK THEME)
    ========================================================================== */
 .theme-toggle {
   background: none;
@@ -1232,7 +1232,7 @@ footer {
   color: var(--blue-600);
 }
 
-/* Modu ilunaren kolore-aldagaiak */
+/* Variables de color para el modo oscuro */
 body.dark-theme {
   --blue-900: #E8EDFB;
   --blue-800: #7B96F0;
@@ -1278,7 +1278,7 @@ body.dark-theme .theme-toggle:hover {
   background: var(--gray-100);
 }
 
-/* --- RA 1: Modalaren estiloak --- */
+/* --- RA 1: Modal Styles (Moved from JS to CSS) --- */
 .custom-modal-content {
   border-radius: var(--radius-md);
   border: none;
@@ -1297,53 +1297,4 @@ body.dark-theme .theme-toggle:hover {
   padding: 24px;
   font-family: var(--font-body);
   color: var(--gray-700);
-}
-
-/* ==========================================================================
-   9. KLASE LAGUNTZAILEAK (JS-tik estiloak kentzeko)
-   ========================================================================== */
-.d-none { display: none !important; }
-.d-flex { display: flex !important; }
-.d-block { display: block !important; }
-
-.item-img-cover {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.img-placeholder-text { font-size: 11px; }
-
-.item-date {
-  font-size: 11px;
-  color: var(--gray-500);
-  display: block;
-  margin-bottom: 8px;
-}
-
-.item-name-spaced {
-  margin-bottom: 8px;
-  min-height: 24px;
-}
-
-.item-desc {
-  font-size: 13px;
-  color: var(--gray-500);
-  margin-bottom: 16px;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.mt-auto { margin-top: auto; }
-.text-danger { color: var(--red); }
-
-/* Animazioa Mockup txartelarentzat (carrusel) */
-.mc-hidden {
-  opacity: 0 !important;
-  transform: translateY(10px) !important;
-}
-.mockup-card {
-  transition: opacity 0.4s ease, transform 0.4s ease, box-shadow 0.2s;
 }

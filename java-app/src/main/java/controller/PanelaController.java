@@ -60,6 +60,13 @@ public class PanelaController implements Initializable {
     @FXML
     private TableColumn<KategoriaKopurua, String> colKopurua;
 
+    /**
+     * Kontroladorea hasieratzen du: ongi-etorri mezua, estatistikak eta azken
+     * mugimenduak kargatzen ditu.
+     *
+     * @param url FXML fitxategiaren kokapena
+     * @param rb  Erabilitako baliabide-sorta
+     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         if (Sesio.getLangilea() != null) {

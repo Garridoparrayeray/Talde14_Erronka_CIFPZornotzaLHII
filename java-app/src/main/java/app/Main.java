@@ -5,6 +5,10 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import utils.BiltegiLokala;
+import utils.DBKonexioa;
+import utils.LogKudeatzailea;
+import utils.ModoKudeatzailea;
 
 /**
  * JavaFX aplikazioaren klase nagusia. Login pantaila kargatzen du hasieran.
@@ -38,12 +42,12 @@ public class Main extends Application {
      */
     @Override
     public void stop() {
-        if (!utils.ModoKudeatzailea.isOffline()) {
-            utils.BiltegiLocala.sincronizatuDBtik();
+        if (!ModoKudeatzailea.isOffline()) {
+            BiltegiLokala.sincronizatuDBtik();
         } else {
-            utils.BiltegiLocala.gorde();
+            BiltegiLokala.gorde();
         }
-        utils.DBConexioa.itxi();
+        DBKonexioa.itxi();
     }
 
     /**
@@ -52,8 +56,8 @@ public class Main extends Application {
      * @param args Komando-lerroko argumentuak
      */
     public static void main(String[] args) {
-        utils.LogKudeatzailea.hasieratu();
-        utils.ModoKudeatzailea.detektatu();
+        LogKudeatzailea.hasieratu();
+        ModoKudeatzailea.detektatu();
         launch(args);
     }
 }

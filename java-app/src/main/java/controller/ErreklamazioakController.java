@@ -70,6 +70,12 @@ public class ErreklamazioakController implements Initializable {
     private VBox itemHautatua;
     private String egoeraFiltro = "irekita";
 
+    /**
+     * Kontroladorea hasieratzen du eta erreklamazioak kargatzen ditu.
+     *
+     * @param url FXML fitxategiaren kokapena
+     * @param rb  Erabilitako baliabide-sorta
+     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         kargatu();

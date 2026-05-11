@@ -37,6 +37,8 @@ import utils.UIKudeatzailea;
 /**
  * Emanaldien formularioa kudeatzen duen kontroladorea. Pertsona (NAN) zein
  * erakundea (IFZ) onartzen ditu.
+ *
+ * @author Yeray Garrido
  */
 public class EmanaldiaController implements Initializable {
 
@@ -104,6 +106,13 @@ public class EmanaldiaController implements Initializable {
     private int erreklamazioId = -1;
     private String atzeraFxmlPath = null;
 
+    /**
+     * Kontroladorea hasieratzen du: artikulu konboxa betetzen du eta
+     * eremu guztiak hasierako egoeran uzten ditu.
+     *
+     * @param url FXML fitxategiaren kokapena
+     * @param rb  Erabilitako baliabide-sorta
+     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         artikuluak = new ArrayList<>();
@@ -130,6 +139,12 @@ public class EmanaldiaController implements Initializable {
         }
     }
 
+    /**
+     * Erreklamazioaren datuak formularioan aurre-betetzen ditu emanaldia
+     * egiteko prest.
+     *
+     * @param err Datuak hartu beharreko erreklamazioa
+     */
     public void setErreklamazioa(Erreklamazioa err) {
         this.erreklamazioId = err.getErreklamazioId();
         if (rbPertsona != null) {
@@ -171,6 +186,17 @@ public class EmanaldiaController implements Initializable {
         }
     }
 
+    /**
+     * Iraungitako artikuluaren emanaldia formularioan aurre-betetzen du,
+     * aurkitzailearen datuak hartuta pertsona edo erakundea moduan.
+     *
+     * @param artikulua   Iraungitako artikulua
+     * @param erakundeaDa true bada erakundea modua aktibatzen du
+     * @param aurkIzena   Aurkitzailearen izena (pertsona moduan)
+     * @param aurkAbizena Aurkitzailearen abizena (pertsona moduan)
+     * @param aurkTelefonoa Aurkitzailearen telefonoa
+     * @param aurkEmaila  Aurkitzailearen emaila
+     */
     public void setIraungitakoa(Artikulua artikulua, boolean erakundeaDa,
             String aurkIzena, String aurkAbizena,
             String aurkTelefonoa, String aurkEmaila) {
@@ -208,6 +234,9 @@ public class EmanaldiaController implements Initializable {
         aldatuHartzaileMota();
     }
 
+    /**
+     * Fitxategi-hautatzailea irekitzen du sinadura-dokumentua aukeratzeko.
+     */
     @FXML
     private void hautaketaSinadura() {
         FileChooser fc = new FileChooser();
@@ -243,6 +272,9 @@ public class EmanaldiaController implements Initializable {
         }
     }
 
+    /**
+     * ComboBox-eko hautaketa aldatzean artikuluaren informazioa freskatzen du.
+     */
     @FXML
     private void artikuluaHautatu() {
         int idx = cbArtikulua.getSelectionModel().getSelectedIndex();
@@ -283,8 +315,14 @@ public class EmanaldiaController implements Initializable {
         String telefonoa = txtTelefonoa.getText().trim();
         String emaila = txtEmaila.getText().trim();
         String helbidea = txtHelbidea.getText().trim();
-        String oharrak = txtOharrak != null ? txtOharrak.getText().trim() : "";
-        int idLangile = Sesio.getLangilea() != null ? Sesio.getLangilea().getLangileId() : 0;
+        String oharrak = "";
+        if (txtOharrak != null) {
+            oharrak = txtOharrak.getText().trim();
+        }
+        int idLangile = 0;
+        if (Sesio.getLangilea() != null) {
+            idLangile = Sesio.getLangilea().getLangileId();
+        }
 
         String dokumentuBidea = null;
         if (archivoSinadura != null) {

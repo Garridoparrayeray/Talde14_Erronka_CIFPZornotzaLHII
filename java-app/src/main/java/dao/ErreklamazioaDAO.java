@@ -12,7 +12,10 @@ import java.util.logging.Logger;
 
 import model.EgoeraErreklamazioa;
 import model.Erreklamazioa;
-import utils.BiltegiLocala;
+import model.Jabea;
+import model.Kategoria;
+import utils.BiltegiLokala;
+import utils.DBKonexioa;
 import utils.LogKudeatzailea;
 import utils.ModoKudeatzailea;
 
@@ -32,7 +35,7 @@ public class ErreklamazioaDAO {
      */
     public static List<Erreklamazioa> getGuztiak() {
         if (ModoKudeatzailea.isOffline()) {
-            return BiltegiLocala.getErreklamazioak();
+            return BiltegiLokala.getErreklamazioak();
         }
         List<Erreklamazioa> erreklamazioak = new ArrayList<>();
 
@@ -44,16 +47,21 @@ public class ErreklamazioaDAO {
                 + "LEFT JOIN JABEA j ON h.id_hartzailea = j.id_hartzailea "
                 + "LEFT JOIN KATEGORIA k ON e.id_kategoria = k.id_kategoria";
 
-        try (Connection conn = utils.DBConexioa.getKonexioa(); PreparedStatement pstmt = conn.prepareStatement(sql); ResultSet rs = pstmt.executeQuery()) {
+        try (Connection conn = DBKonexioa.getKonexioa(); PreparedStatement pstmt = conn.prepareStatement(sql); ResultSet rs = pstmt.executeQuery()) {
 
             while (rs.next()) {
-                String nan = rs.getString("nan") != null ? rs.getString("nan") : "";
-                String jabeIzena = rs.getString("jabe_izena") != null ? rs.getString("jabe_izena") : "";
-                String jabeAbizena = rs.getString("jabe_abizena") != null ? rs.getString("jabe_abizena") : "";
-                String telefonoa = rs.getString("telefonoa") != null ? rs.getString("telefonoa") : "";
-                String emaila = rs.getString("emaila") != null ? rs.getString("emaila") : "";
+                String nan = rs.getString("nan");
+                if (nan == null) { nan = ""; }
+                String jabeIzena = rs.getString("jabe_izena");
+                if (jabeIzena == null) { jabeIzena = ""; }
+                String jabeAbizena = rs.getString("jabe_abizena");
+                if (jabeAbizena == null) { jabeAbizena = ""; }
+                String telefonoa = rs.getString("telefonoa");
+                if (telefonoa == null) { telefonoa = ""; }
+                String emaila = rs.getString("emaila");
+                if (emaila == null) { emaila = ""; }
 
-                model.Jabea jabea = new model.Jabea(
+                Jabea jabea = new Jabea(
                         nan,
                         jabeIzena,
                         jabeAbizena,
@@ -66,7 +74,7 @@ public class ErreklamazioaDAO {
 
                 int idKat = rs.getInt("id_kategoria");
                 if (idKat != 0) {
-                    erreklamazioa.setKategoria(new model.Kategoria(idKat, rs.getString("kategoria_izena")));
+                    erreklamazioa.setKategoria(new Kategoria(idKat, rs.getString("kategoria_izena")));
                 }
 
                 String egoeraStr = rs.getString("errek_egoera");
@@ -96,14 +104,17 @@ public class ErreklamazioaDAO {
      */
     public static boolean updateEgoera(String id, String egoera) {
         if (ModoKudeatzailea.isOffline()) {
-            return BiltegiLocala.erreklamazioaUpdateEgoera(id, egoera);
+            return BiltegiLokala.erreklamazioaUpdateEgoera(id, egoera);
         }
         String sql = "UPDATE ERREKLAMAZIOA SET errek_egoera = ? WHERE id_erreklamazio = ?";
-        try (Connection con = utils.DBConexioa.getKonexioa(); PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = DBKonexioa.getKonexioa(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, egoera);
             ps.setInt(2, Integer.parseInt(id));
-            ps.executeUpdate();
-            return true;
+            boolean ok = ps.executeUpdate() > 0;
+            if (ok) {
+                LOG.log(Level.INFO, "updateEgoera: OK - id={0}, egoera={1}", new Object[]{id, egoera});
+            }
+            return ok;
         } catch (SQLException | NumberFormatException e) {
             LOG.log(Level.SEVERE, "updateEgoera: datu-baseko errorea", e);
             return false;
@@ -113,15 +124,23 @@ public class ErreklamazioaDAO {
     /**
      * Erreklamazio berri bat gordetzen du datu-basean.
      *
-     * @return Ondo gorde den
+     * @param nan          Erreklamaziogilaren NAN zenbakia
+     * @param izena        Erreklamaziogilaren izena
+     * @param abizena      Erreklamaziogilaren abizena
+     * @param telefonoa    Harremanetarako telefonoa
+     * @param emaila       Harremanetarako emaila
+     * @param kategoriaId  Galdutako objektuaren kategoriaren IDa
+     * @param deskribapena Galdutako objektuaren deskribapena
+     * @param idLangile    Erreklamazioa erregistratu duen langilearen IDa
+     * @return Ondo gorde bada true
      */
     public static boolean gorde(String nan, String izena, String abizena, String telefonoa, String emaila, int kategoriaId, String deskribapena, int idLangile) {
         if (ModoKudeatzailea.isOffline()) {
-            return BiltegiLocala.erreklamazioaGorde(nan, izena, abizena, telefonoa, emaila, kategoriaId, deskribapena, idLangile);
+            return BiltegiLokala.erreklamazioaGorde(nan, izena, abizena, telefonoa, emaila, kategoriaId, deskribapena, idLangile);
         }
         int idHartzailea = -1;
 
-        try (Connection con = utils.DBConexioa.getKonexioa()) {
+        try (Connection con = DBKonexioa.getKonexioa()) {
 
             String checkSql = "SELECT id_hartzailea FROM JABEA WHERE nan = ?";
             try (PreparedStatement psCheck = con.prepareStatement(checkSql)) {
@@ -172,8 +191,11 @@ public class ErreklamazioaDAO {
                         psE.setNull(4, java.sql.Types.INTEGER);
                     }
 
-                    psE.executeUpdate();
-                    return true;
+                    boolean ok = psE.executeUpdate() > 0;
+                    if (ok) {
+                        LOG.log(Level.INFO, "gorde: OK - nan={0}", nan);
+                    }
+                    return ok;
                 }
             } else {
                 return false;

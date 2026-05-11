@@ -44,6 +44,12 @@ public class LangileaEdituController implements Initializable {
     private Langilea langilea;
     private List<String[]> rolak;
 
+    /**
+     * Kontroladorea hasieratzen du: rol zerrenda ComboBox-ean betetzen du.
+     *
+     * @param url FXML fitxategiaren kokapena
+     * @param rb  Erabilitako baliabide-sorta
+     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         rolak = LangileaDAO.getRolak();

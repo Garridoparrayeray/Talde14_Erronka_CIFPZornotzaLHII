@@ -15,9 +15,10 @@ import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
-import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import model.Kategoria;
 import model.KategoriaKopurua;
@@ -48,8 +49,8 @@ public class KategoriakController implements Initializable {
     }
 
     /**
-     * Kategoriak datu-basetik kargatzen ditu eta txartelak dinamikoki sortzen ditu
-     * VBox panelean, hiru zutabetan antolatuta.
+     * Kategoriak datu-basetik kargatzen ditu eta txartelak GridPane batean
+     * hiru zutabetan antolatuta erakusten ditu.
      */
     private void kargatu() {
         vboxKategoriak.getChildren().clear();
@@ -57,15 +58,18 @@ public class KategoriakController implements Initializable {
         List<Kategoria> kategoriak = KategoriaDAO.getGuztiak();
         List<KategoriaKopurua> kopuruak = EstadistikaDAO.kategoriaKopuruak();
 
-        HBox row = null;
-        int idx = 0;
-        for (Kategoria k : kategoriak) {
-            if (idx % 3 == 0) {
-                row = new HBox(20);
-                row.setFillHeight(true);
-                vboxKategoriak.getChildren().add(row);
-            }
+        GridPane grid = new GridPane();
+        grid.setHgap(20);
+        grid.setVgap(20);
+        for (int i = 0; i < 3; i++) {
+            ColumnConstraints cc = new ColumnConstraints();
+            cc.setPercentWidth(33.33);
+            cc.setHgrow(Priority.ALWAYS);
+            grid.getColumnConstraints().add(cc);
+        }
 
+        for (int i = 0; i < kategoriak.size(); i++) {
+            Kategoria k = kategoriak.get(i);
             int kop = 0;
             for (KategoriaKopurua kk : kopuruak) {
                 if (k.getIzena().equals(kk.getKategoriaIzena())) {
@@ -73,21 +77,10 @@ public class KategoriakController implements Initializable {
                     break;
                 }
             }
-
-            HBox txartela = sortuTxartela(k, kop);
-            HBox.setHgrow(txartela, Priority.ALWAYS);
-            row.getChildren().add(txartela);
-            idx++;
+            grid.add(sortuTxartela(k, kop), i % 3, i / 3);
         }
 
-        if (row != null && kategoriak.size() % 3 != 0) {
-            int falta = 3 - (kategoriak.size() % 3);
-            for (int i = 0; i < falta; i++) {
-                Region spacer = new Region();
-                HBox.setHgrow(spacer, Priority.ALWAYS);
-                row.getChildren().add(spacer);
-            }
-        }
+        vboxKategoriak.getChildren().add(grid);
     }
 
     /**
@@ -130,11 +123,17 @@ public class KategoriakController implements Initializable {
         txartela.getStyleClass().add("card");
         txartela.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
         txartela.setPadding(new Insets(15));
+        txartela.setMaxWidth(Double.MAX_VALUE);
         txartela.getChildren().addAll(info, botoiak);
 
         return txartela;
     }
 
+    /**
+     * Kategoria bat editatzeko formularioa contentArea-n kargatzen du.
+     *
+     * @param k Editatu beharreko kategoria
+     */
     private void editatuKategoria(Kategoria k) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/KategoriaEditu.fxml"));
@@ -148,6 +147,12 @@ public class KategoriakController implements Initializable {
         }
     }
 
+    /**
+     * Kategoria bat datu-basetik ezabatzen du, artikulurik ez badu.
+     *
+     * @param k       Ezabatu beharreko kategoria
+     * @param kopurua Kategoria horretan dauden artikulu kopurua
+     */
     private void ezabatuKategoria(Kategoria k, int kopurua) {
         if (kopurua > 0) {
             UIKudeatzailea.erakutsiToast("Ezin da ezabatu: kategoriak " + kopurua + " artikulu ditu.", false);

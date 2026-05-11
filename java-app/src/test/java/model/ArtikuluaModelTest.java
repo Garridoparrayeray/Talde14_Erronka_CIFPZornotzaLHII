@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * Artikulua modeloaren metodo garrantzitsuenak probatzen dituen test-a.
  * Datu-baserik behar ez du — objektu hutsak erabiltzen ditu.
  *
- * @author Yeray Garrido
+ * @author Eder Martin
  */
 @DisplayName("Artikulua modelo-testa")
 public class ArtikuluaModelTest {

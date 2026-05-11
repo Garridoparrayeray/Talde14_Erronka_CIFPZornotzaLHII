@@ -82,8 +82,6 @@ public class Artikulua implements Serializable {
         this.iraungitzeData = cal.getTime();
     }
 
-    private static final SimpleDateFormat SDF = new SimpleDateFormat("dd/MM/yyyy");
-
     /**
      * Sarrera-data formatu irakurgarrian itzultzen du (dd/MM/yyyy).
      *
@@ -93,7 +91,7 @@ public class Artikulua implements Serializable {
         if (sarreraData == null) {
             return "—";
         }
-        return SDF.format(sarreraData);
+        return new SimpleDateFormat("dd/MM/yyyy").format(sarreraData);
     }
 
     /**

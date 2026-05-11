@@ -16,6 +16,8 @@ import model.Artikulua;
  * Artikuluen XML fitxategia sortzen du partekatutako_datuak/ karpetan. Eremu
  * kritikoak adierazpen erregularren bidez balioztatzen dira eta patroia
  * betetzen ez duten artikuluak saltatu egiten dira.
+ *
+ * @author Yeray Garrido
  */
 public class XMLExportazioa {
 
@@ -149,7 +151,7 @@ public class XMLExportazioa {
     private static void balioztatu(String eremua, String balioa, Pattern patroia)
             throws XMLPatroiException {
         if (balioa == null || !patroia.matcher(balioa).matches()) {
-            throw new XMLPatroiException(eremua, balioa != null ? balioa : "null");
+            throw new XMLPatroiException(eremua, String.valueOf(balioa));
         }
     }
 

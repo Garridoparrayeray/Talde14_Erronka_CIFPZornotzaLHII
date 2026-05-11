@@ -31,6 +31,8 @@ import utils.XMLExportazioa;
 
 /**
  * Artikulu berri bat erregistratzeko formularioaren kontroladorea.
+ *
+ * @author Yeray Garrido
  */
 public class ErregistroaController implements Initializable {
 
@@ -71,6 +73,13 @@ public class ErregistroaController implements Initializable {
 
     private File argazkiFile;
 
+    /**
+     * Kontroladorea hasieratzen du: kategoria eta kokaleku konboboxak betetzen
+     * ditu eta sarrera-data gaurko datarekin ezartzen du.
+     *
+     * @param url FXML fitxategiaren kokapena
+     * @param rb  Erabilitako baliabide-sorta
+     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         cbKategoria.getItems().setAll(KategoriaDAO.getGuztiak());
@@ -114,19 +123,36 @@ public class ErregistroaController implements Initializable {
             return;
         }
 
-        // Aurkitzailearen datuak (izena + abizena derrigorrez)
-        String aurkIzena = txtAurkIzena != null ? txtAurkIzena.getText().trim() : "";
-        String aurkAbizena = txtAurkAbizena != null ? txtAurkAbizena.getText().trim() : "";
+        String aurkIzena = "";
+        if (txtAurkIzena != null) {
+            aurkIzena = txtAurkIzena.getText().trim();
+        }
+        String aurkAbizena = "";
+        if (txtAurkAbizena != null) {
+            aurkAbizena = txtAurkAbizena.getText().trim();
+        }
         if (aurkIzena.isEmpty() || aurkAbizena.isEmpty()) {
             erakutsiErrorea("Aurkitzailearen izena eta abizena bete behar dira.");
             return;
         }
-        String aurkTelefonoa = txtAurkTelefonoa != null ? txtAurkTelefonoa.getText().trim() : "";
-        String aurkEmaila = txtAurkEmaila != null ? txtAurkEmaila.getText().trim() : "";
-        String aurkipenLekua = txtAurkipenLekua != null ? txtAurkipenLekua.getText().trim() : "";
+        String aurkTelefonoa = "";
+        if (txtAurkTelefonoa != null) {
+            aurkTelefonoa = txtAurkTelefonoa.getText().trim();
+        }
+        String aurkEmaila = "";
+        if (txtAurkEmaila != null) {
+            aurkEmaila = txtAurkEmaila.getText().trim();
+        }
+        String aurkipenLekua = "";
+        if (txtAurkipenLekua != null) {
+            aurkipenLekua = txtAurkipenLekua.getText().trim();
+        }
 
-        java.sql.Date sarreraData = java.sql.Date.valueOf(
-                dpSarreraData.getValue() != null ? dpSarreraData.getValue() : LocalDate.now());
+        LocalDate dataLoc = dpSarreraData.getValue();
+        if (dataLoc == null) {
+            dataLoc = LocalDate.now();
+        }
+        java.sql.Date sarreraData = java.sql.Date.valueOf(dataLoc);
 
         int idKat = kategoria.getKategoriaId();
         int idKok = 0;

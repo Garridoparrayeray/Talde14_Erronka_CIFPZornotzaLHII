@@ -12,7 +12,7 @@ import java.util.Properties;
  *
  * @author Yeray Garrido
  */
-public class DBConexioa {
+public class DBKonexioa {
 
     private static final String URL;
     private static final String USER;
@@ -21,7 +21,7 @@ public class DBConexioa {
     static {
         // Lehentasuna: ingurune-aldagaiak (Docker/produkzioa) > application.properties (garapen lokala)
         Properties props = new Properties();
-        try (InputStream is = DBConexioa.class.getResourceAsStream("/application.properties")) {
+        try (InputStream is = DBKonexioa.class.getResourceAsStream("/application.properties")) {
             if (is != null) {
                 props.load(is);
             }
@@ -29,18 +29,30 @@ public class DBConexioa {
         }
 
         String envUrl = System.getenv("DB_URL");
-        URL = envUrl != null ? envUrl : props.getProperty("DB_URL", "jdbc:mariadb://localhost:3306/erronka_galduak");
+        if (envUrl != null) {
+            URL = envUrl;
+        } else {
+            URL = props.getProperty("DB_URL", "jdbc:mariadb://localhost:3306/erronka_galduak");
+        }
 
         String envUser = System.getenv("DB_USER");
-        USER = envUser != null ? envUser : props.getProperty("DB_USER", "root");
+        if (envUser != null) {
+            USER = envUser;
+        } else {
+            USER = props.getProperty("DB_USER", "root");
+        }
 
         String envPass = System.getenv("DB_PASS");
-        PASS = envPass != null ? envPass : props.getProperty("DB_PASS", "");
+        if (envPass != null) {
+            PASS = envPass;
+        } else {
+            PASS = props.getProperty("DB_PASS", "");
+        }
     }
 
     private static Connection konexioa = null;
 
-    private DBConexioa() {
+    private DBKonexioa() {
     }
 
     /**
@@ -54,6 +66,22 @@ public class DBConexioa {
             konexioa = DriverManager.getConnection(URL, USER, PASS);
         }
         return konexioa;
+    }
+
+    /**
+     * Datu-basearekiko konexioa ondo dabilen egiaztatzen du.
+     *
+     * @return Konexioa badago true, bestela false
+     */
+    public static boolean egiaztatu() {
+        if (ModoKudeatzailea.isOffline()) {
+            return false;
+        }
+        try (Connection con = getKonexioa()) {
+            return con != null && !con.isClosed();
+        } catch (SQLException e) {
+            return false;
+        }
     }
 
     /**

@@ -7,6 +7,7 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import dao.BackupDAO;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -172,7 +173,7 @@ public class MainController implements Initializable {
     @FXML
     public void eginBabesKopia() {
         try {
-            dao.BackupDAO.eginBabesKopia();
+            BackupDAO.eginBabesKopia();
             UIKudeatzailea.erakutsiToast("Babes-kopia ondo egin da.", true);
         } catch (Exception e) {
             LOG.log(Level.SEVERE, "eginBabesKopia: errorea", e);

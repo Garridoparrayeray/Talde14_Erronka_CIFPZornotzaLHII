@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 import utils.AppConfig;
-import utils.DBConexioa;
+import utils.DBKonexioa;
 import utils.ModoKudeatzailea;
 
 /**
@@ -30,7 +30,8 @@ public class BackupDAO {
      * Datu-basearen babes-kopia SQL fitxategi batean gordetzen du.
      *
      * @return Sortutako fitxategiaren bide osoa
-     * @throws Exception Offline moduan deitzen bada edo IO/SQL errorea gertatzen bada
+     * @throws Exception Offline moduan deitzen bada edo IO/SQL errorea
+     * gertatzen bada
      */
     public static String eginBabesKopia() throws Exception {
         if (ModoKudeatzailea.isOffline()) {
@@ -45,7 +46,7 @@ public class BackupDAO {
         }
         String fitxategiIzena = exportDir.getAbsolutePath() + File.separator + "backup_" + data + ".sql";
 
-        try (FileWriter fw = new FileWriter(fitxategiIzena); Connection con = DBConexioa.getKonexioa(); Statement st = con.createStatement()) {
+        try (FileWriter fw = new FileWriter(fitxategiIzena); Connection con = DBKonexioa.getKonexioa(); Statement st = con.createStatement()) {
 
             fw.write("-- Babes-kopia: " + data + "\n");
             fw.write("USE erronka_galduak;\n\n");

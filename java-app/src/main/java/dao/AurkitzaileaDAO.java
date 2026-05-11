@@ -8,8 +8,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import model.Aurkitzailea;
-import utils.BiltegiLocala;
-import utils.DBConexioa;
+import utils.BiltegiLokala;
+import utils.DBKonexioa;
 import utils.LogKudeatzailea;
 import utils.ModoKudeatzailea;
 
@@ -25,22 +25,23 @@ public class AurkitzaileaDAO {
     /**
      * Aurkitzailearen datuak gordetzen ditu artikuluarekin lotuta.
      *
-     * @param idArtikulua  Aurkitzailearekin lotutako artikuluaren kodea
-     * @param izena        Aurkitzailearen izena
-     * @param abizena      Aurkitzailearen abizena
-     * @param telefonoa    Aurkitzailearen telefonoa (hutsik bada null gordetzen da)
-     * @param emaila       Aurkitzailearen helbide elektronikoa (hutsik bada null)
+     * @param idArtikulua Aurkitzailearekin lotutako artikuluaren kodea
+     * @param izena Aurkitzailearen izena
+     * @param abizena Aurkitzailearen abizena
+     * @param telefonoa Aurkitzailearen telefonoa (hutsik bada null gordetzen
+     * da)
+     * @param emaila Aurkitzailearen helbide elektronikoa (hutsik bada null)
      * @param aurkipenLekua Objektua aurkitu zen lekua (hutsik bada null)
      * @return Ondo gorde bada true, bestela false
      */
     public static boolean gehitu(String idArtikulua, String izena, String abizena,
             String telefonoa, String emaila, String aurkipenLekua) {
         if (ModoKudeatzailea.isOffline()) {
-            return BiltegiLocala.aurkitzaileaGehitu(idArtikulua, izena, abizena, telefonoa, emaila, aurkipenLekua);
+            return BiltegiLokala.aurkitzaileaGehitu(idArtikulua, izena, abizena, telefonoa, emaila, aurkipenLekua);
         }
         String sql = "INSERT INTO AURKITZAILEA (izena, abizena, telefonoa, emaila, aurkipen_lekua, id_artikulua) "
                 + "VALUES (?, ?, ?, ?, ?, ?)";
-        try (Connection con = DBConexioa.getKonexioa(); PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = DBKonexioa.getKonexioa(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, izena);
             ps.setString(2, abizena);
             if (telefonoa.isEmpty()) {
@@ -59,7 +60,11 @@ public class AurkitzaileaDAO {
                 ps.setString(5, aurkipenLekua);
             }
             ps.setString(6, idArtikulua);
-            return ps.executeUpdate() > 0;
+            boolean ok = ps.executeUpdate() > 0;
+            if (ok) {
+                LOG.log(Level.INFO, "gehitu: OK - artikulua={0}, izena={1}", new Object[]{idArtikulua, izena});
+            }
+            return ok;
         } catch (SQLException e) {
             LOG.log(Level.SEVERE, "gehitu: datu-baseko errorea", e);
             return false;
@@ -74,10 +79,10 @@ public class AurkitzaileaDAO {
      */
     public static Aurkitzailea getByArtikulua(String idArtikulua) {
         if (ModoKudeatzailea.isOffline()) {
-            return BiltegiLocala.getAurkitzaileaByArtikulua(idArtikulua);
+            return BiltegiLokala.getAurkitzaileaByArtikulua(idArtikulua);
         }
         String sql = "SELECT * FROM AURKITZAILEA WHERE id_artikulua = ? LIMIT 1";
-        try (Connection con = DBConexioa.getKonexioa(); PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = DBKonexioa.getKonexioa(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, idArtikulua);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {

@@ -8,8 +8,8 @@ import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import utils.BiltegiLocala;
-import utils.DBConexioa;
+import utils.BiltegiLokala;
+import utils.DBKonexioa;
 import utils.LogKudeatzailea;
 import utils.ModoKudeatzailea;
 
@@ -26,6 +26,16 @@ public class EmanaldiaDAO {
      * Emanaldia formalizatzen du: hartzailea sortu/bilatu, emanaldia gorde,
      * artikuluaren egoera eguneratu eta mugimendua erregistratu.
      *
+     * @param idArtikulua  Eman beharreko artikuluaren kodea
+     * @param nan          Jabearen NAN zenbakia
+     * @param izena        Jabearen izena
+     * @param abizena      Jabearen abizena
+     * @param telefonoa    Harremanetarako telefonoa
+     * @param emaila       Harremanetarako emaila
+     * @param helbidea     Jabearen helbidea
+     * @param oharrak      Emanaldiaren oharrak (hutsik bada null gordetzen da)
+     * @param idLangile    Eragiketa kudeatzen duen langilearen IDa
+     * @param dokumentuBidea Sinadura-dokumentuaren fitxategi-izena
      * @return Ondo joan bada true
      */
     public static boolean formalizatu(String idArtikulua, String nan, String izena,
@@ -33,11 +43,11 @@ public class EmanaldiaDAO {
             String helbidea, String oharrak, int idLangile,
             String dokumentuBidea) {
         if (ModoKudeatzailea.isOffline()) {
-            return BiltegiLocala.formalizatu(idArtikulua, nan, izena, abizena, telefonoa, emaila, helbidea, oharrak, idLangile, dokumentuBidea);
+            return BiltegiLokala.formalizatu(idArtikulua, nan, izena, abizena, telefonoa, emaila, helbidea, oharrak, idLangile, dokumentuBidea);
         }
         Connection con = null;
         try {
-            con = DBConexioa.getKonexioa();
+            con = DBKonexioa.getKonexioa();
             con.setAutoCommit(false);
 
             int idHartzailea = lortuEdoSortuJabea(con, nan, izena, abizena, telefonoa, emaila, helbidea);
@@ -51,6 +61,7 @@ public class EmanaldiaDAO {
             gordeEmanaldiaEtaMugimendua(con, idArtikulua, idHartzailea, deskMug, idLangile, oharrak, dokumentuBidea);
 
             con.commit();
+            LOG.log(Level.INFO, "formalizatu: OK - artikulua={0}, nan={1}", new Object[]{idArtikulua, nan});
             return true;
 
         } catch (SQLException e) {
@@ -78,17 +89,26 @@ public class EmanaldiaDAO {
     /**
      * Emanaldia formalizatzen du erakundearekin (IFZ bidez).
      *
+     * @param idArtikulua    Eman beharreko artikuluaren kodea
+     * @param ift            Erakundearen IFZ zenbakia
+     * @param izenOfiziala   Erakundearen izen ofiziala
+     * @param telefonoa      Harremanetarako telefonoa
+     * @param emaila         Harremanetarako emaila
+     * @param helbidea       Erakundearen helbidea
+     * @param oharrak        Emanaldiaren oharrak (hutsik bada null gordetzen da)
+     * @param idLangile      Eragiketa kudeatzen duen langilearen IDa
+     * @param dokumentuBidea Sinadura-dokumentuaren fitxategi-izena
      * @return Ondo joan bada true
      */
     public static boolean formalizatuErakundea(String idArtikulua, String ift,
             String izenOfiziala, String telefonoa, String emaila,
             String helbidea, String oharrak, int idLangile, String dokumentuBidea) {
         if (ModoKudeatzailea.isOffline()) {
-            return BiltegiLocala.formalizatuErakundea(idArtikulua, ift, izenOfiziala, telefonoa, emaila, helbidea, oharrak, idLangile, dokumentuBidea);
+            return BiltegiLokala.formalizatuErakundea(idArtikulua, ift, izenOfiziala, telefonoa, emaila, helbidea, oharrak, idLangile, dokumentuBidea);
         }
         Connection con = null;
         try {
-            con = DBConexioa.getKonexioa();
+            con = DBKonexioa.getKonexioa();
             con.setAutoCommit(false);
 
             int idHartzailea = lortuEdoSortuErakundea(con, ift, izenOfiziala, telefonoa, emaila, helbidea);
@@ -101,6 +121,7 @@ public class EmanaldiaDAO {
             gordeEmanaldiaEtaMugimendua(con, idArtikulua, idHartzailea, deskMug, idLangile, oharrak, dokumentuBidea);
 
             con.commit();
+            LOG.log(Level.INFO, "formalizatuErakundea: OK - artikulua={0}, ift={1}", new Object[]{idArtikulua, ift});
             return true;
         } catch (SQLException e) {
             LOG.log(Level.SEVERE, "formalizatuErakundea: datu-baseko errorea", e);

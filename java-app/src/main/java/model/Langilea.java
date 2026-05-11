@@ -5,7 +5,7 @@ import java.util.List;
 
 /**
  * Sistemako langile bat adierazten duen eredua. Administratzailea klasearen
- * oinarria da. {@code BiltegiLocala}-k serializatu egiten du offline
+ * oinarria da. {@code BiltegiLokala}-k serializatu egiten du offline
  * gordetzeko, beraz {@code Serializable} interfazea ezartzen du.
  *
  * @author Yeray Garrido
@@ -24,11 +24,11 @@ public class Langilea implements Serializable {
     /**
      * Langilearen eraikitzailea.
      *
-     * @param langileId     Langilearen identifikagailu bakarra
-     * @param izena         Langilearen izena
-     * @param abizena       Langilearen abizena
+     * @param langileId Langilearen identifikagailu bakarra
+     * @param izena Langilearen izena
+     * @param abizena Langilearen abizena
      * @param erabiltzailea Saioa hasteko erabiltzaile-izena
-     * @param pasahitza     Pasahitzaren hash-a (BCrypt)
+     * @param pasahitza Pasahitzaren hash-a (BCrypt)
      */
     public Langilea(int langileId, String izena, String abizena,
             String erabiltzailea, String pasahitza) {
@@ -41,8 +41,8 @@ public class Langilea implements Serializable {
     }
 
     /**
-     * Artikulu bat erregistratzen du langilearen izenean.
-     * Azpiklaseek gainidatzi behar dute.
+     * Artikulu bat erregistratzen du langilearen izenean. Azpiklaseek
+     * gainidatzi behar dute.
      *
      * @param artikulua Erregistratu beharreko artikulua
      * @return Ondo erregistratu bada true
@@ -52,8 +52,8 @@ public class Langilea implements Serializable {
     }
 
     /**
-     * Erreklamazino bat erregistratzen du langilearen izenean.
-     * Azpiklaseek gainidatzi behar dute.
+     * Erreklamazino bat erregistratzen du langilearen izenean. Azpiklaseek
+     * gainidatzi behar dute.
      *
      * @param erreklamazioa Erregistratu beharreko erreklamazioa
      * @return Ondo erregistratu bada true
@@ -63,8 +63,7 @@ public class Langilea implements Serializable {
     }
 
     /**
-     * Emanaldia bat kudeatzen du.
-     * Azpiklaseek gainidatzi behar dute.
+     * Emanaldia bat kudeatzen du. Azpiklaseek gainidatzi behar dute.
      *
      * @param emanaldia Kudeatu beharreko emanaldia
      * @return Ondo kudeatu bada true
@@ -82,21 +81,113 @@ public class Langilea implements Serializable {
         return null;
     }
 
-    public int getLangileId() { return langileId; }
-    public String getIzena() { return izena; }
-    public void setIzena(String izena) { this.izena = izena; }
-    public String getAbizena() { return abizena; }
-    public void setAbizena(String abizena) { this.abizena = abizena; }
-    /** Izena eta abizena elkarturik itzultzen du. */
-    public String getIzenOsoa() { return izena + " " + abizena; }
-    public String getErabiltzailea() { return erabiltzailea; }
-    public void setErabiltzailea(String erabiltzailea) { this.erabiltzailea = erabiltzailea; }
-    /** BCrypt hash-a itzultzen du; offline autentifikaziorako. */
-    public String getPasahitzaHash() { return pasahitzaHash; }
-    /** BCrypt hash berria ezartzen du pasahitza aldatzean. */
-    public void setPasahitzaHash(String hash) { this.pasahitzaHash = hash; }
-    public String getRola() { return rola; }
-    public void setRola(String rola) { this.rola = rola; }
+    /**
+     * Langilearen datu-baseko IDa itzultzen du.
+     *
+     * @return Langilearen IDa
+     */
+    public int getLangileId() {
+        return langileId;
+    }
+
+    /**
+     * Langilearen izena itzultzen du.
+     *
+     * @return Izena
+     */
+    public String getIzena() {
+        return izena;
+    }
+
+    /**
+     * Langilearen izena ezartzen du.
+     *
+     * @param izena Ezarri beharreko izena
+     */
+    public void setIzena(String izena) {
+        this.izena = izena;
+    }
+
+    /**
+     * Langilearen abizena itzultzen du.
+     *
+     * @return Abizena
+     */
+    public String getAbizena() {
+        return abizena;
+    }
+
+    /**
+     * Langilearen abizena ezartzen du.
+     *
+     * @param abizena Ezarri beharreko abizena
+     */
+    public void setAbizena(String abizena) {
+        this.abizena = abizena;
+    }
+
+    /**
+     * Izena eta abizena elkarturik itzultzen du.
+     *
+     * @return Izena eta abizena zuriunez bereizita
+     */
+    public String getIzenOsoa() {
+        return izena + " " + abizena;
+    }
+
+    /**
+     * Saioa hasteko erabiltzaile-izena itzultzen du.
+     *
+     * @return Erabiltzaile-izena
+     */
+    public String getErabiltzailea() {
+        return erabiltzailea;
+    }
+
+    /**
+     * Saioa hasteko erabiltzaile-izena ezartzen du.
+     *
+     * @param erabiltzailea Ezarri beharreko erabiltzaile-izena
+     */
+    public void setErabiltzailea(String erabiltzailea) {
+        this.erabiltzailea = erabiltzailea;
+    }
+
+    /**
+     * BCrypt hash-a itzultzen du; offline autentifikaziorako.
+     *
+     * @return Pasahitzaren BCrypt hash-a
+     */
+    public String getPasahitzaHash() {
+        return pasahitzaHash;
+    }
+
+    /**
+     * BCrypt hash berria ezartzen du pasahitza aldatzean.
+     *
+     * @param hash Ezarri beharreko BCrypt hash berria
+     */
+    public void setPasahitzaHash(String hash) {
+        this.pasahitzaHash = hash;
+    }
+
+    /**
+     * Langilearen sistema-rola itzultzen du.
+     *
+     * @return Rola (adib. "Administratzailea", "Ikuslea")
+     */
+    public String getRola() {
+        return rola;
+    }
+
+    /**
+     * Langilearen sistema-rola ezartzen du.
+     *
+     * @param rola Ezarri beharreko rola
+     */
+    public void setRola(String rola) {
+        this.rola = rola;
+    }
 
     /**
      * Langilea administratzailea den egiaztatzen du erola konparatuz.
@@ -108,8 +199,8 @@ public class Langilea implements Serializable {
     }
 
     /**
-     * Langilea ikuslea den egiaztatzen du erola konparatuz.
-     * Ikusleak artikuluak ikusi eta erregistratu baino ezin dituzte egin.
+     * Langilea ikuslea den egiaztatzen du erola konparatuz. Ikusleak artikuluak
+     * ikusi eta erregistratu baino ezin dituzte egin.
      *
      * @return Ikuslea bada true
      */

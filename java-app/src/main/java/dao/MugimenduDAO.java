@@ -10,8 +10,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import model.MugimenduLerroa;
-import utils.BiltegiLocala;
-import utils.DBConexioa;
+import utils.BiltegiLokala;
+import utils.DBKonexioa;
 import utils.LogKudeatzailea;
 import utils.ModoKudeatzailea;
 
@@ -37,7 +37,7 @@ public class MugimenduDAO {
             return false;
         }
         String sql = "INSERT INTO MUGIMENDUA (deskribapena, id_artikulua, id_langile) VALUES (?, ?, ?)";
-        try (Connection con = DBConexioa.getKonexioa(); PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = DBKonexioa.getKonexioa(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, deskribapena);
             ps.setString(2, idArtikulua);
             if (idLangile > 0) {
@@ -45,7 +45,11 @@ public class MugimenduDAO {
             } else {
                 ps.setNull(3, java.sql.Types.INTEGER);
             }
-            return ps.executeUpdate() > 0;
+            boolean ok = ps.executeUpdate() > 0;
+            if (ok) {
+                LOG.log(Level.INFO, "gehitu: OK - artikulua={0}", idArtikulua);
+            }
+            return ok;
         } catch (SQLException e) {
             LOG.log(Level.SEVERE, "gehitu: datu-baseko errorea", e);
             return false;
@@ -56,11 +60,12 @@ public class MugimenduDAO {
      * Mugimenduen erregistro guztiak itzultzen ditu auditoria taulako ordena
      * deszendentearekin.
      *
-     * @return MugimenduLerroa objektuen zerrenda, denbora-ordenan beherantz; hutsik egon daiteke
+     * @return MugimenduLerroa objektuen zerrenda, denbora-ordenan beherantz;
+     * hutsik egon daiteke
      */
     public static List<MugimenduLerroa> getGuztiak() {
         if (ModoKudeatzailea.isOffline()) {
-            return BiltegiLocala.getMugimenduak();
+            return BiltegiLokala.getMugimenduak();
         }
         List<MugimenduLerroa> zerrenda = new ArrayList<>();
         String sql = "SELECT m.data, "
@@ -70,7 +75,7 @@ public class MugimenduDAO {
                 + "FROM MUGIMENDUA m "
                 + "LEFT JOIN LANGILEA l ON m.id_langile = l.id_langile "
                 + "ORDER BY m.data DESC";
-        try (Connection con = DBConexioa.getKonexioa(); PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+        try (Connection con = DBKonexioa.getKonexioa(); PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 zerrenda.add(new MugimenduLerroa(
                         rs.getString("data"),
