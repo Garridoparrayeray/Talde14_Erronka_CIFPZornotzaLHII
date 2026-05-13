@@ -5,7 +5,7 @@ import java.util.List;
 
 /**
  * Sistemako langile bat adierazten duen eredua. Administratzailea klasearen
- * oinarria da. {@code BiltegiLocala}-k serializatu egiten du offline
+ * oinarria da. {@code BiltegiLokala}-k serializatu egiten du offline
  * gordetzeko, beraz {@code Serializable} interfazea ezartzen du.
  *
  * @author Yeray Garrido
@@ -24,11 +24,11 @@ public class Langilea implements Serializable {
     /**
      * Langilearen eraikitzailea.
      *
-     * @param langileId     Langilearen identifikagailu bakarra
-     * @param izena         Langilearen izena
-     * @param abizena       Langilearen abizena
+     * @param langileId Langilearen identifikagailu bakarra
+     * @param izena Langilearen izena
+     * @param abizena Langilearen abizena
      * @param erabiltzailea Saioa hasteko erabiltzaile-izena
-     * @param pasahitza     Pasahitzaren hash-a (BCrypt)
+     * @param pasahitza Pasahitzaren hash-a (BCrypt)
      */
     public Langilea(int langileId, String izena, String abizena,
             String erabiltzailea, String pasahitza) {
@@ -41,8 +41,8 @@ public class Langilea implements Serializable {
     }
 
     /**
-     * Artikulu bat erregistratzen du langilearen izenean.
-     * Azpiklaseek gainidatzi behar dute.
+     * Artikulu bat erregistratzen du langilearen izenean. Azpiklaseek
+     * gainidatzi behar dute.
      *
      * @param artikulua Erregistratu beharreko artikulua
      * @return Ondo erregistratu bada true
@@ -52,8 +52,8 @@ public class Langilea implements Serializable {
     }
 
     /**
-     * Erreklamazino bat erregistratzen du langilearen izenean.
-     * Azpiklaseek gainidatzi behar dute.
+     * Erreklamazino bat erregistratzen du langilearen izenean. Azpiklaseek
+     * gainidatzi behar dute.
      *
      * @param erreklamazioa Erregistratu beharreko erreklamazioa
      * @return Ondo erregistratu bada true
@@ -63,8 +63,7 @@ public class Langilea implements Serializable {
     }
 
     /**
-     * Emanaldia bat kudeatzen du.
-     * Azpiklaseek gainidatzi behar dute.
+     * Emanaldia bat kudeatzen du. Azpiklaseek gainidatzi behar dute.
      *
      * @param emanaldia Kudeatu beharreko emanaldia
      * @return Ondo kudeatu bada true
@@ -128,9 +127,9 @@ public class Langilea implements Serializable {
     }
 
     /**
-     * Langilearen izen eta abizena elkarturik itzultzen du.
+     * Izena eta abizena elkarturik itzultzen du.
      *
-     * @return Izen osoa
+     * @return Izena eta abizena zuriunez bereizita
      */
     public String getIzenOsoa() {
         return izena + " " + abizena;
@@ -155,36 +154,34 @@ public class Langilea implements Serializable {
     }
 
     /**
-     * Langilearen pasahitzaren BCrypt hash-a itzultzen du.
-     * Offline autentifikaziorako erabiltzen da {@code BiltegiLocala}-n.
+     * BCrypt hash-a itzultzen du; offline autentifikaziorako.
      *
-     * @return Pasahitzaren hash-a
+     * @return Pasahitzaren BCrypt hash-a
      */
     public String getPasahitzaHash() {
         return pasahitzaHash;
     }
 
     /**
-     * Langilearen pasahitzaren hash-a ezartzen du.
-     * Pasahitza aldatzean {@code BiltegiLocala}-k deitzen du.
+     * BCrypt hash berria ezartzen du pasahitza aldatzean.
      *
-     * @param hash BCrypt hash berria
+     * @param hash Ezarri beharreko BCrypt hash berria
      */
     public void setPasahitzaHash(String hash) {
         this.pasahitzaHash = hash;
     }
 
     /**
-     * Langilearen rola itzultzen du.
+     * Langilearen sistema-rola itzultzen du.
      *
-     * @return Rola testua
+     * @return Rola (adib. "Administratzailea", "Ikuslea")
      */
     public String getRola() {
         return rola;
     }
 
     /**
-     * Langilearen rola ezartzen du.
+     * Langilearen sistema-rola ezartzen du.
      *
      * @param rola Ezarri beharreko rola
      */
@@ -202,8 +199,8 @@ public class Langilea implements Serializable {
     }
 
     /**
-     * Langilea ikuslea den egiaztatzen du erola konparatuz.
-     * Ikusleak artikuluak ikusi eta erregistratu baino ezin dituzte egin.
+     * Langilea ikuslea den egiaztatzen du erola konparatuz. Ikusleak artikuluak
+     * ikusi eta erregistratu baino ezin dituzte egin.
      *
      * @return Ikuslea bada true
      */

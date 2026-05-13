@@ -66,9 +66,12 @@ public class LoginController {
         UIKudeatzailea.aldatuLeihoa(txtErabiltzailea, fxml, true);
     }
 
+    /**
+     * Pasahitza ahaztu duten erabiltzaileei mezu informatibo bat erakusten die,
+     * administratzailearekin jartzera gonbidatuz.
+     */
     @FXML
     private void pasahitzaAhaztuDut() {
-        UIKudeatzailea.erakutsiErrorea("Pasahitza berreskuratu",
-                "Ezin da pasahitza automatikoki berreskuratu.\nJarri harremanetan administratzailearekin.");
+        UIKudeatzailea.erakutsiToast("Ezin da pasahitza berreskuratu. Jarri harremanetan administratzailearekin.", false);
     }
 }

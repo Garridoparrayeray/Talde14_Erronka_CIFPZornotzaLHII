@@ -6,6 +6,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
+import dao.ArtikuluaDAO;
 import dao.EstadistikaDAO;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
@@ -59,12 +60,22 @@ public class PanelaController implements Initializable {
     @FXML
     private TableColumn<KategoriaKopurua, String> colKopurua;
 
+    /**
+     * Kontroladorea hasieratzen du: ongi-etorri mezua, estatistikak eta azken
+     * mugimenduak kargatzen ditu.
+     *
+     * @param url FXML fitxategiaren kokapena
+     * @param rb  Erabilitako baliabide-sorta
+     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         if (Sesio.getLangilea() != null) {
             lblEgunon.setText("Egun on, " + Sesio.getLangilea().getIzena());
         }
         lblData.setText("Gaur, " + LocalDate.now().format(DateTimeFormatter.ofPattern("dd MMM yyyy")));
+
+        // Iraungitutako artikuluak eguneratu estadistikak irakurri aurretik
+        ArtikuluaDAO.iraungituakEguneratu();
 
         lblBiltegian.setText(String.valueOf(EstadistikaDAO.biltegianKopurua()));
         lblErreklamazioIrekiak.setText(String.valueOf(EstadistikaDAO.erreklamazioIrekiakKopurua()));

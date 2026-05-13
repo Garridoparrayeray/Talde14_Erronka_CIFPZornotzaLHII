@@ -48,7 +48,7 @@ public class Erreklamazioa implements Serializable {
     public List<Artikulua> bilatuBateragarriak(List<Artikulua> zerrenda) {
         List<Artikulua> emaitzak = new ArrayList<>();
         for (Artikulua a : zerrenda) {
-            if (a.getEgoera() == model.EgoeraArtikulua.BILTEGIAN) {
+            if (a.getEgoera() == EgoeraArtikulua.BILTEGIAN) {
                 boolean bat = false;
                 if (deskribapenBilatua != null && a.getDeskribapena() != null) {
                     String[] hitzak = deskribapenBilatua.toLowerCase().split("\\s+");

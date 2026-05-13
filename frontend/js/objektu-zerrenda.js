@@ -1,5 +1,5 @@
 // ==========================================================================
-// 1. DICCIONARIO DE TRADUCCIONES (PÁGINA CATÁLOGO)
+// 1. ITZULPENEN HIZTEGIA (KATALOGO-ORRIA)
 // ==========================================================================
 const dictCatalog = {
   "EU": {
@@ -31,7 +31,7 @@ const dictCatalog = {
     "foot_link_terms": "Erabileraren baldintzak", 
     "foot_link_cook": "Cookie politika", 
     "foot_link_acc": "Irisgarritasuna", 
-    "foot_legal_text": "v1.0 · © 2026 Bermeoko Udala · Eskubide guztiak erreserbatuta"
+    "foot_legal_text": "v1.0 · © 2026 Bermeoko Udala · Eskubide guztiak erreserbatuta · Eder Martin Mosquerak eta Yeray Garrido Parrak maitasun eta kafeina handiz egina."
   },
   "ES": {
     "nav_back": "Volver al inicio",
@@ -62,12 +62,12 @@ const dictCatalog = {
     "foot_link_terms": "Condiciones de uso", 
     "foot_link_cook": "Política de cookies", 
     "foot_link_acc": "Accesibilidad", 
-    "foot_legal_text": "v1.0 · © 2026 Ayuntamiento de Bermeo · Todos los derechos reservados"
+    "foot_legal_text": "v1.0 · © 2026 Ayuntamiento de Bermeo · Todos los derechos reservados · Hecho con mucho amor y cafeína por Eder Martin Mosquera y Yeray Garrido Parra."
   }
 };
 
 // ==========================================================================
-// 2. FUNCIÓN DE CAMBIO DE IDIOMA Y TEMA
+// 2. HIZKUNTZA ETA GAIA ALDATZEKO FUNTZIOA
 // ==========================================================================
 function setLang(idioma) {
   localStorage.setItem('appLang', idioma);
@@ -123,10 +123,10 @@ function initTheme() {
 }
 
 // ==========================================================================
-// 3. LÓGICA PRINCIPAL (XML Y EVENTOS)
+// 3. LOGIKA NAGUSIA (XML ETA GERTAERAK)
 // ==========================================================================
 document.addEventListener("DOMContentLoaded", () => {
-  // Inicializamos idiomas y tema
+  // Hizkuntza eta gaia hasieratu
   setLang(localStorage.getItem('appLang') || 'EU');
   initTheme();
 
@@ -142,7 +142,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let visibleLimit = 6; 
 
   if (categorySelect) {
-    fetch('../../partekatutako_datuak/artikuluak.xml')
+    fetch('/datuak/artikuluak.xml')
       .then(response => {
         if (!response.ok) throw new Error("Ezin izan da XML artikuluak fitxategia kargatu");
         return response.text();
@@ -168,7 +168,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   if (catalogGrid) {
-    fetch('../../partekatutako_datuak/artikuluak.xml')
+    fetch('/datuak/artikuluak.xml')
       .then(response => {
         if (!response.ok) throw new Error("Ezin izan da XML artikuluak fitxategia kargatu");
         return response.text();
@@ -188,33 +188,33 @@ document.addEventListener("DOMContentLoaded", () => {
           
           let visualContent = '';
           if (argazkia !== '') {
-            visualContent = `<img src="../../artikulu_irudiak/${argazkia}" alt="${izena}" style="width:100%; height:100%; object-fit:cover;">`;
+            visualContent = `<img src="/irudiak/${argazkia}" alt="${izena}" class="item-img-cover">`;
           } else {
             visualContent = `
               <div class="img-placeholder">
                 <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
-                <span style="font-size: 11px;">Argazkirik gabe</span>
+                <span class="img-placeholder-text">Argazkirik gabe</span>
               </div>`;
           }
 
           const card = document.createElement('div');
           card.className = 'item-card';
           card.setAttribute('data-category', kategoria);
-          card.style.display = 'none'; 
+          card.classList.add('d-none'); 
           
           let dataHTML = '';
           if (sarreraData !== '') {
-            dataHTML = `<span style="font-size: 11px; color: var(--gray-500); display: block; margin-bottom: 8px;">Aurkituta: ${sarreraData}</span>`;
+            dataHTML = `<span class="item-date">Aurkituta: ${sarreraData}</span>`;
           }
 
           card.innerHTML = `
             <div class="item-img">${visualContent}</div>
             <div class="item-info">
               <span class="item-cat-badge">${kategoria.toUpperCase()}</span>
-              <h3 class="item-name" style="margin-bottom: 8px; min-height: 24px;">${izena}</h3>
+              <h3 class="item-name item-name-spaced">${izena}</h3>
               ${dataHTML}
-              ${deskribapena ? `<p style="font-size: 13px; color: var(--gray-500); margin-bottom: 16px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">${deskribapena}</p>` : ''}
-              <a href="mailto:galduaurkituak@bermeo.eus?subject=Erreklamazioa:%20${encodeURIComponent(izena)}%20(ID:%20${id})" class="btn-claim" style="margin-top: auto;">Mezu bat bidali</a>
+              ${deskribapena ? `<p class="item-desc">${deskribapena}</p>` : ''}
+              <a href="mailto:galduaurkituak@bermeo.eus?subject=Erreklamazioa:%20${encodeURIComponent(izena)}%20(ID:%20${id})" class="btn-claim mt-auto">Mezu bat bidali</a>
             </div>
           `;
           catalogGrid.appendChild(card);
@@ -222,7 +222,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         cards = Array.from(document.querySelectorAll('.item-card'));
         
-        // Traducimos los botones justo después de crearlos
+        // Botoiak itzuli DOM-ean sortu bezain laster
         const currentLang = localStorage.getItem('appLang') || 'EU';
         document.querySelectorAll('.btn-claim').forEach(btn => {
           btn.textContent = dictCatalog[currentLang]["btn_claim_card"];
@@ -233,7 +233,7 @@ document.addEventListener("DOMContentLoaded", () => {
       .catch(error => {
         console.error("Errorea:", error);
         if (loadingMsg) {
-           loadingMsg.textContent = "Errorea datuak kargatzean. Egiaztatu zerbitzari lokala erabiltzen ari zarela (Live Server).";
+           loadingMsg.textContent = "Errorea datuak kargatzean.";
         }
       });
   }
@@ -251,23 +251,23 @@ document.addEventListener("DOMContentLoaded", () => {
       return matchesSearch && matchesCategory;
     });
 
-    cards.forEach(card => card.style.display = 'none');
+    cards.forEach(card => card.classList.add('d-none'));
 
     for (let i = 0; i < matchedCards.length; i++) {
       if (i < visibleLimit) {
-        matchedCards[i].style.display = 'flex';
+        matchedCards[i].classList.remove('d-none');
       }
     }
 
     if (matchedCards.length === 0 && cards.length > 0) {
-      if(noResultsMsg) noResultsMsg.style.display = 'block';
-      if(loadMoreContainer) loadMoreContainer.style.display = 'none';
+      if(noResultsMsg) noResultsMsg.classList.remove('d-none');
+      if(loadMoreContainer) loadMoreContainer.classList.add('d-none');
     } else {
-      if(noResultsMsg) noResultsMsg.style.display = 'none';
+      if(noResultsMsg) noResultsMsg.classList.add('d-none');
       if (matchedCards.length > visibleLimit) {
-        if(loadMoreContainer) loadMoreContainer.style.display = 'block';
+        if(loadMoreContainer) loadMoreContainer.classList.remove('d-none');
       } else {
-        if(loadMoreContainer) loadMoreContainer.style.display = 'none';
+        if(loadMoreContainer) loadMoreContainer.classList.add('d-none');
       }
     }
   }

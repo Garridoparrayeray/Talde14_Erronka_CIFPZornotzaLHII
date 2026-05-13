@@ -18,7 +18,7 @@ public class Emanaldia {
     private Langilea langilea;
 
     /**
-     * Emanaldiari eraikitzailea.
+     * Emanaldiaren eraikitzailea.
      *
      * @param artikulua Ematen den artikulua
      * @param hartzailea Artikulua jasotzen duen hartzailea
@@ -49,7 +49,7 @@ public class Emanaldia {
      */
     public boolean amaituEmanaldia() {
         if (dokumentuBidea != null && !dokumentuBidea.isEmpty()) {
-            artikulua.aldatuEgoera(model.EgoeraArtikulua.ITZULITA);
+            artikulua.aldatuEgoera(EgoeraArtikulua.ITZULITA);
             return true;
         }
         return false;

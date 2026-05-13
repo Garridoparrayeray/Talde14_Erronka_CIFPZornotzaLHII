@@ -18,7 +18,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import model.Artikulua;
 import model.Erreklamazioa;
@@ -34,8 +33,6 @@ public class ErreklamazioakController implements Initializable {
 
     private static final Logger LOG = LogKudeatzailea.lortu(ErreklamazioakController.class);
 
-    @FXML
-    private StackPane contentArea;
     @FXML
     private VBox listVBox;
     @FXML
@@ -73,6 +70,12 @@ public class ErreklamazioakController implements Initializable {
     private VBox itemHautatua;
     private String egoeraFiltro = "irekita";
 
+    /**
+     * Kontroladorea hasieratzen du eta erreklamazioak kargatzen ditu.
+     *
+     * @param url FXML fitxategiaren kokapena
+     * @param rb  Erabilitako baliabide-sorta
+     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         kargatu();
@@ -191,7 +194,11 @@ public class ErreklamazioakController implements Initializable {
         lblKontaktua.setText(err.getJabeTelefonoa() + " · " + err.getJabeEmaila());
 
         String desk = err.getDeskribapenBilatua();
-        lblDeskribapenaTestua.setText(desk != null ? desk : "");
+        if (desk != null) {
+            lblDeskribapenaTestua.setText(desk);
+        } else {
+            lblDeskribapenaTestua.setText("");
+        }
 
         erakutsiBateragarriak(err);
 
@@ -276,10 +283,11 @@ public class ErreklamazioakController implements Initializable {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/Emanaldia.fxml"));
             javafx.scene.Parent root = loader.load();
             EmanaldiaController ctrl = loader.getController();
-            ctrl.setErreklamazioa(hautatua, contentArea);
-            UIKudeatzailea.kargatuPanela(contentArea, root);
+            ctrl.setErreklamazioa(hautatua);
+            UIKudeatzailea.kargatuPanela(root);
         } catch (Exception e) {
             LOG.log(Level.SEVERE, "ebatzi: Emanaldia FXML kargatzean errorea", e);
+            UIKudeatzailea.erakutsiToast("Errorea: ezin izan da emanaldia formularioa kargatu.", false);
         }
     }
 
@@ -358,11 +366,10 @@ public class ErreklamazioakController implements Initializable {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/ErreklamazioaBerria.fxml"));
             Node nodoa = loader.load();
-            ErreklamazioaBerriController ctrl = loader.getController();
-            ctrl.setContentArea(contentArea);
-            UIKudeatzailea.kargatuPanela(contentArea, nodoa);
+            UIKudeatzailea.kargatuPanela(nodoa);
         } catch (Exception e) {
             LOG.log(Level.SEVERE, "erreklamazioaBerria: FXML kargatzean errorea", e);
+            UIKudeatzailea.erakutsiToast("Errorea: ezin izan da formularioa kargatu.", false);
         }
     }
 

@@ -13,10 +13,10 @@ import model.Artikulua;
 import model.EgoeraArtikulua;
 import model.Kategoria;
 import model.Kokalekua;
-import utils.DBConexioa;
+import utils.BiltegiLokala;
+import utils.DBKonexioa;
 import utils.LogKudeatzailea;
 import utils.ModoKudeatzailea;
-import utils.BiltegiLocala;
 
 /**
  * Artikuluen datu-baseko eragiketak kudeatzen dituen DAO klasea.
@@ -31,19 +31,19 @@ public class ArtikuluaDAO {
      * Artikulu berria gordetzen du datu-basean, kode automatikoa sortuz eta
      * mugimendua erregistratuz.
      *
-     * @param izena        Artikuluaren izenburua
+     * @param izena Artikuluaren izenburua
      * @param deskribapena Artikuluaren deskripzio osoa
-     * @param iragankorra  Iragankorra bada true
-     * @param idKategoria  Kategoriaaren identifikagailua (0 bada ez da lotzen)
-     * @param idKokalekua  Kokalekuaren identifikagailua (0 bada ez da lotzen)
-     * @param sarreraData  Biltegira sartu zen data
+     * @param iragankorra Iragankorra bada true
+     * @param idKategoria Kategoriaaren identifikagailua (0 bada ez da lotzen)
+     * @param idKokalekua Kokalekuaren identifikagailua (0 bada ez da lotzen)
+     * @param sarreraData Biltegira sartu zen data
      * @param argazkiBidea Argazkiaren bide erlatiboa (null bada hutsik)
      * @return Sortutako artikulu-kodea, edo null errorea bada
      */
     public static String gehitu(String izena, String deskribapena, boolean iragankorra,
             int idKategoria, int idKokalekua, java.sql.Date sarreraData, String argazkiBidea) {
         if (ModoKudeatzailea.isOffline()) {
-            return BiltegiLocala.getInstance().artikuluaGehitu(izena, deskribapena, iragankorra, idKategoria, idKokalekua, sarreraData, argazkiBidea);
+            return BiltegiLokala.artikuluaGehitu(izena, deskribapena, iragankorra, idKategoria, idKokalekua, sarreraData, argazkiBidea);
         }
         String kodea = sortuKodea(sarreraData);
         if (kodea == null) {
@@ -61,7 +61,7 @@ public class ArtikuluaDAO {
         String sql = "INSERT INTO ARTIKULUA (id_artikulua, a_izena, a_deskribapena, egoera, iragankorra, "
                 + "sarrera_data, iraungitze_data, argazkia, id_kategoria, id_kokalekua) "
                 + "VALUES (?, ?, ?, 'aurkitua', ?, ?, ?, ?, ?, ?)";
-        try (Connection con = DBConexioa.getKonexioa(); PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = DBKonexioa.getKonexioa(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, kodea);
             ps.setString(2, izena);
             ps.setString(3, deskribapena);
@@ -84,14 +84,17 @@ public class ArtikuluaDAO {
                 ps.setNull(9, java.sql.Types.INTEGER);
             }
             boolean ok = ps.executeUpdate() > 0;
+            LogKudeatzailea.erregistratu("ARTIKULUA", kodea, ok);
 
             if (ok) {
+                LOG.log(Level.INFO, "gehitu: OK - {0}", kodea);
                 String mugDesc = "Artikulua sisteman erregistratu da: " + kodea;
                 String sqlMug = "INSERT INTO MUGIMENDUA (deskribapena, id_artikulua) VALUES (?, ?)";
                 try (PreparedStatement psMug = con.prepareStatement(sqlMug)) {
                     psMug.setString(1, mugDesc);
                     psMug.setString(2, kodea);
-                    psMug.executeUpdate();
+                    boolean mugOk = psMug.executeUpdate() > 0;
+                    LogKudeatzailea.erregistratu("MUGIMENDUA", kodea, mugOk);
                 }
                 return kodea;
             }
@@ -99,6 +102,30 @@ public class ArtikuluaDAO {
         } catch (SQLException e) {
             LOG.log(Level.SEVERE, "gehitu: datu-baseko errorea", e);
             return null;
+        }
+    }
+
+    /**
+     * Iraungitze-data gainditu duten artikuluak 'iraungita' egoerara pasatzen
+     * ditu. Aplikazioa abiaraztean deitzen da automatikoki online moduan.
+     *
+     * @return Eguneratutako artikulu kopurua
+     */
+    public static int iraungituakEguneratu() {
+        if (ModoKudeatzailea.isOffline()) {
+            return 0;
+        }
+        String sql = "UPDATE ARTIKULUA SET egoera = 'iraungita' "
+                + "WHERE egoera = 'aurkitua' AND iraungitze_data < CURDATE()";
+        try (Connection con = DBKonexioa.getKonexioa(); PreparedStatement ps = con.prepareStatement(sql)) {
+            int kopurua = ps.executeUpdate();
+            if (kopurua > 0) {
+                LOG.log(Level.INFO, "iraungituakEguneratu: {0} artikulu iraungita markatu dira.", kopurua);
+            }
+            return kopurua;
+        } catch (SQLException e) {
+            LOG.log(Level.SEVERE, "iraungituakEguneratu: datu-baseko errorea", e);
+            return 0;
         }
     }
 
@@ -117,7 +144,7 @@ public class ArtikuluaDAO {
             urteStr = String.format("%02d", cal.get(java.util.Calendar.YEAR) % 100);
         }
         String sql = "SELECT COUNT(*) + 1 AS hurrengo FROM ARTIKULUA WHERE id_artikulua LIKE ?";
-        try (Connection con = DBConexioa.getKonexioa(); PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = DBKonexioa.getKonexioa(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, "G-%-" + urteStr);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
@@ -138,7 +165,7 @@ public class ArtikuluaDAO {
      */
     public static Artikulua getByKodea(String kodea) {
         if (ModoKudeatzailea.isOffline()) {
-            return BiltegiLocala.getInstance().getArtikuluaByKodea(kodea);
+            return BiltegiLokala.getArtikuluaByKodea(kodea);
         }
         String sql = "SELECT a.id_artikulua, a.a_izena, a.a_deskribapena, a.egoera, "
                 + "a.sarrera_data, a.argazkia, "
@@ -148,7 +175,7 @@ public class ArtikuluaDAO {
                 + "LEFT JOIN KATEGORIA k  ON a.id_kategoria  = k.id_kategoria "
                 + "LEFT JOIN KOKALEKUA ko ON a.id_kokalekua = ko.id_kokalekua "
                 + "WHERE a.id_artikulua = ?";
-        try (Connection con = DBConexioa.getKonexioa(); PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = DBKonexioa.getKonexioa(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, kodea);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
@@ -195,7 +222,7 @@ public class ArtikuluaDAO {
      */
     public static List<Artikulua> getGuztiak() {
         if (ModoKudeatzailea.isOffline()) {
-            return BiltegiLocala.getInstance().getArtikuluak();
+            return BiltegiLokala.getArtikuluak();
         }
         List<Artikulua> zerrenda = new ArrayList<>();
 
@@ -207,7 +234,7 @@ public class ArtikuluaDAO {
                 + "LEFT JOIN KATEGORIA k  ON a.id_kategoria  = k.id_kategoria "
                 + "LEFT JOIN KOKALEKUA ko ON a.id_kokalekua = ko.id_kokalekua";
 
-        try (Connection con = DBConexioa.getKonexioa(); PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+        try (Connection con = DBKonexioa.getKonexioa(); PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
                 Artikulua a = new Artikulua(
@@ -260,8 +287,8 @@ public class ArtikuluaDAO {
     /**
      * Artikuluaren datuak eguneratzen ditu datu-basean.
      *
-     * @param kodea       Aldatu beharreko artikuluaren kodea
-     * @param izena       Izen berria
+     * @param kodea Aldatu beharreko artikuluaren kodea
+     * @param izena Izen berria
      * @param deskribapena Deskribapen berria
      * @param idKategoria Kategoria berria (0 bada ez da aldatzen)
      * @param idKokalekua Kokaleku berria (0 bada null ezartzen da)
@@ -271,7 +298,7 @@ public class ArtikuluaDAO {
     public static boolean eguneratu(String kodea, String izena, String deskribapena,
             int idKategoria, int idKokalekua, String argazkiBidea) {
         if (ModoKudeatzailea.isOffline()) {
-            return BiltegiLocala.getInstance().artikuluaEguneratu(kodea, izena, deskribapena, idKategoria, idKokalekua, argazkiBidea);
+            return BiltegiLokala.artikuluaEguneratu(kodea, izena, deskribapena, idKategoria, idKokalekua, argazkiBidea);
         }
         StringBuilder sql = new StringBuilder(
                 "UPDATE ARTIKULUA SET a_izena=?, a_deskribapena=?");
@@ -290,8 +317,7 @@ public class ArtikuluaDAO {
         }
         sql.append(" WHERE id_artikulua=?");
 
-        try (Connection con = DBConexioa.getKonexioa();
-                PreparedStatement ps = con.prepareStatement(sql.toString())) {
+        try (Connection con = DBKonexioa.getKonexioa(); PreparedStatement ps = con.prepareStatement(sql.toString())) {
             int idx = 1;
             ps.setString(idx++, izena);
             ps.setString(idx++, deskribapena);
@@ -305,7 +331,11 @@ public class ArtikuluaDAO {
                 ps.setString(idx++, argazkiBidea);
             }
             ps.setString(idx, kodea);
-            return ps.executeUpdate() > 0;
+            boolean ok = ps.executeUpdate() > 0;
+            if (ok) {
+                LOG.log(Level.INFO, "eguneratu: OK - {0}", kodea);
+            }
+            return ok;
         } catch (SQLException e) {
             LOG.log(Level.SEVERE, "eguneratu: datu-baseko errorea", e);
             return false;
@@ -313,21 +343,24 @@ public class ArtikuluaDAO {
     }
 
     /**
-     * Artikulua datu-basetik ezabatzen du.
-     * Mugimendua eta EMANALDIA badago, ezin da ezabatu (FK RESTRICT).
+     * Artikulua datu-basetik ezabatzen du. Mugimendua eta EMANALDIA badago,
+     * ezin da ezabatu (FK RESTRICT).
      *
      * @param kodea Ezabatu beharreko artikuluaren kodea
      * @return Ondo ezabatu bada true
      */
     public static boolean ezabatu(String kodea) {
         if (ModoKudeatzailea.isOffline()) {
-            return BiltegiLocala.getInstance().artikuluaEzabatu(kodea);
+            return BiltegiLokala.artikuluaEzabatu(kodea);
         }
         String sql = "DELETE FROM ARTIKULUA WHERE id_artikulua=?";
-        try (Connection con = DBConexioa.getKonexioa();
-                PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = DBKonexioa.getKonexioa(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, kodea);
-            return ps.executeUpdate() > 0;
+            boolean ok = ps.executeUpdate() > 0;
+            if (ok) {
+                LOG.log(Level.INFO, "ezabatu: OK - {0}", kodea);
+            }
+            return ok;
         } catch (SQLException e) {
             LOG.log(Level.SEVERE, "ezabatu: datu-baseko errorea", e);
             return false;

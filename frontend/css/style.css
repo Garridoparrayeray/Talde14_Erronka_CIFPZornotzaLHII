@@ -379,7 +379,7 @@ body.catalog-page {
   font-size: 17px;
   font-weight: 300;
   line-height: 1.65;
-  color: var(--gray-500);
+  color: var(--gray-700);
   max-width: 440px;
   margin-bottom: 36px;
   opacity: 0;
@@ -667,8 +667,8 @@ textarea.form-control {
 .section-subtitle {
   font-size: 16px;
   font-weight: 300;
-  line-height: 1.7;
-  color: var(--gray-500);
+  line-height: 1.6;
+  color: var(--gray-700);
   max-width: 520px;
   margin-bottom: 60px;
 }
@@ -747,7 +747,7 @@ textarea.form-control {
 .step-desc {
   font-size: 14px;
   line-height: 1.65;
-  color: var(--gray-500);
+  color: var(--gray-700);
   font-weight: 300;
 }
 

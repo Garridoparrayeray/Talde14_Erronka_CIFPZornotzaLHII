@@ -12,18 +12,11 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
 import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.StackPane;
 import model.Langilea;
 import utils.LogKudeatzailea;
 import utils.UIKudeatzailea;
@@ -34,11 +27,9 @@ import utils.UIKudeatzailea;
  * @author Yeray Garrido
  */
 public class LangileakController implements Initializable {
+
     private static final Logger LOG = LogKudeatzailea.lortu(LangileakController.class);
 
-
-    @FXML
-    private StackPane contentArea;
     @FXML
     private TableView<Langilea> taula;
     @FXML
@@ -46,13 +37,9 @@ public class LangileakController implements Initializable {
     @FXML
     private TableColumn<Langilea, String> colErabiltzailea;
     @FXML
-    private TableColumn<Langilea, String> colSaila;
-    @FXML
     private TableColumn<Langilea, String> colRola;
     @FXML
     private TableColumn<Langilea, String> colEgoera;
-    @FXML
-    private TableColumn<Langilea, String> colAzkenSarrera;
     @FXML
     private TextField txtBilaketa;
     @FXML
@@ -61,20 +48,18 @@ public class LangileakController implements Initializable {
     private List<Langilea> guztiak;
 
     /**
-     * Kontroladorea hasieratzen du. Zutabeak konfiguratzen ditu, rolak kargatzen ditu
-     * eta langileen zerrenda bistaratzen du.
+     * Kontroladorea hasieratzen du. Zutabeak konfiguratzen ditu, rolak
+     * kargatzen ditu eta langileen zerrenda bistaratzen du.
      *
      * @param url Hasierako URLa
-     * @param rb  Baliabideen sorta
+     * @param rb Baliabideen sorta
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         colLangilea.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getIzenOsoa()));
         colErabiltzailea.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getErabiltzailea()));
-        colSaila.setCellValueFactory(c -> new SimpleStringProperty("—"));
         colRola.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getRola()));
         colEgoera.setCellValueFactory(c -> new SimpleStringProperty("Aktibo"));
-        colAzkenSarrera.setCellValueFactory(c -> new SimpleStringProperty("—"));
 
         cbRola.getItems().add("Rol guztiak");
         List<String[]> rolak = LangileaDAO.getRolak();
@@ -142,44 +127,33 @@ public class LangileakController implements Initializable {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/LangileBerria.fxml"));
             Node nodoa = loader.load();
-            LangileBerriController ctrl = loader.getController();
-            ctrl.setContentArea(contentArea);
-            UIKudeatzailea.kargatuPanela(contentArea, nodoa);
+            UIKudeatzailea.kargatuPanela(nodoa);
         } catch (Exception e) {
             LOG.log(Level.SEVERE, "langileaBerria: errorea", e);
+            UIKudeatzailea.erakutsiToast("Errorea: ezin izan da formularioa kargatu.", false);
         }
     }
-    
+
     /**
-     * Taulan aukeratutako langilea datu-basetik ezabatzen du.
-     * Ezabatu aurretik, erabiltzaileari baieztapena eskatzen dio erroreak ekiditeko.
+     * Taulan aukeratutako langilea datu-basetik ezabatzen du. Ezabatu aurretik,
+     * erabiltzaileari baieztapena eskatzen dio erroreak ekiditeko.
      */
     @FXML
     public void langileaEzabatu() {
         Langilea sel = taula.getSelectionModel().getSelectedItem();
-        
+
         if (sel == null) {
-            erakutsiAlerta(Alert.AlertType.WARNING, "Kontuz", "Aukeratu langile bat taulan ezabatzeko.");
+            UIKudeatzailea.erakutsiToast("Aukeratu langile bat taulan ezabatzeko.", false);
             return;
         }
 
-        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
-        confirm.setTitle("Langilea ezabatu");
-        confirm.setHeaderText("Langilea behin betiko ezabatuko da");
-        confirm.setContentText("Ziur zaude '" + sel.getErabiltzailea() + "' erabiltzailea ezabatu nahi duzula?");
-        confirm.initOwner(taula.getScene().getWindow());
-
-        confirm.showAndWait().ifPresent(btn -> {
-            if (btn == ButtonType.OK) {
-                boolean ondo = LangileaDAO.ezabatu(sel.getLangileId());
-                if (ondo) {
-                    kargatu(); // Taula datu berriekin freskatu
-                    erakutsiAlerta(Alert.AlertType.INFORMATION, "Eginda", "Langilea ondo ezabatu da.");
-                } else {
-                    erakutsiAlerta(Alert.AlertType.ERROR, "Errorea", "Ezin izan da langilea ezabatu. Agian beste datu batzuekin lotuta dago.");
-                }
-            }
-        });
+        boolean ondo = LangileaDAO.ezabatu(sel.getLangileId());
+        if (ondo) {
+            kargatu();
+            UIKudeatzailea.erakutsiToast("Langilea ezabatu da: " + sel.getErabiltzailea(), true);
+        } else {
+            UIKudeatzailea.erakutsiToast("Ezin izan da langilea ezabatu. Agian beste datu batzuekin lotuta dago.", false);
+        }
     }
 
     /**
@@ -188,43 +162,21 @@ public class LangileakController implements Initializable {
     @FXML
     public void langileaEditatu() {
         Langilea sel = taula.getSelectionModel().getSelectedItem();
-        
+
         if (sel == null) {
-            erakutsiAlerta(Alert.AlertType.WARNING, "Kontuz", "Aukeratu langile bat taulan editatzeko.");
+            UIKudeatzailea.erakutsiToast("Aukeratu langile bat taulan editatzeko.", false);
             return;
         }
 
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/LangileaEditu.fxml"));
-            Parent root = loader.load();
-            
+            Node nodoa = loader.load();
             LangileaEdituController ctrl = loader.getController();
             ctrl.setLangilea(sel);
-            ctrl.setOnUpdateCallback(() -> kargatu()); // Leihoa istean taula freskatzeko
-            
-            Stage stage = new Stage();
-            stage.initOwner(taula.getScene().getWindow());
-            stage.initModality(Modality.WINDOW_MODAL);
-            stage.setTitle("Langilea Editatu");
-            stage.setScene(new Scene(root));
-            stage.showAndWait();
+            UIKudeatzailea.kargatuPanela(nodoa);
         } catch (Exception e) {
-            erakutsiAlerta(Alert.AlertType.ERROR, "Errorea", "Ezin izan da editatzeko leihoa kargatu: " + e.getMessage());
+            UIKudeatzailea.erakutsiToast("Ezin izan da editatzeko leihoa kargatu: " + e.getMessage(), false);
+            LOG.log(Level.SEVERE, "langileaEditatu: FXML kargatzean errorea", e);
         }
-    }
-
-    /**
-     * Erabiltzaileari informazio, abisu edo errore mezuak erakusteko metodo laguntzailea.
-     * 
-     * @param mota Alertaren mota (INFO, WARNING, ERROR...)
-     * @param titulua Alertaren izenburua
-     * @param mezua Erakutsi beharreko testua
-     */
-    private void erakutsiAlerta(Alert.AlertType mota, String titulua, String mezua) {
-        Alert alert = new Alert(mota);
-        alert.setTitle(titulua);
-        alert.setHeaderText(null);
-        alert.setContentText(mezua);
-        alert.showAndWait();
     }
 }

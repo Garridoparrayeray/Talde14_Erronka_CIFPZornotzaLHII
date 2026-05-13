@@ -1,7 +1,7 @@
 package model;
 
 /**
- * Erreklamazino baten egoera posibleak adierazten dituen enumerazioa. IREKITA:
+ * Erreklamazioaren egoera posibleak adierazten dituen enumerazioa. IREKITA:
  * oraindik ebatzi gabe; EBATZITA: artikulua eman zaio jabeari; BAZTERTUTA:
  * baztertu da.
  *
