@@ -37,3 +37,6 @@ logs/
 # Backups
 *.sql.bak
 copia_*.sql
+
+# Ejecutable Windows
+java-app/installer/
