@@ -1,75 +1,35 @@
 @echo off
 setlocal
 
+set JAVA_HOME=C:\Program Files\Eclipse Adoptium\jdk-25.0.3.9-hotspot
+set PATH=%PATH%;C:\maven\apache-maven-3.9.15\bin;%JAVA_HOME%\bin
+
 echo ========================================
 echo  Galdutakoak - Windows .exe sortzea
 echo ========================================
 
-REM Java 21 egiaztatu
-java -version >nul 2>&1
-if %errorlevel% neq 0 (
-    echo ERROR: Java ez dago instalatuta. Instalatu Java 21 JDK.
-    echo https://adoptium.net/temurin/releases/?version=21
-    pause
-    exit /b 1
-)
-
-REM Maven egiaztatu
-mvn -version >nul 2>&1
-if %errorlevel% neq 0 (
-    echo ERROR: Maven ez dago instalatuta. Instalatu Maven.
-    echo https://maven.apache.org/download.cgi
-    pause
-    exit /b 1
-)
-
-REM jpackage egiaztatu
-jpackage --version >nul 2>&1
-if %errorlevel% neq 0 (
-    echo ERROR: jpackage ez dago. Java 21 JDK beharrezkoa da (JRE ez).
-    pause
-    exit /b 1
-)
+echo.
+echo [1/4] Compilando...
+call mvn clean package -DskipTests
+if %errorlevel% neq 0 (echo ERROR en compilacion & pause & exit /b 1)
 
 echo.
-echo [1/2] JAR eraikitzen...
-call mvn package -q
-if %errorlevel% neq 0 (
-    echo ERROR: Maven build huts egin du.
-    pause
-    exit /b 1
-)
-echo     JAR sortuta: target\galdutakoak-1.0-SNAPSHOT.jar
+echo [2/4] Copiando dependencias...
+call mvn dependency:copy-dependencies -DoutputDirectory=target/libs
+copy /Y target\galdutakoak-1.0-SNAPSHOT.jar target\libs\
 
 echo.
-echo [2/2] .exe sortzen...
-set JAVAFX_PATH=%USERPROFILE%\.m2\repository\org\openjfx
+echo [3/4] Eliminando build anterior...
+if exist installer\Galdutakoak rmdir /s /q installer\Galdutakoak
 
-if exist target\Galdutakoak rmdir /s /q target\Galdutakoak
-
-jpackage ^
-  --input target ^
-  --main-jar galdutakoak-1.0-SNAPSHOT.jar ^
-  --main-class app.Launcher ^
-  --module-path "%JAVAFX_PATH%" ^
-  --add-modules javafx.controls,javafx.fxml ^
-  --name Galdutakoak ^
-  --app-version 1.0 ^
-  --vendor "Bermeoko Udala" ^
-  --type exe ^
-  --dest target
-
-if %errorlevel% neq 0 (
-    echo ERROR: jpackage huts egin du.
-    pause
-    exit /b 1
-)
+echo.
+echo [4/4] Creando .exe...
+jpackage --input target\libs --name "Galdutakoak" --main-jar galdutakoak-1.0-SNAPSHOT.jar --main-class app.Launcher --type app-image --dest installer --app-version 1.0
+if %errorlevel% neq 0 (echo ERROR en jpackage & pause & exit /b 1)
 
 echo.
 echo ========================================
-echo  DONE: target\Galdutakoak-1.0.exe
-echo ========================================
-echo  Docker martxan egon behar da aurretik:
-echo    docker compose up -d
+echo  LISTO: installer\Galdutakoak\Galdutakoak.exe
+echo  Mueve TODA la carpeta Galdutakoak/ donde quieras.
 echo ========================================
 pause

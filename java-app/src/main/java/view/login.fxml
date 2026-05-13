@@ -38,7 +38,7 @@
 
         <VBox minWidth="0.0" spacing="10.0" VBox.vgrow="ALWAYS">
           <children>
-            <Label minWidth="0.0" styleClass="text-white, font-bold" text="Galduen kudeaketa" wrapText="true">
+            <Label minWidth="0.0" styleClass="text-white, font-bold" text="Objetu galduen kudeaketa" wrapText="true">
               <font><Font size="42.0" /></font>
             </Label>
           </children>
