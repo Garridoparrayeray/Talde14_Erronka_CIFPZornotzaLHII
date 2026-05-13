@@ -131,6 +131,9 @@ public class IraungitakoakController implements Initializable {
         colAurkTel.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getAurkTel()));
         colAurkEmail.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getAurkEmail()));
         colEskainita.setCellValueFactory(c -> new SimpleStringProperty(""));
+        UIKudeatzailea.ehundatuZelulak(colIzena);
+        UIKudeatzailea.ehundatuZelulak(colAurkIzena);
+        UIKudeatzailea.ehundatuZelulak(colAurkEmail);
 
         desaktibatiBotoiak();
         taula.getSelectionModel().selectedItemProperty().addListener((obs, old, sel) -> {

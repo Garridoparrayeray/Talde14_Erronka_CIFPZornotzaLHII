@@ -26,7 +26,7 @@
             style="-fx-border-color: transparent transparent #E5E7EB transparent; -fx-padding: 15 30;"
             styleClass="bg-white">
          <children>
-            <Label styleClass="font-title" text="Galdu dabenak">
+            <Label styleClass="font-title" text="Galdu duten pertsonak">
                <font><Font size="20.0" /></font>
             </Label>
             <Region HBox.hgrow="ALWAYS" />
@@ -72,19 +72,16 @@
                   <TableView fx:id="taula"
                              VBox.vgrow="ALWAYS"
                              style="-fx-pref-height: 600;">
-                     <columnResizePolicy>
-                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                     </columnResizePolicy>
                      <columns>
-                        <TableColumn fx:id="colZbk"          text="Zbk"          minWidth="45"  maxWidth="55"  />
-                        <TableColumn fx:id="colData"          text="Data"         minWidth="90"  maxWidth="110" />
-                        <TableColumn fx:id="colIzena"         text="Izena"        minWidth="90"  />
-                        <TableColumn fx:id="colAbizena"       text="Abizena"      minWidth="110" />
-                        <TableColumn fx:id="colTelefonoa"     text="Telefonoa"    minWidth="100" maxWidth="130" />
-                        <TableColumn fx:id="colEmaila"        text="E-maila"      minWidth="140" />
-                        <TableColumn fx:id="colKategoria"     text="Kategoria"    minWidth="110" maxWidth="160" />
-                        <TableColumn fx:id="colDeskribapena"  text="Deskribapena" minWidth="200" />
-                        <TableColumn fx:id="colEgoera"        text="Egoera"       minWidth="90"  maxWidth="120" />
+                        <TableColumn fx:id="colZbk"          text="Zbk"          prefWidth="55"  />
+                        <TableColumn fx:id="colData"          text="Data"         prefWidth="100" />
+                        <TableColumn fx:id="colIzena"         text="Izena"        prefWidth="100" />
+                        <TableColumn fx:id="colAbizena"       text="Abizena"      prefWidth="120" />
+                        <TableColumn fx:id="colTelefonoa"     text="Telefonoa"    prefWidth="115" />
+                        <TableColumn fx:id="colEmaila"        text="E-maila"      prefWidth="190" />
+                        <TableColumn fx:id="colKategoria"     text="Kategoria"    prefWidth="160" />
+                        <TableColumn fx:id="colDeskribapena"  text="Deskribapena" prefWidth="250" />
+                        <TableColumn fx:id="colEgoera"        text="Egoera"       prefWidth="100" />
                      </columns>
                   </TableView>
                </children>

@@ -21,13 +21,15 @@ bin/
 .DS_Store
 Thumbs.db
 
+# Environment variables
+.env
+
 # Docker volumes locales
 db_data/
 artikulu_irudiak/*
-!artikulu_irudiak/.gitkeep
 partekatutako_datuak/*.xml
-!partekatutako_datuak/.gitkeep
-
+partekatutako_datuak/*.sql
+partekatutako_datuak/store.dat
 # Logs
 *.log
 logs/
@@ -35,3 +37,6 @@ logs/
 # Backups
 *.sql.bak
 copia_*.sql
+
+# Ejecutable Windows
+java-app/installer/
