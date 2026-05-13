@@ -6,126 +6,168 @@
 
 ## Índice
 
-1. [Visión general del proyecto](#1-visión-general-del-proyecto)
-2. [Tecnologías nuevas — qué son y para qué sirven](#2-tecnologías-nuevas)
-   - 2.1 [Docker y Docker Compose](#21-docker-y-docker-compose)
-   - 2.2 [MariaDB — base de datos relacional](#22-mariadb)
-   - 2.3 [JavaFX y FXML](#23-javafx-y-fxml)
-   - 2.4 [Maven — gestor de dependencias y build](#24-maven)
-   - 2.5 [BCrypt — hash de contraseñas](#25-bcrypt)
-   - 2.6 [Nginx — servidor web](#26-nginx)
-   - 2.7 [XML, XSLT, XPath y XQuery](#27-xml-xslt-xpath-y-xquery)
-   - 2.8 [Adminer — interfaz web para la base de datos](#28-adminer)
-   - 2.9 [Licencia — GNU GPL v3](#29-licencia)
-3. [Controles de tabla y UI dinámica en JavaFX](#3-controles-de-tabla-y-ui-dinámica-en-javafx)
-   - 3.1 [TableView — la tabla de datos](#31-tableview--la-tabla-de-datos)
-   - 3.2 [setCellValueFactory — cómo se conecta cada columna al modelo](#32-setcellvaluefactory--cómo-se-conecta-cada-columna-al-modelo)
-   - 3.3 [Cargar y actualizar datos en la tabla](#33-cargar-y-actualizar-datos-en-la-tabla)
-   - 3.4 [Selección de filas y botones reactivos](#34-selección-de-filas-y-botones-reactivos)
-   - 3.5 [Filtrado y búsqueda en tiempo real](#35-filtrado-y-búsqueda-en-tiempo-real)
-   - 3.6 [ComboBox — desplegable de opciones](#36-combobox--desplegable-de-opciones)
-   - 3.7 [Ventanas modales y popups](#37-ventanas-modales-y-popups)
-   - 3.8 [Diálogos — Alert, TextInputDialog, Confirmation](#38-diálogos--alert-textinputdialog-confirmation)
-   - 3.9 [UI dinámica sin TableView — tarjetas con VBox y HBox](#39-ui-dinámica-sin-tableview--tarjetas-con-vbox-y-hbox)
-   - 3.10 [Layouts dinámicos — VBox, HBox, StackPane, Region](#310-layouts-dinámicos--vbox-hbox-stackpane-region)
-   - 3.11 [Visibilidad y gestión de nodos en tiempo de ejecución](#311-visibilidad-y-gestión-de-nodos-en-tiempo-de-ejecución)
-   - 3.12 [Callbacks entre controladores](#312-callbacks-entre-controladores)
-4. [Arquitectura del proyecto](#4-arquitectura-del-proyecto)
-5. [Base de datos](#5-base-de-datos)
-   - 5.1 [Tablas](#51-tablas)
-   - 5.2 [Roles y usuarios de base de datos](#52-roles-y-usuarios-de-base-de-datos)
-   - 5.3 [Triggers](#53-triggers)
-   - 5.4 [Datos iniciales (seed)](#54-datos-iniciales)
-   - 5.5 [Procedimientos almacenados](#55-procedimientos-almacenados)
-6. [Aplicación Java (escritorio)](#6-aplicación-java-escritorio)
-   - 6.1 [Patrones de diseño usados](#61-patrones-de-diseño-usados)
-   - 6.2 [Capa de modelos](#62-capa-de-modelos)
-   - 6.3 [Capa DAO](#63-capa-dao)
-   - 6.4 [Capa de utilidades](#64-capa-de-utilidades)
-   - 6.5 [Capa de controladores](#65-capa-de-controladores)
-   - 6.6 [Capa de vistas (FXML)](#66-capa-de-vistas-fxml)
-7. [Frontend web](#7-frontend-web)
-   - 7.1 [Internacionalización (i18n)](#71-internacionalización-i18n)
-   - 7.2 [Modo Oscuro y Diseño Responsive](#72-modo-oscuro-y-diseño-responsive)
-   - 7.3 [Gestión de Datos XML en Cliente](#73-gestión-de-datos-xml-en-cliente)
-   - 7.4 [Validación y Generación de Reclamaciones](#74-validación-y-generación-de-reclamaciones)
-10. [Estrategia de Pruebas (Testing)](#10-estrategia-de-pruebas-testing)
-11. [Empaquetado y Distribución](#11-empaquetado-y-distribución)
-12. [Cómo arrancar el proyecto](#12-cómo-arrancar-el-proyecto)
-13. [Flujo completo de datos](#13-flujo-completo-de-datos)
-14. [Javadoc en euskera](#14-javadoc--documentación-en-euskera)
+1. [Visión General y Tecnologías](#1-visión-general-y-tecnologías)
+2. [Arquitectura del Proyecto](#2-arquitectura-del-proyecto)
+3. [Base de Datos (MariaDB)](#3-base-de-datos-mariadb)
+4. [Aplicación Java (Back-office)](#4-aplicación-java-back-office)
+5. [Lógica de UI Dinámica en JavaFX](#5-lógica-de-ui-dinámica-en-javafx)
+6. [Frontend Web (Portal Ciudadano)](#6-frontend-web-portal-ciudadano)
+7. [Resiliencia y Modo Offline](#7-resiliencia-y-modo-offline)
+8. [Sistema de Logging](#8-sistema-de-logging)
+9. [Estrategia de Testing](#9-estrategia-de-testing)
+10. [Operaciones y Distribución](#10-operaciones-y-distribución)
+11. [Guía de Inicio Rápido](#11-guía-de-inicio-rápido)
+12. [Flujos de Trabajo](#12-flujos-de-trabajo)
+13. [Documentación Técnica (Javadoc)](#13-documentación-técnica-javadoc)
 
 ---
 
-## 1. Visión general del proyecto
+## 1. Visión General y Tecnologías
 
 **ERRONKA-BERMEO** es una aplicación de gestión de objetos perdidos con tres capas:
 
-| Capa | Tecnología | Para quién |
-|------|-----------|-----------|
-| Aplicación de escritorio | Java 21 + JavaFX | Empleados municipales (udaltzainak) |
-| Base de datos | MariaDB 11 | Almacenamiento compartido |
-| Portal web | HTML/CSS/JS + Nginx | Ciudadanos que buscan objetos |
+1. **JavaFX (Java 21)**: Herramienta para el back-office (empleados).
+2. **MariaDB 11**: Base de datos relacional compartida.
+3. **Nginx & Vanilla JS**: Portal público para ciudadanos.
 
-Las tres capas corren en **contenedores Docker** y se comunican entre sí a través de una red virtual.
+### 1.1 Dockerización
+Todo el ecosistema corre en contenedores Docker mediante `docker-compose.yml`. Se utiliza **multi-stage build** para la aplicación Java y **noVNC** para servir la interfaz gráfica a través del navegador (puerto 6080).
+
+### 1.2 Tecnologías de Soporte
+- **Maven**: Gestión de dependencias (MariaDB Driver, BCrypt, JavaFX).
+- **BCrypt**: Hashing seguro de contraseñas.
+- **XML/XSLT**: Intercambio de datos entre Java y Web.
+- **Adminer**: Gestión visual de la base de datos (puerto 8081).
+- **Licencia**: GNU GPL v3.
 
 ---
 
-## 2. Tecnologías nuevas
+## 2. Arquitectura del Proyecto
 
-### 2.1 Docker y Docker Compose
-
-**¿Qué es Docker?**  
-Docker es una herramienta que permite empaquetar una aplicación junto con todo lo que necesita para funcionar (sistema operativo, librerías, configuración) en un **contenedor**. Un contenedor es como una caja sellada: dentro siempre hay exactamente lo mismo, sin importar en qué ordenador se ejecute.
-
-**¿Qué problema resuelve?**  
-Elimina el clásico problema de "en mi ordenador funciona". Como el contenedor lleva su propio entorno, el programa se comporta igual en cualquier máquina.
-
-**¿Qué es Docker Compose?**  
-Es una herramienta que permite arrancar **varios contenedores a la vez** y definir cómo se conectan entre sí, usando un único fichero de configuración (`docker-compose.yml`).
-
-**Fichero `docker-compose.yml` de este proyecto:**
-
-```yaml
-services:
-  db:           # Contenedor con MariaDB
-  java-app:     # Contenedor con la aplicación JavaFX
-  web:          # Contenedor con Nginx (portal web)
-  adminer:      # Contenedor con interfaz web para la BD
+```
+┌─────────────────────────────────────────────────────────┐
+│                    Docker Network                        │
+│                                                         │
+│  ┌──────────────┐    ┌──────────────┐    ┌───────────┐ │
+│  │  java-app    │    │     db       │    │   web     │ │
+│  │  (JavaFX)    │───▶│  (MariaDB)   │    │  (Nginx)  │ │
+│  │              │    │              │    │           │ │
+│  │  Puerto X11  │    │  Puerto 3306 │    │ Puerto 80 │ │
+│  └──────────────┘    └──────────────┘    └─────┬─────┘ │
+│         │                                      │       │
+│         └──────── partekatutako_datuak ─────────┘       │
+│                    (carpeta compartida)                  │
+└─────────────────────────────────────────────────────────┘
 ```
 
-**Conceptos clave de Docker Compose:**
+---
 
-| Concepto | Qué hace | Ejemplo en el proyecto |
-|---------|---------|----------------------|
-| `image:` | Imagen base del contenedor | `mariadb:11` — usa MariaDB versión 11 |
-| `build:` | Construye la imagen desde un Dockerfile | `./java-app/Dockerfile` |
-| `ports:` | Mapea puerto del contenedor al host | `8000:80` → accedes con `localhost:8000` |
-| `environment:` | Variables de entorno dentro del contenedor | `DB_URL`, `DB_USER`, `DB_PASS` |
-| `volumes:` | Carpetas compartidas entre host y contenedor | `partekatutako_datuak` |
-| `depends_on:` | Espera a que otro servicio esté listo | `java-app` espera a `db` |
-| `networks:` | Red virtual entre contenedores | `erronka-net` |
-| `healthcheck:` | Comprueba si el servicio está sano | Ping a MariaDB cada 10 segundos |
+## 3. Base de Datos (MariaDB)
 
-**Gestión de variables de entorno (`.env`):**  
-El proyecto utiliza un archivo `.env` para centralizar la configuración sin hardcodear datos sensibles:
+### 3.1 Tablas y Relaciones
+El esquema `erronka_galduak` incluye tablas para `LANGILEA`, `ARTIKULUA`, `ERREKLAMAZIOA`, `EMANALDIA` y la herencia de `HARTZAILEA` (`JABEA` / `ERAKUNDEA`).
 
-```properties
-DB_URL=jdbc:mariadb://db:3306/erronka_galduak
-DB_USER=admin
-DB_PASS=admin123
-EXPORT_BIDEA=/app/partekatutako_datuak
-IRUDIAK_BIDEA=/app/artikulu_irudiak
-```
+### 3.2 Lógica en Base de Datos
+- **Triggers**: Auditoría automática en `MUGIMENDUA` y actualización de estados tras entregas.
+- **Procedimientos**: `sp_iraungitakoak_kudeatu` (gestión de la regla de los 2 años) y `sp_erreklamazioa_ebatzi` (transaccional).
+- **Roles**: `admin_rola`, `udaltzain_rola` y `bezero_rola` para seguridad granular.
 
-**Acceso Gráfico (noVNC):**  
-Dado que la aplicación JavaFX corre dentro de un contenedor Linux (Ubuntu), se ha implementado un stack de visualización:
-1. **Xvfb**: Crea un servidor de pantalla virtual en memoria.
-2. **x11vnc**: Expone la pantalla virtual mediante el protocolo VNC.
-3. **noVNC**: Convierte el tráfico VNC a WebSockets para poder ver la interfaz desde cualquier navegador en el puerto **6080**.
+---
 
-**Dockerfile (para la app Java):**  
-El `Dockerfile` es el "manual de construcción" del contenedor. El de este proyecto usa **multi-stage build** (construcción en dos fases):
+## 4. Aplicación Java (Back-office)
+
+### 4.1 Patrones de Diseño
+- **MVC**: Separación de FXML, Controladores y Modelos.
+- **DAO**: Abstracción de la persistencia SQL.
+- **Singleton**: Gestión de conexiones (`DBKonexioa`) y sesiones (`Sesio`).
+
+### 4.2 Capas del Software
+- **Modelos**: POJOs con lógica de negocio (ej. `Artikulua.kalkulatuIraungitzea()`).
+- **DAOs**: Implementación de CRUDs y gestión de transacciones.
+- **Utilidades**: `UIKudeatzailea` (Toasts), `XMLExportazioa` (Regex), `AppConfig`.
+
+---
+
+## 5. Lógica de UI Dinámica en JavaFX
+
+Se detallan los componentes avanzados de la interfaz:
+- **TableView**: Configuración mediante `setCellValueFactory` y lambdas.
+- **Filtrado Real-time**: Búsqueda multi-parámetro sin recargar de base de datos.
+- **UI Dinámica**: Creación de tarjetas mediante `VBox`/`HBox` para categorías y reclamaciones.
+- **Callbacks**: Comunicación entre controladores para refrescar tablas tras ediciones.
+- **Modales**: Uso de `showAndWait()` y `initModality()` para popups de imágenes y formularios.
+
+---
+
+## 6. Frontend Web (Portal Ciudadano)
+
+Portal ligero servido por Nginx:
+- **i18n**: Traducción dinámica EU/ES mediante diccionarios JavaScript.
+- **Modo Oscuro**: Persistencia en `localStorage` y variables CSS dinámicas.
+- **Gestión XML**: Lectura de catálogo mediante `fetch` y validación de reclamaciones con **Regex** antes de generar el XML de descarga.
+
+---
+
+## 7. Resiliencia y Modo Offline
+
+### 7.1 Serialización .dat
+Uso de `BiltegiLokala` para persistir el estado de la aplicación en `store.dat` cuando no hay conexión a MariaDB.
+
+### 7.2 Sincronización
+Si la app arranca en modo offline, las operaciones se encolan y se sincronizan automáticamente al detectar de nuevo la base de datos.
+
+---
+
+## 8. Sistema de Logging
+
+Dos niveles de auditoría:
+1. **App Logs**: Rotación de ficheros `.log` para errores técnicos.
+2. **Operation Logs**: Fichero `insert_log.txt` que registra cada inserción de negocio de forma física.
+
+---
+
+## 9. Estrategia de Testing
+
+Pruebas unitarias mediante **JUnit 5**:
+- Validación de lógica de fechas de caducidad.
+- Validación de patrones Regex para códigos de artículos.
+- Pruebas de serialización/deserialización para el modo offline.
+
+---
+
+## 10. Operaciones y Distribución
+
+### 10.1 Empaquetado Nativo
+Uso de `jpackage` para generar un ejecutable `.exe` independiente para Windows que incluye su propia JRE.
+
+### 10.2 Backups
+Gestión de copias de seguridad SQL y restauración mediante comandos de consola Docker.
+
+---
+
+## 11. Guía de Inicio Rápido
+
+### 11.1 Arranque
+Uso de los scripts automatizados: `./start-linux.sh` o `start-windows.bat`.
+
+### 11.2 Acceso
+| Servicio | URL |
+|---------|-----|
+| Portal Web | `localhost:8000` |
+| JavaFX GUI | `localhost:6080/vnc.html` |
+| Adminer | `localhost:8081` |
+
+---
+
+## 12. Flujos de Trabajo
+
+Descripción del ciclo de vida de un objeto desde que se encuentra, se registra en Java, se visualiza en la Web y finalmente se entrega al ciudadano mediante una transacción segura.
+
+---
+
+## 13. Documentación Técnica (Javadoc)
+
+Toda la base de código está comentada en **Euskera** siguiendo el estándar Javadoc. Se puede generar el sitio estático mediante `mvn javadoc:javadoc`.
 
 ```
 Fase 1 (builder): Maven + JDK 21
