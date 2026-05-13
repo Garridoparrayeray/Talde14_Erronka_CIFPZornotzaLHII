@@ -226,10 +226,10 @@ chmod +x start-linux.sh stop-linux.sh
 ## Sarbideak eta kredentzialak
 
 | Zerbitzua | URL | Erabiltzailea | Pasahitza |
-|-----------|-----|---------------|-----------|
+|-----------|-----|------------------|-----------|
 | Web ataria | http://localhost:8000 | — | — |
-| Adminer (BD UI) | http://localhost:8081 | `bermeo_udaltzain` | `udaltzainpw` |
-| BD zuzena | localhost:3306 | `bermeo_udaltzain` | `udaltzainpw` |
+| Adminer (BD UI) | http://localhost:8081 | `bermeo_admin` | `bermeopw` |
+| BD zuzena | localhost:3306 | `bermeo_admin` | `bermeopw` |
 
 **Adminer konfigurazioa:**
 - **Sistema:** MySQL
@@ -241,10 +241,10 @@ chmod +x start-linux.sh stop-linux.sh
 ### Datu-basea zuzenean (terminala)
 ```bash
 # Edukiontzi barrutik
-docker exec -it erronka_db mariadb -ubermeo_udaltzain -pudaltzainpw erronka_galduak
+docker exec -it erronka_db mariadb -ubermeo_admin -pbermeopw erronka_galduak
 
 # Tokiko makinatik (mariadb-client beharrezkoa)
-mariadb -h 127.0.0.1 -P 3306 -ubermeo_udaltzain -pudaltzainpw erronka_galduak
+mariadb -h 127.0.0.1 -P 3306 -ubermeo_admin -pbermeopw erronka_galduak
 
 #Bi pertsona aldi berean:
 
@@ -397,7 +397,7 @@ docker compose up --build java-app
 ### Datu-basearen segurtasun-kopia (backup)
 ```bash
 docker exec erronka_db mariadb-dump \
-  -ubermeo_udaltzain -pudaltzainpw erronka_galduak \
+  -ubermeo_admin -pbermeopw erronka_galduak \
   > kopia_$(date +%Y%m%d).sql
 ```
 

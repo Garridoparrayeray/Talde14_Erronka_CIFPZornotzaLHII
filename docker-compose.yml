@@ -7,8 +7,8 @@ services:
     environment:
       MARIADB_ROOT_PASSWORD: rootpw
       MARIADB_DATABASE: erronka_galduak
-      MARIADB_USER: bermeo_udaltzain
-      MARIADB_PASSWORD: udaltzainpw
+      MARIADB_USER: bermeo_admin
+      MARIADB_PASSWORD: bermeopw
     ports:
       - "3306:3306"
     volumes:
@@ -28,8 +28,8 @@ services:
     container_name: erronka_desktop
     environment:
       - DB_URL=jdbc:mariadb://db:3306/erronka_galduak
-      - DB_USER=bermeo_udaltzain
-      - DB_PASS=udaltzainpw
+      - DB_USER=bermeo_admin
+      - DB_PASS=bermeopw
       - OFFLINE_DATA_PATH=/app/partekatutako_datuak
     ports:
       - "6080:6080"
