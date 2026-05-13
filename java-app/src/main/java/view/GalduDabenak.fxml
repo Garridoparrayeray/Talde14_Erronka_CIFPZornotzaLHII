@@ -26,7 +26,7 @@
             style="-fx-border-color: transparent transparent #E5E7EB transparent; -fx-padding: 15 30;"
             styleClass="bg-white">
          <children>
-            <Label styleClass="font-title" text="Galdu dabenak">
+            <Label styleClass="font-title" text="Galdu duten pertsonak">
                <font><Font size="20.0" /></font>
             </Label>
             <Region HBox.hgrow="ALWAYS" />
