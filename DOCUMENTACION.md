@@ -16,6 +16,7 @@
    - 2.6 [Nginx — servidor web](#26-nginx)
    - 2.7 [XML, XSLT, XPath y XQuery](#27-xml-xslt-xpath-y-xquery)
    - 2.8 [Adminer — interfaz web para la base de datos](#28-adminer)
+   - 2.9 [Licencia — GNU GPL v3](#29-licencia)
 3. [Controles de tabla y UI dinámica en JavaFX](#3-controles-de-tabla-y-ui-dinámica-en-javafx)
    - 3.1 [TableView — la tabla de datos](#31-tableview--la-tabla-de-datos)
    - 3.2 [setCellValueFactory — cómo se conecta cada columna al modelo](#32-setcellvaluefactory--cómo-se-conecta-cada-columna-al-modelo)
@@ -35,6 +36,7 @@
    - 5.2 [Roles y usuarios de base de datos](#52-roles-y-usuarios-de-base-de-datos)
    - 5.3 [Triggers](#53-triggers)
    - 5.4 [Datos iniciales (seed)](#54-datos-iniciales)
+   - 5.5 [Procedimientos almacenados](#55-procedimientos-almacenados)
 6. [Aplicación Java (escritorio)](#6-aplicación-java-escritorio)
    - 6.1 [Patrones de diseño usados](#61-patrones-de-diseño-usados)
    - 6.2 [Capa de modelos](#62-capa-de-modelos)
@@ -42,13 +44,16 @@
    - 6.4 [Capa de utilidades](#64-capa-de-utilidades)
    - 6.5 [Capa de controladores](#65-capa-de-controladores)
    - 6.6 [Capa de vistas (FXML)](#66-capa-de-vistas-fxml)
-6. [Frontend web](#6-frontend-web)
-7. [Modo offline](#7-modo-offline)
-8. [Sistema de logs](#8-sistema-de-logs)
-9. [Flujo completo de datos](#9-flujo-completo-de-datos)
-10. [Cómo arrancar el proyecto](#10-cómo-arrancar-el-proyecto)
-11. [Flujo completo de datos](#10-flujo-completo-de-datos)
-12. [Javadoc en euskera](#12-javadoc--documentación-en-euskera)
+7. [Frontend web](#7-frontend-web)
+   - 7.1 [Internacionalización (i18n)](#71-internacionalización-i18n)
+   - 7.2 [Modo Oscuro y Diseño Responsive](#72-modo-oscuro-y-diseño-responsive)
+   - 7.3 [Gestión de Datos XML en Cliente](#73-gestión-de-datos-xml-en-cliente)
+   - 7.4 [Validación y Generación de Reclamaciones](#74-validación-y-generación-de-reclamaciones)
+10. [Estrategia de Pruebas (Testing)](#10-estrategia-de-pruebas-testing)
+11. [Empaquetado y Distribución](#11-empaquetado-y-distribución)
+12. [Cómo arrancar el proyecto](#12-cómo-arrancar-el-proyecto)
+13. [Flujo completo de datos](#13-flujo-completo-de-datos)
+14. [Javadoc en euskera](#14-javadoc--documentación-en-euskera)
 
 ---
 
@@ -101,6 +106,23 @@ services:
 | `depends_on:` | Espera a que otro servicio esté listo | `java-app` espera a `db` |
 | `networks:` | Red virtual entre contenedores | `erronka-net` |
 | `healthcheck:` | Comprueba si el servicio está sano | Ping a MariaDB cada 10 segundos |
+
+**Gestión de variables de entorno (`.env`):**  
+El proyecto utiliza un archivo `.env` para centralizar la configuración sin hardcodear datos sensibles:
+
+```properties
+DB_URL=jdbc:mariadb://db:3306/erronka_galduak
+DB_USER=admin
+DB_PASS=admin123
+EXPORT_BIDEA=/app/partekatutako_datuak
+IRUDIAK_BIDEA=/app/artikulu_irudiak
+```
+
+**Acceso Gráfico (noVNC):**  
+Dado que la aplicación JavaFX corre dentro de un contenedor Linux (Ubuntu), se ha implementado un stack de visualización:
+1. **Xvfb**: Crea un servidor de pantalla virtual en memoria.
+2. **x11vnc**: Expone la pantalla virtual mediante el protocolo VNC.
+3. **noVNC**: Convierte el tráfico VNC a WebSockets para poder ver la interfaz desde cualquier navegador en el puerto **6080**.
 
 **Dockerfile (para la app Java):**  
 El `Dockerfile` es el "manual de construcción" del contenedor. El de este proyecto usa **multi-stage build** (construcción en dos fases):
@@ -452,6 +474,12 @@ Base de datos: erronka_galduak
 ```
 
 Útil durante el desarrollo para inspeccionar los datos sin necesidad de instalar un cliente SQL.
+
+---
+
+### 2.9 Licencia
+
+Este proyecto está bajo la licencia **GNU General Public License v3 (GPLv3)**. Esto significa que es Software Libre: tienes libertad para ejecutar, estudiar, compartir y modificar el software, siempre que las obras derivadas mantengan la misma licencia.
 
 ---
 
@@ -1110,6 +1138,7 @@ La base de datos `erronka_galduak` tiene **12 tablas principales**:
 | `EMANALDIA` | Registro de entrega de objetos a sus dueños |
 | `MUGIMENDUA` | Auditoría completa de todos los movimientos |
 | `AURKITZAILEA` | Datos de quien encontró el objeto |
+| `BackupDAO` | Gestión de copias de seguridad SQL |
 
 **Jerarquía de HARTZAILEA (herencia en base de datos):**
 
@@ -1145,8 +1174,8 @@ Los **roles de base de datos** son una función avanzada que permite definir con
 | Rol BD | Permisos |
 |--------|---------|
 | `admin_rola` | Todos los privilegios sobre todas las tablas |
-| `udaltzain_rola` | CRUD en tablas de datos (sin poder modificar `LANGILEA` ni `ROLA`) |
-| `bezero_rola` | SELECT en artículos/categorías, INSERT en reclamaciones |
+| `udaltzain_rola` | Operaciones completas en datos operativos. Acceso de solo lectura a `LANGILEA`, `ROLA` y `LANGILEA_ROLA` |
+| `bezero_rola` | Acceso público: consulta de artículos y categorías. Permiso para insertar nuevas reclamaciones y datos de contacto |
 
 | Usuario BD | Contraseña | Rol | Usado por |
 |-----------|-----------|-----|----------|
@@ -1205,9 +1234,18 @@ END IF;
 
 El fichero `03-seed.sql` inserta datos de prueba:
 - 3 roles, 3 empleados (admin + 2 udaltzain)
-- 4 categorías y 3 ubicaciones
+- 4 categorías y una malla completa de ubicaciones (Armarios A-G, baldas 1-6)
 - 2 artículos de ejemplo (cartera + gafas)
 - 3 reclamaciones de muestra
+
+### 5.5 Procedimientos almacenados
+
+El sistema delega lógica compleja en la base de datos mediante procedimientos:
+
+- **`sp_iraungitakoak_kudeatu`**: Automatiza el cambio de estado a `iraungita` para todos los objetos cuya `iraungitze_data` sea anterior a la fecha actual.
+- **`sp_erreklamazioa_ebatzi`**: Gestiona la resolución de una reclamación de forma atómica. Dentro de una **transacción**, marca la reclamación como `ebatzita` y genera automáticamente el registro de entrega (`EMANALDIA`) con los datos del reclamante asociado.
+
+---
 
 ---
 
@@ -1271,6 +1309,30 @@ Las enumeraciones son tipos con un conjunto fijo de valores posibles.
 public enum EgoeraArtikulua {
     BILTEGIAN, BHA_N_GORDETA, ITZULITA, IRAUNGITA, DOHANTZAN
 }
+```
+
+Otras enumeraciones clave:
+- **`EgoeraErreklamazioa`**: `IREKITA`, `EBATZITA`, `BAZTERTUTA`.
+- **`MugimenduMota`**: `SARRERA`, `BARNE_MUGIMENDUA`, `IRTEERA_JABEA`, `IRTEERA_ERAKUNDEA`, `IRAUNGITZE_ALERTA`.
+- **`Kanala`**: `SMS`, `EMAIL`, `APP`.
+
+**Lógica de Negocio en los Modelos:**
+
+**`Jakinarazpena.java` — Sistema de Avisos:**  
+Este modelo gestiona la comunicación con el ciudadano. Genera automáticamente un mensaje cuando se detecta una coincidencia entre una reclamación y un objeto del inventario.
+```java
+public Jakinarazpena(Erreklamazioa errek, Artikulua art, Kanala kanala) {
+    this.mezua = "Zure erreklamazioarekin bat datorren artikulua aurkitu da: " + art.getIzenburua();
+    // ...
+}
+```
+
+Otras clases contienen lógica propia del dominio:
+- **`Artikulua.kalkulatuIraungitzea()`**: Implementa la regla municipal de los **2 años (730 días)** para el cálculo automático de la fecha de caducidad desde el momento de la entrada.
+- **`Erreklamazioa.bilatuBateragarriak()`**: Contiene un algoritmo de búsqueda por palabras clave que fragmenta la descripción buscada y la compara con los artículos disponibles en el inventario para sugerir coincidencias automáticas.
+- **`Artikulua.getEgoeraTestua()`**: Centraliza la traducción de los estados internos del sistema a etiquetas legibles para el usuario en la interfaz.
+
+```java
 
 // Uso:
 Artikulua art = new Artikulua();
@@ -1309,9 +1371,14 @@ public static List<Artikulua> getGuztiak() {
          ResultSet rs = ps.executeQuery()) {
         
         while (rs.next()) {
-            Artikulua art = new Artikulua();
-            art.setArtikuluId(rs.getInt("id_artikulu"));
-            art.setIzenburua(rs.getString("izena"));
+            Artikulua art = new Artikulua(
+                rs.getString("id_artikulua"),
+                rs.getString("a_izena"),
+                rs.getString("a_deskribapena"),
+                null, null,
+                rs.getDate("sarrera_data"),
+                rs.getString("argazkia")
+            );
             // ...
             lista.add(art);
         }
@@ -1338,19 +1405,108 @@ public static List<Artikulua> getGuztiak() {
 | `AurkitzaileaDAO` | Datos de quien encontró el objeto |
 | `BackupDAO` | Exportación/backup de la BD |
 
-**Generación automática de códigos:**  
-`ArtikuluaDAO` genera códigos únicos para cada artículo con el formato `G-NNN-YY` (G = galdutakoa, NNN = número secuencial, YY = año).
+### 6.3.1 Lógica avanzada y Seguridad en DAOs
+
+Los DAOs implementan lógica crítica que garantiza la integridad y seguridad del sistema:
+
+**Gestión de Transacciones (`EmanaldiaDAO`):**  
+Al formalizar una entrega, se requiere actualizar múltiples tablas (`HARTZAILEA`, `JABEA`/`ERAKUNDEA`, `EMANALDIA`, `MUGIMENDUA`). Para evitar datos inconsistentes, se desactivan los commits automáticos y se gestiona manualmente la transacción:
+```java
+con.setAutoCommit(false);
+// ... operaciones de guardado ...
+con.commit(); // Solo si todo ha ido bien
+```
+
+**Seguridad de Acceso (`LangileaDAO`):**  
+Implementa la autenticación utilizando **BCrypt**. El DAO recupera el hash de la base de datos y utiliza `BCrypt.checkpw` para validar la identidad sin exponer la contraseña real en ninguna capa.
+
+**Automatización del Ciclo de Vida (`ArtikuluaDAO`):**  
+- **Generación de códigos:** Crea identificadores con formato `G-NNN-AA` (ej. G-001-26).
+- **Cálculo de caducidad:** Al insertar un artículo, calcula automáticamente la fecha de expiración sumando **730 días** (2 años) a la fecha de entrada.
+- **Mantenimiento:** El método `iraungituakEguneratu` ejecuta un `UPDATE` masivo para marcar como `iraungita` los objetos cuya fecha actual supere la de caducidad.
+
+**Exportación de Datos (`BackupDAO`):**  
+Permite generar un script SQL completo recorriendo las tablas del sistema, escapando caracteres especiales para garantizar que el archivo resultante sea ejecutable.
+
+**Delegación Offline:**  
+Todos los métodos incluyen una comprobación de `ModoKudeatzailea.isOffline()`. Si no hay conexión, la petición se redirige a `BiltegiLokala`, haciendo que la aplicación sea resiliente a fallos de red.
 
 ### 6.4 Capa de utilidades
 
-Ubicación: `java-app/src/main/java/utils/`
+Ubicación: `java-app/src/main/java/utils/`  
+Esta capa contiene clases de apoyo que centralizan la lógica transversal (configuración, UI, seguridad, persistencia XML).
 
-**`DBKonexioa.java` — Singleton de conexión:**
+| Utilidad | Función Principal |
+| :--- | :--- |
+| **`AppConfig`** | Centraliza las rutas de archivos. Prioriza variables de entorno sobre `application.properties`. |
+| **`DBKonexioa`** | Singleton para la conexión JDBC. Maneja la reconexión automática si el socket se cierra. |
+| **`Sesio`** | Almacena de forma estática el objeto `Langilea` logueado y sus privilegios de administrador. |
+| **`UIKudeatzailea`** | **Motor de UI**: Carga FXMLs, gestiona el sistema de "Toasts" (mensajes temporales) y crea "Overlays" (modales ligeros) sin abrir ventanas nuevas. |
+| **`XMLExportazioa`** | Genera el catálogo para la web. Incluye validación por **Regex** (`G-\d{3}-\d{2}`) y lanza `XMLPatroiException` si los datos son corruptos. |
+| **`XMLInportazioa`** | Lee el XML para actualizar estados masivamente en la base de datos (p. ej. sincronizar cambios desde el portal web). |
+| **`ModoKudeatzailea`** | Detecta la salud de la conexión DB al arranque y decide si la app opera en modo Online u Offline. |
+| **`LogKudeatzailea`** | Configura la rotación de archivos de log y gestiona el archivo `insert_log.txt` para auditoría física. |
+
+#### 6.4.1 Sistema de Notificaciones (Toasts)
+Para evitar interrumpir al usuario con constantes diálogos de alerta, `UIKudeatzailea` implementa un sistema de **Toasts**:
+- Se inyecta una `Label` animada en el `StackPane` principal.
+- Utiliza un `PauseTransition` de 3 segundos antes de eliminarse automáticamente.
+- Colores semánticos: verde para éxito (`#DEF7EC`) y rojo para errores (`#FDE8E8`).
+
+#### 6.4.2 Exportación XML Segura
+La clase `XMLExportazioa` no solo genera texto; garantiza que el XML sea válido para Nginx y el Portal Web:
+1. **Validación**: Comprueba que el código del artículo y el título no contengan caracteres de control.
+2. **Escapado**: El método `esc()` convierte caracteres reservados (`&`, `<`, `>`, `"`) en entidades XML seguras.
+3. **Portabilidad**: Convierte rutas de archivos locales en nombres de archivos relativos para que las imágenes se vean correctamente en el navegador.
+
+---
+
+## 8. Modo offline y fichero `.dat`
+
+El modo offline es una característica de resiliencia que permite trabajar en situaciones de red inestable o caída del servidor de base de datos.
+
+### 8.1 Funcionamiento y Sincronización
+El sistema se basa en `BiltegiLokala`, que actúa como una base de datos en memoria y en disco (`store.dat`).
+
+**El ciclo de vida es el siguiente:**
+1. **Detección**: `ModoKudeatzailea.detektatu()` intenta un `ping` a la base de datos.
+2. **Modo Online**: 
+   - Se descarga todo el contenido de la DB a `BiltegiLokala`.
+   - Se procesa la **Cola de Sincronización**: si había cambios hechos en offline, se suben a la DB.
+3. **Modo Offline**:
+   - Las peticiones de los DAOs se redirigen a `BiltegiLokala`.
+   - **Cola de Eragiketak**: Cada `INSERT`, `UPDATE` o `DELETE` se guarda en una lista de `ItxaronEragiketa` serializable para ser procesada cuando vuelva la conexión.
+
+### 8.2 ¿Qué es un fichero `.dat` y la serialización?
+
+**Serialización** es el proceso de convertir un objeto Java (con todos sus campos y los objetos que contiene) en una secuencia de bytes que se puede guardar en disco. En este proyecto, guardamos la clase `DatuakPoltsa`.
 
 ```java
-public class DBKonexioa {
-    private static Connection konexioa = null;
-    
+private static class DatuakPoltsa implements Serializable {
+    private static final long serialVersionUID = 2L;
+    List<Langilea> langileak = new ArrayList<>();
+    List<Artikulua> artikuluak = new ArrayList<>();
+    List<ItxaronEragiketa> itxaronEragiketak = new ArrayList<>(); // Operaciones pendientes
+    // ...
+}
+```
+
+---
+
+## 9. Sistema de logs
+
+La aplicación implementa dos niveles de registro gestionados por `LogKudeatzailea`:
+
+1. **Logs de Aplicación (`app-N.log`)**:
+   - Utiliza `java.util.logging`.
+   - Configura **rotación automática**: Máximo 5MB por archivo, manteniendo hasta 3 archivos históricos.
+   - Filtra logs por paquetes (`controller.*`, `dao.*`, etc.) para evitar ruido de librerías externas.
+
+2. **Log de Operaciones (`insert_log.txt`)**:
+   - Registro físico independiente en la carpeta de exportación.
+   - Registra cada operación de inserción con marca de tiempo, tabla afectada e ID del registro.
+   - Formato: `[2026-05-13 14:23:01] INSERT INTO ARTIKULUA | ID: G-092-26 | OK`.
+
     public static Connection getKonexioa() throws SQLException {
         if (konexioa == null || konexioa.isClosed()) {
             // Leer URL de env var o properties
@@ -1423,7 +1579,7 @@ AppConfig.getSinaduraBidea()        // → partekatutako_datuak/sinadurak/ (firm
 La prioridad de configuración es: **variable de entorno → `application.properties` → valor por defecto**. Esto permite que la app funcione igual en Docker (con `env vars`) y en local (con el fichero `.properties`).
 
 **`XMLExportazioa.java` — Exportación a XML:**  
-Cuando se añade o modifica un artículo, se llama a este método para actualizar el XML que lee el portal web. Incluye validación con regex de campos obligatorios, lanzando `XMLPatroiException` si algún valor no cumple el patrón esperado.
+| **`XMLExportazioa`** | Genera el catálogo para la web. Incluye validación por **Regex** (`G-\d{3}-\d{2}`) y lanza la excepción personalizada **`XMLPatroiException`** si los datos (ID o Título) no cumplen el formato municipal. |
 
 ```java
 // Genera el fichero partekatutako_datuak/artikuluak.xml
@@ -1434,73 +1590,44 @@ XMLExportazioa.exportatu();
 
 Ubicación: `java-app/src/main/java/controller/`
 
-**Flujo de autenticación:**
+Los controladores gestionan la lógica de la interfaz y la comunicación con la capa DAO.
 
-```
-login.fxml → LoginController
-    │
-    ├── LangileaDAO.login(user, pass)
-    │     └── BCrypt.checkpw()
-    │
-    ├── [admin]  → AdminLayout.fxml → AdminController
-    └── [staff]  → MainLayout.fxml  → MainController
-```
+### 6.5.1 Lógica de Navegación y Sesión
 
-**Navegación principal (MainController):**
+La aplicación utiliza un sistema de **Layouts** (`MainLayout` y `AdminLayout`) con un `StackPane` central donde se cargan dinámicamente las diferentes vistas mediante `UIKudeatzailea`.
 
-```
-MainLayout
-├── Panela        → PanelaController      (estadísticas del día)
-├── Inbentarioa   → InbentarioController  (tabla de artículos)
-├── Erregistroa   → ErregistroaController (registrar nuevo objeto)
-├── Erreklamazioak → ErreklamazioakController (gestión de reclamaciones)
-├── Emanaldia     → EmanaldiaController   (entregar objeto)
-└── Galdu Dabenak → GalduDabenakController (artículos próximos a caducar)
-```
+- **`LoginController`**: Punto de entrada que valida las credenciales y redirige según el rol (Admin o Staff).
+- **`MainController` / `AdminController`**: Gestionan el menú lateral, resaltando el botón activo mediante la clase CSS `.nav-item-active`. El Admin puede volver a la interfaz de usuario normal sin cerrar sesión.
 
-**Vistas exclusivas de administrador (AdminController):**
+### 6.5.2 Gestión de Archivos e Imágenes
 
-```
-AdminLayout
-├── Kategoriak     → KategoriakController  (gestionar categorías)
-├── Kokalekuak     → KokalekuakController  (gestionar ubicaciones)
-├── Langileak      → LangileakController   (gestionar empleados)
-└── Auditoria      → AuditoriaController   (ver auditoría completa)
-```
+Implementada en `ErregistroaController` y `ArtikuluaEditatuController`:
+1.  **Copia Física**: Al seleccionar una imagen o un documento de firma (PDF/JPG), el sistema genera un nombre único basado en el *timestamp* (`img_171558...jpg`).
+2.  **Rutas Configurables**: Utiliza `AppConfig` para determinar las rutas de destino (`artikulu_irudiak/` o `sinadurak/`).
+3.  **Persistencia**: En la base de datos solo se guarda el nombre del archivo, permitiendo que la aplicación sea portable entre diferentes entornos siempre que se mantenga el volumen de Docker.
 
-**Ejemplo — InbentarioController (simplificado):**
+### 6.5.3 Lógica de Negocio en Controladores Clave
+
+| Controlador | Funcionalidad Destacada |
+| :--- | :--- |
+| **`ErreklamazioakController`** | Genera una interfaz dinámica de tarjetas (`VBox`) en lugar de tablas. Implementa un sistema de **matching automático** para sugerir artículos que coincidan con la descripción de la reclamación. |
+| **`IraungitakoakController`** | Gestiona la "Mugarria 5": detecta artículos con más de 2 años en el almacén y permite iniciar el proceso de entrega directamente a favor del aurkitzailea o una donación. |
+| **`AuditoriaController`** | Permite visualizar el historial de movimientos y exportar los datos a un archivo **CSV** utilizando `PrintWriter` con codificación UTF-8. |
+| **`InbentarioController`** | Incluye la lógica de **Importación/Exportación XML**. La exportación actualiza el portal web, mientras que la importación permite sincronizar estados masivamente desde un archivo externo. |
+| **`EmanaldiaController`** | Formulario dual. Permite alternar entre la entrega a una persona física (DNI) o a una entidad (IFZ). Gestiona la copia del documento de identidad escaneado o firma. |
+| **`PanelaController`** | Dashboard principal. Al iniciarse, fuerza la ejecución de `ArtikuluaDAO.iraungituakEguneratu()` para asegurar que las estadísticas mostradas sean reales. |
+
+### 6.5.4 Comunicación entre Ventanas (Callbacks)
+
+Para actualizar las tablas después de una edición, se utiliza un patrón de **callbacks** o recargas delegadas:
+
+1. El controlador principal (`LangileakController`) abre la vista de edición.
+2. Tras cerrar el modal o cambiar el panel, se invoca de nuevo al método `kargatu()` del padre para reflejar los cambios realizados en la base de datos inmediatamente.
 
 ```java
-public class InbentarioController implements Initializable {
-
-    @FXML private TableView<Artikulua> tablaArtikuluak;
-    @FXML private TableColumn<Artikulua, String> colIzena;
-    @FXML private TableColumn<Artikulua, String> colEgoera;
-    @FXML private TextField txtBilaketa;
-
-    private ObservableList<Artikulua> artikuluList;
-
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        // Configurar columnas
-        colIzena.setCellValueFactory(new PropertyValueFactory<>("izenburua"));
-        colEgoera.setCellValueFactory(new PropertyValueFactory<>("egoera"));
-        
-        // Cargar datos
-        kargatu();
-    }
-
-    private void kargatu() {
-        List<Artikulua> lista = ArtikuluaDAO.getGuztiak();
-        artikuluList = FXCollections.observableArrayList(lista);
-        tablaArtikuluak.setItems(artikuluList);
-    }
-
-    @FXML
-    private void bilatu() {
-        String filtro = txtBilaketa.getText().toLowerCase();
-        // Filtrar la lista observable
-    }
+// Ejemplo de carga en UIKudeatzailea usada por los controladores
+public static void kargatuPanela(Node nodoa) {
+    edukiGunea.getChildren().setAll(nodoa);
 }
 ```
 
@@ -1574,10 +1701,53 @@ Ubicación: `frontend/`
 El portal web permite a los ciudadanos ver los objetos perdidos encontrados por el ayuntamiento y presentar reclamaciones.
 
 **Tecnologías:**
-- **HTML5** — estructura de las páginas
-- **CSS3** — estilos y diseño responsive (adapta la web a móvil/tablet/escritorio)
-- **JavaScript** — interactividad (filtros, tema oscuro/claro, toggle de idioma EU/ES)
-- **Nginx** — servidor que sirve estos ficheros estáticos
+
+- **HTML5 / CSS3 / JavaScript (Vanilla)**: No se usan frameworks externos para mantener la ligereza y sostenibilidad.
+- **Nginx**: Servidor web que expone el portal en el puerto 8000.
+
+### 7.1 Internacionalización (i18n)
+
+El sistema de traducción es dinámico y no requiere recargar la página:
+- **Diccionarios**: Definidos en `main.js` (`dictIndex`) y `objektu-zerrenda.js` (`dictCatalog`) para Euskera y Castellano.
+- **Atributo `data-i18n`**: Los elementos HTML marcados con este atributo se actualizan automáticamente al cambiar el idioma.
+- **Persistencia**: Se utiliza `localStorage` para recordar la preferencia de idioma del ciudadano en futuras visitas.
+
+### 7.2 Modo Oscuro y Diseño Responsive
+
+- **Arquitectura CSS**: Basada en variables (`:root`) que cambian según la clase `.dark-theme`.
+- **Responsive**: El uso de **CSS Grid** en el catálogo y **Flexbox** en la navegación garantiza que la web sea 100% funcional en móviles.
+- **Accesibilidad**: Se han definido fuentes locales (Inter y Montserrat) con estrategias de `font-display: swap` para optimizar la carga.
+
+### 7.3 Gestión de Datos XML en Cliente
+
+El portal es capaz de leer y procesar datos estructurados sin una base de datos directa:
+- **Carga dinámica**: JavaScript (`fetch`) lee el archivo `artikuluak.xml` exportado por la App Java.
+- **Filtrado en cliente**: El buscador y el selector de categorías filtran los nodos del DOM en tiempo real basándose en los datos del XML.
+- **Transformación**: Se incluye un archivo `artikuluak.xsl` para transformar el inventario en una tabla HTML estéticamente agradable si se visualiza el XML directamente.
+
+### 7.4 Validación y Generación de Reclamaciones
+
+Una de las piezas clave es la lógica del formulario de reclamación:
+1. **Validación de Identidad**: Se aplica una expresión regular (`/^[0-9]{8}[a-zA-Z]$/`) para asegurar que el DNI introducido es válido antes de procesar nada.
+2. **Generación de XML**: El sistema construye un documento XML en memoria con los datos del formulario.
+3. **Descarga de comprobante**: Se utiliza un objeto `Blob` para forzar la descarga de la reclamación en formato XML, permitiendo al ciudadano guardarla o enviarla por otros medios.
+
+---
+
+## 8. Modo offline y fichero `.dat`
+
+El modo offline permite que la aplicación funcione **sin conexión a la base de datos** (por ejemplo, si el servidor MariaDB no está disponible).
+
+---
+
+## 9. Sistema de logs
+
+**¿Qué es el logging?**  
+El logging (registro de eventos) es el proceso de guardar en ficheros lo que hace la aplicación: errores, operaciones importantes, advertencias. Permite diagnosticar problemas en producción.
+
+---
+
+## 10. Flujo completo de datos
 
 **Datos del inventario:**  
 La web lee el fichero `datuak/artikuluak.xml` (generado por la app Java) mediante JavaScript y XPath para mostrar los artículos sin necesidad de una API.
@@ -1585,7 +1755,22 @@ La web lee el fichero `datuak/artikuluak.xml` (generado por la app Java) mediant
 **Transformaciones XSLT:**  
 El directorio `xslt/` contiene transformaciones que convierten el XML de artículos en HTML para su presentación web directa.
 
----
+### 7.1 Multi-idioma dinámico (i18n)
+El portal web incluye un sistema de internacionalización desarrollado en Vanilla JS. Utiliza diccionarios JSON (`dictIndex` y `dictCatalog`) con las traducciones en Euskera (EU) y Castellano (ES).
+- La preferencia del usuario se guarda persistentemente en `localStorage.getItem('appLang')`.
+- Al cambiar de idioma, se buscan los elementos con el atributo `data-i18n` y se actualizan dinámicamente sin recargar la página.
+
+### 7.2 Modo Oscuro (Dark Theme)
+El diseño soporta un modo claro y oscuro gestionado mediante una clase `.dark-theme` en el `<body>` y variables CSS (`:root`).
+- La selección se guarda en `localStorage.getItem('appTheme')`.
+- Cambia automáticamente las paletas de colores principales (`--blue-900`, `--gray-50`, `--white`, etc.) garantizando el contraste y la accesibilidad visual.
+
+### 7.3 Validaciones y Generación XML en cliente
+Antes de permitir la descarga del archivo XML de una reclamación, JavaScript intercepta el formulario:
+1. **Validación estricta:** Comprueba mediante Expresiones Regulares (Regex) que el DNI/NAN del reclamante tenga un formato válido de 8 números y 1 letra (`/^[0-9]{8}[a-zA-Z]$/`).
+2. **Sanitización:** Escapa caracteres especiales (`&`, `<`, `>`) para prevenir inyecciones y no corromper la estructura XML.
+3. **Generación Local:** Crea el documento XML y lanza su descarga automáticamente mediante un `Blob`, generando un nombre de archivo dinámico basado en el nombre y apellidos del reclamante.
+
 
 ## 8. Modo offline y fichero `.dat`
 
@@ -1756,7 +1941,7 @@ log.severe("Error grave");
 
 ---
 
-## 10. Flujo completo de datos
+## 12. Flujo completo de datos
 
 **Registro de un objeto perdido:**
 
@@ -1790,17 +1975,61 @@ log.severe("Error grave");
 
 ---
 
+## 10. Estrategia de Pruebas (Testing)
+
+Para garantizar la robustez del sistema, se han implementado diversos tests unitarios en el paquete `src/test/java`:
+
+1.  **Tests de Modelos**: Validación de la lógica de negocio, como el cálculo de fechas de caducidad (730 días) en `Artikulua`.
+2.  **Tests de Validación (Regex)**: Pruebas sobre la clase `XMLExportazioa` para asegurar que solo se aceptan IDs de artículos con el patrón correcto (`G-NNN-AA`).
+3.  **Tests de Persistencia (Offline)**: Verificación de que `BiltegiLokala` es capaz de guardar y recuperar objetos mediante la serialización sin pérdida de integridad.
+4.  **Tests de Seguridad**: Comprobación del correcto funcionamiento de `BCrypt` al validar contraseñas correctas e incorrectas.
+
+---
+
+## 11. Empaquetado y Distribución
+
+### 11.1 Restauración de Backups
+El sistema genera archivos `.sql` (como el incluido `backup_20260511_1032.sql`). Para restaurar el sistema a un punto anterior, un administrador puede ejecutar:
+```bash
+docker exec -i db mariadb -uadmin -padmin123 erronka_galduak < backup_archivo.sql
+```
+*Nota: Esto sobrescribirá los datos actuales de la base de datos con los del backup.*
+
+---
+
+## 11. Empaquetado y Distribución
+
+Para facilitar el uso de la aplicación en equipos que no tienen Java instalado, el proyecto incluye un script de empaquetado nativo para Windows (`build-windows.bat`).
+
+**Proceso de creación del ejecutable:**
+1. **Maven**: Se genera el *fat JAR* con todas las dependencias.
+2. **jpackage**: Esta herramienta de Java 21 empaqueta el JAR junto con una **Runtime de Java (JRE) mínima** y las librerías de JavaFX necesarias.
+3. **Resultado**: Se genera un archivo `.exe` en `target/Galdutakoak-1.0.exe` que funciona de forma independiente.
+
+```batch
+jpackage --input target --main-jar app.jar --type exe --name Galdutakoak ...
+```
+
+---
+
 ## 11. Cómo arrancar el proyecto
 
 **Requisitos previos:**
 - Docker Desktop instalado y ejecutándose
 - En Linux: ejecutar `xhost +local:docker` para permitir la GUI
 
-**Arrancar (Linux):**
+**Scripts de automatización:**  
+Se han incluido scripts para simplificar el ciclo de vida de los contenedores:
 
+| Script | Función |
+|--------|---------|
+| `start-linux.sh` / `start-windows.bat` | Verifica Docker, construye imágenes y arranca el entorno. |
+| `stop-linux.sh` / `stop-windows.bat` | Detiene los contenedores de forma segura. |
+
+**Ejecución en Linux:**
 ```bash
-# Desde la raíz del proyecto
 ./start-linux.sh
+```
 
 # O manualmente:
 xhost +local:docker
@@ -1808,8 +2037,7 @@ docker compose up -d
 ```
 
 **Arrancar (Windows):**
-1. Instalar VcXsrv (servidor X11 para Windows)
-2. Ejecutar `start-windows.bat`
+1. Ejecutar `start-windows.bat` (No se requiere servidor X11 externo gracias a noVNC).
 
 **URLs de acceso:**
 
@@ -1817,7 +2045,7 @@ docker compose up -d
 |---------|-----|
 | Portal web ciudadanos | http://localhost:8000 |
 | Adminer (gestión BD) | http://localhost:8081 |
-| Aplicación JavaFX | Se abre automáticamente como ventana |
+| Aplicación JavaFX (noVNC) | http://localhost:6080/vnc.html?autoconnect=1&resize=scale |
 
 **Credenciales de la aplicación Java:**
 
@@ -1843,7 +2071,7 @@ docker compose down -v  # -v elimina también los volúmenes (datos de la BD)
 
 ---
 
-## 12. Javadoc — documentación en euskera
+## 13. Javadoc — documentación en euskera
 
 Toda la base de código está documentada con Javadoc **íntegramente en euskera** (Basque). Esto incluye clases, métodos, parámetros (`@param`) y valores de retorno (`@return`).
 
@@ -1879,4 +2107,4 @@ mvn javadoc:javadoc
 
 ---
 
-*Documentación actualizada el 2026-05-09 para el proyecto ERRONKA-BERMEO v1.0.*
+*Documentación actualizada el 2026-05-13 para el proyecto ERRONKA-BERMEO v1.0.*
