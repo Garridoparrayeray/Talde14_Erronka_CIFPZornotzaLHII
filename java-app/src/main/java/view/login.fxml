@@ -79,7 +79,7 @@
               <children>
                 <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#sartu" styleClass="btn-primary" text="Sartu" />
                 <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="btn-outline" text="Pasahitza ahaztu dut" onAction="#pasahitzaAhaztuDut" />
-                <Label fx:id="lblErrorea" style="-fx-text-fill: #EF4444; -fx-font-size: 12px;" text="" />
+                <Label fx:id="lblErrorea" style="-fx-text-fill: #EF4444; -fx-font-size: 12px;" text="" wrapText="true" maxWidth="1.7976931348623157E308" />
               </children>
             </VBox>
           </children>

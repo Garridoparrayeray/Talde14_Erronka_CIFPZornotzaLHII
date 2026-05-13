@@ -37,11 +37,11 @@
 
                         <HBox alignment="CENTER_LEFT" spacing="15.0">
                            <children>
-                              <TextField fx:id="txtBilaketa" prefWidth="350.0" promptText="Bilatu langilea..." styleClass="form-control" HBox.hgrow="ALWAYS" onAction="#bilatu" />
-                              <ComboBox fx:id="cbRola" prefWidth="180.0" promptText="Rol guztiak" styleClass="form-select" onAction="#bilatu" />
-                              <Button mnemonicParsing="false" styleClass="btn-outline" text="Editatu" onAction="#langileaEditatu" />
-                              <Button mnemonicParsing="false" styleClass="btn-outline" style="-fx-background-color: #ef4444; -fx-text-fill: white; -fx-border-color: #ef4444;" text="Ezabatu" onAction="#langileaEzabatu" />
-                              <Button mnemonicParsing="false" styleClass="btn-primary" text="+ Langilea gehitu" onAction="#langileaBerria" />
+                              <TextField fx:id="txtBilaketa" prefWidth="220.0" promptText="Bilatu langilea..." styleClass="form-control" onAction="#bilatu" />
+                              <ComboBox fx:id="cbRola" prefWidth="180.0" minWidth="150.0" promptText="Rol guztiak" styleClass="form-select" onAction="#bilatu" />
+                              <Button mnemonicParsing="false" styleClass="btn-outline" text="Editatu" onAction="#langileaEditatu" minWidth="80" />
+                              <Button mnemonicParsing="false" styleClass="btn-outline" style="-fx-background-color: #ef4444; -fx-text-fill: white; -fx-border-color: #ef4444;" text="Ezabatu" onAction="#langileaEzabatu" minWidth="80" />
+                              <Button mnemonicParsing="false" styleClass="btn-primary" text="+ Langilea gehitu" onAction="#langileaBerria" minWidth="140" />
                            </children>
                         </HBox>
 
