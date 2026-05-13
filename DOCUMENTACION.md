@@ -49,10 +49,11 @@
    - 7.2 [Modo Oscuro y Diseño Responsive](#72-modo-oscuro-y-diseño-responsive)
    - 7.3 [Gestión de Datos XML en Cliente](#73-gestión-de-datos-xml-en-cliente)
    - 7.4 [Validación y Generación de Reclamaciones](#74-validación-y-generación-de-reclamaciones)
-10. [Empaquetado y Distribución](#10-empaquetado-y-distribución)
-11. [Cómo arrancar el proyecto](#11-cómo-arrancar-el-proyecto)
-12. [Flujo completo de datos](#12-flujo-completo-de-datos)
-13. [Javadoc en euskera](#13-javadoc--documentación-en-euskera)
+10. [Estrategia de Pruebas (Testing)](#10-estrategia-de-pruebas-testing)
+11. [Empaquetado y Distribución](#11-empaquetado-y-distribución)
+12. [Cómo arrancar el proyecto](#12-cómo-arrancar-el-proyecto)
+13. [Flujo completo de datos](#13-flujo-completo-de-datos)
+14. [Javadoc en euskera](#14-javadoc--documentación-en-euskera)
 
 ---
 
@@ -1125,7 +1126,6 @@ La base de datos `erronka_galduak` tiene **12 tablas principales**:
 | Tabla | Descripción |
 |-------|-------------|
 | `ROLA` | Roles del sistema (Administratzailea, Udaltzaina, Erregistratzailea) |
-| `LANGILEA_ROLA` | Tabla intermedia para registrar la fecha de asignación de roles a empleados |
 | `LANGILEA` | Empleados municipales con contraseña hasheada |
 | `KATEGORIA` | Categorías de objetos (Accesorios, Gafas, Llaves, Otros) |
 | `KOKALEKUA` | Ubicaciones físicas de almacenamiento (armario + balda) |
@@ -1138,6 +1138,7 @@ La base de datos `erronka_galduak` tiene **12 tablas principales**:
 | `EMANALDIA` | Registro de entrega de objetos a sus dueños |
 | `MUGIMENDUA` | Auditoría completa de todos los movimientos |
 | `AURKITZAILEA` | Datos de quien encontró el objeto |
+| `BackupDAO` | Gestión de copias de seguridad SQL |
 
 **Jerarquía de HARTZAILEA (herencia en base de datos):**
 
@@ -1578,7 +1579,7 @@ AppConfig.getSinaduraBidea()        // → partekatutako_datuak/sinadurak/ (firm
 La prioridad de configuración es: **variable de entorno → `application.properties` → valor por defecto**. Esto permite que la app funcione igual en Docker (con `env vars`) y en local (con el fichero `.properties`).
 
 **`XMLExportazioa.java` — Exportación a XML:**  
-Cuando se añade o modifica un artículo, se llama a este método para actualizar el XML que lee el portal web. Incluye validación con regex de campos obligatorios, lanzando `XMLPatroiException` si algún valor no cumple el patrón esperado.
+| **`XMLExportazioa`** | Genera el catálogo para la web. Incluye validación por **Regex** (`G-\d{3}-\d{2}`) y lanza la excepción personalizada **`XMLPatroiException`** si los datos (ID o Título) no cumplen el formato municipal. |
 
 ```java
 // Genera el fichero partekatutako_datuak/artikuluak.xml
@@ -1974,7 +1975,29 @@ log.severe("Error grave");
 
 ---
 
-## 10. Empaquetado y Distribución
+## 10. Estrategia de Pruebas (Testing)
+
+Para garantizar la robustez del sistema, se han implementado diversos tests unitarios en el paquete `src/test/java`:
+
+1.  **Tests de Modelos**: Validación de la lógica de negocio, como el cálculo de fechas de caducidad (730 días) en `Artikulua`.
+2.  **Tests de Validación (Regex)**: Pruebas sobre la clase `XMLExportazioa` para asegurar que solo se aceptan IDs de artículos con el patrón correcto (`G-NNN-AA`).
+3.  **Tests de Persistencia (Offline)**: Verificación de que `BiltegiLokala` es capaz de guardar y recuperar objetos mediante la serialización sin pérdida de integridad.
+4.  **Tests de Seguridad**: Comprobación del correcto funcionamiento de `BCrypt` al validar contraseñas correctas e incorrectas.
+
+---
+
+## 11. Empaquetado y Distribución
+
+### 11.1 Restauración de Backups
+El sistema genera archivos `.sql` (como el incluido `backup_20260511_1032.sql`). Para restaurar el sistema a un punto anterior, un administrador puede ejecutar:
+```bash
+docker exec -i db mariadb -uadmin -padmin123 erronka_galduak < backup_archivo.sql
+```
+*Nota: Esto sobrescribirá los datos actuales de la base de datos con los del backup.*
+
+---
+
+## 11. Empaquetado y Distribución
 
 Para facilitar el uso de la aplicación en equipos que no tienen Java instalado, el proyecto incluye un script de empaquetado nativo para Windows (`build-windows.bat`).
 
