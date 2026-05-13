@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<StackPane fx:id="contentArea" styleClass="bg-light" stylesheets="@style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.InbentarioController">
+<StackPane fx:id="contentArea" styleClass="bg-light" stylesheets="@style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.InbentarioController">
    <children>
       <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
          <children>
@@ -27,13 +27,13 @@
                      </font>
                   </Label>
                   <Region HBox.hgrow="ALWAYS" />
-                  <Button fx:id="btnIrudia" disable="true" mnemonicParsing="false" onAction="#ikusiIrudia" styleClass="btn-outline" text="Argazkia" />
-                  <Button fx:id="btnEditatu" disable="true" mnemonicParsing="false" onAction="#editatu" styleClass="btn-outline" text="Editatu" />
-                  <Button fx:id="btnEzabatu" disable="true" mnemonicParsing="false" onAction="#ezabatu" style="-fx-background-color: #FEE2E2; -fx-text-fill: #B91C1C; -fx-border-color: #FEE2E2;" styleClass="btn-outline" text="Ezabatu" />
+                  <Button fx:id="btnIrudia" disable="true" mnemonicParsing="false" onAction="#ikusiIrudia" styleClass="btn-outline" text="Argazkia" minWidth="90" />
+                  <Button fx:id="btnEditatu" disable="true" mnemonicParsing="false" onAction="#editatu" styleClass="btn-outline" text="Editatu" minWidth="80" />
+                  <Button fx:id="btnEzabatu" disable="true" mnemonicParsing="false" onAction="#ezabatu" style="-fx-background-color: #FEE2E2; -fx-text-fill: #B91C1C; -fx-border-color: #FEE2E2;" styleClass="btn-outline" text="Ezabatu" minWidth="80" />
                   <Region HBox.hgrow="ALWAYS" />
-                  <Button mnemonicParsing="false" onAction="#inportatuXML" style="-fx-padding: 6 14; -fx-font-size: 12px;" styleClass="btn-outline" text="⬆ XML Inportatu" />
+                  <Button mnemonicParsing="false" onAction="#inportatuXML" style="-fx-padding: 6 14; -fx-font-size: 12px;" styleClass="btn-outline" text="⬆ XML Inportatu" minWidth="130" />
                   <HBox prefWidth="10.0" />
-                  <Button mnemonicParsing="false" onAction="#exportatuXML" style="-fx-padding: 6 14; -fx-font-size: 12px;" styleClass="btn-primary" text="⬇ XML Exportatu" />
+                  <Button mnemonicParsing="false" onAction="#exportatuXML" style="-fx-padding: 6 14; -fx-font-size: 12px;" styleClass="btn-primary" text="⬇ XML Exportatu" minWidth="130" />
                </children>
             </HBox>
 

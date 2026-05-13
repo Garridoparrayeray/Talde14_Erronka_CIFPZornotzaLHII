@@ -92,8 +92,10 @@ public class KategoriakController implements Initializable {
      */
     private HBox sortuTxartela(Kategoria k, int kopurua) {
         VBox info = new VBox(4);
+        info.setMinWidth(80);
         Label lblIzena = new Label(k.getIzena());
         lblIzena.getStyleClass().addAll("font-bold", "text-dark");
+        lblIzena.setWrapText(true);
         String kopText;
         if (kopurua == 1) {
             kopText = "1 artikulu";
@@ -109,11 +111,13 @@ public class KategoriakController implements Initializable {
         Button btnEdita = new Button("Editatu");
         btnEdita.getStyleClass().add("btn-outline");
         btnEdita.setStyle("-fx-padding: 4 12; -fx-font-size: 11px;");
+        btnEdita.setMinWidth(javafx.scene.control.Control.USE_PREF_SIZE);
         btnEdita.setOnAction(e -> editatuKategoria(k));
 
         Button btnEzabatu = new Button("Ezabatu");
         btnEzabatu.getStyleClass().add("btn-danger");
         btnEzabatu.setStyle("-fx-padding: 4 12; -fx-font-size: 11px;");
+        btnEzabatu.setMinWidth(javafx.scene.control.Control.USE_PREF_SIZE);
         btnEzabatu.setOnAction(e -> ezabatuKategoria(k, kopurua));
 
         HBox botoiak = new HBox(8, btnEdita, btnEzabatu);

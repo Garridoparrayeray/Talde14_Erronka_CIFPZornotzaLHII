@@ -201,7 +201,7 @@ java -jar target/galdutakoak-1.0-SNAPSHOT.jar
 ## Sarbideak eta kredentzialak
 
 | Zerbitzua | URL | Erabiltzailea | Pasahitza |
-|-----------|-----|---------------|-----------|
+|-----------|-----|------------------|-----------|
 | Web ataria | http://localhost:8000 | — | — |
 | Adminer | http://localhost:8081 | `admin` | `admin123` |
 | DB zuzena | localhost:3306 | `admin` | `admin123` |

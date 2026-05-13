@@ -38,7 +38,7 @@
 
         <VBox minWidth="0.0" spacing="10.0" VBox.vgrow="ALWAYS">
           <children>
-            <Label minWidth="0.0" styleClass="text-white, font-bold" text="Galduen kudeaketa" wrapText="true">
+            <Label minWidth="0.0" styleClass="text-white, font-bold" text="Objetu galduen kudeaketa" wrapText="true">
               <font><Font size="42.0" /></font>
             </Label>
           </children>
@@ -79,7 +79,7 @@
               <children>
                 <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#sartu" styleClass="btn-primary" text="Sartu" />
                 <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="btn-outline" text="Pasahitza ahaztu dut" onAction="#pasahitzaAhaztuDut" />
-                <Label fx:id="lblErrorea" style="-fx-text-fill: #EF4444; -fx-font-size: 12px;" text="" />
+                <Label fx:id="lblErrorea" style="-fx-text-fill: #EF4444; -fx-font-size: 12px;" text="" wrapText="true" maxWidth="1.7976931348623157E308" />
               </children>
             </VBox>
           </children>

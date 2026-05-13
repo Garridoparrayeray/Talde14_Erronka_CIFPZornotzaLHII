@@ -79,6 +79,8 @@ public class GalduDabenakController implements Initializable {
         colKategoria.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getKategoriaIzena()));
         colDeskribapena.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getDeskribapena()));
         UIKudeatzailea.ehundatuZelulak(colDeskribapena);
+        UIKudeatzailea.ehundatuZelulak(colEmaila);
+        UIKudeatzailea.ehundatuZelulak(colKategoria);
         colEgoera.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getEgoeraTestua()));
 
         hboxDateFilter.setVisible(false);
