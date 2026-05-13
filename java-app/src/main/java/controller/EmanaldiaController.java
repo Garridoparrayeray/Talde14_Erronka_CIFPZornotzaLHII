@@ -1,14 +1,17 @@
 package controller;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import dao.ArtikuluaDAO;
+import dao.AurkitzaileaDAO;
 import dao.EmanaldiaDAO;
 import dao.ErreklamazioaDAO;
 import javafx.fxml.FXML;
@@ -16,31 +19,34 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import model.Artikulua;
 import model.EgoeraArtikulua;
 import model.Erreklamazioa;
+import utils.AppConfig;
 import utils.LogKudeatzailea;
 import utils.Sesio;
 import utils.UIKudeatzailea;
 
 /**
- * Emanaldien formularioa kudeatzen duen kontroladorea.
+ * Emanaldien formularioa kudeatzen duen kontroladorea. Pertsona (NAN) zein
+ * erakundea (IFZ) onartzen ditu.
  *
  * @author Yeray Garrido
  */
 public class EmanaldiaController implements Initializable {
 
     private static final Logger LOG = LogKudeatzailea.lortu(EmanaldiaController.class);
-
     private static final SimpleDateFormat SDF = new SimpleDateFormat("dd/MM/yyyy");
 
     @FXML
     private ComboBox<String> cbArtikulua;
-
     @FXML
     private Label lblArtikuluKodea;
     @FXML
@@ -52,12 +58,31 @@ public class EmanaldiaController implements Initializable {
     @FXML
     private Label lblArtikuluEgoera;
 
+    // Toggle
+    @FXML
+    private RadioButton rbPertsona;
+    @FXML
+    private RadioButton rbErakundea;
+    @FXML
+    private VBox boxPertsona;
+    @FXML
+    private VBox boxErakundea;
+
+    // Pertsona eremuak
     @FXML
     private TextField txtNan;
     @FXML
     private TextField txtIzena;
     @FXML
     private TextField txtAbizena;
+
+    // Erakundea eremuak
+    @FXML
+    private TextField txtIft;
+    @FXML
+    private TextField txtIzenOfiziala;
+
+    // Kontaktua (biak)
     @FXML
     private TextField txtTelefonoa;
     @FXML
@@ -71,7 +96,6 @@ public class EmanaldiaController implements Initializable {
     private CheckBox chkNortasuna;
     @FXML
     private CheckBox chkSinadura;
-
     @FXML
     private Label lblErrorea;
     @FXML
@@ -80,11 +104,18 @@ public class EmanaldiaController implements Initializable {
     private ArrayList<Artikulua> artikuluak;
     private File archivoSinadura;
     private int erreklamazioId = -1;
-    private StackPane contentArea = null;
+    private String atzeraFxmlPath = null;
 
+    /**
+     * Kontroladorea hasieratzen du: artikulu konboxa betetzen du eta
+     * eremu guztiak hasierako egoeran uzten ditu.
+     *
+     * @param url FXML fitxategiaren kokapena
+     * @param rb  Erabilitako baliabide-sorta
+     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        artikuluak = new ArrayList<Artikulua>();
+        artikuluak = new ArrayList<>();
         beteteArtikuluCombo();
         ezkutuArtikuluInfo();
         ezkutuErrorea();
@@ -92,20 +123,59 @@ public class EmanaldiaController implements Initializable {
     }
 
     /**
-     * Erreklamazioa baten datuak formularioan aurrez betetzen ditu eta
-     * jabea identifikatzen du, emanaldian erreklamazioa zuzenean ebazteko.
-     *
-     * @param err       Ebazteko erreklamazioa
-     * @param contentArea Itzultzean erabili beharreko StackPane nagusia
+     * RadioButton-en arabera pertsona edo erakundearen eremuak
+     * erakutsi/ezkutatu.
      */
-    public void setErreklamazioa(Erreklamazioa err, StackPane contentArea) {
+    @FXML
+    private void aldatuHartzaileMota() {
+        boolean erakundea = rbErakundea != null && rbErakundea.isSelected();
+        if (boxPertsona != null) {
+            boxPertsona.setVisible(!erakundea);
+            boxPertsona.setManaged(!erakundea);
+        }
+        if (boxErakundea != null) {
+            boxErakundea.setVisible(erakundea);
+            boxErakundea.setManaged(erakundea);
+        }
+    }
+
+    /**
+     * Erreklamazioaren datuak formularioan aurre-betetzen ditu emanaldia
+     * egiteko prest.
+     *
+     * @param err Datuak hartu beharreko erreklamazioa
+     */
+    public void setErreklamazioa(Erreklamazioa err) {
         this.erreklamazioId = err.getErreklamazioId();
-        this.contentArea = contentArea;
-        txtNan.setText(err.getJabeNan() != null ? err.getJabeNan() : "");
-        txtIzena.setText(err.getJabeIzena() != null ? err.getJabeIzena() : "");
-        txtAbizena.setText(err.getJabeAbizena() != null ? err.getJabeAbizena() : "");
-        txtTelefonoa.setText(err.getJabeTelefonoa() != null ? err.getJabeTelefonoa() : "");
-        txtEmaila.setText(err.getJabeEmaila() != null ? err.getJabeEmaila() : "");
+        if (rbPertsona != null) {
+            rbPertsona.setSelected(true);
+        }
+        aldatuHartzaileMota();
+        if (err.getJabeNan() != null) {
+            txtNan.setText(err.getJabeNan());
+        } else {
+            txtNan.setText("");
+        }
+        if (err.getJabeIzena() != null) {
+            txtIzena.setText(err.getJabeIzena());
+        } else {
+            txtIzena.setText("");
+        }
+        if (err.getJabeAbizena() != null) {
+            txtAbizena.setText(err.getJabeAbizena());
+        } else {
+            txtAbizena.setText("");
+        }
+        if (err.getJabeTelefonoa() != null) {
+            txtTelefonoa.setText(err.getJabeTelefonoa());
+        } else {
+            txtTelefonoa.setText("");
+        }
+        if (err.getJabeEmaila() != null) {
+            txtEmaila.setText(err.getJabeEmaila());
+        } else {
+            txtEmaila.setText("");
+        }
         List<Artikulua> bateragarriak = err.bilatuBateragarriak(artikuluak);
         if (!bateragarriak.isEmpty()) {
             int idx = artikuluak.indexOf(bateragarriak.get(0));
@@ -117,7 +187,55 @@ public class EmanaldiaController implements Initializable {
     }
 
     /**
-     * Sinadura-dokumentua aukeratzeko fitxategi-hautatzailea irekitzen du.
+     * Iraungitako artikuluaren emanaldia formularioan aurre-betetzen du,
+     * aurkitzailearen datuak hartuta pertsona edo erakundea moduan.
+     *
+     * @param artikulua   Iraungitako artikulua
+     * @param erakundeaDa true bada erakundea modua aktibatzen du
+     * @param aurkIzena   Aurkitzailearen izena (pertsona moduan)
+     * @param aurkAbizena Aurkitzailearen abizena (pertsona moduan)
+     * @param aurkTelefonoa Aurkitzailearen telefonoa
+     * @param aurkEmaila  Aurkitzailearen emaila
+     */
+    public void setIraungitakoa(Artikulua artikulua, boolean erakundeaDa,
+            String aurkIzena, String aurkAbizena,
+            String aurkTelefonoa, String aurkEmaila) {
+        this.atzeraFxmlPath = "/view/Iraungitakoak.fxml";
+        cbArtikulua.getItems().clear();
+        artikuluak.clear();
+        artikuluak.add(artikulua);
+        cbArtikulua.getItems().add(artikulua.getArtikuluKodea() + " – " + artikulua.getIzenburua());
+        cbArtikulua.getSelectionModel().selectFirst();
+        artikuluaHautatu();
+        lblArtikuluEgoera.setText("Iraungita");
+        cbArtikulua.setDisable(true);
+
+        if (erakundeaDa) {
+            if (rbErakundea != null) {
+                rbErakundea.setSelected(true);
+            }
+        } else {
+            if (rbPertsona != null) {
+                rbPertsona.setSelected(true);
+            }
+            if (aurkIzena != null && txtIzena != null) {
+                txtIzena.setText(aurkIzena);
+            }
+            if (aurkAbizena != null && txtAbizena != null) {
+                txtAbizena.setText(aurkAbizena);
+            }
+            if (aurkTelefonoa != null && txtTelefonoa != null) {
+                txtTelefonoa.setText(aurkTelefonoa);
+            }
+            if (aurkEmaila != null && txtEmaila != null) {
+                txtEmaila.setText(aurkEmaila);
+            }
+        }
+        aldatuHartzaileMota();
+    }
+
+    /**
+     * Fitxategi-hautatzailea irekitzen du sinadura-dokumentua aukeratzeko.
      */
     @FXML
     private void hautaketaSinadura() {
@@ -129,19 +247,22 @@ public class EmanaldiaController implements Initializable {
         File f = fc.showOpenDialog(cbArtikulua.getScene().getWindow());
         if (f != null) {
             archivoSinadura = f;
-            if (lblArchivoSinadura != null) {
+            if (lblArchivoSinadura != null) { // Check for null before accessing
                 lblArchivoSinadura.setText(f.getName());
+            }
+            if (chkSinadura != null) { // Check for null before accessing
+                chkSinadura.setSelected(true);
+            }
+        } else {
+            if (chkSinadura != null) { // If no file selected, uncheck
+                chkSinadura.setSelected(false);
             }
         }
     }
 
-    /**
-     * ComboBox-a biltegiko artikuluekin betetzen du.
-     */
     private void beteteArtikuluCombo() {
         cbArtikulua.getItems().clear();
         artikuluak.clear();
-
         List<Artikulua> guztiak = ArtikuluaDAO.getGuztiak();
         for (Artikulua a : guztiak) {
             if (a.getEgoera() == EgoeraArtikulua.BILTEGIAN) {
@@ -152,7 +273,7 @@ public class EmanaldiaController implements Initializable {
     }
 
     /**
-     * ComboBox-ean artikulua hautatzean xehetasunak erakusten ditu.
+     * ComboBox-eko hautaketa aldatzean artikuluaren informazioa freskatzen du.
      */
     @FXML
     private void artikuluaHautatu() {
@@ -164,16 +285,18 @@ public class EmanaldiaController implements Initializable {
         Artikulua sel = artikuluak.get(idx);
         lblArtikuluKodea.setText(sel.getArtikuluKodea());
         lblArtikuluIzena.setText(sel.getIzenburua());
-
-        String kok = "—";
+        String kok;
         if (sel.getKokalekua() != null) {
             kok = sel.getKokalekua().getKokalekuOsoa();
+        } else {
+            kok = "—";
         }
         lblArtikuluKokalekua.setText(kok);
-
-        String data = "—";
+        String data;
         if (sel.getSarreraData() != null) {
             data = SDF.format(sel.getSarreraData());
+        } else {
+            data = "—";
         }
         lblArtikuluSarrera.setText(data);
         lblArtikuluEgoera.setText("Biltegian");
@@ -181,9 +304,6 @@ public class EmanaldiaController implements Initializable {
         ezkutuErrorea();
     }
 
-    /**
-     * Formularioa egiaztatzen du eta emanaldia datu-basean gordetzen du.
-     */
     @FXML
     private void formalizatu() {
         int idx = cbArtikulua.getSelectionModel().getSelectedIndex();
@@ -191,16 +311,7 @@ public class EmanaldiaController implements Initializable {
             erakutsiErrorea("Artikulu bat hautatu behar da.");
             return;
         }
-
-        String nan = txtNan.getText().trim();
-        String izena = txtIzena.getText().trim();
-        String abizena = txtAbizena.getText().trim();
-
-        if (nan.isEmpty() || izena.isEmpty() || abizena.isEmpty()) {
-            erakutsiErrorea("(*) eremuak bete behar dira: NAN, Izena eta Abizena.");
-            return;
-        }
-
+        String idArtikulua = artikuluak.get(idx).getArtikuluKodea();
         String telefonoa = txtTelefonoa.getText().trim();
         String emaila = txtEmaila.getText().trim();
         String helbidea = txtHelbidea.getText().trim();
@@ -208,20 +319,49 @@ public class EmanaldiaController implements Initializable {
         if (txtOharrak != null) {
             oharrak = txtOharrak.getText().trim();
         }
-
         int idLangile = 0;
         if (Sesio.getLangilea() != null) {
             idLangile = Sesio.getLangilea().getLangileId();
         }
 
-        String idArtikulua = artikuluak.get(idx).getArtikuluKodea();
-        String dokumentuBidea = archivoSinadura != null ? archivoSinadura.getAbsolutePath() : null;
-        boolean ok = EmanaldiaDAO.formalizatu(idArtikulua, nan, izena, abizena,
-                telefonoa, emaila, helbidea, oharrak, idLangile, dokumentuBidea);
+        String dokumentuBidea = null;
+        if (archivoSinadura != null) {
+            String kopia = kopiatuSinadura(archivoSinadura);
+            if (kopia != null) {
+                dokumentuBidea = kopia;
+            }
+        }
+
+        boolean erakundeaDa = rbErakundea != null && rbErakundea.isSelected();
+        boolean ok;
+
+        if (erakundeaDa) {
+            String ift = txtIft.getText().trim();
+            String izenOfiziala = txtIzenOfiziala.getText().trim();
+            if (ift.isEmpty() || izenOfiziala.isEmpty()) {
+                erakutsiErrorea("(*) IFZ eta izen ofiziala bete behar dira.");
+                return;
+            }
+            ok = EmanaldiaDAO.formalizatuErakundea(idArtikulua, ift, izenOfiziala,
+                    telefonoa, emaila, helbidea, oharrak, idLangile, dokumentuBidea);
+        } else {
+            String nan = txtNan.getText().trim();
+            String izena = txtIzena.getText().trim();
+            String abizena = txtAbizena.getText().trim();
+            if (nan.isEmpty() || izena.isEmpty() || abizena.isEmpty()) {
+                erakutsiErrorea("(*) eremuak bete behar dira: NAN, Izena eta Abizena.");
+                return;
+            }
+            ok = EmanaldiaDAO.formalizatu(idArtikulua, nan, izena, abizena,
+                    telefonoa, emaila, helbidea, oharrak, idLangile, dokumentuBidea);
+        }
+
         if (ok) {
             if (erreklamazioId > 0) {
                 ErreklamazioaDAO.updateEgoera(String.valueOf(erreklamazioId), "ebatzita");
-                UIKudeatzailea.kargatuPanela(contentArea, "/view/Erreklamazioak.fxml");
+                UIKudeatzailea.kargatuPanela("/view/Erreklamazioak.fxml");
+            } else if (atzeraFxmlPath != null) { // If coming from Iraungitakoak
+                UIKudeatzailea.kargatuPanela(atzeraFxmlPath);
             } else {
                 garbitu();
                 erakutsiErrorea("Emanaldia ondo formalizatu da.");
@@ -231,29 +371,38 @@ public class EmanaldiaController implements Initializable {
         }
     }
 
-    /**
-     * Aldaketak gorde gabe atzera egiten du: erreklamaziotik etorri bada
-     * erreklamazioen zerrendara itzultzen da, bestela formularioa garbitzen du.
-     */
     @FXML
     private void utzi() {
-        if (contentArea != null) {
-            UIKudeatzailea.kargatuPanela(contentArea, "/view/Erreklamazioak.fxml");
+        if (atzeraFxmlPath != null || erreklamazioId > 0) { // If coming from Erreklamazioak or Iraungitakoak
+            String dest;
+            if (atzeraFxmlPath != null) {
+                dest = atzeraFxmlPath;
+            } else {
+                dest = "/view/Erreklamazioak.fxml";
+            }
+            UIKudeatzailea.kargatuPanela(dest);
         } else {
             garbitu();
         }
     }
 
-    /**
-     * Formularioko eremu guztiak hasierako egoerara itzultzen ditu.
-     */
     private void garbitu() {
         beteteArtikuluCombo();
         cbArtikulua.setValue(null);
         ezkutuArtikuluInfo();
+        if (rbPertsona != null) {
+            rbPertsona.setSelected(true);
+        }
+        aldatuHartzaileMota();
         txtNan.clear();
         txtIzena.clear();
         txtAbizena.clear();
+        if (txtIft != null) {
+            txtIft.clear();
+        }
+        if (txtIzenOfiziala != null) {
+            txtIzenOfiziala.clear();
+        }
         txtTelefonoa.clear();
         txtEmaila.clear();
         txtHelbidea.clear();
@@ -311,6 +460,39 @@ public class EmanaldiaController implements Initializable {
         if (lblErrorea != null) {
             lblErrorea.setVisible(false);
             lblErrorea.setManaged(false);
+        }
+    }
+
+    /**
+     * Sinadura fitxategia 'sinadurak/' karpetara kopiatzen du. DB-n
+     * fitxategi-izena soilik gordetzen da (bidea gabe).
+     *
+     * @param origen Jatorrizko fitxategia
+     * @return Fitxategi-izena (adib. sinadura_1234567.pdf) edo null errorea
+     * bada
+     */
+    private String kopiatuSinadura(File origen) {
+        try {
+            File sinaduraDir = new File(AppConfig.getSinaduraBidea());
+            if (!sinaduraDir.exists()) {
+                sinaduraDir.mkdirs();
+            }
+            String nombre = origen.getName();
+            int dot = nombre.lastIndexOf('.');
+            String ext;
+            if (dot >= 0) {
+                ext = nombre.substring(dot).toLowerCase();
+            } else {
+                ext = "";
+            }
+            String izena = "sinadura_" + System.currentTimeMillis() + ext;
+            File destino = new File(sinaduraDir, izena);
+            Files.copy(origen.toPath(), destino.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            return izena;
+        } catch (IOException e) {
+            LOG.log(Level.WARNING, "kopiatuSinadura: sinadura kopiatzeko errorea", e);
+            UIKudeatzailea.erakutsiToast("Ezin izan da sinadura dokumentua gorde.", false);
+            return null;
         }
     }
 }

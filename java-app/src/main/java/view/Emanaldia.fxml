@@ -5,13 +5,16 @@
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
@@ -39,7 +42,7 @@
                      <children>
 
                         <!-- Artikuluaren txartela -->
-                        <VBox prefWidth="400.0" spacing="15.0" styleClass="card" HBox.hgrow="ALWAYS">
+                        <VBox prefWidth="380.0" spacing="15.0" styleClass="card" HBox.hgrow="NEVER">
                            <children>
                               <Label style="-fx-font-size: 16px;" styleClass="font-bold, text-dark" text="Artikulua" />
 
@@ -69,17 +72,72 @@
                         </VBox>
 
                         <!-- Hartzailearen datuak -->
-                        <VBox prefWidth="500.0" spacing="15.0" styleClass="card" HBox.hgrow="ALWAYS">
+                        <VBox spacing="15.0" styleClass="card" HBox.hgrow="ALWAYS">
                            <children>
                               <Label style="-fx-font-size: 16px;" styleClass="font-bold, text-dark" text="Hartzailearen datuak" />
 
-                              <VBox spacing="5.0">
+                              <!-- Toggle: Pertsona / Erakundea -->
+                              <HBox spacing="15.0" alignment="CENTER_LEFT">
                                  <children>
-                                    <Label styleClass="text-muted" text="NAN/Dokumentua *" />
-                                    <TextField fx:id="txtNan" promptText="12345678X" styleClass="form-control" />
+                                    <Label styleClass="font-bold, text-dark" text="Mota:" />
+                                    <RadioButton fx:id="rbPertsona" mnemonicParsing="false" text="Pertsona (NAN)" selected="true" onAction="#aldatuHartzaileMota">
+                                       <toggleGroup><ToggleGroup fx:id="tgHartzailea" /></toggleGroup>
+                                    </RadioButton>
+                                    <RadioButton fx:id="rbErakundea" mnemonicParsing="false" text="Erakundea (IFZ)" toggleGroup="$tgHartzailea" onAction="#aldatuHartzaileMota" />
+                                 </children>
+                              </HBox>
+
+                              <!-- Pertsona eremuak -->
+                              <VBox fx:id="boxPertsona" spacing="10.0">
+                                 <children>
+                                    <VBox spacing="5.0">
+                                       <children>
+                                          <Label styleClass="text-muted" text="NAN/Dokumentua *" />
+                                          <TextField fx:id="txtNan" promptText="12345678X" styleClass="form-control" />
+                                       </children>
+                                    </VBox>
+                                    <GridPane hgap="15.0" vgap="10.0">
+                                       <columnConstraints>
+                                          <ColumnConstraints hgrow="ALWAYS" percentWidth="50.0" />
+                                          <ColumnConstraints hgrow="ALWAYS" percentWidth="50.0" />
+                                       </columnConstraints>
+                                       <children>
+                                          <VBox spacing="5.0" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                                             <children>
+                                                <Label styleClass="text-muted" text="Izena *" />
+                                                <TextField fx:id="txtIzena" promptText="Iker" styleClass="form-control" maxWidth="1.7976931348623157E308" />
+                                             </children>
+                                          </VBox>
+                                          <VBox spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                                             <children>
+                                                <Label styleClass="text-muted" text="Abizena *" />
+                                                <TextField fx:id="txtAbizena" promptText="Mendia" styleClass="form-control" maxWidth="1.7976931348623157E308" />
+                                             </children>
+                                          </VBox>
+                                       </children>
+                                    </GridPane>
                                  </children>
                               </VBox>
 
+                              <!-- Erakundea eremuak -->
+                              <VBox fx:id="boxErakundea" spacing="10.0" managed="false" visible="false">
+                                 <children>
+                                    <VBox spacing="5.0">
+                                       <children>
+                                          <Label styleClass="text-muted" text="IFZ (Identifikazio Fiskaleko Zenbakia) *" />
+                                          <TextField fx:id="txtIft" promptText="B48123456" styleClass="form-control" />
+                                       </children>
+                                    </VBox>
+                                    <VBox spacing="5.0">
+                                       <children>
+                                          <Label styleClass="text-muted" text="Enpresa izena *" />
+                                          <TextField fx:id="txtIzenOfiziala" promptText="Bermeo SL" styleClass="form-control" />
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </VBox>
+
+                              <!-- Kontaktua (biek partekatzen dute) -->
                               <GridPane hgap="15.0" vgap="10.0">
                                  <columnConstraints>
                                     <ColumnConstraints hgrow="ALWAYS" percentWidth="50.0" />
@@ -88,23 +146,11 @@
                                  <children>
                                     <VBox spacing="5.0" GridPane.columnIndex="0" GridPane.rowIndex="0">
                                        <children>
-                                          <Label styleClass="text-muted" text="Izena *" />
-                                          <TextField fx:id="txtIzena" promptText="Iker" styleClass="form-control" maxWidth="1.7976931348623157E308" />
-                                       </children>
-                                    </VBox>
-                                    <VBox spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="0">
-                                       <children>
-                                          <Label styleClass="text-muted" text="Abizena *" />
-                                          <TextField fx:id="txtAbizena" promptText="Mendia" styleClass="form-control" maxWidth="1.7976931348623157E308" />
-                                       </children>
-                                    </VBox>
-                                    <VBox spacing="5.0" GridPane.columnIndex="0" GridPane.rowIndex="1">
-                                       <children>
                                           <Label styleClass="text-muted" text="Telefonoa" />
                                           <TextField fx:id="txtTelefonoa" promptText="666 12 34 56" styleClass="form-control" maxWidth="1.7976931348623157E308" />
                                        </children>
                                     </VBox>
-                                    <VBox spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                    <VBox spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="0">
                                        <children>
                                           <Label styleClass="text-muted" text="E-posta" />
                                           <TextField fx:id="txtEmaila" promptText="i.mendia@mail.eus" styleClass="form-control" maxWidth="1.7976931348623157E308" />
@@ -144,14 +190,6 @@
 
                         <HBox spacing="30.0">
                            <children>
-                              <VBox spacing="5.0">
-                                 <children>
-                                    <Label styleClass="font-bold, text-dark" text="Legezko oharra:" />
-                                    <Label styleClass="text-muted" wrapText="true"
-                                           text="Artikulua hartzaileari emanez, honek aitortzen du bere jabegokoa dela. Udalak dokumentu sinatua 5 urtez gordeko du." />
-                                 </children>
-                                 <HBox.hgrow>ALWAYS</HBox.hgrow>
-                              </VBox>
                               <VBox spacing="10.0" alignment="CENTER_LEFT">
                                  <children>
                                     <CheckBox fx:id="chkNortasuna" mnemonicParsing="false"

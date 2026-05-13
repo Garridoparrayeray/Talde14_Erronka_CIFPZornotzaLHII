@@ -120,11 +120,23 @@ CREATE TABLE EMANALDIA (
 CREATE TABLE MUGIMENDUA (
     id_mugimendua INT AUTO_INCREMENT PRIMARY KEY,
     data DATETIME DEFAULT CURRENT_TIMESTAMP,
+    mota VARCHAR(50),
     deskribapena TEXT NOT NULL,
     id_artikulua VARCHAR(15),
     id_langile INT,
     FOREIGN KEY (id_artikulua) REFERENCES ARTIKULUA(id_artikulua) ON DELETE CASCADE,
     FOREIGN KEY (id_langile) REFERENCES LANGILEA(id_langile) ON DELETE SET NULL
+) ENGINE=InnoDB;
+
+CREATE TABLE AURKITZAILEA (
+    id_aurkitzailea INT AUTO_INCREMENT PRIMARY KEY,
+    izena VARCHAR(100) NOT NULL,
+    abizena VARCHAR(100) NOT NULL,
+    telefonoa VARCHAR(20),
+    emaila VARCHAR(100),
+    aurkipen_lekua VARCHAR(200),
+    id_artikulua VARCHAR(15) NOT NULL,
+    FOREIGN KEY (id_artikulua) REFERENCES ARTIKULUA(id_artikulua) ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
 

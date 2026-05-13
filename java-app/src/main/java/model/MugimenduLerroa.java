@@ -1,11 +1,15 @@
 package model;
 
+import java.io.Serializable;
+
 /**
  * Auditoria-taulako mugimenduen errenkada bat adierazten duen DTO klasea.
  *
  * @author Yeray Garrido
  */
-public class MugimenduLerroa {
+public class MugimenduLerroa implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private String data;
     private String langilea;
@@ -27,18 +31,38 @@ public class MugimenduLerroa {
         this.artikuluId = artikuluId;
     }
 
+    /**
+     * Mugimenduaren data eta ordua itzultzen du.
+     *
+     * @return Data eta ordua katea
+     */
     public String getData() {
         return data;
     }
 
+    /**
+     * Eragiketa burutu duen langilearen izena itzultzen du.
+     *
+     * @return Langilearen izena
+     */
     public String getLangilea() {
         return langilea;
     }
 
+    /**
+     * Eginikako ekintzaren deskribapena itzultzen du.
+     *
+     * @return Ekintzaren deskribapena
+     */
     public String getEkintza() {
         return ekintza;
     }
 
+    /**
+     * Lotutako artikuluaren kode bakarra itzultzen du.
+     *
+     * @return Artikuluaren ID testua
+     */
     public String getArtikuluId() {
         return artikuluId;
     }

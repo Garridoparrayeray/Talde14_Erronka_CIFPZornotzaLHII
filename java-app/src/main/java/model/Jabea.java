@@ -29,21 +29,38 @@ public class Jabea extends Hartzailea {
     }
 
     /**
-     * @return Jabearen NAN zenbakia identifikazio gisa
+     * Jabearen identifikazioa NAN gisa itzultzen du.
+     *
+     * @return NAN testua
      */
     @Override
     public String getIdentifikazioa() {
         return nan;
     }
 
+    /**
+     * Jabearen izena itzultzen du.
+     *
+     * @return Izena
+     */
     public String getIzena() {
         return izena;
     }
 
+    /**
+     * Jabearen abizena itzultzen du.
+     *
+     * @return Abizena
+     */
     public String getAbizena() {
         return abizena;
     }
 
+    /**
+     * Jabearen NAN zenbakia itzultzen du.
+     *
+     * @return NAN testua
+     */
     public String getNan() {
         return nan;
     }

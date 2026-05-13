@@ -28,18 +28,38 @@ public class AzkenMugimendua {
         this.langilea = langilea;
     }
 
+    /**
+     * Artikuluaren kode bakarra itzultzen du.
+     *
+     * @return Artikuluaren ID testua
+     */
     public String getArtikuluId() {
         return artikuluId;
     }
 
+    /**
+     * Mugimenduaren azalpen laburra itzultzen du.
+     *
+     * @return Deskribapena
+     */
     public String getDeskribapena() {
         return deskribapena;
     }
 
+    /**
+     * Mugimenduaren data eta ordua itzultzen du.
+     *
+     * @return Data eta ordua katea
+     */
     public String getData() {
         return data;
     }
 
+    /**
+     * Eragiketa burutu duen langilearen izena itzultzen du.
+     *
+     * @return Langilearen izena
+     */
     public String getLangilea() {
         return langilea;
     }

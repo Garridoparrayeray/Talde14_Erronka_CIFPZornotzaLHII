@@ -17,7 +17,6 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.StackPane;
 import model.Langilea;
 import utils.LogKudeatzailea;
 import utils.UIKudeatzailea;
@@ -32,21 +31,15 @@ public class LangileakController implements Initializable {
     private static final Logger LOG = LogKudeatzailea.lortu(LangileakController.class);
 
     @FXML
-    private StackPane contentArea;
-    @FXML
     private TableView<Langilea> taula;
     @FXML
     private TableColumn<Langilea, String> colLangilea;
     @FXML
     private TableColumn<Langilea, String> colErabiltzailea;
     @FXML
-    private TableColumn<Langilea, String> colSaila;
-    @FXML
     private TableColumn<Langilea, String> colRola;
     @FXML
     private TableColumn<Langilea, String> colEgoera;
-    @FXML
-    private TableColumn<Langilea, String> colAzkenSarrera;
     @FXML
     private TextField txtBilaketa;
     @FXML
@@ -54,14 +47,19 @@ public class LangileakController implements Initializable {
 
     private List<Langilea> guztiak;
 
+    /**
+     * Kontroladorea hasieratzen du. Zutabeak konfiguratzen ditu, rolak
+     * kargatzen ditu eta langileen zerrenda bistaratzen du.
+     *
+     * @param url Hasierako URLa
+     * @param rb Baliabideen sorta
+     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         colLangilea.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getIzenOsoa()));
         colErabiltzailea.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getErabiltzailea()));
-        colSaila.setCellValueFactory(c -> new SimpleStringProperty("—"));
         colRola.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getRola()));
         colEgoera.setCellValueFactory(c -> new SimpleStringProperty("Aktibo"));
-        colAzkenSarrera.setCellValueFactory(c -> new SimpleStringProperty("—"));
 
         cbRola.getItems().add("Rol guztiak");
         List<String[]> rolak = LangileaDAO.getRolak();
@@ -73,6 +71,9 @@ public class LangileakController implements Initializable {
         kargatu();
     }
 
+    /**
+     * Langileen zerrenda datu-basetik kargatzen du eta taula eguneratzen du.
+     */
     private void kargatu() {
         guztiak = LangileaDAO.getGuztiak();
         taula.getItems().setAll(guztiak);
@@ -95,10 +96,22 @@ public class LangileakController implements Initializable {
 
         List<Langilea> iragaziak = new ArrayList<>();
         for (Langilea l : guztiak) {
-            boolean testPasa = testua.isEmpty()
-                    || l.getIzenOsoa().toLowerCase().contains(testua)
-                    || l.getErabiltzailea().toLowerCase().contains(testua);
-            boolean rolPasa = rolSel.equals("Rol guztiak") || l.getRola().equals(rolSel);
+            boolean testPasa;
+            if (testua.isEmpty()) {
+                testPasa = true;
+            } else if (l.getIzenOsoa().toLowerCase().contains(testua)) {
+                testPasa = true;
+            } else {
+                testPasa = l.getErabiltzailea().toLowerCase().contains(testua);
+            }
+
+            boolean rolPasa;
+            if (rolSel.equals("Rol guztiak")) {
+                rolPasa = true;
+            } else {
+                rolPasa = l.getRola().equals(rolSel);
+            }
+
             if (testPasa && rolPasa) {
                 iragaziak.add(l);
             }
@@ -114,11 +127,56 @@ public class LangileakController implements Initializable {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/LangileBerria.fxml"));
             Node nodoa = loader.load();
-            LangileBerriController ctrl = loader.getController();
-            ctrl.setContentArea(contentArea);
-            UIKudeatzailea.kargatuPanela(contentArea, nodoa);
+            UIKudeatzailea.kargatuPanela(nodoa);
         } catch (Exception e) {
-            LOG.log(Level.SEVERE, "langileaBerria: FXML kargatzean errorea", e);
+            LOG.log(Level.SEVERE, "langileaBerria: errorea", e);
+            UIKudeatzailea.erakutsiToast("Errorea: ezin izan da formularioa kargatu.", false);
+        }
+    }
+
+    /**
+     * Taulan aukeratutako langilea datu-basetik ezabatzen du. Ezabatu aurretik,
+     * erabiltzaileari baieztapena eskatzen dio erroreak ekiditeko.
+     */
+    @FXML
+    public void langileaEzabatu() {
+        Langilea sel = taula.getSelectionModel().getSelectedItem();
+
+        if (sel == null) {
+            UIKudeatzailea.erakutsiToast("Aukeratu langile bat taulan ezabatzeko.", false);
+            return;
+        }
+
+        boolean ondo = LangileaDAO.ezabatu(sel.getLangileId());
+        if (ondo) {
+            kargatu();
+            UIKudeatzailea.erakutsiToast("Langilea ezabatu da: " + sel.getErabiltzailea(), true);
+        } else {
+            UIKudeatzailea.erakutsiToast("Ezin izan da langilea ezabatu. Agian beste datu batzuekin lotuta dago.", false);
+        }
+    }
+
+    /**
+     * Taulan aukeratutako langilea editatzeko leihoa irekitzen du.
+     */
+    @FXML
+    public void langileaEditatu() {
+        Langilea sel = taula.getSelectionModel().getSelectedItem();
+
+        if (sel == null) {
+            UIKudeatzailea.erakutsiToast("Aukeratu langile bat taulan editatzeko.", false);
+            return;
+        }
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/LangileaEditu.fxml"));
+            Node nodoa = loader.load();
+            LangileaEdituController ctrl = loader.getController();
+            ctrl.setLangilea(sel);
+            UIKudeatzailea.kargatuPanela(nodoa);
+        } catch (Exception e) {
+            UIKudeatzailea.erakutsiToast("Ezin izan da editatzeko leihoa kargatu: " + e.getMessage(), false);
+            LOG.log(Level.SEVERE, "langileaEditatu: FXML kargatzean errorea", e);
         }
     }
 }

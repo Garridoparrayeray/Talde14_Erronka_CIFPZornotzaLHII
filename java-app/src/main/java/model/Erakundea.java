@@ -28,7 +28,9 @@ public class Erakundea extends Hartzailea {
     }
 
     /**
-     * @return Erakundearen IFZ identifikazio gisa
+     * Erakundearen identifikazioa IFZ gisa itzultzen du.
+     *
+     * @return IFZ testua
      */
     @Override
     public String getIdentifikazioa() {
@@ -36,14 +38,29 @@ public class Erakundea extends Hartzailea {
     }
 
     // Getters
+    /**
+     * Erakundearen Identifikazio Fiskaleko Zenbakia itzultzen du.
+     *
+     * @return IFZ testua
+     */
     public String getIfz() {
         return ifz;
     }
 
+    /**
+     * Erakundearen izen ofiziala itzultzen du.
+     *
+     * @return Izen fiskala
+     */
     public String getIzenFiskala() {
         return izenFiskala;
     }
 
+    /**
+     * Erakundearen mota itzultzen du.
+     *
+     * @return Erakundearen mota (GKE, udala, etab.)
+     */
     public String getErakundeMota() {
         return erakundeMota;
     }

@@ -2,9 +2,12 @@ package controller;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import dao.BackupDAO;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -40,6 +43,8 @@ public class MainController implements Initializable {
     private Button btnEmanaldia;
     @FXML
     private Button btnGalduDabenak;
+    @FXML
+    private Button btnBabesKopia;
 
     @FXML
     private Label lblLangileIzena;
@@ -50,32 +55,41 @@ public class MainController implements Initializable {
     @FXML
     private VBox boxAdminSwitch;
 
-    private ArrayList<Button> navBotoiak;
+    private List<Button> navBotoiak;
 
+    /**
+     * Kontroladorea hasieratzen du: nabigazio-botoiak ezartzen ditu, saio-datuak
+     * erakusten ditu, ikusle-rolaren murrizketa aplikatzen du eta panela kargatzen du.
+     *
+     * @param url FXML fitxategiaren kokapena
+     * @param rb  Erabilitako baliabide-sorta
+     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        navBotoiak = new ArrayList<Button>();
+        UIKudeatzailea.setEdukiGunea(contentArea);
+
+        navBotoiak = new ArrayList<>();
         navBotoiak.add(btnPanela);
         navBotoiak.add(btnInbentarioa);
         navBotoiak.add(btnErregistroa);
         navBotoiak.add(btnErreklamazioak);
         navBotoiak.add(btnEmanaldia);
         navBotoiak.add(btnGalduDabenak);
+        navBotoiak.add(btnBabesKopia);
 
         Langilea l = Sesio.getLangilea();
         if (l != null) {
             lblLangileIzena.setText(l.getIzena() + " " + l.getAbizena());
             lblLangileRola.setText(l.getRola());
 
-            String ini = "";
+            StringBuilder ini = new StringBuilder();
             if (l.getIzena() != null && !l.getIzena().isEmpty()) {
-                ini = ini + l.getIzena().charAt(0);
+                ini.append(l.getIzena().charAt(0));
             }
             if (l.getAbizena() != null && !l.getAbizena().isEmpty()) {
-                ini = ini + l.getAbizena().charAt(0);
+                ini.append(l.getAbizena().charAt(0));
             }
-
-            lblInitialak.setText(ini.toUpperCase());
+            lblInitialak.setText(ini.toString().toUpperCase());
         }
 
         if (boxAdminSwitch != null) {
@@ -83,8 +97,20 @@ public class MainController implements Initializable {
             boxAdminSwitch.setManaged(Sesio.isAdmin());
         }
 
+        // Ikusle rolak baimen mugatuak ditu
+        if (l != null && "Ikuslea".equalsIgnoreCase(l.getRola())) {
+            btnEmanaldia.setVisible(false);
+            btnEmanaldia.setManaged(false);
+            btnErreklamazioak.setVisible(false);
+            btnErreklamazioak.setManaged(false);
+            btnGalduDabenak.setVisible(false);
+            btnGalduDabenak.setManaged(false);
+            btnBabesKopia.setVisible(false);
+            btnBabesKopia.setManaged(false);
+        }
+
         setAktibo(btnPanela);
-        UIKudeatzailea.kargatuPanela(contentArea, "/view/Panela.fxml");
+        UIKudeatzailea.kargatuPanela("/view/Panela.fxml");
     }
 
     /**
@@ -93,7 +119,7 @@ public class MainController implements Initializable {
     @FXML
     public void loadPanela() {
         setAktibo(btnPanela);
-        UIKudeatzailea.kargatuPanela(contentArea, "/view/Panela.fxml");
+        UIKudeatzailea.kargatuPanela("/view/Panela.fxml");
     }
 
     /**
@@ -102,7 +128,7 @@ public class MainController implements Initializable {
     @FXML
     public void loadInbentarioa() {
         setAktibo(btnInbentarioa);
-        UIKudeatzailea.kargatuPanela(contentArea, "/view/Inbentario.fxml");
+        UIKudeatzailea.kargatuPanela("/view/Inbentario.fxml");
     }
 
     /**
@@ -111,7 +137,7 @@ public class MainController implements Initializable {
     @FXML
     public void loadErregistroa() {
         setAktibo(btnErregistroa);
-        UIKudeatzailea.kargatuPanela(contentArea, "/view/Erregistroa.fxml");
+        UIKudeatzailea.kargatuPanela("/view/Erregistroa.fxml");
     }
 
     /**
@@ -120,7 +146,7 @@ public class MainController implements Initializable {
     @FXML
     public void loadErreklamazioak() {
         setAktibo(btnErreklamazioak);
-        UIKudeatzailea.kargatuPanela(contentArea, "/view/Erreklamazioak.fxml");
+        UIKudeatzailea.kargatuPanela("/view/Erreklamazioak.fxml");
     }
 
     /**
@@ -129,7 +155,7 @@ public class MainController implements Initializable {
     @FXML
     public void loadEmanaldia() {
         setAktibo(btnEmanaldia);
-        UIKudeatzailea.kargatuPanela(contentArea, "/view/Emanaldia.fxml");
+        UIKudeatzailea.kargatuPanela("/view/Emanaldia.fxml");
     }
 
     /**
@@ -138,7 +164,21 @@ public class MainController implements Initializable {
     @FXML
     public void loadGalduDabenak() {
         setAktibo(btnGalduDabenak);
-        UIKudeatzailea.kargatuPanela(contentArea, "/view/GalduDabenak.fxml");
+        UIKudeatzailea.kargatuPanela("/view/GalduDabenak.fxml");
+    }
+
+    /**
+     * Datu-basearen babes-kopia egiten du.
+     */
+    @FXML
+    public void eginBabesKopia() {
+        try {
+            BackupDAO.eginBabesKopia();
+            UIKudeatzailea.erakutsiToast("Babes-kopia ondo egin da.", true);
+        } catch (Exception e) {
+            LOG.log(Level.SEVERE, "eginBabesKopia: errorea", e);
+            UIKudeatzailea.erakutsiToast("Ezin izan da babes-kopia egin: " + e.getMessage(), false);
+        }
     }
 
     /**

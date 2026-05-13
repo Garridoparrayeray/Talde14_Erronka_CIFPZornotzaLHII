@@ -10,7 +10,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.StackPane;
 import utils.LogKudeatzailea;
 import utils.UIKudeatzailea;
 
@@ -32,20 +31,15 @@ public class KokalekuaBerriController implements Initializable {
     @FXML
     private Label lblErrorea;
 
-    private StackPane contentArea;
-
     /**
-     * Itzultzean erabili beharreko StackPane ezartzen du.
+     * Kontroladorea hasieratzen du eta errore-etiketa ezkutatzen du.
      *
-     * @param contentArea Formularioa kargatuta dagoen gunea
+     * @param url FXML fitxategiaren kokapena
+     * @param rb  Erabilitako baliabide-sorta
      */
-    public void setContentArea(StackPane contentArea) {
-        this.contentArea = contentArea;
-    }
-
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        ezkutuErrorea();
+        UIKudeatzailea.ezkutuFormularioErrorea(lblErrorea);
     }
 
     /**
@@ -59,7 +53,7 @@ public class KokalekuaBerriController implements Initializable {
         boolean bhaDa = chkBhaDa != null && chkBhaDa.isSelected();
 
         if (armairua.isEmpty() || apala.isEmpty()) {
-            erakutsiErrorea("(*) Armairua eta apala bete behar dira.");
+            UIKudeatzailea.erakutsiFormularioErrorea(lblErrorea, "(*) Armairua eta apala bete behar dira.");
             return;
         }
 
@@ -67,7 +61,7 @@ public class KokalekuaBerriController implements Initializable {
         if (ok) {
             itxi();
         } else {
-            erakutsiErrorea("Errorea gordetzean. Egiaztatu datuak.");
+            UIKudeatzailea.erakutsiFormularioErrorea(lblErrorea, "Errorea gordetzean. Egiaztatu datuak.");
         }
     }
 
@@ -79,18 +73,10 @@ public class KokalekuaBerriController implements Initializable {
         itxi();
     }
 
-    private void erakutsiErrorea(String mezua) {
-        lblErrorea.setText(mezua);
-        lblErrorea.setVisible(true);
-        lblErrorea.setManaged(true);
-    }
-
-    private void ezkutuErrorea() {
-        lblErrorea.setVisible(false);
-        lblErrorea.setManaged(false);
-    }
-
+    /**
+     * Kokalekuen zerrendara itzultzen da formularioa itxiz.
+     */
     private void itxi() {
-        UIKudeatzailea.kargatuPanela(contentArea, "/view/Kokalekuak.fxml");
+        UIKudeatzailea.kargatuPanela("/view/Kokalekuak.fxml");
     }
 }

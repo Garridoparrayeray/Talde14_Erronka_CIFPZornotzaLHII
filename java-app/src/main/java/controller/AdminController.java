@@ -2,11 +2,15 @@ package controller;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
@@ -38,6 +42,8 @@ public class AdminController implements Initializable {
     private Button btnKokalekuak;
     @FXML
     private Button btnAuditoria;
+    @FXML
+    private Button btnIraungitakoak;
 
     @FXML
     private Label lblLangileIzena;
@@ -46,35 +52,61 @@ public class AdminController implements Initializable {
     @FXML
     private Label lblInitialak;
 
-    private ArrayList<Button> navBotoiak;
+    private List<Button> navBotoiak;
 
+    /**
+     * Kontroladorea hasieratzen du: nabigazio-botoiak ezartzen ditu,
+     * saio-datuak erakusten ditu eta administrazio-panela kargatzen du.
+     *
+     * @param url FXML fitxategiaren kokapena
+     * @param rb Erabilitako baliabide-sorta
+     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        UIKudeatzailea.setEdukiGunea(adminContentArea);
+
         navBotoiak = new ArrayList<>();
         navBotoiak.add(btnAdminPanela);
         navBotoiak.add(btnLangileak);
         navBotoiak.add(btnKategoriak);
         navBotoiak.add(btnKokalekuak);
         navBotoiak.add(btnAuditoria);
+        navBotoiak.add(btnIraungitakoak);
 
         Langilea l = Sesio.getLangilea();
         if (l != null) {
             lblLangileIzena.setText(l.getIzena() + " " + l.getAbizena());
             lblLangileRola.setText(l.getRola());
 
-            String ini = "";
+            StringBuilder ini = new StringBuilder();
             if (l.getIzena() != null && !l.getIzena().isEmpty()) {
-                ini = ini + l.getIzena().charAt(0);
+                ini.append(l.getIzena().charAt(0));
             }
             if (l.getAbizena() != null && !l.getAbizena().isEmpty()) {
-                ini = ini + l.getAbizena().charAt(0);
+                ini.append(l.getAbizena().charAt(0));
             }
-
-            lblInitialak.setText(ini.toUpperCase());
+            lblInitialak.setText(ini.toString().toUpperCase());
         }
 
         setAktibo(btnAdminPanela);
-        UIKudeatzailea.kargatuPanela(adminContentArea, "/view/AdminPanela.fxml");
+        kargatuAdminPanela();
+    }
+
+    /**
+     * Administrazio-panelaren FXML nodoa kargatzen du eta AdminController
+     * erreferentzia kontroladoreari pasatzen dio.
+     */
+    private void kargatuAdminPanela() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/AdminPanela.fxml"));
+            Node nodoa = loader.load();
+            AdminPanelaController ctrl = loader.getController();
+            ctrl.setAdminController(this);
+            UIKudeatzailea.kargatuPanela(nodoa);
+        } catch (Exception e) {
+            LOG.log(Level.SEVERE, "kargatuAdminPanela: FXML kargatzean errorea", e);
+            UIKudeatzailea.erakutsiToast("Errorea: ezin izan da administrazio-panela kargatu.", false);
+        }
     }
 
     /**
@@ -83,31 +115,70 @@ public class AdminController implements Initializable {
     @FXML
     public void loadAdminPanela() {
         setAktibo(btnAdminPanela);
-        UIKudeatzailea.kargatuPanela(adminContentArea, "/view/AdminPanela.fxml");
+        kargatuAdminPanela();
     }
 
+    /**
+     * Langileen kudeaketa bista kargatzen du.
+     */
     @FXML
     public void loadLangileak() {
         setAktibo(btnLangileak);
-        UIKudeatzailea.kargatuPanela(adminContentArea, "/view/Langileak.fxml");
+        UIKudeatzailea.kargatuPanela("/view/Langileak.fxml");
     }
 
+    /**
+     * Kategorien kudeaketa bista kargatzen du.
+     */
     @FXML
     public void loadKategoriak() {
         setAktibo(btnKategoriak);
-        UIKudeatzailea.kargatuPanela(adminContentArea, "/view/Kategoriak.fxml");
+        UIKudeatzailea.kargatuPanela("/view/Kategoriak.fxml");
     }
 
+    /**
+     * Kokalekuen kudeaketa bista kargatzen du.
+     */
     @FXML
     public void loadKokalekuak() {
         setAktibo(btnKokalekuak);
-        UIKudeatzailea.kargatuPanela(adminContentArea, "/view/Kokalekuak.fxml");
+        UIKudeatzailea.kargatuPanela("/view/Kokalekuak.fxml");
     }
 
+    /**
+     * Auditoriaren bista kargatzen du.
+     */
     @FXML
     public void loadAuditoria() {
         setAktibo(btnAuditoria);
-        UIKudeatzailea.kargatuPanela(adminContentArea, "/view/Auditoria.fxml");
+        UIKudeatzailea.kargatuPanela("/view/Auditoria.fxml");
+    }
+
+    /**
+     * Iraungitako artikuluen kudeaketa bista kargatzen du.
+     */
+    @FXML
+    public void loadIraungitakoak() {
+        setAktibo(btnIraungitakoak);
+        UIKudeatzailea.kargatuPanela("/view/Iraungitakoak.fxml");
+    }
+
+    /**
+     * Langile berria gehitzeko bista kargatzen du eta nabigazioa eguneratzen
+     * du.
+     */
+    public void loadLangileBerria() {
+        setAktibo(btnLangileak);
+        UIKudeatzailea.kargatuPanela("/view/LangileBerria.fxml");
+    }
+
+    /**
+     * Kategoria berria gehitzeko bista kargatzen du eta nabigazioa eguneratzen
+     * du.
+     */
+    public void loadKategoriaBerria() {
+        setAktibo(btnKategoriak);
+        UIKudeatzailea.kargatuPanela("/view/KategoriaBerria.fxml");
     }
 
     /**

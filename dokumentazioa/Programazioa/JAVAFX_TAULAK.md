@@ -190,7 +190,7 @@ colIzena.setOnEditCommit(event -> {
 // ArtikuluaDAO.java
 public static boolean eguneratu(String kodea, String izenaBerrria) {
     String sql = "UPDATE ARTIKULUA SET a_izena = ? WHERE id_artikulua = ?";
-    try (Connection con = DBConexioa.getKonexioa();
+    try (Connection con = DBKonexioa.getKonexioa();
          PreparedStatement ps = con.prepareStatement(sql)) {
         ps.setString(1, izenaBerrria);
         ps.setString(2, kodea);

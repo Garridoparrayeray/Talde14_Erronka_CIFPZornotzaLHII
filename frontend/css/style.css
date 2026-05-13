@@ -1,3 +1,90 @@
+/* ==========================================================================
+   1. FUENTES LOCALES
+   ========================================================================== */
+/* inter-300 - latin */
+@font-face {
+  font-display: swap; 
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 300;
+  src: url('../fonts/inter-v20-latin-300.woff2') format('woff2'); 
+}
+
+/* inter-regular - latin */
+@font-face {
+  font-display: swap; 
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  src: url('../fonts/inter-v20-latin-regular.woff2') format('woff2'); 
+}
+
+/* inter-500 - latin */
+@font-face {
+  font-display: swap; 
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 500;
+  src: url('../fonts/inter-v20-latin-500.woff2') format('woff2'); 
+}
+
+/* inter-600 - latin */
+@font-face {
+  font-display: swap; 
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 600;
+  src: url('../fonts/inter-v20-latin-600.woff2') format('woff2'); 
+}
+
+/* montserrat-regular - latin */
+@font-face {
+  font-display: swap; 
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 400;
+  src: url('../fonts/montserrat-v31-latin-regular.woff2') format('woff2'); 
+}
+
+/* montserrat-500 - latin */
+@font-face {
+  font-display: swap; 
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 500;
+  src: url('../fonts/montserrat-v31-latin-500.woff2') format('woff2'); 
+}
+
+/* montserrat-600 - latin */
+@font-face {
+  font-display: swap; 
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 600;
+  src: url('../fonts/montserrat-v31-latin-600.woff2') format('woff2'); 
+}
+
+/* montserrat-700 - latin */
+@font-face {
+  font-display: swap; 
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 700;
+  src: url('../fonts/montserrat-v31-latin-700.woff2') format('woff2'); 
+}
+
+/* montserrat-800 - latin */
+@font-face {
+  font-display: swap; 
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 800;
+  src: url('../fonts/montserrat-v31-latin-800.woff2') format('woff2'); 
+}
+
+/* ==========================================================================
+   2. BASE Y VARIABLES
+   ========================================================================== */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
@@ -32,15 +119,35 @@
 
 html { scroll-behavior: smooth; }
 
+/* 1. Cambiamos el body para que sea una columna flexible que ocupe siempre el 100% del alto de la pantalla */
 body {
   font-family: var(--font-body);
   background: var(--white);
   color: var(--gray-900);
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
+  
+  /* -- AÑADIDO PARA EL FOOTER -- */
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
-/* ─── NAVBAR ─────────────────────────────── */
+/* 2. Le decimos al main que crezca (flex: 1) para rellenar todo el hueco vacío y empujar el footer hacia abajo */
+main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Padding especial para la página de catálogo (ajustar si es necesario) */
+body.catalog-page {
+  padding-top: 80px;
+}
+
+/* ==========================================================================
+   3. NAVBAR (COMÚN)
+   ========================================================================== */
 .navbar {
   position: fixed;
   top: 0; left: 0; right: 0;
@@ -164,7 +271,9 @@ body {
 
 .nav-cta:hover { background: var(--blue-700); transform: translateY(-1px); box-shadow: 0 4px 18px rgba(59,91,219,.35); }
 
-/* ─── HERO ───────────────────────────────── */
+/* ==========================================================================
+   4. PÁGINA DE INICIO (HERO Y SECCIONES)
+   ========================================================================== */
 .hero {
   padding-top: 130px;
   padding-bottom: 0;
@@ -270,7 +379,7 @@ body {
   font-size: 17px;
   font-weight: 300;
   line-height: 1.65;
-  color: var(--gray-500);
+  color: var(--gray-700);
   max-width: 440px;
   margin-bottom: 36px;
   opacity: 0;
@@ -340,7 +449,6 @@ body {
 .trust-text { font-size: 13px; color: var(--gray-500); }
 .trust-text strong { color: var(--gray-700); font-weight: 500; }
 
-/* ─── HERO VISUAL ───────────────────────── */
 .hero-visual {
   display: flex;
   justify-content: center;
@@ -368,6 +476,11 @@ body {
   width: 360px;
   border: 1px solid var(--gray-100);
   position: relative;
+  cursor: pointer;
+}
+
+.mockup-card:hover {
+  box-shadow: 0 16px 50px rgba(59,91,219,.22);
 }
 
 .mc-header {
@@ -410,7 +523,6 @@ body {
   color: var(--blue-700);
 }
 
-/* ─── FORM SECTION ───────────────────────── */
 .form-group {
   margin-bottom: 24px;
 }
@@ -513,7 +625,6 @@ textarea.form-control {
   .form-row { grid-template-columns: 1fr; }
 }
 
-/* ─── HOW IT WORKS ───────────────────────── */
 .section {
   padding: 100px 32px;
 }
@@ -556,8 +667,8 @@ textarea.form-control {
 .section-subtitle {
   font-size: 16px;
   font-weight: 300;
-  line-height: 1.7;
-  color: var(--gray-500);
+  line-height: 1.6;
+  color: var(--gray-700);
   max-width: 520px;
   margin-bottom: 60px;
 }
@@ -636,11 +747,10 @@ textarea.form-control {
 .step-desc {
   font-size: 14px;
   line-height: 1.65;
-  color: var(--gray-500);
+  color: var(--gray-700);
   font-weight: 300;
 }
 
-/* ─── CATEGORIES ─────────────────────────── */
 .cat-section { padding: 80px 32px; }
 
 .cat-inner { max-width: 1200px; margin: 0 auto; }
@@ -685,9 +795,221 @@ textarea.form-control {
 .cat-name { font-size: 12px; font-weight: 600; color: var(--gray-700); letter-spacing: .01em; }
 .cat-count { font-size: 11px; color: var(--gray-400, #9ca3bb); margin-top: 3px; }
 
-/* ─── FOOTER ─────────────────────────────── */
+/* ==========================================================================
+   5. CATÁLOGO / OBJEKTU-ZERRENDA (Estilos específicos)
+   ========================================================================== */
+.btn-back {
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--blue-600);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.catalog-header {
+  background: var(--gray-50);
+  padding: 60px 32px 40px;
+  text-align: left;
+  border-bottom: 1px solid var(--gray-100);
+}
+
+.header-inner { max-width: 1200px; margin: 0 auto; }
+
+.catalog-title {
+  font-family: var(--font-head);
+  font-size: 32px;
+  font-weight: 800;
+  margin-bottom: 10px;
+}
+
+.catalog-sub { color: var(--gray-500); max-width: 600px; font-size: 15px; margin-bottom: 32px; }
+
+.filter-bar {
+  display: flex;
+  gap: 16px;
+  background: var(--white);
+  padding: 16px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--gray-200);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  align-items: center;
+}
+
+.search-wrapper {
+  flex-grow: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-wrapper svg {
+  position: absolute;
+  left: 14px;
+  color: var(--gray-400);
+  width: 18px;
+  height: 18px;
+}
+
+.search-input {
+  width: 100%;
+  padding: 12px 16px 12px 40px;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-body);
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.search-input:focus { border-color: var(--blue-500); }
+
+.category-select {
+  padding: 12px 16px;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--gray-700);
+  outline: none;
+  background: var(--white);
+  cursor: pointer;
+  min-width: 200px;
+}
+
+.catalog-section { padding: 60px 32px; }
+
+.catalog-grid {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 30px;
+}
+
+.item-card {
+  background: var(--white);
+  border: 1px solid var(--gray-100);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.2s;
+  display: flex;
+  flex-direction: column;
+}
+
+.item-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-md);
+}
+
+.item-img {
+  width: 100%;
+  height: 200px;
+  background: var(--blue-50);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.item-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.img-placeholder {
+  color: var(--blue-300);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.item-info {
+  padding: 20px;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.item-cat-badge {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--blue-600);
+  background: var(--blue-50);
+  padding: 4px 8px;
+  border-radius: 4px;
+  align-self: flex-start;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+}
+
+.item-name {
+  font-family: var(--font-head);
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--gray-900);
+  margin-bottom: 20px;
+  min-height: 44px;
+}
+
+.btn-claim {
+  width: 100%;
+  background: var(--blue-600);
+  color: #fff;
+  border: none;
+  padding: 12px;
+  border-radius: var(--radius-md);
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  text-align: center;
+  transition: background 0.2s;
+}
+
+.btn-claim:hover { background: var(--blue-700); }
+
+.no-results {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 40px;
+  color: var(--gray-500);
+  font-size: 16px;
+  display: none;
+}
+
+.btn-load-more {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: var(--white);
+  color: var(--blue-600);
+  font-family: var(--font-body);  
+  font-size: 14px;
+  font-weight: 600;
+  padding: 12px 28px;
+  border-radius: var(--radius-md);
+  border: 1.5px solid var(--blue-200);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-load-more:hover {
+  background: var(--blue-50);
+  border-color: var(--blue-400);
+  transform: translateY(-2px);
+}
+
+/* ==========================================================================
+   6. FOOTER (COMÚN)
+   ========================================================================== */
 footer {
-  background: var(--gray-900);
+  background: #12131A;
   color: rgba(255,255,255,.6);
   padding: 64px 32px 32px;
 }
@@ -730,6 +1052,7 @@ footer {
   text-decoration: none;
   display: flex; align-items: center; gap: 6px;
   transition: color .2s;
+  width: fit-content;
 }
 
 .footer-contact a:hover { color: rgba(255,255,255,.9); }
@@ -758,6 +1081,7 @@ footer {
   text-decoration: none;
   transition: color .2s;
   display: flex; align-items: center; gap: 5px;
+  width: fit-content;
 }
 
 .footer-links a:hover { color: rgba(255,255,255,.9); }
@@ -793,12 +1117,13 @@ footer {
   border: 1px solid rgba(255,255,255,.08);
 }
 
-/* ─── ACCESSIBILITY ──────────────────────── */
+/* ==========================================================================
+   7. ACCESIBILIDAD Y RESPONSIVE (MEDIA QUERIES)
+   ========================================================================== */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
 }
 
-/* ─── RESPONSIVE ─────────────────────────── */
 @media (max-width: 900px) {
   .hero-inner { grid-template-columns: 1fr; }
   .hero-visual { display: none; }
@@ -811,9 +1136,26 @@ footer {
   .menu-toggle { display: flex; }
 }
 
+@media (max-width: 640px) {
+  .form-row { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 600px) {
+  .nav-inner { padding: 0 16px; gap: 8px; }
+  .nav-logo { flex-shrink: 1; }
+  .logo-text span { display: none; }
+  
+  .btn-back { font-size: 12px; white-space: nowrap; } 
+  
+  .filter-bar { flex-direction: column; align-items: stretch; }
+  .category-select { min-width: 0; width: 100%; }
+  .catalog-grid { grid-template-columns: 1fr; }
+  .footer-top { grid-template-columns: 1fr; }
+  .footer-bottom { flex-direction: column; align-items: flex-start; gap: 16px; }
+}
+
 @media (max-width: 540px) {
   /* --- Navbar Responsive --- */
-  .nav-inner { padding: 0 16px; gap: 15px; }
   .logo-mark { width: 32px; height: 32px; }
   .logo-mark svg { width: 16px; height: 16px; }
   .nav-right { gap: 8px; }
@@ -825,10 +1167,10 @@ footer {
   .hero-title { font-size: clamp(32px, 8vw, 40px); }
   .section { padding: 60px 16px; }
   .cat-grid { grid-template-columns: repeat(2, 1fr); }
-  .footer-top { grid-template-columns: 1fr; }
   .form-inner { padding: 32px 20px; }
 }
-/* --- ESTILOS MENÚ MÓVIL --- */
+
+/* --- ESTILOS MENÚ MÓVIL (Común) --- */
 .menu-toggle {
   display: none;
   background: var(--blue-50);
@@ -868,4 +1210,91 @@ footer {
 .mobile-nav a:hover, .mobile-nav a.active {
   background: var(--blue-50);
   color: var(--blue-600);
+}
+/* ==========================================================================
+   8. MODO OSCURO (DARK THEME)
+   ========================================================================== */
+.theme-toggle {
+  background: none;
+  border: none;
+  color: var(--gray-700);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  border-radius: 50%;
+  transition: background 0.2s, color 0.2s;
+  margin-right: 10px;
+}
+.theme-toggle:hover {
+  background: var(--gray-100);
+  color: var(--blue-600);
+}
+
+/* Variables de color para el modo oscuro */
+body.dark-theme {
+  --blue-900: #E8EDFB;
+  --blue-800: #7B96F0;
+  --blue-700: #5274E7;
+  --blue-600: #3B5BDB;
+  --blue-500: #2850C8;
+  --blue-400: #1A3A8F;
+  --blue-100: #1A2235;
+  --blue-50:  #121826;
+  --gray-900: #F6F7FA;
+  --gray-700: #B8BBCA;
+  --gray-500: #8E94A8;
+  --gray-300: #3F4458;
+  --gray-100: #222635;
+  --gray-50:  #181B26;
+  --white:    #0E1117;
+}
+
+body.dark-theme .navbar {
+  background: rgba(14, 17, 23, 0.88);
+}
+body.dark-theme .navbar.scrolled {
+  background: rgba(14, 17, 23, 0.97);
+}
+body.dark-theme .hero {
+  background: linear-gradient(160deg, var(--blue-50) 0%, var(--white) 55%);
+}
+body.dark-theme .mockup-card,
+body.dark-theme .step-card,
+body.dark-theme .cat-card,
+body.dark-theme .mobile-nav {
+  background: var(--gray-50);
+  border-color: var(--gray-100);
+}
+body.dark-theme .form-control {
+  background: var(--white);
+  color: var(--gray-900);
+}
+body.dark-theme .theme-toggle {
+  color: var(--gray-900);
+}
+body.dark-theme .theme-toggle:hover {
+  background: var(--gray-100);
+}
+
+/* --- RA 1: Modal Styles (Moved from JS to CSS) --- */
+.custom-modal-content {
+  border-radius: var(--radius-md);
+  border: none;
+  box-shadow: var(--shadow-lg);
+  background: var(--white);
+}
+
+.custom-modal-header {
+  background: var(--blue-600);
+  color: white;
+  border-top-left-radius: var(--radius-md);
+  border-top-right-radius: var(--radius-md);
+}
+
+.custom-modal-body {
+  padding: 24px;
+  font-family: var(--font-body);
+  color: var(--gray-700);
 }

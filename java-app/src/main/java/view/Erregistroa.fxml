@@ -6,10 +6,14 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
@@ -25,113 +29,167 @@
          </children>
       </HBox>
 
-      <HBox spacing="20.0" VBox.vgrow="ALWAYS">
-         <children>
-
-            <VBox prefWidth="500.0" spacing="20.0" styleClass="card" HBox.hgrow="ALWAYS">
+      <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS"
+                  style="-fx-background-color: transparent; -fx-border-color: transparent;">
+         <content>
+            <VBox spacing="20.0">
                <children>
-                  <Label style="-fx-font-size: 16px;" styleClass="font-bold, text-dark" text="Artikuluaren datuak" />
 
-                  <VBox spacing="8.0">
+                  <HBox spacing="20.0">
                      <children>
-                        <Label style="-fx-text-fill: #374151;" styleClass="font-bold" text="Izena *" />
-                        <TextField fx:id="txtIzena" promptText="Adib.: Eskola-motxila" styleClass="form-control" />
-                     </children>
-                  </VBox>
 
-                  <HBox spacing="15.0">
-                     <children>
-                        <VBox spacing="8.0" HBox.hgrow="ALWAYS" />
+                        <!-- Artikuluaren datuak -->
+                        <VBox prefWidth="500.0" spacing="16.0" styleClass="card" HBox.hgrow="ALWAYS">
+                           <children>
+                              <Label style="-fx-font-size: 16px;" styleClass="font-bold, text-dark" text="Artikuluaren datuak" />
+
+                              <VBox spacing="8.0">
+                                 <children>
+                                    <Label style="-fx-text-fill: #374151;" styleClass="font-bold" text="Izena *" />
+                                    <TextField fx:id="txtIzena" promptText="Adib.: Eskola-motxila" styleClass="form-control" />
+                                 </children>
+                              </VBox>
+
+                              <VBox spacing="8.0">
+                                 <children>
+                                    <Label style="-fx-text-fill: #374151;" styleClass="font-bold" text="Kategoria *" />
+                                    <ComboBox fx:id="cbKategoria" maxWidth="1.7976931348623157E308" promptText="— Hautatu —" styleClass="form-select" />
+                                 </children>
+                              </VBox>
+
+                              <VBox spacing="8.0" VBox.vgrow="ALWAYS">
+                                 <children>
+                                    <Label style="-fx-text-fill: #374151;" styleClass="font-bold" text="Deskribapena *" />
+                                    <TextArea fx:id="txtDeskribapena" prefHeight="90.0" promptText="Ezaugarri bereizgarriak, etiketak, edukia..." styleClass="text-area" VBox.vgrow="ALWAYS" />
+                                 </children>
+                              </VBox>
+
+                              <HBox spacing="15.0">
+                                 <children>
+                                    <VBox spacing="8.0" HBox.hgrow="ALWAYS">
+                                       <children>
+                                          <Label style="-fx-text-fill: #374151;" styleClass="font-bold" text="Aurkipen-lekua" />
+                                          <TextField fx:id="txtAurkipenLekua" promptText="Adib.: Portua" styleClass="form-control" />
+                                       </children>
+                                    </VBox>
+                                    <VBox spacing="8.0" HBox.hgrow="ALWAYS">
+                                       <children>
+                                          <Label style="-fx-text-fill: #374151;" styleClass="font-bold" text="Sarrera-data" />
+                                          <DatePicker fx:id="dpSarreraData" maxWidth="1.7976931348623157E308" styleClass="date-picker" />
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </HBox>
+
+                              <VBox spacing="8.0">
+                                 <children>
+                                    <Label style="-fx-text-fill: #374151;" styleClass="font-bold" text="Biltegiko kokalekua" />
+                                    <ComboBox fx:id="cbKokalekua" maxWidth="1.7976931348623157E308" promptText="— Hautatu kokalekua —" styleClass="form-select" />
+                                 </children>
+                              </VBox>
+
+                              <CheckBox fx:id="chkIragankorra" mnemonicParsing="false" styleClass="check-box" text="Iragankorra" />
+                           </children>
+                           <padding>
+                              <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />
+                           </padding>
+                        </VBox>
+
+                        <!-- Eskuineko zutabea: Aurkitzailea + Argazkia -->
+                        <VBox spacing="20.0" HBox.hgrow="ALWAYS">
+                           <children>
+
+                              <!-- Aurkitzailearen datuak -->
+                              <VBox prefWidth="500.0" spacing="16.0" styleClass="card">
+                                 <children>
+                                    <VBox spacing="4.0">
+                                       <children>
+                                          <Label style="-fx-font-size: 16px;" styleClass="font-bold, text-dark" text="Aurkitu duen pertsonaren datuak:" />
+                                          <Label style="-fx-font-size: 11px; -fx-text-fill: #6B7280;" text="Objektua aurkitu eta udaletxera ekarri duen pertsona (2 urte igarota jakinaraziko zaio)" />
+                                       </children>
+                                    </VBox>
+
+                                    <GridPane hgap="15.0" vgap="10.0">
+                                       <columnConstraints>
+                                          <ColumnConstraints hgrow="ALWAYS" percentWidth="50.0" />
+                                          <ColumnConstraints hgrow="ALWAYS" percentWidth="50.0" />
+                                       </columnConstraints>
+                                       <children>
+                                          <VBox spacing="8.0" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                                             <children>
+                                                <Label style="-fx-text-fill: #374151;" styleClass="font-bold" text="Izena *" />
+                                                <TextField fx:id="txtAurkIzena" promptText="Iker" styleClass="form-control" maxWidth="1.7976931348623157E308" />
+                                             </children>
+                                          </VBox>
+                                          <VBox spacing="8.0" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                                             <children>
+                                                <Label style="-fx-text-fill: #374151;" styleClass="font-bold" text="Abizena *" />
+                                                <TextField fx:id="txtAurkAbizena" promptText="Mendia" styleClass="form-control" maxWidth="1.7976931348623157E308" />
+                                             </children>
+                                          </VBox>
+                                          <VBox spacing="8.0" GridPane.columnIndex="0" GridPane.rowIndex="1">
+                                             <children>
+                                                <Label style="-fx-text-fill: #374151;" styleClass="font-bold" text="Telefonoa" />
+                                                <TextField fx:id="txtAurkTelefonoa" promptText="666 12 34 56" styleClass="form-control" maxWidth="1.7976931348623157E308" />
+                                             </children>
+                                          </VBox>
+                                          <VBox spacing="8.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                             <children>
+                                                <Label style="-fx-text-fill: #374151;" styleClass="font-bold" text="E-posta" />
+                                                <TextField fx:id="txtAurkEmaila" promptText="i.mendia@mail.eus" styleClass="form-control" maxWidth="1.7976931348623157E308" />
+                                             </children>
+                                          </VBox>
+                                       </children>
+                                    </GridPane>
+                                 </children>
+                                 <padding>
+                                    <Insets bottom="20.0" left="25.0" right="25.0" top="20.0" />
+                                 </padding>
+                              </VBox>
+
+                              <!-- Argazkia -->
+                              <VBox prefWidth="500.0" spacing="16.0" styleClass="card" VBox.vgrow="ALWAYS">
+                                 <children>
+                                    <Label style="-fx-font-size: 16px;" styleClass="font-bold, text-dark" text="Argazkia" />
+
+                                    <VBox spacing="10.0" styleClass="upload-zone" VBox.vgrow="ALWAYS" alignment="CENTER">
+                                       <children>
+                                          <Label style="-fx-text-fill: #9CA3AF; -fx-font-size: 32px;" text="📷" />
+                                          <Label fx:id="lblArgazkiIzena" style="-fx-text-fill: #6B7280; -fx-font-size: 12px;" text="Ez da irudirik hautatu." wrapText="true" />
+                                          <Button mnemonicParsing="false" styleClass="btn-outline" text="Aukeratu irudia..." onAction="#hautatuArgazkia"
+                                                  style="-fx-padding: 6 16; -fx-font-size: 12px;" />
+                                          <Label style="-fx-text-fill: #9CA3AF; -fx-font-size: 11px;" text="JPG, PNG · max 5 MB">
+                                             <VBox.margin><Insets top="4.0" /></VBox.margin>
+                                          </Label>
+                                       </children>
+                                    </VBox>
+
+                                    <Label fx:id="lblErrorea" styleClass="text-danger" wrapText="true" managed="false" visible="false" />
+
+                                    <HBox alignment="BOTTOM_RIGHT" spacing="15.0">
+                                       <children>
+                                          <Button mnemonicParsing="false" styleClass="btn-outline" text="Utzi" onAction="#utzi" />
+                                          <Button mnemonicParsing="false" styleClass="btn-primary" text="Erregistratu" onAction="#erregistratu" />
+                                       </children>
+                                    </HBox>
+                                 </children>
+                                 <padding>
+                                    <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />
+                                 </padding>
+                              </VBox>
+
+                           </children>
+                        </VBox>
+
                      </children>
                   </HBox>
 
-                  <VBox spacing="8.0">
-                     <children>
-                        <Label style="-fx-text-fill: #374151;" styleClass="font-bold" text="Kategoria *" />
-                        <ComboBox fx:id="cbKategoria" maxWidth="1.7976931348623157E308" promptText="— Hautatu —" styleClass="form-select" />
-                     </children>
-                  </VBox>
-
-                  <VBox spacing="8.0" VBox.vgrow="ALWAYS">
-                     <children>
-                        <Label style="-fx-text-fill: #374151;" styleClass="font-bold" text="Deskribapena" />
-                        <TextArea fx:id="txtDeskribapena" prefHeight="100.0" promptText="Ezaugarri bereizgarriak, etiketak, edukia..." styleClass="text-area" VBox.vgrow="ALWAYS" />
-                     </children>
-                  </VBox>
-
-                  <HBox spacing="15.0">
-                     <children>
-                        <VBox spacing="8.0" HBox.hgrow="ALWAYS">
-                           <children>
-                              <Label style="-fx-text-fill: #374151;" styleClass="font-bold" text="Aurkipen-lekua" />
-                              <TextField fx:id="txtAurkipenLekua" promptText="Adib.: Portua" styleClass="form-control" />
-                           </children>
-                        </VBox>
-                        <VBox spacing="8.0" HBox.hgrow="ALWAYS">
-                           <children>
-                              <Label style="-fx-text-fill: #374151;" styleClass="font-bold" text="Sarrera-data" />
-                              <DatePicker fx:id="dpSarreraData" maxWidth="1.7976931348623157E308" promptText="19/04/2026" styleClass="date-picker" />
-                           </children>
-                        </VBox>
-                     </children>
-                  </HBox>
-
-                  <CheckBox fx:id="chkIragankorra" mnemonicParsing="false" styleClass="check-box" text="Iragankorra" />
                </children>
                <padding>
-                  <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />
+                  <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
                </padding>
             </VBox>
-
-            <VBox prefWidth="500.0" spacing="20.0" styleClass="card" HBox.hgrow="ALWAYS">
-               <children>
-                  <Label style="-fx-font-size: 16px;" styleClass="font-bold, text-dark" text="Kokalekua eta argazkia" />
-
-                  <VBox spacing="8.0">
-                     <children>
-                        <Label style="-fx-text-fill: #374151;" styleClass="font-bold" text="Biltegiko kokalekua" />
-                        <ComboBox fx:id="cbKokalekua" maxWidth="1.7976931348623157E308" promptText="A-01 · Armairua A, apala 01" styleClass="form-select" />
-                     </children>
-                  </VBox>
-
-                  <VBox spacing="8.0" VBox.vgrow="ALWAYS">
-                     <children>
-                        <Label style="-fx-text-fill: #374151;" styleClass="font-bold" text="Argazkia" />
-                        <VBox spacing="10.0" styleClass="upload-zone" VBox.vgrow="ALWAYS">
-                           <children>
-                              <Label style="-fx-text-fill: #9CA3AF; -fx-font-size: 32px;" text="↓" />
-                              <Label style="-fx-text-fill: #4B5563; -fx-font-size: 14px;" text="Jaregin irudia hemen" />
-                              <Label style="-fx-text-fill: #9CA3AF; -fx-font-size: 12px;" text="edo" />
-                              <Button mnemonicParsing="false" styleClass="btn-outline" text="Aukeratu fitxategia..." />
-                              <Label style="-fx-text-fill: #9CA3AF; -fx-font-size: 11px;" text="JPG, PNG · max 5 MB">
-                                 <VBox.margin><Insets top="10.0" /></VBox.margin>
-                              </Label>
-                           </children>
-                        </VBox>
-                     </children>
-                  </VBox>
-
-                  <Label fx:id="lblErrorea" styleClass="text-danger" wrapText="true" managed="false" visible="false" />
-
-                  <HBox alignment="BOTTOM_RIGHT" spacing="15.0">
-                     <children>
-                        <Button mnemonicParsing="false" styleClass="btn-outline" text="Utzi" onAction="#utzi" />
-                        <Button mnemonicParsing="false" styleClass="btn-primary" text="Erregistratu" onAction="#erregistratu" />
-                     </children>
-                     <VBox.margin>
-                        <Insets top="10.0" />
-                     </VBox.margin>
-                  </HBox>
-               </children>
-               <padding>
-                  <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />
-               </padding>
-            </VBox>
-
-         </children>
-         <padding>
-            <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
-         </padding>
-      </HBox>
+         </content>
+      </ScrollPane>
    </children>
 </VBox>

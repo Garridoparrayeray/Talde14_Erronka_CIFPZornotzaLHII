@@ -29,7 +29,7 @@
                <children>
                   <VBox spacing="20.0" style="-fx-padding: 25;" styleClass="card" VBox.vgrow="ALWAYS">
                      <children>
-                        <HBox alignment="CENTER_LEFT">
+                        <HBox alignment="CENTER_LEFT" spacing="15.0">
                            <children>
                               <VBox>
                                  <children>
@@ -38,7 +38,9 @@
                                  </children>
                               </VBox>
                               <Region HBox.hgrow="ALWAYS" />
-                              <Button mnemonicParsing="false" styleClass="btn-primary" text="+ Apal berria" onAction="#kokalekuaBerria" />
+                              <Button mnemonicParsing="false" styleClass="btn-outline" text="Editatu" onAction="#kokalekuaEditatu" minWidth="80" />
+                              <Button mnemonicParsing="false" styleClass="btn-outline" style="-fx-background-color: #ef4444; -fx-text-fill: white; -fx-border-color: #ef4444;" text="Ezabatu" onAction="#kokalekuaEzabatu" minWidth="80" />
+                              <Button mnemonicParsing="false" styleClass="btn-primary" text="+ Apal berria" onAction="#kokalekuaBerria" minWidth="120" />
                            </children>
                         </HBox>
 

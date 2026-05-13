@@ -18,7 +18,7 @@ public class Emanaldia {
     private Langilea langilea;
 
     /**
-     * Emanaldiari eraikitzailea.
+     * Emanaldiaren eraikitzailea.
      *
      * @param artikulua Ematen den artikulua
      * @param hartzailea Artikulua jasotzen duen hartzailea
@@ -49,41 +49,81 @@ public class Emanaldia {
      */
     public boolean amaituEmanaldia() {
         if (dokumentuBidea != null && !dokumentuBidea.isEmpty()) {
-            artikulua.aldatuEgoera(model.EgoeraArtikulua.ITZULITA);
+            artikulua.aldatuEgoera(EgoeraArtikulua.ITZULITA);
             return true;
         }
         return false;
     }
 
     // Getters
+    /**
+     * Emanaldiren datu-baseko IDa itzultzen du.
+     *
+     * @return Emanaldiaren IDa
+     */
     public int getEmanaldiId() {
         return emanaldiId;
     }
 
+    /**
+     * Emanaldiaren data itzultzen du.
+     *
+     * @return Emanaldiaren data
+     */
     public Date getEmateData() {
         return emateData;
     }
 
+    /**
+     * Sinadura-dokumentuaren fitxategi-bidea itzultzen du.
+     *
+     * @return Dokumentuaren bidea
+     */
     public String getDokumentuBidea() {
         return dokumentuBidea;
     }
 
+    /**
+     * Emanaldiari buruzko oharrak itzultzen du.
+     *
+     * @return Oharrak
+     */
     public String getOharrak() {
         return oharrak;
     }
 
+    /**
+     * Emanaldiari buruzko oharrak ezartzen ditu.
+     *
+     * @param oharrak Ezarri beharreko oharrak
+     */
     public void setOharrak(String oharrak) {
         this.oharrak = oharrak;
     }
 
+    /**
+     * Emanaldiarekin lotutako artikulua itzultzen du.
+     *
+     * @return Artikulua objektua
+     */
     public Artikulua getArtikulua() {
         return artikulua;
     }
 
+    /**
+     * Artikulua jaso duen hartzailea itzultzen du.
+     *
+     * @return Hartzailea objektua
+     */
     public Hartzailea getHartzailea() {
         return hartzailea;
     }
 
+    /**
+     * Emanaldia kudeatzen duen langilea itzultzen du.
+     *
+     * @return Langilea objektua
+     */
     public Langilea getLangilea() {
         return langilea;
     }
