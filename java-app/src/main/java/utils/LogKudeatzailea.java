@@ -1,10 +1,14 @@
 package utils;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.FileHandler;
@@ -70,6 +74,34 @@ public class LogKudeatzailea {
         }
     }
 
+    private static final DateTimeFormatter INSERT_FMT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+    /**
+     * INSERT eragiketaren emaitza fitxategira idazten du.
+     *
+     * @param taula   Taula-izena (adib. "ARTIKULUA")
+     * @param kodea   Sortu den erregistroaren identifikagailua
+     * @param emaitza true txertaketa ondo egin bada
+     */
+    public static void erregistratu(String taula, String kodea, boolean emaitza) {
+        String bidea = AppConfig.getExportBidea() + File.separator + "insert_log.txt";
+        try {
+            Files.createDirectories(Paths.get(AppConfig.getExportBidea()));
+            try (PrintWriter pw = new PrintWriter(new FileWriter(bidea, true))) {
+                String emaitzaTestua;
+                if (emaitza) {
+                    emaitzaTestua = "OK";
+                } else {
+                    emaitzaTestua = "HUTS";
+                }
+                pw.printf("[%s] INSERT INTO %s | ID: %-15s | %s%n",
+                        LocalDateTime.now().format(INSERT_FMT), taula, kodea, emaitzaTestua);
+            }
+        } catch (IOException e) {
+            System.err.println("LogKudeatzailea: ezin idatzi insert_log — " + e.getMessage());
+        }
+    }
+
     /**
      * Klase baten Logger-a itzultzen du.
      *
@@ -80,6 +112,12 @@ public class LogKudeatzailea {
         return Logger.getLogger(klasea.getName());
     }
 
+    /**
+     * Log erregistroak formateatzeko Formatter bat sortzen du. Formatua:
+     * [data ordua] [maila] KlaseIzena: mezua.
+     *
+     * @return Konfiguratutako Formatter instantzia
+     */
     private static Formatter sortuFormatzailea() {
         return new SimpleFormatter() {
             private static final String FORMATUA = "[%1$tF %1$tT] [%2$-7s] %3$s: %4$s%n";

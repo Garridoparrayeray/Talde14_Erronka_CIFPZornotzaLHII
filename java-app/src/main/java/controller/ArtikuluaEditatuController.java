@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -20,20 +19,24 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 import model.Artikulua;
 import model.Kategoria;
 import model.Kokalekua;
 import utils.AppConfig;
 import utils.LogKudeatzailea;
+import utils.UIKudeatzailea;
 import utils.XMLExportazioa;
 
 /**
- * @author Eder Martin Artikulu bat editatzeko formularioaren kontroladorea.
+ * Biltegiko artikulu baten datuak editatzeko formularioaren kontroladorea.
+ * Artikuluaren izena, kategoria, kokalekua, deskribapena eta argazkia eguneratzeko
+ * aukera ematen du.
+ *
+ * @author Yeray Garrido
  */
-public class ArtikuluaEdituController implements Initializable {
+public class ArtikuluaEditatuController implements Initializable {
 
-    private static final Logger LOG = LogKudeatzailea.lortu(ArtikuluaEdituController.class);
+    private static final Logger LOG = LogKudeatzailea.lortu(ArtikuluaEditatuController.class);
 
     @FXML
     private Label lblTitulua;
@@ -52,34 +55,43 @@ public class ArtikuluaEdituController implements Initializable {
 
     private Artikulua artikulua;
     private File argazkiFile;
-    private Runnable onGordeCb;
 
+    /**
+     * Kontroladorea hasieratzen du: kategoria eta kokaleku ComboBox-ak betetzen
+     * ditu eta errore-etiketa ezkutatzen du.
+     *
+     * @param url FXML fitxategiaren kokapena
+     * @param rb  Erabilitako baliabide-sorta
+     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        cbKategoria.getItems().setAll(new ArrayList<>(KategoriaDAO.getGuztiak()));
-        cbKokalekua.getItems().setAll(new ArrayList<>(KokalekuaDAO.getZerrenda()));
-        ezkutuErrorea();
+        cbKategoria.getItems().setAll(KategoriaDAO.getGuztiak());
+        cbKokalekua.getItems().setAll(KokalekuaDAO.getZerrenda());
+        UIKudeatzailea.ezkutuFormularioErrorea(lblErrorea);
     }
 
     /**
-     * Editatu beharreko artikuluaren datuak formularioan aurrez betetzen ditu.
+     * Artikuluaren datuak formularioan kargatzen ditu, erabiltzaileak editatzeko
+     * prest utziz.
      *
      * @param a Editatu beharreko artikulua
-     * @param onGorde Gorde ostean deitzen den callback-a (taula freskatzeko)
      */
-    public void kargatu(Artikulua a, Runnable onGorde) {
+    public void kargatu(Artikulua a) {
         this.artikulua = a;
-        this.onGordeCb = onGorde;
 
         lblTitulua.setText("Editatu: " + a.getArtikuluKodea());
         txtIzena.setText(a.getIzenburua());
-        txtDeskribapena.setText(a.getDeskribapenaSegurua().equals("—") ? "" : a.getDeskribapenaSegurua());
+        String deskribapenaSegurua = a.getDeskribapenaSegurua();
+        if (deskribapenaSegurua.equals("—")) {
+            txtDeskribapena.setText("");
+        } else {
+            txtDeskribapena.setText(deskribapenaSegurua);
+        }
 
         if (a.getArgazkiBidea() != null && !a.getArgazkiBidea().isEmpty()) {
             lblArgazkiIzena.setText(a.getArgazkiBidea());
         }
 
-        // Kategoria hautatu
         if (a.getKategoria() != null) {
             for (Kategoria k : cbKategoria.getItems()) {
                 if (k.getKategoriaId() == a.getKategoria().getKategoriaId()) {
@@ -89,7 +101,6 @@ public class ArtikuluaEdituController implements Initializable {
             }
         }
 
-        // Kokalekua hautatu
         if (a.getKokalekua() != null) {
             for (Kokalekua kok : cbKokalekua.getItems()) {
                 if (kok.getKokalekuOsoa().equals(a.getKokalekua().getKokalekuOsoa())) {
@@ -100,6 +111,10 @@ public class ArtikuluaEdituController implements Initializable {
         }
     }
 
+    /**
+     * Fitxategi-hautagailu bat irekitzen du erabiltzaileak argazki bat
+     * hautatu ahal izateko.
+     */
     @FXML
     private void hautatuArgazkia() {
         FileChooser fc = new FileChooser();
@@ -114,24 +129,33 @@ public class ArtikuluaEdituController implements Initializable {
         }
     }
 
+    /**
+     * Formularioko datuak egiaztatzen ditu eta artikuluaren aldaketak datu-basean
+     * gordetzen ditu. Argazki berria aukeratu bada, karpetara kopiatzen du.
+     */
     @FXML
     private void gorde() {
         String izena = txtIzena.getText().trim();
         String deskribapena = txtDeskribapena.getText().trim();
         if (izena.isEmpty() || deskribapena.isEmpty()) {
-            erakutsiErrorea("Izena eta deskribapena bete behar dira.");
+            UIKudeatzailea.erakutsiFormularioErrorea(lblErrorea, "Izena eta deskribapena bete behar dira.");
             return;
         }
 
-        int idKat = cbKategoria.getValue() != null ? cbKategoria.getValue().getKategoriaId() : 0;
-        int idKok = cbKokalekua.getValue() != null ? cbKokalekua.getValue().getKokalekuId() : 0;
+        int idKat = 0;
+        if (cbKategoria.getValue() != null) {
+            idKat = cbKategoria.getValue().getKategoriaId();
+        }
+        int idKok = 0;
+        if (cbKokalekua.getValue() != null) {
+            idKok = cbKokalekua.getValue().getKokalekuId();
+        }
 
-        // Argazki berria kopiatzen da
         String argazkiBidea = artikulua.getArgazkiBidea();
         if (argazkiFile != null) {
-            String kopiaCopy = kopiatuArgazkia(argazkiFile);
-            if (kopiaCopy != null) {
-                argazkiBidea = kopiaCopy;
+            String kopia = kopiatuArgazkia(argazkiFile);
+            if (kopia != null) {
+                argazkiBidea = kopia;
             }
         }
 
@@ -139,21 +163,26 @@ public class ArtikuluaEdituController implements Initializable {
                 idKat, idKok, argazkiBidea);
         if (ok) {
             XMLExportazioa.exportatu();
-            if (onGordeCb != null) {
-                onGordeCb.run();
-            }
             itxi();
         } else {
-            erakutsiErrorea("Errorea gordetzean.");
+            UIKudeatzailea.erakutsiFormularioErrorea(lblErrorea, "Errorea gordetzean.");
         }
     }
 
+    /**
+     * Formularioa ixten du eta inbentario bistara itzultzen da.
+     */
     @FXML
     private void itxi() {
-        Stage stage = (Stage) txtIzena.getScene().getWindow();
-        stage.close();
+        UIKudeatzailea.kargatuPanela("/view/Inbentario.fxml");
     }
 
+    /**
+     * Argazkia artikulu_irudiak/ karpetara kopiatzen du izen berri batekin.
+     *
+     * @param origen Kopiatu beharreko jatorrizko fitxategia
+     * @return Kopiaren izen berria, edo null errorea izanez gero
+     */
     private String kopiatuArgazkia(File origen) {
         try {
             File irudiDir = new File(AppConfig.getArtikuluIrudiakBidea());
@@ -162,28 +191,18 @@ public class ArtikuluaEdituController implements Initializable {
             }
             String nombre = origen.getName();
             int dot = nombre.lastIndexOf('.');
-            String ext = dot >= 0 ? nombre.substring(dot).toLowerCase() : "";
+            String ext;
+            if (dot >= 0) {
+                ext = nombre.substring(dot).toLowerCase();
+            } else {
+                ext = "";
+            }
             String izena = "img_" + System.currentTimeMillis() + ext;
             Files.copy(origen.toPath(), new File(irudiDir, izena).toPath(), StandardCopyOption.REPLACE_EXISTING);
             return izena;
         } catch (IOException e) {
             LOG.log(Level.WARNING, "kopiatuArgazkia: errorea", e);
             return null;
-        }
-    }
-
-    private void erakutsiErrorea(String mezua) {
-        if (lblErrorea != null) {
-            lblErrorea.setText(mezua);
-            lblErrorea.setVisible(true);
-            lblErrorea.setManaged(true);
-        }
-    }
-
-    private void ezkutuErrorea() {
-        if (lblErrorea != null) {
-            lblErrorea.setVisible(false);
-            lblErrorea.setManaged(false);
         }
     }
 }

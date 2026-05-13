@@ -1,7 +1,6 @@
 package controller;
 
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
@@ -13,7 +12,6 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.StackPane;
 import model.Kategoria;
 import utils.LogKudeatzailea;
 import utils.Sesio;
@@ -45,21 +43,15 @@ public class ErreklamazioaBerriController implements Initializable {
     @FXML
     private Label lblErrorea;
 
-    private StackPane contentArea;
-
     /**
-     * Itzultzean erabili beharreko StackPane ezartzen du.
+     * Kontroladorea hasieratzen du: kategoria ComboBox-a betetzen du.
      *
-     * @param contentArea Formularioa kargatuta dagoen gunea
+     * @param url FXML fitxategiaren kokapena
+     * @param rb  Erabilitako baliabide-sorta
      */
-    public void setContentArea(StackPane contentArea) {
-        this.contentArea = contentArea;
-    }
-
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        ArrayList<Kategoria> kategoriak = new ArrayList<Kategoria>(KategoriaDAO.getGuztiak());
-        cbKategoria.getItems().setAll(kategoriak);
+        cbKategoria.getItems().setAll(KategoriaDAO.getGuztiak());
     }
 
     /**
@@ -77,7 +69,7 @@ public class ErreklamazioaBerriController implements Initializable {
         Kategoria kategoria = cbKategoria.getValue();
 
         if (nan.isEmpty() || izena.isEmpty() || abizena.isEmpty() || deskribapena.isEmpty() || kategoria == null) {
-            mostrarErrorea("(*) eremuak bete behar dira.");
+            UIKudeatzailea.erakutsiFormularioErrorea(lblErrorea, "(*) eremuak bete behar dira.");
             return;
         }
 
@@ -91,7 +83,7 @@ public class ErreklamazioaBerriController implements Initializable {
         if (ok) {
             itxi();
         } else {
-            mostrarErrorea("Errorea gordetzean. Egiaztatu datuak.");
+            UIKudeatzailea.erakutsiFormularioErrorea(lblErrorea, "Errorea gordetzean. Egiaztatu datuak.");
         }
     }
 
@@ -103,13 +95,10 @@ public class ErreklamazioaBerriController implements Initializable {
         itxi();
     }
 
-    private void mostrarErrorea(String mezua) {
-        lblErrorea.setText(mezua);
-        lblErrorea.setVisible(true);
-        lblErrorea.setManaged(true);
-    }
-
+    /**
+     * Erreklamazioak zerrendara itzultzen da formularioa itxiz.
+     */
     private void itxi() {
-        UIKudeatzailea.kargatuPanela(contentArea, "/view/Erreklamazioak.fxml");
+        UIKudeatzailea.kargatuPanela("/view/Erreklamazioak.fxml");
     }
 }

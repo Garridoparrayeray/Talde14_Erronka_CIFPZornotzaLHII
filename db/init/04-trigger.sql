@@ -75,7 +75,7 @@ CREATE TRIGGER trg_blokeatu_bueltatuak
 BEFORE UPDATE ON ARTIKULUA
 FOR EACH ROW
 BEGIN
-    IF OLD.egoera = 'bueltatua' AND NEW.egoera = 'bueltatua' THEN
+    IF OLD.egoera = 'bueltatua' AND NEW.egoera <> OLD.egoera THEN
         SIGNAL SQLSTATE '45000' 
         SET MESSAGE_TEXT = 'Errorea: Ezin da aldatu dagoeneko bueltatua izan den artikulu bat.';
     END IF;

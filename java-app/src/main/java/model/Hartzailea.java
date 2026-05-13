@@ -22,8 +22,8 @@ public abstract class Hartzailea implements Serializable {
      * Hartzailearen eraikitzailea.
      *
      * @param hartzaileId Hartzailearen identifikagailu bakarra
-     * @param telefonoa   Hartzailearen telefono zenbakia
-     * @param emaila      Hartzailearen helbide elektronikoa
+     * @param telefonoa Hartzailearen telefono zenbakia
+     * @param emaila Hartzailearen helbide elektronikoa
      */
     public Hartzailea(int hartzaileId, String telefonoa, String emaila) {
         this.hartzaileId = hartzaileId;
@@ -48,8 +48,8 @@ public abstract class Hartzailea implements Serializable {
     }
 
     /**
-     * Hartzailearen datu-baseko IDa ezartzen du.
-     * Offline moduan {@code BiltegiLocala}-k erabiltzen du ID berria esleitzeko.
+     * Hartzailearen datu-baseko IDa ezartzen du. Offline moduan
+     * {@code BiltegiLokala}-k erabiltzen du ID berria esleitzeko.
      *
      * @param id Ezarri beharreko IDa
      */
@@ -58,8 +58,8 @@ public abstract class Hartzailea implements Serializable {
     }
 
     /**
-     * Jabearen izena itzultzen du, Jabea azpiklaseak gainidatzita.
-     * Oinarrizko hartzailean "—" itzultzen du.
+     * Jabearen izena itzultzen du, Jabea azpiklaseak gainidatzita. Oinarrizko
+     * hartzailean "—" itzultzen du.
      *
      * @return Izena, edo "—" ez bada Jabea
      */
@@ -68,8 +68,8 @@ public abstract class Hartzailea implements Serializable {
     }
 
     /**
-     * Jabearen abizena itzultzen du, Jabea azpiklaseak gainidatzita.
-     * Oinarrizko hartzailean "—" itzultzen du.
+     * Jabearen abizena itzultzen du, Jabea azpiklaseak gainidatzita. Oinarrizko
+     * hartzailean "—" itzultzen du.
      *
      * @return Abizena, edo "—" ez bada Jabea
      */

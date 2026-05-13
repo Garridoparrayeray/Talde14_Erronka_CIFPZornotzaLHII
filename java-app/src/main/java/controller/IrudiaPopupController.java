@@ -15,14 +15,21 @@ import utils.AppConfig;
 
 /**
  * Artikuluaren argazkia eta deskribapena erakusten dituen popup kontroladorea.
+ *
+ * @author Yeray Garrido Parra
  */
 public class IrudiaPopupController implements Initializable {
 
-    @FXML private ImageView imgArgazkia;
-    @FXML private Label lblKodea;
-    @FXML private Label lblDeskribapena;
-    @FXML private Label lblNoImage;
+    @FXML
+    private ImageView imgArgazkia;
+    @FXML
+    private Label lblKodea;
+    @FXML
+    private Label lblDeskribapena;
+    @FXML
+    private Label lblNoImage;
 
+    /** Ez du hasierako ekintzarik behar; kargatu() metodoak osatzen du. */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
     }
@@ -33,7 +40,9 @@ public class IrudiaPopupController implements Initializable {
      * @param artikulua Erakutsi beharreko artikulua
      */
     public void kargatu(Artikulua artikulua) {
-        if (artikulua == null) return;
+        if (artikulua == null) {
+            return;
+        }
 
         lblKodea.setText(artikulua.getArtikuluKodea() + " — " + artikulua.getIzenburua());
         lblDeskribapena.setText(artikulua.getDeskribapenaSegurua());
@@ -65,6 +74,9 @@ public class IrudiaPopupController implements Initializable {
         }
     }
 
+    /**
+     * Popup leihoa ixten du dagokion botoia sakatzean.
+     */
     @FXML
     private void itxi() {
         Stage stage = (Stage) lblKodea.getScene().getWindow();

@@ -7,8 +7,8 @@ services:
     environment:
       MARIADB_ROOT_PASSWORD: rootpw
       MARIADB_DATABASE: erronka_galduak
-      MARIADB_USER: bermeo_admin
-      MARIADB_PASSWORD: bermeopw
+      MARIADB_USER: admin
+      MARIADB_PASSWORD: admin123
     ports:
       - "3306:3306"
     volumes:
@@ -27,9 +27,11 @@ services:
     build: ./java-app
     container_name: erronka_desktop
     environment:
-      - DB_URL=jdbc:mariadb://db:3306/erronka_galduak
-      - DB_USER=bermeo_admin
-      - DB_PASS=bermeopw
+      - DB_URL=${DB_URL}
+      - DB_USER=${DB_USER}
+      - DB_PASS=${DB_PASS}
+      - EXPORT_BIDEA=${EXPORT_BIDEA}
+      - IRUDIAK_BIDEA=${IRUDIAK_BIDEA}
       - OFFLINE_DATA_PATH=/app/partekatutako_datuak
     ports:
       - "6080:6080"
@@ -42,6 +44,7 @@ services:
     depends_on:
       db:
         condition: service_healthy
+        
 
   # 3. WEBGUNEA
   web:

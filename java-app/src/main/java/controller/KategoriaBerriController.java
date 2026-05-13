@@ -9,7 +9,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.StackPane;
 import utils.LogKudeatzailea;
 import utils.UIKudeatzailea;
 
@@ -27,20 +26,15 @@ public class KategoriaBerriController implements Initializable {
     @FXML
     private Label lblErrorea;
 
-    private StackPane contentArea;
-
     /**
-     * Itzultzean erabili beharreko StackPane ezartzen du.
+     * Kontroladorea hasieratzen du eta errore-etiketa ezkutatzen du.
      *
-     * @param contentArea Formularioa kargatuta dagoen gunea
+     * @param url FXML fitxategiaren kokapena
+     * @param rb  Erabilitako baliabide-sorta
      */
-    public void setContentArea(StackPane contentArea) {
-        this.contentArea = contentArea;
-    }
-
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        ezkutuErrorea();
+        UIKudeatzailea.ezkutuFormularioErrorea(lblErrorea);
     }
 
     /**
@@ -51,7 +45,7 @@ public class KategoriaBerriController implements Initializable {
     private void gorde() {
         String izena = txtIzena.getText().trim();
         if (izena.isEmpty()) {
-            erakutsiErrorea("(*) Kategoriaren izena bete behar da.");
+            UIKudeatzailea.erakutsiFormularioErrorea(lblErrorea, "(*) Kategoriaren izena bete behar da.");
             return;
         }
 
@@ -59,7 +53,7 @@ public class KategoriaBerriController implements Initializable {
         if (ok) {
             itxi();
         } else {
-            erakutsiErrorea("Errorea gordetzean. Baliteke izen hori dagoeneko existitzea.");
+            UIKudeatzailea.erakutsiFormularioErrorea(lblErrorea, "Errorea gordetzean. Baliteke izen hori dagoeneko existitzea.");
         }
     }
 
@@ -71,18 +65,10 @@ public class KategoriaBerriController implements Initializable {
         itxi();
     }
 
-    private void erakutsiErrorea(String mezua) {
-        lblErrorea.setText(mezua);
-        lblErrorea.setVisible(true);
-        lblErrorea.setManaged(true);
-    }
-
-    private void ezkutuErrorea() {
-        lblErrorea.setVisible(false);
-        lblErrorea.setManaged(false);
-    }
-
+    /**
+     * Kategorien zerrendara itzultzen da formularioa itxiz.
+     */
     private void itxi() {
-        UIKudeatzailea.kargatuPanela(contentArea, "/view/Kategoriak.fxml");
+        UIKudeatzailea.kargatuPanela("/view/Kategoriak.fxml");
     }
 }
