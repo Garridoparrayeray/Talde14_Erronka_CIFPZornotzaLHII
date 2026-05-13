@@ -95,7 +95,7 @@ public class InbentarioController implements Initializable {
         cbEgoera.getSelectionModel().selectFirst();
 
         // Botoiak aukeraketa-menpean
-        desaktibatiBotoiak();
+        desaktibatuBotoiak();
         taula.getSelectionModel().selectedItemProperty().addListener((obs, old, sel) -> {
             boolean dago = sel != null;
             if (btnEditatu != null) {
@@ -246,7 +246,7 @@ public class InbentarioController implements Initializable {
         beteteKategoriaCombo();
         cbEgoera.getSelectionModel().selectFirst();
         erakutsiDatuak(guztiak);
-        desaktibatiBotoiak();
+        desaktibatuBotoiak();
     }
 
     /**
@@ -262,7 +262,7 @@ public class InbentarioController implements Initializable {
      * Editatu, ezabatu eta irudi botoiak desaktibatzen ditu artikulurik
      * hautatu ez denean.
      */
-    private void desaktibatiBotoiak() {
+    private void desaktibatuBotoiak() {
         if (btnEditatu != null) {
             btnEditatu.setDisable(true);
         }
