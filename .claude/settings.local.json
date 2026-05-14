@@ -1,9 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Bash(Get-ChildItem -Recurse)",
-      "Bash(Select-Object FullName, PSIsContainer)",
-      "Bash(ConvertTo-Csv -NoTypeInformation)"
-    ]
-  }
-}
