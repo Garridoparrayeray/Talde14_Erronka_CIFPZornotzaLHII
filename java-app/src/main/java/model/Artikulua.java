@@ -144,18 +144,6 @@ public class Artikulua implements Serializable {
     }
 
     /**
-     * Deskribapena itzultzen du, null bada "—" itzultzen du.
-     *
-     * @return Deskribapena katea, edo "—" null bada
-     */
-    public String getDeskribapenaSegurua() {
-        if (deskribapena != null) {
-            return deskribapena;
-        }
-        return "—";
-    }
-
-    /**
      * Artikuluaren laburpen-katea itzultzen du erregistroetarako.
      *
      * @return Kodea, izenburua, marka eta egoera katetuta
@@ -169,7 +157,17 @@ public class Artikulua implements Serializable {
     public String getArtikuluKodea() { return artikuluKodea; }
     public String getIzenburua() { return izenburua; }
     public void setIzenburua(String izenburua) { this.izenburua = izenburua; }
-    public String getDeskribapena() { return deskribapena; }
+    /**
+     * Deskribapena itzultzen du, null bada "—" itzultzen du.
+     *
+     * @return Deskribapena katea, edo "—" null bada
+     */
+    public String getDeskribapena() {
+        if (deskribapena != null) {
+            return deskribapena;
+        }
+        return "—";
+    }
     public void setDeskribapena(String deskribapena) { this.deskribapena = deskribapena; }
     public String getMarka() { return marka; }
     public String getKolorea() { return kolorea; }

@@ -81,11 +81,11 @@ public class ArtikuluaEditatuController implements Initializable {
 
         lblTitulua.setText("Editatu: " + a.getArtikuluKodea());
         txtIzena.setText(a.getIzenburua());
-        String deskribapenaSegurua = a.getDeskribapenaSegurua();
-        if (deskribapenaSegurua.equals("—")) {
+        String deskribapena = a.getDeskribapena();
+        if (deskribapena.equals("—")) {
             txtDeskribapena.setText("");
         } else {
-            txtDeskribapena.setText(deskribapenaSegurua);
+            txtDeskribapena.setText(deskribapena);
         }
 
         if (a.getArgazkiBidea() != null && !a.getArgazkiBidea().isEmpty()) {

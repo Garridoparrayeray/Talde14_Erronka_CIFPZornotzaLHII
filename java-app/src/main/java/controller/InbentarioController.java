@@ -84,7 +84,7 @@ public class InbentarioController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         colKodea.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getArtikuluKodea()));
         colIzena.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getIzenburua()));
-        colDeskribapena.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getDeskribapenaSegurua()));
+        colDeskribapena.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getDeskribapena()));
         UIKudeatzailea.ehundatuZelulak(colDeskribapena);
         colKategoria.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getKategoriaIzena()));
         colKokalekua.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getKokalekuaIzena()));
@@ -95,7 +95,7 @@ public class InbentarioController implements Initializable {
         cbEgoera.getSelectionModel().selectFirst();
 
         // Botoiak aukeraketa-menpean
-        desaktibatiBotoiak();
+        desaktibatuBotoiak();
         taula.getSelectionModel().selectedItemProperty().addListener((obs, old, sel) -> {
             boolean dago = sel != null;
             if (btnEditatu != null) {
@@ -246,7 +246,7 @@ public class InbentarioController implements Initializable {
         beteteKategoriaCombo();
         cbEgoera.getSelectionModel().selectFirst();
         erakutsiDatuak(guztiak);
-        desaktibatiBotoiak();
+        desaktibatuBotoiak();
     }
 
     /**
@@ -262,7 +262,7 @@ public class InbentarioController implements Initializable {
      * Editatu, ezabatu eta irudi botoiak desaktibatzen ditu artikulurik
      * hautatu ez denean.
      */
-    private void desaktibatiBotoiak() {
+    private void desaktibatuBotoiak() {
         if (btnEditatu != null) {
             btnEditatu.setDisable(true);
         }
@@ -292,7 +292,7 @@ public class InbentarioController implements Initializable {
             boolean testPasa = testua.isEmpty()
                     || a.getArtikuluKodea().toLowerCase().contains(testua)
                     || a.getIzenburua().toLowerCase().contains(testua)
-                    || a.getDeskribapenaSegurua().toLowerCase().contains(testua);
+                    || a.getDeskribapena().toLowerCase().contains(testua);
             boolean katPasa = katSel == null || katSel.equals("Kategoria guztiak") || a.getKategoriaIzena().equals(katSel);
             boolean egPasa = egSel == null || egSel.equals("Egoera guztiak") || a.getEgoeraTestua().equalsIgnoreCase(egSel);
             if (testPasa && katPasa && egPasa) {

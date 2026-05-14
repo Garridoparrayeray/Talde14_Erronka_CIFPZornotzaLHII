@@ -50,7 +50,7 @@ public class Erreklamazioa implements Serializable {
         for (Artikulua a : zerrenda) {
             if (a.getEgoera() == EgoeraArtikulua.BILTEGIAN) {
                 boolean bat = false;
-                if (deskribapenBilatua != null && a.getDeskribapena() != null) {
+                if (deskribapenBilatua != null && !a.getDeskribapena().equals("—")) {
                     String[] hitzak = deskribapenBilatua.toLowerCase().split("\\s+");
                     for (String h : hitzak) {
                         if (a.getDeskribapena().toLowerCase().contains(h)) {

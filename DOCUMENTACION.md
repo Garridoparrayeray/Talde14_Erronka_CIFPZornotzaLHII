@@ -611,7 +611,7 @@ private List<Artikulua> guztiak;  // lista completa (para el filtrado)
 private void kargatu() {
     guztiak = ArtikuluaDAO.getGuztiak();   // consulta a la BD
     taula.getItems().setAll(guztiak);      // pone los datos en la tabla
-    desaktibatiBotoiak();
+    desaktibatuBotoiak();
 }
 
 private void erakutsiDatuak(List<Artikulua> datuak) {

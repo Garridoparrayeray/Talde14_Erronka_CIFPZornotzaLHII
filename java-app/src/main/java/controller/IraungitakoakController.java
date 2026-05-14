@@ -135,7 +135,7 @@ public class IraungitakoakController implements Initializable {
         UIKudeatzailea.ehundatuZelulak(colAurkIzena);
         UIKudeatzailea.ehundatuZelulak(colAurkEmail);
 
-        desaktibatiBotoiak();
+        desaktibatuBotoiak();
         taula.getSelectionModel().selectedItemProperty().addListener((obs, old, sel) -> {
             boolean dago = sel != null;
             btnEskaini.setDisable(!dago);
@@ -159,7 +159,7 @@ public class IraungitakoakController implements Initializable {
             }
         }
         taula.getItems().setAll(lerroak);
-        desaktibatiBotoiak();
+        desaktibatuBotoiak();
     }
 
     /**
@@ -237,7 +237,7 @@ public class IraungitakoakController implements Initializable {
     /**
      * Eskaintza botoiak desaktibatzen ditu artikulurik hautatu ez denean.
      */
-    private void desaktibatiBotoiak() {
+    private void desaktibatuBotoiak() {
         btnEskaini.setDisable(true);
         btnErakundea.setDisable(true);
     }
