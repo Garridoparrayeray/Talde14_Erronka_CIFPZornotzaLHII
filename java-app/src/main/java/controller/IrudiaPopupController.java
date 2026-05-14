@@ -45,7 +45,7 @@ public class IrudiaPopupController implements Initializable {
         }
 
         lblKodea.setText(artikulua.getArtikuluKodea() + " — " + artikulua.getIzenburua());
-        lblDeskribapena.setText(artikulua.getDeskribapenaSegurua());
+        lblDeskribapena.setText(artikulua.getDeskribapena());
 
         String argazkiBidea = artikulua.getArgazkiBidea();
         if (argazkiBidea != null && !argazkiBidea.isEmpty()) {
