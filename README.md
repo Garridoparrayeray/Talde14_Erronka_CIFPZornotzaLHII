@@ -83,7 +83,7 @@ Datu-base bat partekatzen dute (MariaDB). JavaFX-ek artikuluen XML-ak esportatze
   Fitxategi-trukea:
     ./partekatutako_datuak/artikuluak.xml  ← Java idatzi, Web irakurri
     ./artikulu_irudiak/                    ← Java + Web partekatzen dute
-    ~/.erronka-bermeo/store.dat            ← Offline cache (bakoitzaren makinan)
+    ./partekatutako_datuak/store.dat       ← Offline cache
 ```
 
 | Zerbitzua | Irudia | Portua | Funtzioa |
@@ -189,6 +189,16 @@ java-app/build-windows.bat
 
 `target\Galdutakoak-1.0.exe` sortuko da — JVM barne darama, ez du Java instalatuta behar.
 
+### .exe zuzenean exekutatu (Windows — Docker gabe)
+
+`java-app/target/Galdutakoak-1.0.exe` fitxategia dagoenean, bi klik eginda exekutatu daiteke — ez du Java ez Docker beharrik. DB konexioa `localhost:3306`-ra saiatu egingo da; ez badago, offline moduan abiarazten da automatikoki.
+
+```
+target\Galdutakoak-1.0.exe
+```
+
+> `.exe` ez badago: `build-windows.bat` exekutatu lehenik (Java 21 JDK + Maven behar ditu).
+
 ### JAR soilik (Java instalatuta behar du)
 
 ```bash
@@ -290,7 +300,7 @@ docker compose down -v   # KONTUZ: datuak ezabatzen dira
 | `01-schema.sql` | Taula guztiak sortu |
 | `02-roles.sql` | Rolak eta DB erabiltzaileak |
 | `03-seed.sql` | Hasierako datuak |
-| `04-trigger.sql` | UPDATE + DELETE triggerrak |
+| `04-trigger.sql` | 5 trigger (BEFORE/AFTER INSERT/UPDATE) |
 | `05-procedures.sql` | Gordetako prozedurak |
 
 ### Taula nagusiak
@@ -331,7 +341,7 @@ erronka-bermeo/
 │       ├── 01-schema.sql          ← Taula guztiak
 │       ├── 02-roles.sql           ← Rolak eta DB erabiltzaileak
 │       ├── 03-seed.sql            ← Hasierako datuak
-│       ├── 04-trigger.sql         ← Triggerrak (UPDATE + DELETE)
+│       ├── 04-trigger.sql         ← Triggerrak (5 trigger BEFORE/AFTER)
 │       └── 05-procedures.sql      ← Gordetako prozedurak
 │
 ├──  java-app/
@@ -390,7 +400,7 @@ erronka-bermeo/
 | | Sekuentzi-diagrama | `dokumentazioa/GarapenIngurunea/` |
 | **DATU_BASEAK** | Diseinu fisikoa (SQL) | `db/init/01-schema.sql` |
 | | SELECT/INSERT/UPDATE/DELETE | `db/init/01-schema.sql` |
-| | Triggerrak (DELETE + UPDATE) | `db/init/04-trigger.sql` |
+| | Triggerrak (5 trigger BEFORE/AFTER) | `db/init/04-trigger.sql` |
 | | Gordetako prozedura | `db/init/05-procedures.sql` |
 | | Diseinu kontzeptuala | `dokumentazioa/DatuBaseak/diseinu_kontzeptuala/` |
 | | Diseinu logikoa | `dokumentazioa/DatuBaseak/diseinu_logikoa/` |
@@ -463,7 +473,7 @@ xhost +local:docker
 3. `docker compose restart java-app`
 
 ### Offline modua aktibatu denean
-DB konexiorik ez badago, aplikazioa automatikoki offline moduan abiarazten da `~/.erronka-bermeo/store.dat` fitxategiarekin. Backup egiteko funtzioa ez dago erabilgarri offline moduan.
+DB konexiorik ez badago, aplikazioa automatikoki offline moduan abiarazten da `partekatutako_datuak/store.dat` fitxategiarekin. Backup egiteko funtzioa ez dago erabilgarri offline moduan.
 
 ---
 
