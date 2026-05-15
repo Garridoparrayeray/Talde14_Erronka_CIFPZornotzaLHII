@@ -1,11 +1,5 @@
 package dao;
 
-import model.Kokalekua;
-import utils.DBKonexioa;
-import utils.LogKudeatzailea;
-import utils.ModoKudeatzailea;
-import utils.BiltegiLokala;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -14,6 +8,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import model.Kokalekua;
+import utils.BiltegiLokala;
+import utils.DBKonexioa;
+import utils.LogKudeatzailea;
+import utils.ModoKudeatzailea;
 
 /**
  * Kokalekuen datu-baseko eragiketak kudeatzen dituen DAO klasea.

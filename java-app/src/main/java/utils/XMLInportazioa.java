@@ -17,7 +17,6 @@ import org.w3c.dom.NodeList;
 
 import dao.ArtikuluaDAO;
 import model.Artikulua;
-import model.EgoeraArtikulua;
 
 /**
  * XML fitxategi batetik artikuluen datuak irakurri eta datu-basea eguneratzen

@@ -1,11 +1,12 @@
 package controller;
 
 import java.net.URL;
-import java.time.LocalDate;
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+
 import dao.ErreklamazioaDAO;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
@@ -113,10 +114,7 @@ public class GalduDabenakController implements Initializable {
                     LocalDate data = new Date(e.getErreklamazioData().getTime()).toLocalDate();
                     LocalDate hasiera = dpHasiera.getValue();
                     LocalDate amaiera = dpAmaiera.getValue();
-                    if (hasiera != null && data.isBefore(hasiera)) {
-                        continue;
-                    }
-                    if (amaiera != null && data.isAfter(amaiera)) {
+                    if ((hasiera != null && data.isBefore(hasiera)) || (amaiera != null && data.isAfter(amaiera))) {
                         continue;
                     }
                 }

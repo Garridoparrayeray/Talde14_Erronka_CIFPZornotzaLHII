@@ -19,6 +19,7 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import model.Kategoria;
 import model.KategoriaKopurua;
@@ -111,13 +112,13 @@ public class KategoriakController implements Initializable {
         Button btnEdita = new Button("Editatu");
         btnEdita.getStyleClass().add("btn-outline");
         btnEdita.setStyle("-fx-padding: 4 12; -fx-font-size: 11px;");
-        btnEdita.setMinWidth(javafx.scene.control.Control.USE_PREF_SIZE);
+        btnEdita.setMinWidth(Region.USE_PREF_SIZE);
         btnEdita.setOnAction(e -> editatuKategoria(k));
 
         Button btnEzabatu = new Button("Ezabatu");
         btnEzabatu.getStyleClass().add("btn-danger");
         btnEzabatu.setStyle("-fx-padding: 4 12; -fx-font-size: 11px;");
-        btnEzabatu.setMinWidth(javafx.scene.control.Control.USE_PREF_SIZE);
+        btnEzabatu.setMinWidth(Region.USE_PREF_SIZE);
         btnEzabatu.setOnAction(e -> ezabatuKategoria(k, kopurua));
 
         HBox botoiak = new HBox(8, btnEdita, btnEzabatu);

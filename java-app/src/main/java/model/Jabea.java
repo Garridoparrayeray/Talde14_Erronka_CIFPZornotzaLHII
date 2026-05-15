@@ -43,7 +43,8 @@ public class Jabea extends Hartzailea {
      *
      * @return Izena
      */
-    public String getIzena() {
+    @Override
+	public String getIzena() {
         return izena;
     }
 
@@ -52,7 +53,8 @@ public class Jabea extends Hartzailea {
      *
      * @return Abizena
      */
-    public String getAbizena() {
+    @Override
+	public String getAbizena() {
         return abizena;
     }
 
@@ -61,7 +63,8 @@ public class Jabea extends Hartzailea {
      *
      * @return NAN testua
      */
-    public String getNan() {
+    @Override
+	public String getNan() {
         return nan;
     }
 }

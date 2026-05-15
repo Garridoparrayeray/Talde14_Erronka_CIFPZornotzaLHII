@@ -4,9 +4,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.sql.Types;
+
 import model.Aurkitzailea;
 import utils.BiltegiLokala;
 import utils.DBKonexioa;

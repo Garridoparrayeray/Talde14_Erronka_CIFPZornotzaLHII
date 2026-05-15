@@ -36,8 +36,9 @@ public class LogKudeatzailea {
      * Bigarren deietan ez du ezer egiten.
      */
     public static synchronized void hasieratu() {
-        if (hasieratua)
-            return;
+        if (hasieratua) {
+			return;
+		}
         try {
             Files.createDirectories(Paths.get(LOG_DIREKTORIOA));
 
@@ -53,8 +54,9 @@ public class LogKudeatzailea {
             fitxategiaKudeatzailea.setFormatter(sortuFormatzailea());
             fitxategiaKudeatzailea.setFilter(erregistroa -> {
                 String izena = erregistroa.getLoggerName();
-                if (izena == null)
-                    return false;
+                if (izena == null) {
+					return false;
+				}
                 return izena.startsWith("app.") || izena.startsWith("controller.")
                         || izena.startsWith("dao.") || izena.startsWith("model.")
                         || izena.startsWith("utils.") || izena.startsWith("view.");
