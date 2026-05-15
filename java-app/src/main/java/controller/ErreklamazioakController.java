@@ -113,7 +113,7 @@ public class ErreklamazioakController implements Initializable {
     /**
      * Erreklamazio baten lista-elementua sortzen du.
      *
-     * @param err Erakutsi beharreko erreklamazioa
+     * @param err     Erakutsi beharreko erreklamazioa
      * @param aktiboa Hasieratik aktibo erakustea nahi bada true
      * @return Lista-elementuaren VBox nodoa
      */
@@ -170,7 +170,7 @@ public class ErreklamazioakController implements Initializable {
      * Erreklamazio bat hautatzen du eta xehetasunak eskuineko panelean
      * erakusten ditu.
      *
-     * @param err Hautatu beharreko erreklamazioa
+     * @param err  Hautatu beharreko erreklamazioa
      * @param item Aktibo markatu beharreko lista-elementua
      */
     private void hautatu(Erreklamazioa err, VBox item) {

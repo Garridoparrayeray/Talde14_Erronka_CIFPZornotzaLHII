@@ -47,29 +47,41 @@ public class ErreklamazioaDAO {
                 + "LEFT JOIN JABEA j ON h.id_hartzailea = j.id_hartzailea "
                 + "LEFT JOIN KATEGORIA k ON e.id_kategoria = k.id_kategoria";
 
-        try (Connection conn = DBKonexioa.getKonexioa(); PreparedStatement pstmt = conn.prepareStatement(sql); ResultSet rs = pstmt.executeQuery()) {
+        try (Connection conn = DBKonexioa.getKonexioa();
+                PreparedStatement pstmt = conn.prepareStatement(sql);
+                ResultSet rs = pstmt.executeQuery()) {
 
             while (rs.next()) {
                 String nan = rs.getString("nan");
-                if (nan == null) { nan = ""; }
+                if (nan == null) {
+                    nan = "";
+                }
                 String jabeIzena = rs.getString("jabe_izena");
-                if (jabeIzena == null) { jabeIzena = ""; }
+                if (jabeIzena == null) {
+                    jabeIzena = "";
+                }
                 String jabeAbizena = rs.getString("jabe_abizena");
-                if (jabeAbizena == null) { jabeAbizena = ""; }
+                if (jabeAbizena == null) {
+                    jabeAbizena = "";
+                }
                 String telefonoa = rs.getString("telefonoa");
-                if (telefonoa == null) { telefonoa = ""; }
+                if (telefonoa == null) {
+                    telefonoa = "";
+                }
                 String emaila = rs.getString("emaila");
-                if (emaila == null) { emaila = ""; }
+                if (emaila == null) {
+                    emaila = "";
+                }
 
                 Jabea jabea = new Jabea(
                         nan,
                         jabeIzena,
                         jabeAbizena,
                         telefonoa,
-                        emaila
-                );
+                        emaila);
 
-                Erreklamazioa erreklamazioa = new Erreklamazioa(jabea, rs.getString("deskribapen_bilatua"), rs.getDate("erreklamazio_data"));
+                Erreklamazioa erreklamazioa = new Erreklamazioa(jabea, rs.getString("deskribapen_bilatua"),
+                        rs.getDate("erreklamazio_data"));
                 erreklamazioa.setErreklamazioId(rs.getInt("id_erreklamazio"));
 
                 int idKat = rs.getInt("id_kategoria");
@@ -98,7 +110,7 @@ public class ErreklamazioaDAO {
     /**
      * Erreklamazio baten egoera eguneratzen du datu-basean.
      *
-     * @param id Erreklamazioaren IDa
+     * @param id     Erreklamazioaren IDa
      * @param egoera Egoera berria
      * @return Eguneraketa ondo joan den ala ez
      */
@@ -112,7 +124,7 @@ public class ErreklamazioaDAO {
             ps.setInt(2, Integer.parseInt(id));
             boolean ok = ps.executeUpdate() > 0;
             if (ok) {
-                LOG.log(Level.INFO, "updateEgoera: OK - id={0}, egoera={1}", new Object[]{id, egoera});
+                LOG.log(Level.INFO, "updateEgoera: OK - id={0}, egoera={1}", new Object[] { id, egoera });
             }
             return ok;
         } catch (SQLException | NumberFormatException e) {
@@ -134,9 +146,11 @@ public class ErreklamazioaDAO {
      * @param idLangile    Erreklamazioa erregistratu duen langilearen IDa
      * @return Ondo gorde bada true
      */
-    public static boolean gorde(String nan, String izena, String abizena, String telefonoa, String emaila, int kategoriaId, String deskribapena, int idLangile) {
+    public static boolean gorde(String nan, String izena, String abizena, String telefonoa, String emaila,
+            int kategoriaId, String deskribapena, int idLangile) {
         if (ModoKudeatzailea.isOffline()) {
-            return BiltegiLokala.erreklamazioaGorde(nan, izena, abizena, telefonoa, emaila, kategoriaId, deskribapena, idLangile);
+            return BiltegiLokala.erreklamazioaGorde(nan, izena, abizena, telefonoa, emaila, kategoriaId, deskribapena,
+                    idLangile);
         }
         int idHartzailea = -1;
 

@@ -20,10 +20,10 @@ public class Emanaldia {
     /**
      * Emanaldiaren eraikitzailea.
      *
-     * @param artikulua Ematen den artikulua
+     * @param artikulua  Ematen den artikulua
      * @param hartzailea Artikulua jasotzen duen hartzailea
-     * @param langilea Eragiketa kudeatzen duen langilea
-     * @param emateData Emateko data
+     * @param langilea   Eragiketa kudeatzen duen langilea
+     * @param emateData  Emateko data
      */
     public Emanaldia(Artikulua artikulua, Hartzailea hartzailea,
             Langilea langilea, Date emateData) {

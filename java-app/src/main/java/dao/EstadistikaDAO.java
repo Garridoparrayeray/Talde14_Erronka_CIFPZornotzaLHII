@@ -149,14 +149,15 @@ public class EstadistikaDAO {
                 + "COALESCE(CONCAT(l.izena,' ',l.abizena), '—') AS langilea "
                 + "FROM MUGIMENDUA m LEFT JOIN LANGILEA l ON m.id_langile = l.id_langile "
                 + "ORDER BY m.data DESC LIMIT 10";
-        try (Connection con = DBKonexioa.getKonexioa(); PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+        try (Connection con = DBKonexioa.getKonexioa();
+                PreparedStatement ps = con.prepareStatement(sql);
+                ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 zerrenda.add(new AzkenMugimendua(
                         rs.getString("id_artikulua"),
                         rs.getString("deskribapena"),
                         rs.getString("data"),
-                        rs.getString("langilea")
-                ));
+                        rs.getString("langilea")));
             }
         } catch (SQLException e) {
             LOG.log(Level.SEVERE, "azkenMugimenduak: datu-baseko errorea", e);
@@ -177,7 +178,9 @@ public class EstadistikaDAO {
         String sql = "SELECT k.izena, COUNT(a.id_artikulua) AS kop "
                 + "FROM KATEGORIA k LEFT JOIN ARTIKULUA a ON k.id_kategoria = a.id_kategoria "
                 + "GROUP BY k.id_kategoria, k.izena ORDER BY kop DESC";
-        try (Connection con = DBKonexioa.getKonexioa(); PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+        try (Connection con = DBKonexioa.getKonexioa();
+                PreparedStatement ps = con.prepareStatement(sql);
+                ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 zerrenda.add(new KategoriaKopurua(rs.getString("izena"), rs.getInt("kop")));
             }
@@ -186,7 +189,6 @@ public class EstadistikaDAO {
         }
         return zerrenda;
     }
-
 
     /**
      * Emandako egoera batean dauden artikuluak kontatzen ditu.
@@ -216,7 +218,9 @@ public class EstadistikaDAO {
      * @return Kontatutako kopurua, edo 0 errorea bada
      */
     private static int kontatuSql(String sql) {
-        try (Connection con = DBKonexioa.getKonexioa(); PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+        try (Connection con = DBKonexioa.getKonexioa();
+                PreparedStatement ps = con.prepareStatement(sql);
+                ResultSet rs = ps.executeQuery()) {
             if (rs.next()) {
                 return rs.getInt(1);
             }

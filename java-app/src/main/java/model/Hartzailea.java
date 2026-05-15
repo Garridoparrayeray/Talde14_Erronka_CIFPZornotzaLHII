@@ -22,8 +22,8 @@ public abstract class Hartzailea implements Serializable {
      * Hartzailearen eraikitzailea.
      *
      * @param hartzaileId Hartzailearen identifikagailu bakarra
-     * @param telefonoa Hartzailearen telefono zenbakia
-     * @param emaila Hartzailearen helbide elektronikoa
+     * @param telefonoa   Hartzailearen telefono zenbakia
+     * @param emaila      Hartzailearen helbide elektronikoa
      */
     public Hartzailea(int hartzaileId, String telefonoa, String emaila) {
         this.hartzaileId = hartzaileId;

@@ -85,7 +85,7 @@ public class InbentarioController implements Initializable {
         colKodea.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getArtikuluKodea()));
         colIzena.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getIzenburua()));
         colDeskribapena.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getDeskribapena()));
-        UIKudeatzailea.ehundatuZelulak(colDeskribapena);
+        UIKudeatzailea.objetuarenWrapper(colDeskribapena);
         colKategoria.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getKategoriaIzena()));
         colKokalekua.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getKokalekuaIzena()));
         colSarrera.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getSarreraDataFormatua()));
@@ -289,13 +289,38 @@ public class InbentarioController implements Initializable {
 
         List<Artikulua> iragaziak = new ArrayList<>();
         for (Artikulua a : guztiak) {
-            boolean testPasa = testua.isEmpty()
-                    || a.getArtikuluKodea().toLowerCase().contains(testua)
-                    || a.getIzenburua().toLowerCase().contains(testua)
-                    || a.getDeskribapena().toLowerCase().contains(testua);
-            boolean katPasa = katSel == null || katSel.equals("Kategoria guztiak") || a.getKategoriaIzena().equals(katSel);
-            boolean egPasa = egSel == null || egSel.equals("Egoera guztiak") || a.getEgoeraTestua().equalsIgnoreCase(egSel);
-            if (testPasa && katPasa && egPasa) {
+            boolean testuanAurkitu;
+            if (testua.isEmpty()) {
+                testuanAurkitu = true;
+            } else if (a.getArtikuluKodea().toLowerCase().contains(testua)) {
+                testuanAurkitu = true;
+            } else if (a.getIzenburua().toLowerCase().contains(testua)) {
+                testuanAurkitu = true;
+            } else if (a.getDeskribapena().toLowerCase().contains(testua)) {
+                testuanAurkitu = true;
+            } else {
+                testuanAurkitu = false;
+            }
+
+            boolean katPasa;
+            if (katSel == null || katSel.equals("Kategoria guztiak")) {
+                katPasa = true;
+            } else if (a.getKategoriaIzena().equals(katSel)) {
+                katPasa = true;
+            } else {
+                katPasa = false;
+            }
+
+            boolean egPasa;
+            if (egSel == null || egSel.equals("Egoera guztiak")) {
+                egPasa = true;
+            } else if (a.getEgoeraTestua().equalsIgnoreCase(egSel)) {
+                egPasa = true;
+            } else {
+                egPasa = false;
+            }
+
+            if (testuanAurkitu && katPasa && egPasa) {
                 iragaziak.add(a);
             }
         }

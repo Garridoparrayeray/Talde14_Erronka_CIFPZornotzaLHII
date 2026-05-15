@@ -86,7 +86,7 @@ public class KategoriakController implements Initializable {
     /**
      * Kategoria baten txartela sortzen du, editatu eta ezabatu botoiekin.
      *
-     * @param k Erakutsi beharreko kategoria
+     * @param k       Erakutsi beharreko kategoria
      * @param kopurua Kategoria horretan dauden artikulu kopurua
      * @return Txartelaren HBox nodoa
      */
@@ -140,9 +140,9 @@ public class KategoriakController implements Initializable {
      */
     private void editatuKategoria(Kategoria k) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/KategoriaEditu.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/KategoriaEditatu.fxml"));
             Node nodoa = loader.load();
-            KategoriaEdituController ctrl = loader.getController();
+            KategoriaEditatuController ctrl = loader.getController();
             ctrl.setKategoria(k);
             UIKudeatzailea.kargatuPanela(nodoa);
         } catch (Exception e) {

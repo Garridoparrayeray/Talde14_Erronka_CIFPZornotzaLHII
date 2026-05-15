@@ -42,15 +42,16 @@ public class LangileaDAO {
         String sql = "SELECT l.id_langile, l.izena, l.abizena, l.erabiltzailea, l.pasahitza_hash, r.deskribapena AS rola "
                 + "FROM LANGILEA l JOIN ROLA r ON l.id_rola = r.id_rola "
                 + "ORDER BY l.id_langile";
-        try (Connection con = DBKonexioa.getKonexioa(); PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+        try (Connection con = DBKonexioa.getKonexioa();
+                PreparedStatement ps = con.prepareStatement(sql);
+                ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 Langilea l = new Langilea(
                         rs.getInt("id_langile"),
                         rs.getString("izena"),
                         rs.getString("abizena"),
                         rs.getString("erabiltzailea"),
-                        rs.getString("pasahitza_hash")
-                );
+                        rs.getString("pasahitza_hash"));
                 l.setRola(rs.getString("rola"));
                 zerrenda.add(l);
             }
@@ -71,11 +72,13 @@ public class LangileaDAO {
         }
         List<String[]> zerrenda = new ArrayList<>();
         String sql = "SELECT id_rola, deskribapena FROM ROLA ORDER BY id_rola";
-        try (Connection con = DBKonexioa.getKonexioa(); PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+        try (Connection con = DBKonexioa.getKonexioa();
+                PreparedStatement ps = con.prepareStatement(sql);
+                ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
-                zerrenda.add(new String[]{
-                    rs.getString("id_rola"),
-                    rs.getString("deskribapena")
+                zerrenda.add(new String[] {
+                        rs.getString("id_rola"),
+                        rs.getString("deskribapena")
                 });
             }
         } catch (SQLException e) {
@@ -87,11 +90,11 @@ public class LangileaDAO {
     /**
      * Langile berria gordetzen du datu-basean pasahitza BCrypt bidez zifratuta.
      *
-     * @param izena Langilearen izena
-     * @param abizena Langilearen abizena
+     * @param izena         Langilearen izena
+     * @param abizena       Langilearen abizena
      * @param erabiltzailea Erabiltzaile-izena (bakarra izan behar da)
-     * @param pasahitza Argizko pasahitza (hash eginda gordeko da)
-     * @param idRola Langileari esleitu beharreko rolaren IDa
+     * @param pasahitza     Argizko pasahitza (hash eginda gordeko da)
+     * @param idRola        Langileari esleitu beharreko rolaren IDa
      * @return Ondo gorde bada true, bestela false
      */
     public static boolean gehitu(String izena, String abizena, String erabiltzailea, String pasahitza, int idRola) {
@@ -122,9 +125,9 @@ public class LangileaDAO {
      * objektua itzultzen du.
      *
      * @param erabiltzailea Saioa hasteko erabiltzaile-izena
-     * @param pasahitza Argizko pasahitza BCrypt bidez egiaztatuko dena
+     * @param pasahitza     Argizko pasahitza BCrypt bidez egiaztatuko dena
      * @return Langilea (edo Administratzailea) ondo autentifikatu bada, null
-     * bestela
+     *         bestela
      */
     public static Langilea login(String erabiltzailea, String pasahitza) {
         if (ModoKudeatzailea.isOffline()) {
@@ -174,11 +177,11 @@ public class LangileaDAO {
     /**
      * Langilea baten datuak eguneratzen ditu datu-basean.
      *
-     * @param id Langilearen identifikatzailea
-     * @param izena Langilearen izen berria
-     * @param abizena Langilearen abizen berria
+     * @param id            Langilearen identifikatzailea
+     * @param izena         Langilearen izen berria
+     * @param abizena       Langilearen abizen berria
      * @param erabiltzailea Erabiltzaile izen berria
-     * @param idRola Rolaren ID berria
+     * @param idRola        Rolaren ID berria
      * @return true ondo eguneratu bada, false bestela
      */
     public static boolean eguneratu(int id, String izena, String abizena, String erabiltzailea, int idRola) {
@@ -188,16 +191,17 @@ public class LangileaDAO {
     /**
      * Langilearen datuak eguneratzen ditu, aukeran pasahitza ere aldatuz.
      *
-     * @param id Langilearen identifikatzailea
-     * @param izena Langilearen izen berria
-     * @param abizena Langilearen abizen berria
-     * @param erabiltzailea Erabiltzaile izen berria
-     * @param idRola Rolaren ID berria
+     * @param id              Langilearen identifikatzailea
+     * @param izena           Langilearen izen berria
+     * @param abizena         Langilearen abizen berria
+     * @param erabiltzailea   Erabiltzaile izen berria
+     * @param idRola          Rolaren ID berria
      * @param pasahitzaBerria Pasahitz berria (null edo hutsa bada, ez da
-     * aldatzen)
+     *                        aldatzen)
      * @return true ondo eguneratu bada, false bestela
      */
-    public static boolean eguneratu(int id, String izena, String abizena, String erabiltzailea, int idRola, String pasahitzaBerria) {
+    public static boolean eguneratu(int id, String izena, String abizena, String erabiltzailea, int idRola,
+            String pasahitzaBerria) {
         if (ModoKudeatzailea.isOffline()) {
             return BiltegiLokala.langileaEguneratu(id, izena, abizena, erabiltzailea, idRola, pasahitzaBerria);
         }

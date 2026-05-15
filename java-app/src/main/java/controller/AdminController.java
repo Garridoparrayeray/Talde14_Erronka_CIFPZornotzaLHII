@@ -59,7 +59,7 @@ public class AdminController implements Initializable {
      * saio-datuak erakusten ditu eta administrazio-panela kargatzen du.
      *
      * @param url FXML fitxategiaren kokapena
-     * @param rb Erabilitako baliabide-sorta
+     * @param rb  Erabilitako baliabide-sorta
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {

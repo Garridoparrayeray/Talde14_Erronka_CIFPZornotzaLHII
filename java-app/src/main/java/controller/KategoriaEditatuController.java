@@ -16,10 +16,12 @@ import utils.UIKudeatzailea;
  *
  * @author Yeray Garrido
  */
-public class KategoriaEdituController implements Initializable {
+public class KategoriaEditatuController implements Initializable {
 
-    @FXML private TextField txtIzena;
-    @FXML private Label lblErrorea;
+    @FXML
+    private TextField txtIzena;
+    @FXML
+    private Label lblErrorea;
 
     private Kategoria kategoria;
 
@@ -30,7 +32,8 @@ public class KategoriaEdituController implements Initializable {
      * @param rb  Erabilitako baliabide-sorta
      */
     @Override
-    public void initialize(URL url, ResourceBundle rb) {}
+    public void initialize(URL url, ResourceBundle rb) {
+    }
 
     /**
      * Editatu beharreko kategoria ezartzen du eta formularioa betetzen du.

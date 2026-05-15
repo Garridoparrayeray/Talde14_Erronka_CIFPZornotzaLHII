@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
+import java.sql.Types;
 import utils.BiltegiLokala;
 import utils.DBKonexioa;
 import utils.LogKudeatzailea;
@@ -26,15 +26,15 @@ public class EmanaldiaDAO {
      * Emanaldia formalizatzen du: hartzailea sortu/bilatu, emanaldia gorde,
      * artikuluaren egoera eguneratu eta mugimendua erregistratu.
      *
-     * @param idArtikulua  Eman beharreko artikuluaren kodea
-     * @param nan          Jabearen NAN zenbakia
-     * @param izena        Jabearen izena
-     * @param abizena      Jabearen abizena
-     * @param telefonoa    Harremanetarako telefonoa
-     * @param emaila       Harremanetarako emaila
-     * @param helbidea     Jabearen helbidea
-     * @param oharrak      Emanaldiaren oharrak (hutsik bada null gordetzen da)
-     * @param idLangile    Eragiketa kudeatzen duen langilearen IDa
+     * @param idArtikulua    Eman beharreko artikuluaren kodea
+     * @param nan            Jabearen NAN zenbakia
+     * @param izena          Jabearen izena
+     * @param abizena        Jabearen abizena
+     * @param telefonoa      Harremanetarako telefonoa
+     * @param emaila         Harremanetarako emaila
+     * @param helbidea       Jabearen helbidea
+     * @param oharrak        Emanaldiaren oharrak (hutsik bada null gordetzen da)
+     * @param idLangile      Eragiketa kudeatzen duen langilearen IDa
      * @param dokumentuBidea Sinadura-dokumentuaren fitxategi-izena
      * @return Ondo joan bada true
      */
@@ -43,7 +43,8 @@ public class EmanaldiaDAO {
             String helbidea, String oharrak, int idLangile,
             String dokumentuBidea) {
         if (ModoKudeatzailea.isOffline()) {
-            return BiltegiLokala.formalizatu(idArtikulua, nan, izena, abizena, telefonoa, emaila, helbidea, oharrak, idLangile, dokumentuBidea);
+            return BiltegiLokala.formalizatu(idArtikulua, nan, izena, abizena, telefonoa, emaila, helbidea, oharrak,
+                    idLangile, dokumentuBidea);
         }
         Connection con = null;
         try {
@@ -61,7 +62,7 @@ public class EmanaldiaDAO {
             gordeEmanaldiaEtaMugimendua(con, idArtikulua, idHartzailea, deskMug, idLangile, oharrak, dokumentuBidea);
 
             con.commit();
-            LOG.log(Level.INFO, "formalizatu: OK - artikulua={0}, nan={1}", new Object[]{idArtikulua, nan});
+            LOG.log(Level.INFO, "formalizatu: OK - artikulua={0}, nan={1}", new Object[] { idArtikulua, nan });
             return true;
 
         } catch (SQLException e) {
@@ -104,7 +105,8 @@ public class EmanaldiaDAO {
             String izenOfiziala, String telefonoa, String emaila,
             String helbidea, String oharrak, int idLangile, String dokumentuBidea) {
         if (ModoKudeatzailea.isOffline()) {
-            return BiltegiLokala.formalizatuErakundea(idArtikulua, ift, izenOfiziala, telefonoa, emaila, helbidea, oharrak, idLangile, dokumentuBidea);
+            return BiltegiLokala.formalizatuErakundea(idArtikulua, ift, izenOfiziala, telefonoa, emaila, helbidea,
+                    oharrak, idLangile, dokumentuBidea);
         }
         Connection con = null;
         try {
@@ -121,7 +123,7 @@ public class EmanaldiaDAO {
             gordeEmanaldiaEtaMugimendua(con, idArtikulua, idHartzailea, deskMug, idLangile, oharrak, dokumentuBidea);
 
             con.commit();
-            LOG.log(Level.INFO, "formalizatuErakundea: OK - artikulua={0}, ift={1}", new Object[]{idArtikulua, ift});
+            LOG.log(Level.INFO, "formalizatuErakundea: OK - artikulua={0}, ift={1}", new Object[] { idArtikulua, ift });
             return true;
         } catch (SQLException e) {
             LOG.log(Level.SEVERE, "formalizatuErakundea: datu-baseko errorea", e);
@@ -152,7 +154,7 @@ public class EmanaldiaDAO {
                 + "VALUES (CURDATE(), ?, ?, ?, ?, ?)";
         try (PreparedStatement ps = con.prepareStatement(sqlEm)) {
             if (oharrak.isEmpty()) {
-                ps.setNull(1, java.sql.Types.VARCHAR);
+                ps.setNull(1, Types.VARCHAR);
             } else {
                 ps.setString(1, oharrak);
             }
@@ -162,7 +164,7 @@ public class EmanaldiaDAO {
             if (idLangile > 0) {
                 ps.setInt(5, idLangile);
             } else {
-                ps.setNull(5, java.sql.Types.INTEGER);
+                ps.setNull(5, Types.INTEGER);
             }
             ps.executeUpdate();
         }
@@ -175,7 +177,7 @@ public class EmanaldiaDAO {
             if (idLangile > 0) {
                 ps.setInt(3, idLangile);
             } else {
-                ps.setNull(3, java.sql.Types.INTEGER);
+                ps.setNull(3, Types.INTEGER);
             }
             ps.executeUpdate();
         }
@@ -201,17 +203,17 @@ public class EmanaldiaDAO {
         int idH;
         try (PreparedStatement ps = con.prepareStatement(sqlH, Statement.RETURN_GENERATED_KEYS)) {
             if (telefonoa.isEmpty()) {
-                ps.setNull(1, java.sql.Types.VARCHAR);
+                ps.setNull(1, Types.VARCHAR);
             } else {
                 ps.setString(1, telefonoa);
             }
             if (emaila.isEmpty()) {
-                ps.setNull(2, java.sql.Types.VARCHAR);
+                ps.setNull(2, Types.VARCHAR);
             } else {
                 ps.setString(2, emaila);
             }
             if (helbidea.isEmpty()) {
-                ps.setNull(3, java.sql.Types.VARCHAR);
+                ps.setNull(3, Types.VARCHAR);
             } else {
                 ps.setString(3, helbidea);
             }
@@ -256,17 +258,17 @@ public class EmanaldiaDAO {
         int idH;
         try (PreparedStatement ps = con.prepareStatement(sqlH, Statement.RETURN_GENERATED_KEYS)) {
             if (telefonoa.isEmpty()) {
-                ps.setNull(1, java.sql.Types.VARCHAR);
+                ps.setNull(1, Types.VARCHAR);
             } else {
                 ps.setString(1, telefonoa);
             }
             if (emaila.isEmpty()) {
-                ps.setNull(2, java.sql.Types.VARCHAR);
+                ps.setNull(2, Types.VARCHAR);
             } else {
                 ps.setString(2, emaila);
             }
             if (helbidea.isEmpty()) {
-                ps.setNull(3, java.sql.Types.VARCHAR);
+                ps.setNull(3, Types.VARCHAR);
             } else {
                 ps.setString(3, helbidea);
             }

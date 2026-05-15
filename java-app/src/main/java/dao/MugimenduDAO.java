@@ -28,8 +28,8 @@ public class MugimenduDAO {
      * Mugimendua berria txertatzen du auditoria taulan.
      *
      * @param deskribapena Ekintzaren deskribapena
-     * @param idArtikulua Lotutako artikuluaren kodea
-     * @param idLangile Langilearen IDa (0 bada sistema-ekintza)
+     * @param idArtikulua  Lotutako artikuluaren kodea
+     * @param idLangile    Langilearen IDa (0 bada sistema-ekintza)
      * @return Ondo txertatu bada true
      */
     public static boolean gehitu(String deskribapena, String idArtikulua, int idLangile) {
@@ -61,7 +61,7 @@ public class MugimenduDAO {
      * deszendentearekin.
      *
      * @return MugimenduLerroa objektuen zerrenda, denbora-ordenan beherantz;
-     * hutsik egon daiteke
+     *         hutsik egon daiteke
      */
     public static List<MugimenduLerroa> getGuztiak() {
         if (ModoKudeatzailea.isOffline()) {
@@ -75,14 +75,15 @@ public class MugimenduDAO {
                 + "FROM MUGIMENDUA m "
                 + "LEFT JOIN LANGILEA l ON m.id_langile = l.id_langile "
                 + "ORDER BY m.data DESC";
-        try (Connection con = DBKonexioa.getKonexioa(); PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+        try (Connection con = DBKonexioa.getKonexioa();
+                PreparedStatement ps = con.prepareStatement(sql);
+                ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 zerrenda.add(new MugimenduLerroa(
                         rs.getString("data"),
                         rs.getString("langilea"),
                         rs.getString("deskribapena"),
-                        rs.getString("artikulua")
-                ));
+                        rs.getString("artikulua")));
             }
         } catch (SQLException e) {
             LOG.log(Level.SEVERE, "getGuztiak: datu-baseko errorea", e);

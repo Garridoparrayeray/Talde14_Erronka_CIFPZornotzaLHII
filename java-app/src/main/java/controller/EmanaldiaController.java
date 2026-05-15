@@ -190,12 +190,12 @@ public class EmanaldiaController implements Initializable {
      * Iraungitako artikuluaren emanaldia formularioan aurre-betetzen du,
      * aurkitzailearen datuak hartuta pertsona edo erakundea moduan.
      *
-     * @param artikulua   Iraungitako artikulua
-     * @param erakundeaDa true bada erakundea modua aktibatzen du
-     * @param aurkIzena   Aurkitzailearen izena (pertsona moduan)
-     * @param aurkAbizena Aurkitzailearen abizena (pertsona moduan)
+     * @param artikulua     Iraungitako artikulua
+     * @param erakundeaDa   true bada erakundea modua aktibatzen du
+     * @param aurkIzena     Aurkitzailearen izena (pertsona moduan)
+     * @param aurkAbizena   Aurkitzailearen abizena (pertsona moduan)
      * @param aurkTelefonoa Aurkitzailearen telefonoa
-     * @param aurkEmaila  Aurkitzailearen emaila
+     * @param aurkEmaila    Aurkitzailearen emaila
      */
     public void setIraungitakoa(Artikulua artikulua, boolean erakundeaDa,
             String aurkIzena, String aurkAbizena,
@@ -242,8 +242,7 @@ public class EmanaldiaController implements Initializable {
         FileChooser fc = new FileChooser();
         fc.setTitle("Sinadura dokumentua hautatu");
         fc.getExtensionFilters().add(
-                new FileChooser.ExtensionFilter("Dokumentuak (PDF, JPG, PNG)", "*.pdf", "*.jpg", "*.jpeg", "*.png")
-        );
+                new FileChooser.ExtensionFilter("Dokumentuak (PDF, JPG, PNG)", "*.pdf", "*.jpg", "*.jpeg", "*.png"));
         File f = fc.showOpenDialog(cbArtikulua.getScene().getWindow());
         if (f != null) {
             archivoSinadura = f;
@@ -469,7 +468,7 @@ public class EmanaldiaController implements Initializable {
      *
      * @param origen Jatorrizko fitxategia
      * @return Fitxategi-izena (adib. sinadura_1234567.pdf) edo null errorea
-     * bada
+     *         bada
      */
     private String kopiatuSinadura(File origen) {
         try {

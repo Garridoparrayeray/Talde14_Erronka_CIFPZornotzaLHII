@@ -144,8 +144,7 @@ public class KokalekuakController implements Initializable {
                     sel.getKokalekuId(),
                     txtArmairua.getText().trim(),
                     txtApala.getText().trim(),
-                    chkBha.isSelected()
-            );
+                    chkBha.isSelected());
             if (ondo) {
                 kargatu();
                 UIKudeatzailea.erakutsiToast("Kokalekua ondo eguneratu da.", true);

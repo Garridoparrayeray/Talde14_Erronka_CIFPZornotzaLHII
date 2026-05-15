@@ -1,6 +1,5 @@
 package controller;
 
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import dao.LangileaDAO;
@@ -72,7 +71,8 @@ public class LoginController {
      */
     @FXML
     private void pasahitzaAhaztuDut() {
-        lblErrorea.setStyle("-fx-text-fill: #080808; -fx-font-size: 12px;-fx-background-color: #ff0000; -fx-padding: 10px; -fx-border-radius: 5px; -fx-background-radius: 5px;-fx-text-wrap: wrap;");
+        lblErrorea.setStyle(
+                "-fx-text-fill: #080808; -fx-font-size: 12px;-fx-background-color: #ff0000; -fx-padding: 10px; -fx-border-radius: 5px; -fx-background-radius: 5px;-fx-text-wrap: wrap;");
         lblErrorea.setText("Ezin da pasahitza berreskuratu. Jarri harremanetan administratzailearekin.");
     }
 }

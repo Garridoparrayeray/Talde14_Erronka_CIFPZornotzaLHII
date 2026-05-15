@@ -21,9 +21,9 @@ import utils.ModoKudeatzailea;
 public class BackupDAO {
 
     private static final String[] TAULAK = {
-        "ROLA", "LANGILEA", "KATEGORIA", "KOKALEKUA",
-        "HARTZAILEA", "JABEA", "ERAKUNDEA", "ARTIKULUA",
-        "ERREKLAMAZIOA", "EMANALDIA", "MUGIMENDUA", "JAKINARAZPENA"
+            "ROLA", "LANGILEA", "KATEGORIA", "KOKALEKUA",
+            "HARTZAILEA", "JABEA", "ERAKUNDEA", "ARTIKULUA",
+            "ERREKLAMAZIOA", "EMANALDIA", "MUGIMENDUA", "JAKINARAZPENA"
     };
 
     /**
@@ -31,7 +31,7 @@ public class BackupDAO {
      *
      * @return Sortutako fitxategiaren bide osoa
      * @throws Exception Offline moduan deitzen bada edo IO/SQL errorea
-     * gertatzen bada
+     *                   gertatzen bada
      */
     public static String eginBabesKopia() throws Exception {
         if (ModoKudeatzailea.isOffline()) {
@@ -46,7 +46,9 @@ public class BackupDAO {
         }
         String fitxategiIzena = exportDir.getAbsolutePath() + File.separator + "backup_" + data + ".sql";
 
-        try (FileWriter fw = new FileWriter(fitxategiIzena); Connection con = DBKonexioa.getKonexioa(); Statement st = con.createStatement()) {
+        try (FileWriter fw = new FileWriter(fitxategiIzena);
+                Connection con = DBKonexioa.getKonexioa();
+                Statement st = con.createStatement()) {
 
             fw.write("-- Babes-kopia: " + data + "\n");
             fw.write("USE erronka_galduak;\n\n");
@@ -62,11 +64,11 @@ public class BackupDAO {
                     while (rs.next()) {
                         StringBuilder sb = new StringBuilder("INSERT INTO " + taula + " VALUES (");
                         for (int i = 1; i <= cols; i++) {
-                            String val = rs.getString(i);
-                            if (val == null) {
+                            String bal = rs.getString(i);
+                            if (bal == null) {
                                 sb.append("NULL");
                             } else {
-                                sb.append("'").append(val.replace("'", "\\'")).append("'");
+                                sb.append("'").append(bal.replace("'", "\\'")).append("'");
                             }
                             if (i < cols) {
                                 sb.append(", ");

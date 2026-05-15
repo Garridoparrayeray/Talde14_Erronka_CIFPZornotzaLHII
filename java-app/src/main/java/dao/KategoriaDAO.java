@@ -51,7 +51,7 @@ public class KategoriaDAO {
     /**
      * Kategoria baten izena eguneratzen du.
      *
-     * @param id Kategoriaren identifikagailua
+     * @param id       Kategoriaren identifikagailua
      * @param izenaOso Izen berria
      * @return Ondo eguneratu bada true
      */
@@ -65,7 +65,7 @@ public class KategoriaDAO {
             ps.setInt(2, id);
             boolean ok = ps.executeUpdate() > 0;
             if (ok) {
-                LOG.log(Level.INFO, "aldatuIzena: OK - id={0}, izena={1}", new Object[]{id, izenaOso});
+                LOG.log(Level.INFO, "aldatuIzena: OK - id={0}, izena={1}", new Object[] { id, izenaOso });
             }
             return ok;
         } catch (SQLException e) {
@@ -110,7 +110,9 @@ public class KategoriaDAO {
         List<Kategoria> kategoriak = new ArrayList<>();
         String sql = "SELECT id_kategoria, izena FROM KATEGORIA";
 
-        try (Connection con = DBKonexioa.getKonexioa(); PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+        try (Connection con = DBKonexioa.getKonexioa();
+                PreparedStatement ps = con.prepareStatement(sql);
+                ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 kategoriak.add(new Kategoria(rs.getInt("id_kategoria"), rs.getString("izena")));
             }

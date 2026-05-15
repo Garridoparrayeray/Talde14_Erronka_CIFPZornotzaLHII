@@ -16,7 +16,7 @@
 <VBox stylesheets="@style.css"
       xmlns="http://javafx.com/javafx/21"
       xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="controller.LangileaEdituController"
+      fx:controller="controller.LangileaEditatuController"
       style="-fx-background-color: white; -fx-pref-width: 450; -fx-pref-height: 480;">
 
    <children>

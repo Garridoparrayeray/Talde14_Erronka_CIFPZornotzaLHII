@@ -51,10 +51,12 @@ import model.MugimenduLerroa;
  * eduki guztia memoria eta {@code store.dat} fitxategian gordetzen du.
  * Aplikazioa ixten denean ere sinkronizatu egiten da {@code Main.stop()}-etik.
  * Hurrengo exekuzioan DB eskuragarri ez bada, azken sinkronizazioko datuak
- * erabiltzen dira fitxategitik irakurrita.</p>
+ * erabiltzen dira fitxategitik irakurrita.
+ * </p>
  *
  * <p>
- * Klase Estatikoa — Metodo guztiak zuzenean deitu.</p>
+ * Klase Estatikoa — Metodo guztiak zuzenean deitu.
+ * </p>
  *
  * @author Yeray Garrido
  */
@@ -165,7 +167,7 @@ public class BiltegiLokala {
             poltsa.mugimenduak = new LinkedList<>(mugimenduak);
 
             LOG.log(Level.INFO, "BiltegiLokala DB-tik sinkronizatuta: {0} artikulu, {1} langile.",
-                    new Object[]{artikuluak.size(), langileak.size()});
+                    new Object[] { artikuluak.size(), langileak.size() });
         } catch (Exception e) {
             LOG.log(Level.WARNING, "DB sinkronizazioa huts egin du: {0}", e.getMessage());
             e.printStackTrace();
@@ -179,7 +181,8 @@ public class BiltegiLokala {
             return;
         }
 
-        LOG.log(Level.INFO, "Offline moduan egindako {0} eragiketa aurkitu dira. DB-ra igotzen...", poltsa.itxaronEragiketak.size());
+        LOG.log(Level.INFO, "Offline moduan egindako {0} eragiketa aurkitu dira. DB-ra igotzen...",
+                poltsa.itxaronEragiketak.size());
         java.util.Map<String, String> artikuluIdMap = new java.util.HashMap<>();
 
         for (ItxaronEragiketa op : new ArrayList<>(poltsa.itxaronEragiketak)) {
@@ -188,9 +191,11 @@ public class BiltegiLokala {
                 switch (op.entitatea) {
                     case "LANGILEA":
                         if ("INSERT".equals(op.ekintza)) {
-                            LangileaDAO.gehitu((String) a[0], (String) a[1], (String) a[2], (String) a[3], (Integer) a[4]);
+                            LangileaDAO.gehitu((String) a[0], (String) a[1], (String) a[2], (String) a[3],
+                                    (Integer) a[4]);
                         } else if ("UPDATE".equals(op.ekintza)) {
-                            LangileaDAO.eguneratu((Integer) a[0], (String) a[1], (String) a[2], (String) a[3], (Integer) a[4], (String) a[5]);
+                            LangileaDAO.eguneratu((Integer) a[0], (String) a[1], (String) a[2], (String) a[3],
+                                    (Integer) a[4], (String) a[5]);
                         } else if ("DELETE".equals(op.ekintza)) {
                             LangileaDAO.ezabatu((Integer) a[0]);
                         }
@@ -198,13 +203,15 @@ public class BiltegiLokala {
                     case "ARTIKULUA":
                         if ("INSERT".equals(op.ekintza)) {
                             String oldId = (String) a[0];
-                            String newId = ArtikuluaDAO.gehitu((String) a[1], (String) a[2], (Boolean) a[3], (Integer) a[4], (Integer) a[5], (java.sql.Date) a[6], (String) a[7]);
+                            String newId = ArtikuluaDAO.gehitu((String) a[1], (String) a[2], (Boolean) a[3],
+                                    (Integer) a[4], (Integer) a[5], (java.sql.Date) a[6], (String) a[7]);
                             if (newId != null && !newId.equals(oldId)) {
                                 artikuluIdMap.put(oldId, newId);
                             }
                         } else if ("UPDATE".equals(op.ekintza)) {
                             String id = artikuluIdMap.getOrDefault((String) a[0], (String) a[0]);
-                            ArtikuluaDAO.eguneratu(id, (String) a[1], (String) a[2], (Integer) a[3], (Integer) a[4], (String) a[5]);
+                            ArtikuluaDAO.eguneratu(id, (String) a[1], (String) a[2], (Integer) a[3], (Integer) a[4],
+                                    (String) a[5]);
                         } else if ("DELETE".equals(op.ekintza)) {
                             String id = artikuluIdMap.getOrDefault((String) a[0], (String) a[0]);
                             ArtikuluaDAO.ezabatu(id);
@@ -230,7 +237,8 @@ public class BiltegiLokala {
                         break;
                     case "ERREKLAMAZIOA":
                         if ("INSERT".equals(op.ekintza)) {
-                            ErreklamazioaDAO.gorde((String) a[0], (String) a[1], (String) a[2], (String) a[3], (String) a[4], (Integer) a[5], (String) a[6], (Integer) a[7]);
+                            ErreklamazioaDAO.gorde((String) a[0], (String) a[1], (String) a[2], (String) a[3],
+                                    (String) a[4], (Integer) a[5], (String) a[6], (Integer) a[7]);
                         } else if ("UPDATE_EGOERA".equals(op.ekintza)) {
                             ErreklamazioaDAO.updateEgoera((String) a[0], (String) a[1]);
                         }
@@ -238,21 +246,24 @@ public class BiltegiLokala {
                     case "EMANALDIA":
                         String emId = artikuluIdMap.getOrDefault((String) a[0], (String) a[0]);
                         if ("FORMALIZATU".equals(op.ekintza)) {
-                            EmanaldiaDAO.formalizatu(emId, (String) a[1], (String) a[2], (String) a[3], (String) a[4], (String) a[5], (String) a[6], (String) a[7], (Integer) a[8], (String) a[9]);
+                            EmanaldiaDAO.formalizatu(emId, (String) a[1], (String) a[2], (String) a[3], (String) a[4],
+                                    (String) a[5], (String) a[6], (String) a[7], (Integer) a[8], (String) a[9]);
                         } else if ("FORMALIZATU_ERAKUNDEA".equals(op.ekintza)) {
-                            EmanaldiaDAO.formalizatuErakundea(emId, (String) a[1], (String) a[2], (String) a[3], (String) a[4], (String) a[5], (String) a[6], (Integer) a[7], (String) a[8]);
+                            EmanaldiaDAO.formalizatuErakundea(emId, (String) a[1], (String) a[2], (String) a[3],
+                                    (String) a[4], (String) a[5], (String) a[6], (Integer) a[7], (String) a[8]);
                         }
                         break;
                     case "AURKITZAILEA":
                         if ("INSERT".equals(op.ekintza)) {
                             String auId = artikuluIdMap.getOrDefault((String) a[0], (String) a[0]);
-                            AurkitzaileaDAO.gehitu(auId, (String) a[1], (String) a[2], (String) a[3], (String) a[4], (String) a[5]);
+                            AurkitzaileaDAO.gehitu(auId, (String) a[1], (String) a[2], (String) a[3], (String) a[4],
+                                    (String) a[5]);
                         }
                         break;
                 }
             } catch (Exception e) {
                 LOG.log(Level.WARNING, "Ezin izan da prozesatu eragiketa ({0} - {1}): {2}",
-                        new Object[]{op.entitatea, op.ekintza, e.getMessage()});
+                        new Object[] { op.entitatea, op.ekintza, e.getMessage() });
             }
         }
 
@@ -278,7 +289,10 @@ public class BiltegiLokala {
         return new ArrayList<>(poltsa.langileak);
     }
 
-    /** Biltegi lokaleko rol guztien zerrenda itzultzen du ({id, deskribapena} bikoteak). */
+    /**
+     * Biltegi lokaleko rol guztien zerrenda itzultzen du ({id, deskribapena}
+     * bikoteak).
+     */
     public static List<String[]> getRolak() {
         return new ArrayList<>(poltsa.rolak);
     }
@@ -286,11 +300,11 @@ public class BiltegiLokala {
     /**
      * Langile berri bat gehitzen du biltegi lokalean eta itxaron-ilaran.
      *
-     * @param izena        Langilearen izena
-     * @param abizena      Langilearen abizena
+     * @param izena         Langilearen izena
+     * @param abizena       Langilearen abizena
      * @param erabiltzailea Sarbide-izena
-     * @param pasahitza    Testu-plano pasahitza (BCrypt-ekin gordeko da)
-     * @param idRola       Langilearen rolaren IDa
+     * @param pasahitza     Testu-plano pasahitza (BCrypt-ekin gordeko da)
+     * @param idRola        Langilearen rolaren IDa
      * @return Beti true
      */
     public static synchronized boolean langileaGehitu(String izena, String abizena,
@@ -306,13 +320,14 @@ public class BiltegiLokala {
         l.setRola(rolaDesk);
         poltsa.langileak.add(l);
         poltsa.langileNextId++;
-        gehituItxaronEragiketa("LANGILEA", "INSERT", new Object[]{izena, abizena, erabiltzailea, pasahitza, idRola});
+        gehituItxaronEragiketa("LANGILEA", "INSERT", new Object[] { izena, abizena, erabiltzailea, pasahitza, idRola });
         gorde();
         return true;
     }
 
     /**
-     * Erabiltzaile-izen eta pasahitzarekin sarrera-egiaztapena egiten du biltegi lokalean.
+     * Erabiltzaile-izen eta pasahitzarekin sarrera-egiaztapena egiten du biltegi
+     * lokalean.
      *
      * @param erabiltzailea Sarbide-izena
      * @param pasahitza     Testu-plano pasahitza
@@ -320,14 +335,15 @@ public class BiltegiLokala {
      */
     public static Langilea login(String erabiltzailea, String pasahitza) {
         LOG.log(Level.INFO, "Login lokala intentatzen: ''{0}''. Langile kopurua: {1}",
-                new Object[]{erabiltzailea, poltsa.langileak.size()});
+                new Object[] { erabiltzailea, poltsa.langileak.size() });
         for (Langilea l : poltsa.langileak) {
             if (l.getErabiltzailea().equals(erabiltzailea)) {
                 String gordetako = l.getPasahitzaHash();
                 LOG.info("Erabiltzailea aurkituta. Gordetako pasahitza DB-n: " + (gordetako == null ? "NULL" : "DAGO"));
                 if (gordetako != null) {
                     try {
-                        if (gordetako.startsWith("$2a$") || gordetako.startsWith("$2b$") || gordetako.startsWith("$2y$")) {
+                        if (gordetako.startsWith("$2a$") || gordetako.startsWith("$2b$")
+                                || gordetako.startsWith("$2y$")) {
                             if (BCrypt.checkpw(pasahitza, gordetako)) {
                                 LOG.info("Login OK (BCrypt)");
                                 return l;
@@ -353,11 +369,11 @@ public class BiltegiLokala {
     /**
      * Langile baten datuak eguneratzen ditu biltegi lokalean eta itxaron-ilaran.
      *
-     * @param id             Langilearen IDa
-     * @param izena          Izen berria
-     * @param abizena        Abizen berria
-     * @param erabiltzailea  Sarbide-izen berria
-     * @param idRola         Rol berriaren IDa
+     * @param id              Langilearen IDa
+     * @param izena           Izen berria
+     * @param abizena         Abizen berria
+     * @param erabiltzailea   Sarbide-izen berria
+     * @param idRola          Rol berriaren IDa
      * @param pasahitzaBerria Pasahitz berria (null edo hutsa bada ez da aldatzen)
      * @return true eguneraketa ondo joan bada, false IDa aurkitu ez bada
      */
@@ -372,7 +388,8 @@ public class BiltegiLokala {
                 if (pasahitzaBerria != null && !pasahitzaBerria.isEmpty()) {
                     l.setPasahitzaHash(BCrypt.hashpw(pasahitzaBerria, BCrypt.gensalt(10)));
                 }
-                gehituItxaronEragiketa("LANGILEA", "UPDATE", new Object[]{id, izena, abizena, erabiltzailea, idRola, pasahitzaBerria});
+                gehituItxaronEragiketa("LANGILEA", "UPDATE",
+                        new Object[] { id, izena, abizena, erabiltzailea, idRola, pasahitzaBerria });
                 gorde();
                 return true;
             }
@@ -381,7 +398,8 @@ public class BiltegiLokala {
     }
 
     /**
-     * Langile bat biltegi lokaletik ezabatzen du eta itxaron-ilaran erregistratzen du.
+     * Langile bat biltegi lokaletik ezabatzen du eta itxaron-ilaran erregistratzen
+     * du.
      *
      * @param id Ezabatu beharreko langilearen IDa
      * @return true ezabatu bada, false IDa aurkitu ez bada
@@ -389,7 +407,7 @@ public class BiltegiLokala {
     public static synchronized boolean langileaEzabatu(int id) {
         boolean removed = poltsa.langileak.removeIf(l -> l.getLangileId() == id);
         if (removed) {
-            gehituItxaronEragiketa("LANGILEA", "DELETE", new Object[]{id});
+            gehituItxaronEragiketa("LANGILEA", "DELETE", new Object[] { id });
             gorde();
         }
         return removed;
@@ -462,7 +480,8 @@ public class BiltegiLokala {
         String now = now();
         poltsa.mugimenduak.addFirst(new MugimenduLerroa(now, "—",
                 "Artikulua sisteman erregistratu da: " + kodea, kodea));
-        gehituItxaronEragiketa("ARTIKULUA", "INSERT", new Object[]{kodea, izena, deskribapena, iragankorra, idKategoria, idKokalekua, sarreraData, argazkiBidea});
+        gehituItxaronEragiketa("ARTIKULUA", "INSERT", new Object[] { kodea, izena, deskribapena, iragankorra,
+                idKategoria, idKokalekua, sarreraData, argazkiBidea });
         gorde();
         return kodea;
     }
@@ -473,9 +492,12 @@ public class BiltegiLokala {
      * @param kodea        Eguneratu beharreko artikuluaren kodea
      * @param izena        Izenburua berria
      * @param deskribapena Deskribapen berria
-     * @param idKategoria  Kategoria berriaren IDa (0 edo negatiboa = kategoria gabe)
-     * @param idKokalekua  Kokalekua berriaren IDa (0 edo negatiboa = kokalekua gabe)
-     * @param argazkiBidea Argazki berriaren bidea (null edo hutsa bada ez da aldatzen)
+     * @param idKategoria  Kategoria berriaren IDa (0 edo negatiboa = kategoria
+     *                     gabe)
+     * @param idKokalekua  Kokalekua berriaren IDa (0 edo negatiboa = kokalekua
+     *                     gabe)
+     * @param argazkiBidea Argazki berriaren bidea (null edo hutsa bada ez da
+     *                     aldatzen)
      * @return true eguneraketa ondo joan bada, false kodea aurkitu ez bada
      */
     public static synchronized boolean artikuluaEguneratu(String kodea, String izena,
@@ -511,7 +533,8 @@ public class BiltegiLokala {
                 if (argazkiBidea != null && !argazkiBidea.isEmpty()) {
                     a.setArgazkiBidea(argazkiBidea);
                 }
-                gehituItxaronEragiketa("ARTIKULUA", "UPDATE", new Object[]{kodea, izena, deskribapena, idKategoria, idKokalekua, argazkiBidea});
+                gehituItxaronEragiketa("ARTIKULUA", "UPDATE",
+                        new Object[] { kodea, izena, deskribapena, idKategoria, idKokalekua, argazkiBidea });
                 gorde();
                 return true;
             }
@@ -520,7 +543,8 @@ public class BiltegiLokala {
     }
 
     /**
-     * Artikulu bat biltegi lokaletik ezabatzen du eta itxaron-ilaran erregistratzen du.
+     * Artikulu bat biltegi lokaletik ezabatzen du eta itxaron-ilaran erregistratzen
+     * du.
      *
      * @param kodea Ezabatu beharreko artikuluaren kodea
      * @return true ezabatu bada, false kodea aurkitu ez bada
@@ -528,7 +552,7 @@ public class BiltegiLokala {
     public static synchronized boolean artikuluaEzabatu(String kodea) {
         boolean removed = poltsa.artikuluak.removeIf(a -> a.getArtikuluKodea().equals(kodea));
         if (removed) {
-            gehituItxaronEragiketa("ARTIKULUA", "DELETE", new Object[]{kodea});
+            gehituItxaronEragiketa("ARTIKULUA", "DELETE", new Object[] { kodea });
             gorde();
         }
         return removed;
@@ -562,7 +586,7 @@ public class BiltegiLokala {
      */
     public static synchronized boolean kategoriaGehitu(String izena) {
         poltsa.kategoriak.add(new Kategoria(poltsa.kategoriaNextId++, izena));
-        gehituItxaronEragiketa("KATEGORIA", "INSERT", new Object[]{izena});
+        gehituItxaronEragiketa("KATEGORIA", "INSERT", new Object[] { izena });
         gorde();
         return true;
     }
@@ -578,7 +602,7 @@ public class BiltegiLokala {
         for (Kategoria k : poltsa.kategoriak) {
             if (k.getKategoriaId() == id) {
                 k.setIzena(izena);
-                gehituItxaronEragiketa("KATEGORIA", "UPDATE", new Object[]{id, izena});
+                gehituItxaronEragiketa("KATEGORIA", "UPDATE", new Object[] { id, izena });
                 gorde();
                 return true;
             }
@@ -587,7 +611,8 @@ public class BiltegiLokala {
     }
 
     /**
-     * Kategoria bat biltegi lokaletik ezabatzen du eta itxaron-ilaran erregistratzen du.
+     * Kategoria bat biltegi lokaletik ezabatzen du eta itxaron-ilaran
+     * erregistratzen du.
      *
      * @param id Ezabatu beharreko kategoriaren IDa
      * @return true ezabatu bada, false IDa aurkitu ez bada
@@ -595,7 +620,7 @@ public class BiltegiLokala {
     public static synchronized boolean kategoriaEzabatu(int id) {
         boolean removed = poltsa.kategoriak.removeIf(k -> k.getKategoriaId() == id);
         if (removed) {
-            gehituItxaronEragiketa("KATEGORIA", "DELETE", new Object[]{id});
+            gehituItxaronEragiketa("KATEGORIA", "DELETE", new Object[] { id });
             gorde();
         }
         return removed;
@@ -623,7 +648,10 @@ public class BiltegiLokala {
         return result;
     }
 
-    /** Biltegi lokaleko kokaleku guztien zerrenda itzultzen du, kopuruak kalkulatu gabe. */
+    /**
+     * Biltegi lokaleko kokaleku guztien zerrenda itzultzen du, kopuruak kalkulatu
+     * gabe.
+     */
     public static List<Kokalekua> getKokalekuakZerrenda() {
         return new ArrayList<>(poltsa.kokalekuak);
     }
@@ -640,7 +668,7 @@ public class BiltegiLokala {
         Kokalekua k = new Kokalekua(armairua, apala, bhaDa);
         k.setKokalekuId(poltsa.kokalekuNextId++);
         poltsa.kokalekuak.add(k);
-        gehituItxaronEragiketa("KOKALEKUA", "INSERT", new Object[]{armairua, apala, bhaDa});
+        gehituItxaronEragiketa("KOKALEKUA", "INSERT", new Object[] { armairua, apala, bhaDa });
         gorde();
         return true;
     }
@@ -665,7 +693,7 @@ public class BiltegiLokala {
                         a.setKokalekua(berria);
                     }
                 }
-                gehituItxaronEragiketa("KOKALEKUA", "UPDATE", new Object[]{id, armairua, apala, bhaDa});
+                gehituItxaronEragiketa("KOKALEKUA", "UPDATE", new Object[] { id, armairua, apala, bhaDa });
                 gorde();
                 return true;
             }
@@ -674,7 +702,8 @@ public class BiltegiLokala {
     }
 
     /**
-     * Kokaleku bat biltegi lokaletik ezabatzen du eta itxaron-ilaran erregistratzen du.
+     * Kokaleku bat biltegi lokaletik ezabatzen du eta itxaron-ilaran erregistratzen
+     * du.
      *
      * @param id Ezabatu beharreko kokalekuaren IDa
      * @return true ezabatu bada, false IDa aurkitu ez bada
@@ -682,7 +711,7 @@ public class BiltegiLokala {
     public static synchronized boolean kokalekuaEzabatu(int id) {
         boolean removed = poltsa.kokalekuak.removeIf(k -> k.getKokalekuId() == id);
         if (removed) {
-            gehituItxaronEragiketa("KOKALEKUA", "DELETE", new Object[]{id});
+            gehituItxaronEragiketa("KOKALEKUA", "DELETE", new Object[] { id });
             gorde();
         }
         return removed;
@@ -699,7 +728,8 @@ public class BiltegiLokala {
      *
      * @param id     Erreklamazioaren IDa (testu gisa)
      * @param egoera Egoera berria (adibidez {@code "IREKITA"}, {@code "ITXITA"})
-     * @return true eguneraketa ondo joan bada, false IDa baliogabea edo aurkitu ez bada
+     * @return true eguneraketa ondo joan bada, false IDa baliogabea edo aurkitu ez
+     *         bada
      */
     public static synchronized boolean erreklamazioaUpdateEgoera(String id, String egoera) {
         int idInt;
@@ -715,7 +745,7 @@ public class BiltegiLokala {
                 } catch (IllegalArgumentException ex) {
                     e.setEgoera(EgoeraErreklamazioa.IREKITA);
                 }
-                gehituItxaronEragiketa("ERREKLAMAZIOA", "UPDATE_EGOERA", new Object[]{id, egoera});
+                gehituItxaronEragiketa("ERREKLAMAZIOA", "UPDATE_EGOERA", new Object[] { id, egoera });
                 gorde();
                 return true;
             }
@@ -750,7 +780,8 @@ public class BiltegiLokala {
             }
         }
         poltsa.erreklamazioak.add(e);
-        gehituItxaronEragiketa("ERREKLAMAZIOA", "INSERT", new Object[]{nan, izena, abizena, telefonoa, emaila, kategoriaId, deskribapena, idLangile});
+        gehituItxaronEragiketa("ERREKLAMAZIOA", "INSERT",
+                new Object[] { nan, izena, abizena, telefonoa, emaila, kategoriaId, deskribapena, idLangile });
         gorde();
         return true;
     }
@@ -785,7 +816,8 @@ public class BiltegiLokala {
         String langileIzena = getLangileIzena(idLangile);
         poltsa.mugimenduak.addFirst(new MugimenduLerroa(now(), langileIzena,
                 "Artikulua " + izena + " " + abizena + "-ri eman zaio.", idArtikulua));
-        gehituItxaronEragiketa("EMANALDIA", "FORMALIZATU", new Object[]{idArtikulua, nan, izena, abizena, telefonoa, emaila, helbidea, oharrak, idLangile, dokumentuBidea});
+        gehituItxaronEragiketa("EMANALDIA", "FORMALIZATU", new Object[] { idArtikulua, nan, izena, abizena, telefonoa,
+                emaila, helbidea, oharrak, idLangile, dokumentuBidea });
         gorde();
         return true;
     }
@@ -818,7 +850,8 @@ public class BiltegiLokala {
         String langileIzena = getLangileIzena(idLangile);
         poltsa.mugimenduak.addFirst(new MugimenduLerroa(now(), langileIzena,
                 "Artikulua " + izenOfiziala + " erakundeari eman zaio.", idArtikulua));
-        gehituItxaronEragiketa("EMANALDIA", "FORMALIZATU_ERAKUNDEA", new Object[]{idArtikulua, ift, izenOfiziala, telefonoa, emaila, helbidea, oharrak, idLangile, dokumentuBidea});
+        gehituItxaronEragiketa("EMANALDIA", "FORMALIZATU_ERAKUNDEA", new Object[] { idArtikulua, ift, izenOfiziala,
+                telefonoa, emaila, helbidea, oharrak, idLangile, dokumentuBidea });
         gorde();
         return true;
     }
@@ -827,23 +860,40 @@ public class BiltegiLokala {
     /**
      * Aurkitzaile berri bat gehitzen du biltegi lokalean eta itxaron-ilaran.
      *
-     * @param idArtikulua  Aurkitutako artikuluaren kodea
-     * @param izena        Aurkitzailearen izena
-     * @param abizena      Aurkitzailearen abizena
-     * @param telefonoa    Harremanetarako telefonoa (hutsa bada null gordetzen da)
-     * @param emaila       Harremanetarako emaila (hutsa bada null gordetzen da)
-     * @param aurkipenLekua Artikulua aurkitu den lekua (hutsa bada null gordetzen da)
+     * @param idArtikulua   Aurkitutako artikuluaren kodea
+     * @param izena         Aurkitzailearen izena
+     * @param abizena       Aurkitzailearen abizena
+     * @param telefonoa     Harremanetarako telefonoa (hutsa bada null gordetzen da)
+     * @param emaila        Harremanetarako emaila (hutsa bada null gordetzen da)
+     * @param aurkipenLekua Artikulua aurkitu den lekua (hutsa bada null gordetzen
+     *                      da)
      * @return Beti true
      */
     public static synchronized boolean aurkitzaileaGehitu(String idArtikulua, String izena,
             String abizena, String telefonoa, String emaila, String aurkipenLekua) {
-        String tel = telefonoa.isEmpty() ? null : telefonoa;
-        String ema = emaila.isEmpty() ? null : emaila;
-        String lekua = aurkipenLekua.isEmpty() ? null : aurkipenLekua;
+        String tel;
+        if (telefonoa.isEmpty()) {
+            tel = null;
+        } else {
+            tel = telefonoa;
+        }
+        String ema;
+        if (emaila.isEmpty()) {
+            ema = null;
+        } else {
+            ema = emaila;
+        }
+        String lekua;
+        if (aurkipenLekua.isEmpty()) {
+            lekua = null;
+        } else {
+            lekua = aurkipenLekua;
+        }
         Aurkitzailea a = new Aurkitzailea(izena, abizena, tel, ema, lekua, idArtikulua);
         a.setAurkitzaileaId(poltsa.aurkitzaileNextId++);
         poltsa.aurkitzaileak.add(a);
-        gehituItxaronEragiketa("AURKITZAILEA", "INSERT", new Object[]{idArtikulua, izena, abizena, telefonoa, emaila, aurkipenLekua});
+        gehituItxaronEragiketa("AURKITZAILEA", "INSERT",
+                new Object[] { idArtikulua, izena, abizena, telefonoa, emaila, aurkipenLekua });
         gorde();
         return true;
     }
@@ -1006,7 +1056,8 @@ public class BiltegiLokala {
     /**
      * Kategoria bakoitzeko artikulu kopurua kalkulatzen du biltegi lokaletik.
      *
-     * @return Kategoria bakoitzaren izena eta artikulu kopurua, kopuruaren arabera ordenatuta
+     * @return Kategoria bakoitzaren izena eta artikulu kopurua, kopuruaren arabera
+     *         ordenatuta
      */
     public static List<KategoriaKopurua> kategoriaKopuruak() {
         List<KategoriaKopurua> result = new ArrayList<>();
@@ -1080,8 +1131,8 @@ public class BiltegiLokala {
         /**
          * Itxaron-eragiketa sortzen du entitatea, ekintza eta argumentuekin.
          *
-         * @param entitatea  Eragiketaren entitate mota (adib. "LANGILEA", "ARTIKULUA")
-         * @param ekintza    SQL ekintza (adib. "INSERT", "UPDATE", "DELETE")
+         * @param entitatea   Eragiketaren entitate mota (adib. "LANGILEA", "ARTIKULUA")
+         * @param ekintza     SQL ekintza (adib. "INSERT", "UPDATE", "DELETE")
          * @param argumentuak Eragiketaren parametroak
          */
         public ItxaronEragiketa(String entitatea, String ekintza, Object[] argumentuak) {

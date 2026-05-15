@@ -26,9 +26,9 @@ public class Erreklamazioa implements Serializable {
     /**
      * Erreklamazioaren eraikitzailea.
      *
-     * @param hartzailea Erreklamazioa egiten duen pertsona edo erakundea
+     * @param hartzailea         Erreklamazioa egiten duen pertsona edo erakundea
      * @param deskribapenBilatua Galdutako objektuaren deskribapena
-     * @param erreklamazioData Erreklamazioa sortu den data
+     * @param erreklamazioData   Erreklamazioa sortu den data
      */
     public Erreklamazioa(Hartzailea hartzailea, String deskribapenBilatua,
             Date erreklamazioData) {

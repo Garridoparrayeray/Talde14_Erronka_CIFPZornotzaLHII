@@ -15,7 +15,7 @@ public class KategoriaKopurua {
      * Ereduaren eraikitzailea.
      *
      * @param kategoriaIzena Kategoriaren izena
-     * @param kopurua Zenbat artikulu dauden kategoria horretan
+     * @param kopurua        Zenbat artikulu dauden kategoria horretan
      */
     public KategoriaKopurua(String kategoriaIzena, int kopurua) {
         this.kategoriaIzena = kategoriaIzena;

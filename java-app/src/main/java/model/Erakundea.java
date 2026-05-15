@@ -15,10 +15,10 @@ public class Erakundea extends Hartzailea {
     /**
      * Erakundearen eraikitzailea.
      *
-     * @param ifz Identifikazio Fiskaleko Zenbakia
-     * @param izenFiskala Erakundearen izen ofiziala
+     * @param ifz          Identifikazio Fiskaleko Zenbakia
+     * @param izenFiskala  Erakundearen izen ofiziala
      * @param erakundeMota Erakundearen mota (GKE, udala, etab.)
-     * @param telefonoa Kontaktu telefonoa
+     * @param telefonoa    Kontaktu telefonoa
      */
     public Erakundea(String ifz, String izenFiskala, String erakundeMota, String telefonoa) {
         super(0, telefonoa, null);

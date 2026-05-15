@@ -52,7 +52,7 @@ public class AuditoriaController implements Initializable {
         colData.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getData()));
         colLangilea.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getLangilea()));
         colEkintza.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getEkintza()));
-        UIKudeatzailea.ehundatuZelulak(colEkintza);
+        UIKudeatzailea.objetuarenWrapper(colEkintza);
         colXehetasunak.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getArtikuluId()));
         kargatu();
     }
@@ -100,7 +100,8 @@ public class AuditoriaController implements Initializable {
     }
 
     private static String esc(String s) {
-        if (s == null) return "";
+        if (s == null)
+            return "";
         return s.replace("\"", "\"\"");
     }
 }

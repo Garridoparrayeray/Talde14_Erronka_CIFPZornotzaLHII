@@ -91,7 +91,8 @@ public class LangileBerriController implements Initializable {
         if (ok) {
             itxi();
         } else {
-            UIKudeatzailea.erakutsiFormularioErrorea(lblErrorea, "Errorea gordetzean. Erabiltzaile izena dagoeneko existitu daiteke.");
+            UIKudeatzailea.erakutsiFormularioErrorea(lblErrorea,
+                    "Errorea gordetzean. Erabiltzaile izena dagoeneko existitu daiteke.");
         }
     }
 

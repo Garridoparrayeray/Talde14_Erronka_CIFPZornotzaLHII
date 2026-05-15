@@ -15,11 +15,11 @@ public class Jabea extends Hartzailea {
     /**
      * Jabearen eraikitzailea.
      *
-     * @param nan Nortasun Agiri Nazionala
-     * @param izena Jabearen izena
-     * @param abizena Jabearen abizena
+     * @param nan       Nortasun Agiri Nazionala
+     * @param izena     Jabearen izena
+     * @param abizena   Jabearen abizena
      * @param telefonoa Kontaktu telefonoa
-     * @param emaila Kontaktu helbide elektronikoa
+     * @param emaila    Kontaktu helbide elektronikoa
      */
     public Jabea(String nan, String izena, String abizena, String telefonoa, String emaila) {
         super(0, telefonoa, emaila);

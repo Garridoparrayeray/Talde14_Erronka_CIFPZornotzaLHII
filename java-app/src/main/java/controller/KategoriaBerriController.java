@@ -53,7 +53,8 @@ public class KategoriaBerriController implements Initializable {
         if (ok) {
             itxi();
         } else {
-            UIKudeatzailea.erakutsiFormularioErrorea(lblErrorea, "Errorea gordetzean. Baliteke izen hori dagoeneko existitzea.");
+            UIKudeatzailea.erakutsiFormularioErrorea(lblErrorea,
+                    "Errorea gordetzean. Baliteke izen hori dagoeneko existitzea.");
         }
     }
 

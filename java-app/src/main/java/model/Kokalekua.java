@@ -21,8 +21,8 @@ public class Kokalekua implements Serializable {
      * Kokalekuaren eraikitzailea.
      *
      * @param armairua Armairuaren kodea edo izena
-     * @param apala Apalaren kodea edo izena
-     * @param bhaDa Behin-Behineko Harrera Alderdian badago true
+     * @param apala    Apalaren kodea edo izena
+     * @param bhaDa    Behin-Behineko Harrera Alderdian badago true
      */
     public Kokalekua(String armairua, String apala, boolean bhaDa) {
         this.armairua = armairua;

@@ -64,7 +64,7 @@ public class AdminPanelaController implements Initializable {
      * azken babes-kopiaren data erakusten ditu.
      *
      * @param url FXML fitxategiaren kokapena
-     * @param rb Erabilitako baliabide-sorta
+     * @param rb  Erabilitako baliabide-sorta
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {

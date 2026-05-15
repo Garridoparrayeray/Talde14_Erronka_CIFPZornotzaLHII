@@ -19,9 +19,9 @@ public class Mugimendua {
     /**
      * Mugimenduaren eraikitzailea.
      *
-     * @param langilea Eragiketa burutu duen langilea
-     * @param artikulua Mugitu den artikulua
-     * @param mota Mugimendu mota (sarrera, irteera, etab.)
+     * @param langilea     Eragiketa burutu duen langilea
+     * @param artikulua    Mugitu den artikulua
+     * @param mota         Mugimendu mota (sarrera, irteera, etab.)
      * @param deskribapena Mugimenduaren azalpen laburra
      */
     public Mugimendua(Langilea langilea, Artikulua artikulua,

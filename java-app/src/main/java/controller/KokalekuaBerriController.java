@@ -50,7 +50,7 @@ public class KokalekuaBerriController implements Initializable {
     private void gorde() {
         String armairua = txtArmairua.getText().trim().toUpperCase();
         String apala = txtApala.getText().trim();
-        boolean bhaDa = chkBhaDa != null && chkBhaDa.isSelected();
+        boolean bhaDa = chkBhaDa.isSelected();
 
         if (armairua.isEmpty() || apala.isEmpty()) {
             UIKudeatzailea.erakutsiFormularioErrorea(lblErrorea, "(*) Armairua eta apala bete behar dira.");

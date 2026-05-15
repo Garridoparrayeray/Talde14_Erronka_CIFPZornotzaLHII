@@ -97,8 +97,7 @@ public class ErregistroaController implements Initializable {
         FileChooser fc = new FileChooser();
         fc.setTitle("Argazkia hautatu");
         fc.getExtensionFilters().add(
-                new FileChooser.ExtensionFilter("Irudiak (JPG, PNG, WEBP)", "*.jpg", "*.jpeg", "*.png", "*.webp")
-        );
+                new FileChooser.ExtensionFilter("Irudiak (JPG, PNG, WEBP)", "*.jpg", "*.jpeg", "*.png", "*.webp"));
         File f = fc.showOpenDialog(txtIzena.getScene().getWindow());
         if (f != null) {
             argazkiFile = f;
@@ -176,7 +175,8 @@ public class ErregistroaController implements Initializable {
         }
 
         // Aurkitzailea gorde
-        boolean aurkOk = AurkitzaileaDAO.gehitu(kodea, aurkIzena, aurkAbizena, aurkTelefonoa, aurkEmaila, aurkipenLekua);
+        boolean aurkOk = AurkitzaileaDAO.gehitu(kodea, aurkIzena, aurkAbizena, aurkTelefonoa, aurkEmaila,
+                aurkipenLekua);
         if (!aurkOk) {
             LOG.log(Level.WARNING, "Aurkitzailearen datuak ezin izan dira gorde: " + kodea);
         }

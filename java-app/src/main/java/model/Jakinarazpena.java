@@ -22,8 +22,8 @@ public class Jakinarazpena {
      * Jakinarazpenaren eraikitzailea. Mezua automatikoki sortzen du.
      *
      * @param erreklamazioa Lotutako erreklamazioa
-     * @param artikulua Bat datorren artikulua
-     * @param kanala Bidaltzeko kanala
+     * @param artikulua     Bat datorren artikulua
+     * @param kanala        Bidaltzeko kanala
      */
     public Jakinarazpena(Erreklamazioa erreklamazioa, Artikulua artikulua, Kanala kanala) {
         this.erreklamazioa = erreklamazioa;

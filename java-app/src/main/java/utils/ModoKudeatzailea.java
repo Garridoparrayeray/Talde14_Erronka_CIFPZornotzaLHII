@@ -2,7 +2,7 @@ package utils;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
+import java.sql.Connection;
 import dao.ArtikuluaDAO;
 
 /**
@@ -16,9 +16,6 @@ public class ModoKudeatzailea {
     private static final Logger LOG = LogKudeatzailea.lortu(ModoKudeatzailea.class);
     private static volatile boolean offlineModo = false;
 
-    private ModoKudeatzailea() {
-    }
-
     /**
      * Abiaraztean DB konexioa egiaztatu eta modua ezartzen du. Online bada,
      * BiltegiLokala DB-tik sinkronizatzen du hurrengo offline-erako. DB
@@ -26,8 +23,12 @@ public class ModoKudeatzailea {
      */
     public static void detektatu() {
         try {
-            java.sql.Connection con = DBKonexioa.getKonexioa();
-            offlineModo = (con == null || con.isClosed());
+            Connection con = DBKonexioa.getKonexioa();
+            if (con == null || con.isClosed()) {
+                offlineModo = true;
+            } else {
+                offlineModo = false;
+            }
         } catch (Exception e) {
             LOG.log(Level.INFO, "DB ez dago eskuragarri, offline modura: {0}", e.getMessage());
             offlineModo = true;

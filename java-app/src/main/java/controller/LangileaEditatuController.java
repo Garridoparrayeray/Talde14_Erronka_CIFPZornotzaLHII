@@ -22,9 +22,9 @@ import utils.UIKudeatzailea;
  *
  * @author Eder Martin
  */
-public class LangileaEdituController implements Initializable {
+public class LangileaEditatuController implements Initializable {
 
-    private static final Logger LOG = LogKudeatzailea.lortu(LangileaEdituController.class);
+    private static final Logger LOG = LogKudeatzailea.lortu(LangileaEditatuController.class);
 
     @FXML
     private TextField txtIzena;
@@ -97,7 +97,8 @@ public class LangileaEdituController implements Initializable {
             }
         }
 
-        boolean ondo = LangileaDAO.eguneratu(langilea.getLangileId(), izena, abizena, erabiltzailea, idRola, pasahitzaBerria);
+        boolean ondo = LangileaDAO.eguneratu(langilea.getLangileId(), izena, abizena, erabiltzailea, idRola,
+                pasahitzaBerria);
 
         if (ondo) {
             itxi();

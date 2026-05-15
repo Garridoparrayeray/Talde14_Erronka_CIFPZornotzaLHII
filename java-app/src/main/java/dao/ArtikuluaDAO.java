@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -31,19 +32,20 @@ public class ArtikuluaDAO {
      * Artikulu berria gordetzen du datu-basean, kode automatikoa sortuz eta
      * mugimendua erregistratuz.
      *
-     * @param izena Artikuluaren izenburua
+     * @param izena        Artikuluaren izenburua
      * @param deskribapena Artikuluaren deskripzio osoa
-     * @param iragankorra Iragankorra bada true
-     * @param idKategoria Kategoriaaren identifikagailua (0 bada ez da lotzen)
-     * @param idKokalekua Kokalekuaren identifikagailua (0 bada ez da lotzen)
-     * @param sarreraData Biltegira sartu zen data
+     * @param iragankorra  Iragankorra bada true
+     * @param idKategoria  Kategoriaaren identifikagailua (0 bada ez da lotzen)
+     * @param idKokalekua  Kokalekuaren identifikagailua (0 bada ez da lotzen)
+     * @param sarreraData  Biltegira sartu zen data
      * @param argazkiBidea Argazkiaren bide erlatiboa (null bada hutsik)
      * @return Sortutako artikulu-kodea, edo null errorea bada
      */
     public static String gehitu(String izena, String deskribapena, boolean iragankorra,
             int idKategoria, int idKokalekua, java.sql.Date sarreraData, String argazkiBidea) {
         if (ModoKudeatzailea.isOffline()) {
-            return BiltegiLokala.artikuluaGehitu(izena, deskribapena, iragankorra, idKategoria, idKokalekua, sarreraData, argazkiBidea);
+            return BiltegiLokala.artikuluaGehitu(izena, deskribapena, iragankorra, idKategoria, idKokalekua,
+                    sarreraData, argazkiBidea);
         }
         String kodea = sortuKodea(sarreraData);
         if (kodea == null) {
@@ -52,9 +54,9 @@ public class ArtikuluaDAO {
 
         java.sql.Date iraungData = null;
         if (sarreraData != null) {
-            java.util.Calendar cal = java.util.Calendar.getInstance();
+            Calendar cal = Calendar.getInstance();
             cal.setTime(sarreraData);
-            cal.add(java.util.Calendar.DAY_OF_YEAR, 730);
+            cal.add(Calendar.DAY_OF_YEAR, 730);
             iraungData = new java.sql.Date(cal.getTimeInMillis());
         }
 
@@ -137,11 +139,11 @@ public class ArtikuluaDAO {
      * @return Kode berria, edo null errorea bada
      */
     private static String sortuKodea(java.sql.Date sarreraData) {
-        String urteStr = String.format("%02d", java.util.Calendar.getInstance().get(java.util.Calendar.YEAR) % 100);
+        String urteStr = String.format("%02d", Calendar.getInstance().get(Calendar.YEAR) % 100);
         if (sarreraData != null) {
-            java.util.Calendar cal = java.util.Calendar.getInstance();
+            Calendar cal = Calendar.getInstance();
             cal.setTime(sarreraData);
-            urteStr = String.format("%02d", cal.get(java.util.Calendar.YEAR) % 100);
+            urteStr = String.format("%02d", cal.get(Calendar.YEAR) % 100);
         }
         String sql = "SELECT COUNT(*) + 1 AS hurrengo FROM ARTIKULUA WHERE id_artikulua LIKE ?";
         try (Connection con = DBKonexioa.getKonexioa(); PreparedStatement ps = con.prepareStatement(sql)) {
@@ -182,8 +184,7 @@ public class ArtikuluaDAO {
                 Artikulua a = new Artikulua(
                         rs.getString("id_artikulua"), rs.getString("a_izena"),
                         rs.getString("a_deskribapena"), null, null,
-                        rs.getDate("sarrera_data"), rs.getString("argazkia")
-                );
+                        rs.getDate("sarrera_data"), rs.getString("argazkia"));
                 String egoeraStr = rs.getString("egoera");
                 if (egoeraStr != null) {
                     switch (egoeraStr) {
@@ -205,7 +206,8 @@ public class ArtikuluaDAO {
                     a.setKategoria(new Kategoria(rs.getInt("id_kategoria"), rs.getString("kat_izena")));
                 }
                 if (rs.getInt("id_kokalekua") != 0) {
-                    a.setKokalekua(new Kokalekua(rs.getString("armairua"), rs.getString("apala"), rs.getBoolean("bha_da")));
+                    a.setKokalekua(
+                            new Kokalekua(rs.getString("armairua"), rs.getString("apala"), rs.getBoolean("bha_da")));
                 }
                 return a;
             }
@@ -234,7 +236,9 @@ public class ArtikuluaDAO {
                 + "LEFT JOIN KATEGORIA k  ON a.id_kategoria  = k.id_kategoria "
                 + "LEFT JOIN KOKALEKUA ko ON a.id_kokalekua = ko.id_kokalekua";
 
-        try (Connection con = DBKonexioa.getKonexioa(); PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+        try (Connection con = DBKonexioa.getKonexioa();
+                PreparedStatement ps = con.prepareStatement(sql);
+                ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
                 Artikulua a = new Artikulua(
@@ -243,8 +247,7 @@ public class ArtikuluaDAO {
                         rs.getString("a_deskribapena"),
                         null, null,
                         rs.getDate("sarrera_data"),
-                        rs.getString("argazkia")
-                );
+                        rs.getString("argazkia"));
 
                 String egoeraStr = rs.getString("egoera");
                 if (egoeraStr != null) {
@@ -272,8 +275,7 @@ public class ArtikuluaDAO {
                     a.setKokalekua(new Kokalekua(
                             rs.getString("armairua"),
                             rs.getString("apala"),
-                            rs.getBoolean("bha_da")
-                    ));
+                            rs.getBoolean("bha_da")));
                 }
 
                 zerrenda.add(a);
@@ -287,11 +289,11 @@ public class ArtikuluaDAO {
     /**
      * Artikuluaren datuak eguneratzen ditu datu-basean.
      *
-     * @param kodea Aldatu beharreko artikuluaren kodea
-     * @param izena Izen berria
+     * @param kodea        Aldatu beharreko artikuluaren kodea
+     * @param izena        Izen berria
      * @param deskribapena Deskribapen berria
-     * @param idKategoria Kategoria berria (0 bada ez da aldatzen)
-     * @param idKokalekua Kokaleku berria (0 bada null ezartzen da)
+     * @param idKategoria  Kategoria berria (0 bada ez da aldatzen)
+     * @param idKokalekua  Kokaleku berria (0 bada null ezartzen da)
      * @param argazkiBidea Argazki bide berria (null bada ez da aldatzen)
      * @return Ondo eguneratu bada true
      */

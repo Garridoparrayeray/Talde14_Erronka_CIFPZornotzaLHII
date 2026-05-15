@@ -14,12 +14,15 @@ import java.util.Properties;
  */
 public class DBKonexioa {
 
-    private static final String URL;
-    private static final String USER;
-    private static final String PASS;
+    private static final String URL = lortuPropietatea("DB_URL", "jdbc:mariadb://localhost:3306/erronka_galduak");
+    private static final String USER = lortuPropietatea("DB_USER", "root");
+    private static final String PASS = lortuPropietatea("DB_PASS", "");
 
-    static {
-        // Lehentasuna: ingurune-aldagaiak (Docker/produkzioa) > application.properties (garapen lokala)
+    private static String lortuPropietatea(String gakoa, String defektuz) {
+        String env = System.getenv(gakoa);
+        if (env != null) {
+            return env;
+        }
         Properties props = new Properties();
         try (InputStream is = DBKonexioa.class.getResourceAsStream("/application.properties")) {
             if (is != null) {
@@ -27,33 +30,10 @@ public class DBKonexioa {
             }
         } catch (Exception ignored) {
         }
-
-        String envUrl = System.getenv("DB_URL");
-        if (envUrl != null) {
-            URL = envUrl;
-        } else {
-            URL = props.getProperty("DB_URL", "jdbc:mariadb://localhost:3306/erronka_galduak");
-        }
-
-        String envUser = System.getenv("DB_USER");
-        if (envUser != null) {
-            USER = envUser;
-        } else {
-            USER = props.getProperty("DB_USER", "root");
-        }
-
-        String envPass = System.getenv("DB_PASS");
-        if (envPass != null) {
-            PASS = envPass;
-        } else {
-            PASS = props.getProperty("DB_PASS", "");
-        }
+        return props.getProperty(gakoa, defektuz);
     }
 
     private static Connection konexioa = null;
-
-    private DBKonexioa() {
-    }
 
     /**
      * Datu-basearekin konexioa itzultzen du, beharrezkoa bada berria sortuz.

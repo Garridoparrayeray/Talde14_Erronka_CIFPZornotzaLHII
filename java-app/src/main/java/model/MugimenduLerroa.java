@@ -19,9 +19,9 @@ public class MugimenduLerroa implements Serializable {
     /**
      * MugimenduLerroa-ren eraikitzailea.
      *
-     * @param data Mugimenduaren data eta ordua
-     * @param langilea Eragiketa burutu duen langilearen izena
-     * @param ekintza Eginikako ekintzaren deskribapena
+     * @param data       Mugimenduaren data eta ordua
+     * @param langilea   Eragiketa burutu duen langilearen izena
+     * @param ekintza    Eginikako ekintzaren deskribapena
      * @param artikuluId Artikuluaren kode bakarra
      */
     public MugimenduLerroa(String data, String langilea, String ekintza, String artikuluId) {

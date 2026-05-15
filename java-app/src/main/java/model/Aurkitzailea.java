@@ -24,12 +24,13 @@ public class Aurkitzailea implements Serializable {
     /**
      * Aurkitzailearen eraikitzailea.
      *
-     * @param izena        Aurkitzailearen izena
-     * @param abizena      Aurkitzailearen abizena
-     * @param telefonoa    Harremanetarako telefonoa (null bada ezezaguna)
-     * @param emaila       Harremanetarako helbide elektronikoa (null bada ezezaguna)
+     * @param izena         Aurkitzailearen izena
+     * @param abizena       Aurkitzailearen abizena
+     * @param telefonoa     Harremanetarako telefonoa (null bada ezezaguna)
+     * @param emaila        Harremanetarako helbide elektronikoa (null bada
+     *                      ezezaguna)
      * @param aurkipenLekua Artikulua aurkitu zen lekua (null bada ezezaguna)
-     * @param idArtikulua  Aurkitu den artikuluaren kodea
+     * @param idArtikulua   Aurkitu den artikuluaren kodea
      */
     public Aurkitzailea(String izena, String abizena, String telefonoa,
             String emaila, String aurkipenLekua, String idArtikulua) {

@@ -803,10 +803,10 @@ public void langileaEditatu() {
     Langilea sel = taula.getSelectionModel().getSelectedItem();
     if (sel == null) return;
 
-    FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/LangileaEditu.fxml"));
+    FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/LangileaEditatu.fxml"));
     Parent root = loader.load();
 
-    LangileaEdituController ctrl = loader.getController();
+    LangileaEditatuController ctrl = loader.getController();
     ctrl.setLangilea(sel);
     ctrl.setOnUpdateCallback(() -> kargatu());  // al cerrar, recargar tabla
 
@@ -1082,7 +1082,7 @@ Cuando se abre una ventana secundaria (editar un empleado, por ejemplo), al cerr
 **Código real de LangileakController:**
 ```java
 // Controlador padre — pasa una función al hijo
-LangileaEdituController ctrl = loader.getController();
+LangileaEditatuController ctrl = loader.getController();
 ctrl.setLangilea(sel);
 ctrl.setOnUpdateCallback(() -> kargatu());   // "cuando acabes, llama a kargatu()"
 
@@ -1090,7 +1090,7 @@ stage.showAndWait();
 // kargatu() se ejecutará cuando el hijo llame al callback
 ```
 
-**En el controlador hijo (LangileaEdituController):**
+**En el controlador hijo (LangileaEditatuController):**
 ```java
 private Runnable onUpdateCallback;
 
@@ -1729,7 +1729,7 @@ Ubicación: `java-app/src/main/java/view/`
 | `KokalekuaBerria.fxml` | Nueva ubicación |
 | `Langileak.fxml` | Lista de empleados |
 | `LangileBerria.fxml` | Nuevo empleado |
-| `LangileaEditu.fxml` | Editar empleado |
+| `LangileaEditatu.fxml` | Editar empleado |
 | `ArtikuluaEditu.fxml` | Editar artículo |
 | `Auditoria.fxml` | Historial de auditoría |
 | `IrudiaPopup.fxml` | Ventana emergente para ver foto |
@@ -2121,7 +2121,7 @@ Toda la base de código está documentada con Javadoc **íntegramente en euskera
 
 | Paquete | Clases documentadas |
 |---------|-------------------|
-| `controller` | AdminController, AdminPanelaController, ArtikuluaEdituController, ErreklamazioaBerriController, ErreklamazioakController, InbentarioController, IraungitakoakController, IrudiaPopupController, KategoriaBerriController, KategoriakController, KokalekuaBerriController, KokalekuakController, LangileBerriController, LangileaEdituController, LangileakController, LoginController, MainController |
+| `controller` | AdminController, AdminPanelaController, ArtikuluaEdituController, ErreklamazioaBerriController, ErreklamazioakController, InbentarioController, IraungitakoakController, IrudiaPopupController, KategoriaBerriController, KategoriakController, KokalekuaBerriController, KokalekuakController, LangileBerriController, LangileaEditatuController, LangileakController, LoginController, MainController |
 | `dao` | ArtikuluaDAO, AurkitzaileaDAO, BackupDAO, EmanaldiaDAO, ErreklamazioaDAO, EstadistikaDAO, KategoriaDAO, KokalekuaDAO, LangileaDAO, MugimenduDAO |
 | `model` | Artikulua, Aurkitzailea, AzkenMugimendua, Emanaldia, Erakundea, Erreklamazioa, Hartzailea, Jabea, Jakinarazpena, Kategoria, KategoriaKopurua, Kokalekua, Langilea, MugimenduLerroa |
 | `utils` | AppConfig, BiltegiLokala, DBKonexioa, LogKudeatzailea, ModoKudeatzailea, Sesio, UIKudeatzailea, XMLExportazioa, XMLInportazioa |

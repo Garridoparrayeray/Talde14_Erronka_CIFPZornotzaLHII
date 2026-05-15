@@ -10,7 +10,7 @@
 <VBox stylesheets="@style.css"
       xmlns="http://javafx.com/javafx/21"
       xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="controller.KategoriaEdituController"
+      fx:controller="controller.KategoriaEditatuController"
       style="-fx-background-color: white;">
 
    <children>

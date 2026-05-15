@@ -59,7 +59,8 @@ public class MainController implements Initializable {
 
     /**
      * Kontroladorea hasieratzen du: nabigazio-botoiak ezartzen ditu, saio-datuak
-     * erakusten ditu, ikusle-rolaren murrizketa aplikatzen du eta panela kargatzen du.
+     * erakusten ditu, ikusle-rolaren murrizketa aplikatzen du eta panela kargatzen
+     * du.
      *
      * @param url FXML fitxategiaren kokapena
      * @param rb  Erabilitako baliabide-sorta

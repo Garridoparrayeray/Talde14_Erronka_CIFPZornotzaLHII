@@ -31,12 +31,12 @@ public class Artikulua implements Serializable {
      * Artikuluaren eraikitzailea.
      *
      * @param artikuluKodea Artikuluaren kode bakarra (adib. G-001-26)
-     * @param izenburua Artikuluaren izen laburra
-     * @param deskribapena Artikuluaren deskripzio osoa
-     * @param marka Markaren izena
-     * @param kolorea Kolorea
-     * @param sarreraData Biltegira sartu zen data
-     * @param argazkiBidea Argazkiaren fitxategi-bidea
+     * @param izenburua     Artikuluaren izen laburra
+     * @param deskribapena  Artikuluaren deskripzio osoa
+     * @param marka         Markaren izena
+     * @param kolorea       Kolorea
+     * @param sarreraData   Biltegira sartu zen data
+     * @param argazkiBidea  Argazkiaren fitxategi-bidea
      */
     public Artikulua(String artikuluKodea, String izenburua, String deskribapena,
             String marka, String kolorea, Date sarreraData, String argazkiBidea) {
@@ -153,10 +153,22 @@ public class Artikulua implements Serializable {
     }
 
     // Getters & Setters
-    public int getArtikuluId() { return artikuluId; }
-    public String getArtikuluKodea() { return artikuluKodea; }
-    public String getIzenburua() { return izenburua; }
-    public void setIzenburua(String izenburua) { this.izenburua = izenburua; }
+    public int getArtikuluId() {
+        return artikuluId;
+    }
+
+    public String getArtikuluKodea() {
+        return artikuluKodea;
+    }
+
+    public String getIzenburua() {
+        return izenburua;
+    }
+
+    public void setIzenburua(String izenburua) {
+        this.izenburua = izenburua;
+    }
+
     /**
      * Deskribapena itzultzen du, null bada "—" itzultzen du.
      *
@@ -168,18 +180,54 @@ public class Artikulua implements Serializable {
         }
         return "—";
     }
-    public void setDeskribapena(String deskribapena) { this.deskribapena = deskribapena; }
-    public String getMarka() { return marka; }
-    public String getKolorea() { return kolorea; }
-    public Date getSarreraData() { return sarreraData; }
-    public Date getIraungitzeData() { return iraungitzeData; }
-    public String getArgazkiBidea() { return argazkiBidea; }
-    public void setArgazkiBidea(String argazkiBidea) { this.argazkiBidea = argazkiBidea; }
-    public EgoeraArtikulua getEgoera() { return egoera; }
-    public Kategoria getKategoria() { return kategoria; }
-    public void setKategoria(Kategoria kategoria) { this.kategoria = kategoria; }
-    public Kokalekua getKokalekua() { return kokalekua; }
-    public void setKokalekua(Kokalekua kokalekua) { this.kokalekua = kokalekua; }
+
+    public void setDeskribapena(String deskribapena) {
+        this.deskribapena = deskribapena;
+    }
+
+    public String getMarka() {
+        return marka;
+    }
+
+    public String getKolorea() {
+        return kolorea;
+    }
+
+    public Date getSarreraData() {
+        return sarreraData;
+    }
+
+    public Date getIraungitzeData() {
+        return iraungitzeData;
+    }
+
+    public String getArgazkiBidea() {
+        return argazkiBidea;
+    }
+
+    public void setArgazkiBidea(String argazkiBidea) {
+        this.argazkiBidea = argazkiBidea;
+    }
+
+    public EgoeraArtikulua getEgoera() {
+        return egoera;
+    }
+
+    public Kategoria getKategoria() {
+        return kategoria;
+    }
+
+    public void setKategoria(Kategoria kategoria) {
+        this.kategoria = kategoria;
+    }
+
+    public Kokalekua getKokalekua() {
+        return kokalekua;
+    }
+
+    public void setKokalekua(Kokalekua kokalekua) {
+        this.kokalekua = kokalekua;
+    }
 
     @Override
     public String toString() {

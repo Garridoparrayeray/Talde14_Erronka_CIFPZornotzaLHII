@@ -18,7 +18,7 @@ public class Kategoria implements Serializable {
      * Kategoriaren eraikitzailea.
      *
      * @param kategoriaId Kategoriaren identifikagailu bakarra
-     * @param izena Kategoriaren izena
+     * @param izena       Kategoriaren izena
      */
     public Kategoria(int kategoriaId, String izena) {
         this.kategoriaId = kategoriaId;

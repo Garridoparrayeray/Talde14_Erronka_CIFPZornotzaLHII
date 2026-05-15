@@ -24,7 +24,10 @@ public class XMLExportazioa {
     private static final Logger LOG = LogKudeatzailea.lortu(XMLExportazioa.class);
     private static final SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd");
 
+    /** Artikulu-kodearen patroia: G-NNN-AA formatua (adib. G-001-26). */
     private static final Pattern KODEA_PATROIA = Pattern.compile("^G-\\d{3}-\\d{2}$");
+
+    /** Artikulu-izenaren patroia: 1-200 karaktere, kontrol-karaktererik gabe. */
     private static final Pattern IZENA_PATROIA = Pattern.compile("^[^\\x00-\\x1F]{1,200}$");
 
     private XMLExportazioa() {

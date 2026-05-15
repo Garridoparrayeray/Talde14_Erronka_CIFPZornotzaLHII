@@ -29,7 +29,8 @@ import utils.XMLExportazioa;
 
 /**
  * Biltegiko artikulu baten datuak editatzeko formularioaren kontroladorea.
- * Artikuluaren izena, kategoria, kokalekua, deskribapena eta argazkia eguneratzeko
+ * Artikuluaren izena, kategoria, kokalekua, deskribapena eta argazkia
+ * eguneratzeko
  * aukera ematen du.
  *
  * @author Yeray Garrido
@@ -120,8 +121,7 @@ public class ArtikuluaEditatuController implements Initializable {
         FileChooser fc = new FileChooser();
         fc.setTitle("Argazkia hautatu");
         fc.getExtensionFilters().add(
-                new FileChooser.ExtensionFilter("Irudiak (JPG, PNG)", "*.jpg", "*.jpeg", "*.png", "*.webp")
-        );
+                new FileChooser.ExtensionFilter("Irudiak (JPG, PNG)", "*.jpg", "*.jpeg", "*.png", "*.webp"));
         File f = fc.showOpenDialog(txtIzena.getScene().getWindow());
         if (f != null) {
             argazkiFile = f;

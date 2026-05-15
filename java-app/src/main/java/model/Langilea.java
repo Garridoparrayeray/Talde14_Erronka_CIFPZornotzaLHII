@@ -24,11 +24,11 @@ public class Langilea implements Serializable {
     /**
      * Langilearen eraikitzailea.
      *
-     * @param langileId Langilearen identifikagailu bakarra
-     * @param izena Langilearen izena
-     * @param abizena Langilearen abizena
+     * @param langileId     Langilearen identifikagailu bakarra
+     * @param izena         Langilearen izena
+     * @param abizena       Langilearen abizena
      * @param erabiltzailea Saioa hasteko erabiltzaile-izena
-     * @param pasahitza Pasahitzaren hash-a (BCrypt)
+     * @param pasahitza     Pasahitzaren hash-a (BCrypt)
      */
     public Langilea(int langileId, String izena, String abizena,
             String erabiltzailea, String pasahitza) {

@@ -52,7 +52,7 @@ public class LangileakController implements Initializable {
      * kargatzen ditu eta langileen zerrenda bistaratzen du.
      *
      * @param url Hasierako URLa
-     * @param rb Baliabideen sorta
+     * @param rb  Baliabideen sorta
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -152,7 +152,8 @@ public class LangileakController implements Initializable {
             kargatu();
             UIKudeatzailea.erakutsiToast("Langilea ezabatu da: " + sel.getErabiltzailea(), true);
         } else {
-            UIKudeatzailea.erakutsiToast("Ezin izan da langilea ezabatu. Agian beste datu batzuekin lotuta dago.", false);
+            UIKudeatzailea.erakutsiToast("Ezin izan da langilea ezabatu. Agian beste datu batzuekin lotuta dago.",
+                    false);
         }
     }
 
@@ -169,9 +170,9 @@ public class LangileakController implements Initializable {
         }
 
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/LangileaEditu.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/LangileaEditatu.fxml"));
             Node nodoa = loader.load();
-            LangileaEdituController ctrl = loader.getController();
+            LangileaEditatuController ctrl = loader.getController();
             ctrl.setLangilea(sel);
             UIKudeatzailea.kargatuPanela(nodoa);
         } catch (Exception e) {

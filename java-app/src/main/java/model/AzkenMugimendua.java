@@ -16,10 +16,10 @@ public class AzkenMugimendua {
     /**
      * AzkenMugimendua-ren eraikitzailea.
      *
-     * @param artikuluId Artikuluaren kode bakarra
+     * @param artikuluId   Artikuluaren kode bakarra
      * @param deskribapena Mugimenduaren azalpen laburra
-     * @param data Mugimenduaren data eta ordua
-     * @param langilea Eragiketa burutu duen langilearen izena
+     * @param data         Mugimenduaren data eta ordua
+     * @param langilea     Eragiketa burutu duen langilearen izena
      */
     public AzkenMugimendua(String artikuluId, String deskribapena, String data, String langilea) {
         this.artikuluId = artikuluId;

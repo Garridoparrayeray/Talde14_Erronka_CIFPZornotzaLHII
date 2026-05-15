@@ -188,7 +188,7 @@ public class UIKudeatzailea {
      * @param <T>     Taularen errenkada-mota
      * @param zutabea Konfiguratu beharreko zutabea
      */
-    public static <T> void ehundatuZelulak(TableColumn<T, String> zutabea) {
+    public static <T> void objetuarenWrapper(TableColumn<T, String> zutabea) {
         zutabea.setCellFactory(col -> new TableCell<T, String>() {
             private final Text testua = new Text();
 

@@ -126,14 +126,15 @@ public class IraungitakoakController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         colKodea.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().artikulua.getArtikuluKodea()));
         colIzena.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().artikulua.getIzenburua()));
-        colIraungita.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().artikulua.getSarreraDataFormatua()));
+        colIraungita
+                .setCellValueFactory(c -> new SimpleStringProperty(c.getValue().artikulua.getSarreraDataFormatua()));
         colAurkIzena.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getAurkIzena()));
         colAurkTel.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getAurkTel()));
         colAurkEmail.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getAurkEmail()));
         colEskainita.setCellValueFactory(c -> new SimpleStringProperty(""));
-        UIKudeatzailea.ehundatuZelulak(colIzena);
-        UIKudeatzailea.ehundatuZelulak(colAurkIzena);
-        UIKudeatzailea.ehundatuZelulak(colAurkEmail);
+        UIKudeatzailea.objetuarenWrapper(colIzena);
+        UIKudeatzailea.objetuarenWrapper(colAurkIzena);
+        UIKudeatzailea.objetuarenWrapper(colAurkEmail);
 
         desaktibatuBotoiak();
         taula.getSelectionModel().selectedItemProperty().addListener((obs, old, sel) -> {
