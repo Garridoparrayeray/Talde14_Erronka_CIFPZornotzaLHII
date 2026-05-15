@@ -154,7 +154,7 @@ public class InbentarioController implements Initializable {
         }
 
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/ArtikuluaEditu.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/ArtikuluaEditatu.fxml"));
             Node nodoa = loader.load();
             ArtikuluaEditatuController ctrl = loader.getController();
 
