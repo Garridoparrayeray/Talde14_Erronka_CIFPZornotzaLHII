@@ -481,7 +481,7 @@ DB konexiorik ez badago, aplikazioa automatikoki offline moduan abiarazten da `p
 
 **Erronka taldea** · 1. DAW · 2026
 
-- Yeray Garrido Parrayera
+- Yeray Garrido Parra
 - Eder Martin
 
 **Bezeroa:** Bermeoko Udala · CIFP Zornotza LHII
