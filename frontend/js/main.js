@@ -6,23 +6,25 @@ const dictIndex = {
     "nav_home": "Hasiera", "nav_claim": "Erreklamazioa", "nav_process": "Prozesua", "nav_cats": "Kategoriak", "nav_help": "Laguntza", "nav_btn_claim": "Erreklamatu",
     "hero_title": "Galdutakoa berriro aurkitu", "hero_sub": "Bermeoko Udalaren galdu eta aurkituen zerbitzu digitala. Galdu duzuna bilatzen laguntzeko eta aurkitutakoa erreklamatzeko plataforma bakarra.", "hero_btn": "Erreklamazioa hasi",
     "mc_brand": "Marka", "mc_color": "Kolorea",
-    "form_tag": "Erreklamazioa", "form_title": "Galdutako objektua erreklamatu", "form_sub": "Bete inprimakia galdutako objektuaren xehetasunekin.", "form_sec1": "1. Eskatzailearen Datuak", "form_name": "Izena", "form_place_name": "Sartu zure izena", "form_surname": "Abizenak", "form_place_surname": "Sartu zure abizenak", "form_phone": "Telefonoa", "form_place_phone": "adib. 600 000 000", "form_email": "Posta elektronikoa", "form_place_email": "adib. izena@email.com",
+    "form_tag": "Erreklamazioa", "form_title": "Galdutako objektua erreklamatu", "form_sub": "Bete inprimakia galdutako objektuaren xehetasunekin.", "form_sec1": "1. Eskatzailearen Datuak", "form_nan": "NAN / NIE", "form_place_nan": "12345678A", "form_name": "Izena", "form_place_name": "Sartu zure izena", "form_surname": "Abizenak", "form_place_surname": "Sartu zure abizenak", "form_phone": "Telefonoa", "form_place_phone": "adib. 600 000 000", "form_email": "Posta elektronikoa", "form_place_email": "adib. izena@email.com",
     "form_sec2": "2. Galdutako Objektuaren Deskribapena", "form_desc": "Deskribapena (kolorea, marka, materiala...)", "form_place_desc": "Eman xehetasun guztiak (marka, kolorea, edukia...)", "form_photo": "Argazkia erantsi (Aukerakoa)", "form_remove_btn": "Artxiboa ezabatu",
-    "form_sec3": "3. Noiz eta Non", "form_date": "Galtze-data", "form_loc": "Kokalekua", "form_opt_choose": "Aukeratu bat", "form_opt_port": "Bermeoko Portua", "form_opt_gazt": "San Juan de Gaztelugatxe", "form_opt_street": "Bide publikoa", "form_opt_trans": "Garraio publikoa (Bizkaibus, Euskotren)", "form_opt_hall": "Udaletxea", "form_opt_other": "Bestelakoak", "form_notes": "Oharrak", "form_place_notes": "Informazio gehigarria...", "form_privacy": "Datu pertsonalen babesari buruzko informazioa irakurri eta onartzen dut.", "form_submit": "Bidali erreklamazioa",
+    "form_sec3": "3. Noiz eta Non", "form_date": "Galtze-data", "form_loc": "Kokalekua", "form_opt_choose": "Aukeratu bat", "form_opt_port": "Bermeoko Portua", "form_opt_gazt": "San Juan de Gaztelugatxe", "form_opt_street": "Bide publikoa", "form_opt_trans": "Garraio publikoa (Bizkaibus, Euskotren)", "form_opt_hall": "Udaletxea", "form_opt_other": "Bestelakoak", "form_notes": "Oharrak", "form_place_notes": "Informazio gehigarria...", "form_privacy_1": "Datu pertsonalen babesari buruzko informazioa ", "form_privacy_link": "irakurri eta onartzen dut", "form_submit": "Bidali erreklamazioa",
     "proc_tag": "Nola funtzionatzen du", "proc_title": "Hiru urrats, itzulera bat", "proc_sub": "Prozesu erraza, gardena eta bizkorra. Bermeoko Udaleko langileek lagundu egingo dizute urrats guztietan.", "step1_title": "Bilatu inbentarioan", "step1_desc": "Bilaketa aurreratua erabili galdu duzuna aurkitzeko. Kategoria, kolorea, data eta kokalaguntzak iragazki gisa erabil ditzakezu.", "step2_title": "Erreklamazioa bidali", "step2_desc": "Objektua aurkitu baduzu, erreklamazioformen bidez zure datuak bidali. Txartel nazionala edo NAN zenbakia behar duzu egiaztatzeko.", "step3_title": "Jaso udaletxean", "step3_desc": "Zure erreklamazioa onartu ondoren, hitzordua eskatu Bermeoko Udaleko BerHAZ bulegoan (Ertzilla kalea 6-8) objektua pertsonalki jasotzeko. Hau da hain sinplea!",
     "cats_tag": "Katalogoa", "cats_title": "Kategoriak", "cats_see_all": "Denak ikusi", "cats_loading": "Kategoriak kargatzen...",
-    "foot_desc": "Bermeoko Udaleko galdu eta aurkituen zerbitzu ofiziala. Herritarrei zerbitzuan, gardentasunez eta eraginkortasunez.", "foot_col1": "Zerbitzuak", "foot_link_inv": "Inbentarioa bilatu", "foot_link_claim": "Erreklamazioa hasi", "foot_link_my": "Nire erreklamazioak", "foot_link_not": "Jakinarazpenak", "foot_link_faq": "Galdera ohikoak", "foot_col2": "Udala", "foot_link_town": "Bermeoko Udala", "foot_link_serv": "Zerbitzu guztiak", "foot_link_board": "Iragarki-taula", "foot_link_press": "Prentsa-kabineta", "foot_link_contact": "Kontaktua", "foot_col3": "Legala", "foot_link_priv": "Pribatutasun-politika", "foot_link_terms": "Erabileraren baldintzak", "foot_link_cook": "Cookie politika", "foot_link_acc": "Irisgarritasuna", "foot_legal_text": "v1.0 · © 2026 Bermeoko Udala · Eskubide guztiak erreserbatuta · Eder Martin Mosquerak eta Yeray Garrido Parrak maitasun eta kafeina handiz egina."
+    "foot_desc": "Bermeoko Udaleko galdu eta aurkituen zerbitzu ofiziala. Herritarrei zerbitzuan, gardentasunez eta eraginkortasunez.", "foot_col1": "Zerbitzuak", "foot_link_inv": "Inbentarioa bilatu", "foot_link_claim": "Erreklamazioa hasi", "foot_link_my": "Nire erreklamazioak", "foot_link_not": "Jakinarazpenak", "foot_link_faq": "Galdera ohikoak", "foot_col2": "Udala", "foot_link_town": "Bermeoko Udala", "foot_link_serv": "Zerbitzu guztiak", "foot_link_board": "Iragarki-taula", "foot_link_press": "Prentsa-kabineta", "foot_link_contact": "Kontaktua", "foot_col3": "Legala", "foot_link_priv": "Pribatutasun-politika", "foot_link_terms": "Erabileraren baldintzak", "foot_link_cook": "Cookie politika", "foot_link_acc": "Irisgarritasuna", "foot_legal_text": "v1.0 · © 2026 Bermeoko Udala · Eskubide guztiak erreserbatuta · Eder Martin Mosquerak eta Yeray Garrido Parrak maitasun eta kafeina handiz egina.",
+    "modal_privacy_body": "Bermeoko Udalak datu pertsonalen tratamendua bermatzen du indarrean dagoen legeriaren arabera (RGPD).", "modal_close": "Itxi", "form_success": "Erreklamazioa ondo sortu da! Fitxategia deskargatzen..."
   },
   "ES": {
     "nav_home": "Inicio", "nav_claim": "Reclamación", "nav_process": "Proceso", "nav_cats": "Categorías", "nav_help": "Ayuda", "nav_btn_claim": "Reclamar",
     "hero_title": "Encuentra de nuevo lo perdido", "hero_sub": "Servicio digital de objetos perdidos del Ayuntamiento de Bermeo. La plataforma única para ayudarte a buscar lo que has perdido y reclamar lo encontrado.", "hero_btn": "Iniciar reclamación",
     "mc_brand": "Marca", "mc_color": "Color",
-    "form_tag": "Reclamación", "form_title": "Reclamar objeto perdido", "form_sub": "Rellena el formulario con los detalles del objeto perdido.", "form_sec1": "1. Datos del Solicitante", "form_name": "Nombre", "form_place_name": "Introduce tu nombre", "form_surname": "Apellidos", "form_place_surname": "Introduce tus apellidos", "form_phone": "Teléfono", "form_place_phone": "ej. 600 000 000", "form_email": "Correo electrónico", "form_place_email": "ej. nombre@email.com",
+    "form_tag": "Reclamación", "form_title": "Reclamar objeto perdido", "form_sub": "Rellena el formulario con los detalles del objeto perdido.", "form_sec1": "1. Datos del Solicitante", "form_nan": "DNI / NIE", "form_place_nan": "12345678A", "form_name": "Nombre", "form_place_name": "Introduce tu nombre", "form_surname": "Apellidos", "form_place_surname": "Introduce tus apellidos", "form_phone": "Teléfono", "form_place_phone": "ej. 600 000 000", "form_email": "Correo electrónico", "form_place_email": "ej. nombre@email.com",
     "form_sec2": "2. Descripción del Objeto Perdido", "form_desc": "Descripción (color, marca, material...)", "form_place_desc": "Da todos los detalles (marca, color, contenido...)", "form_photo": "Adjuntar foto (Opcional)", "form_remove_btn": "Borrar archivo",
-    "form_sec3": "3. Cuándo y Dónde", "form_date": "Fecha de pérdida", "form_loc": "Ubicación", "form_opt_choose": "Elige una", "form_opt_port": "Puerto de Bermeo", "form_opt_gazt": "San Juan de Gaztelugatxe", "form_opt_street": "Vía pública", "form_opt_trans": "Transporte público (Bizkaibus, Euskotren)", "form_opt_hall": "Ayuntamiento", "form_opt_other": "Otros", "form_notes": "Notas", "form_place_notes": "Información adicional...", "form_privacy": "He leído y acepto la información sobre protección de datos personales.", "form_submit": "Enviar reclamación",
+    "form_sec3": "3. Cuándo y Dónde", "form_date": "Fecha de pérdida", "form_loc": "Ubicación", "form_opt_choose": "Elige una", "form_opt_port": "Puerto de Bermeo", "form_opt_gazt": "San Juan de Gaztelugatxe", "form_opt_street": "Vía pública", "form_opt_trans": "Transporte público (Bizkaibus, Euskotren)", "form_opt_hall": "Ayuntamiento", "form_opt_other": "Otros", "form_notes": "Notas", "form_place_notes": "Información adicional...", "form_privacy_1": "He leído y acepto la información sobre protección de datos personales ", "form_privacy_link": "haciendo clic aquí", "form_submit": "Enviar reclamación",
     "proc_tag": "Cómo funciona", "proc_title": "Tres pasos, una devolución", "proc_sub": "Proceso fácil, transparente y rápido. Los trabajadores del Ayuntamiento de Bermeo te ayudarán en todos los pasos.", "step1_title": "Busca en el inventario", "step1_desc": "Usa la búsqueda avanzada para encontrar lo que has perdido. Puedes usar categoría, color y fecha como filtros.", "step2_title": "Envía una reclamación", "step2_desc": "Si has encontrado el objeto, envía tus datos mediante el formulario. Necesitarás tu DNI para verificarlo.", "step3_title": "Recoge en el ayuntamiento", "step3_desc": "Una vez aceptada tu reclamación, pide cita para recoger el objeto personalmente en la oficina BerHAZ del Ayuntamiento de Bermeo (C/ Ertzilla, 6-8).",
     "cats_tag": "Catálogo", "cats_title": "Categorías", "cats_see_all": "Ver todas", "cats_loading": "Cargando categorías...",
-    "foot_desc": "Servicio oficial de objetos perdidos del Ayuntamiento de Bermeo. Al servicio de los ciudadanos con transparencia y eficacia.", "foot_col1": "Servicios", "foot_link_inv": "Buscar en inventario", "foot_link_claim": "Iniciar reclamación", "foot_link_my": "Mis reclamaciones", "foot_link_not": "Notificaciones", "foot_link_faq": "Preguntas frecuentes", "foot_col2": "Ayuntamiento", "foot_link_town": "Ayuntamiento de Bermeo", "foot_link_serv": "Todos los servicios", "foot_link_board": "Tablón de anuncios", "foot_link_press": "Gabinete de prensa", "foot_link_contact": "Contacto", "foot_col3": "Legal", "foot_link_priv": "Política de privacidad", "foot_link_terms": "Condiciones de uso", "foot_link_cook": "Política de cookies", "foot_link_acc": "Accesibilidad", "foot_legal_text": "v1.0 · © 2026 Ayuntamiento de Bermeo · Todos los derechos reservados · Hecho con mucho amor y cafeína por Eder Martin Mosquera y Yeray Garrido Parra."
+    "foot_desc": "Servicio oficial de objetos perdidos del Ayuntamiento de Bermeo. Al servicio de los ciudadanos con transparencia y eficacia.", "foot_col1": "Servicios", "foot_link_inv": "Buscar en inventario", "foot_link_claim": "Iniciar reclamación", "foot_link_my": "Mis reclamaciones", "foot_link_not": "Notificaciones", "foot_link_faq": "Preguntas frecuentes", "foot_col2": "Ayuntamiento", "foot_link_town": "Ayuntamiento de Bermeo", "foot_link_serv": "Todos los servicios", "foot_link_board": "Tablón de anuncios", "foot_link_press": "Gabinete de prensa", "foot_link_contact": "Contacto", "foot_col3": "Legal", "foot_link_priv": "Política de privacidad", "foot_link_terms": "Condiciones de uso", "foot_link_cook": "Política de cookies", "foot_link_acc": "Accesibilidad", "foot_legal_text": "v1.0 · © 2026 Ayuntamiento de Bermeo · Todos los derechos reservados · Hecho con mucho amor y cafeína por Eder Martin Mosquera y Yeray Garrido Parra.",
+    "modal_privacy_body": "El Ayuntamiento de Bermeo garantiza el tratamiento de datos personales de acuerdo a la legislación vigente (RGPD).", "modal_close": "Cerrar", "form_success": "¡Reclamación creada con éxito! Descargando archivo..."
   }
 };
 
@@ -289,15 +291,10 @@ document.addEventListener('DOMContentLoaded', () => {
     claimForm.addEventListener('submit', (e) => {
       e.preventDefault(); // Posta-bezeroa irekitzea ekidin
       
-      // --- XML Sortzea eta Deskargatzea (RA 2 betetzeko) ---
-      let xmlContent = '<?xml version="1.0" encoding="UTF-8"?>\n';
-      xmlContent += '<erreklamazioa>\n';
-      
       const formData = new FormData(claimForm);
       const data = Object.fromEntries(formData.entries());
 
-      // --- NAN Baliozkotzea (RA 3 - Murriztapenak) ---
-      // Erregela: 8 zenbaki eta letra bat (adibidez: 12345678A)
+      // --- 1. NAN Baliozkotzea (RA 3 - Murriztapenak) ---
       const nanRegex = /^[0-9]{8}[a-zA-Z]$/;
       const nanBalioa = data.nan || ""; // Ziurtatu HTMLan name="nan" duela
 
@@ -308,6 +305,23 @@ document.addEventListener('DOMContentLoaded', () => {
         alert(errorMsg);
         return; // Gelditu prozesua formatua okerra bada
       }
+
+      // --- 2. Telefonoaren baliozkotzea (JS Bigarren Balidazioa) ---
+      const telRegex = /^[0-9]{9}$/;
+      const telBalioa = data.telefonoa ? data.telefonoa.replace(/\s+/g, '') : "";
+      if (telBalioa && !telRegex.test(telBalioa)) {
+        const errorMsg = localStorage.getItem('appLang') === 'ES'
+          ? "Formato de teléfono incorrecto (debe tener 9 dígitos)."
+          : "Telefono formatu okerra (9 digitu izan behar ditu).";
+        alert(errorMsg);
+        return;
+      }
+
+      // --- XML Sortzea eta Deskargatzea (RA 2 betetzeko) ---
+      let xmlContent = '<?xml version="1.0" encoding="UTF-8"?>\n';
+      // RA2/RA3: DTD eta XSD erreferentziak gehitu
+      xmlContent += '<!DOCTYPE erreklamazioa SYSTEM "../dtd/artikuluak.dtd">\n';
+      xmlContent += '<erreklamazioa xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../xsd/artikuluak.xsd">\n';
 
       let hasData = false;
       
@@ -356,6 +370,15 @@ document.addEventListener('DOMContentLoaded', () => {
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
+
+      // Erakutsi Bootstrap Toast-a
+      if (typeof bootstrap !== 'undefined') {
+        const toastEl = document.getElementById('successToast');
+        if (toastEl) {
+          const toast = new bootstrap.Toast(toastEl);
+          toast.show();
+        }
+      }
     });
   }
 });

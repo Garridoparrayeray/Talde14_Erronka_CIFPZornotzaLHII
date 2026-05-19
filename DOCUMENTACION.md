@@ -204,30 +204,7 @@ docker ps
 
 ---
 
-### 2.2 MariaDB
-
-**¿Qué es?**  
-MariaDB es un sistema gestor de bases de datos relacionales (SGBD), compatible con MySQL y open source. Almacena los datos en tablas relacionadas entre sí mediante claves foráneas.
-
-**Diferencias con lo que ya sabías (JDBC básico):**
-
-Lo que ya sabías: conectarte a una BD con JDBC y hacer `SELECT`, `INSERT`, `UPDATE`, `DELETE`.
-
-Lo **nuevo** en este proyecto:
-
-- **Triggers** (ver sección 4.3): código SQL que se ejecuta automáticamente cuando ocurre un evento en una tabla.
-- **Roles de base de datos** (ver sección 4.2): sistema de permisos para que cada usuario solo pueda hacer lo que le corresponde.
-- **Colación UTF8MB4**: configuración especial para soportar caracteres del euskera (ñ, ü, ä...).
-- **Health checks**: el contenedor de la BD verifica que MariaDB está lista antes de dejar arrancar los demás contenedores.
-- **Usuario de solo lectura para la web** (`bezero_web`): acceso restringido para el portal público.
-
-**Configuración de conexión en el proyecto:**  
-La clase `DBKonexioa.java` busca la conexión en este orden:
-1. Variables de entorno (`DB_URL`, `DB_USER`, `DB_PASS`) — usado dentro de Docker
-2. Fichero `application.properties` — usado en desarrollo local
-3. Si no encuentra ninguna, activa el **modo offline**
-
----
+ 
 
 ### 2.3 JavaFX y FXML
 
