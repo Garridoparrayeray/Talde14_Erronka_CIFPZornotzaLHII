@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<artikuluak>
+  <artikulua>
+    <id>G-001-26</id>
+    <izena>Kartera oria</izena>
+    <deskribapena>Kartera larruzkoa, oria kolorekoa. Barruan txartel batzuk ditu.</deskribapena>
+    <kategoria>Osagarri pertsonalak</kategoria>
+    <egoera>BILTEGIAN</egoera>
+    <sarreraData>2026-01-15</sarreraData>
+    <argazkia>img_1778671587748.png</argazkia>
+  </artikulua>
+  <artikulua>
+    <id>G-002-26</id>
+    <izena>Umearen betaurrekoak</izena>
+    <deskribapena>Betaurrekoak umearentzat, plastiko koloretsuak, markoa urdina.</deskribapena>
+    <kategoria>Betaurrekoak</kategoria>
+    <egoera>BILTEGIAN</egoera>
+    <sarreraData>2026-01-22</sarreraData>
+    <argazkia></argazkia>
+  </artikulua>
+  <artikulua>
+    <id>G-003-26</id>
+    <izena>Giltzak Honda giltza batekin</izena>
+    <deskribapena>Hiru etxe giltza eta Honda motako auto giltza bat, giltzetako metalezko orraztekin.</deskribapena>
+    <kategoria>Giltzak</kategoria>
+    <egoera>BILTEGIAN</egoera>
+    <sarreraData>2026-02-03</sarreraData>
+    <argazkia></argazkia>
+  </artikulua>
+  <artikulua>
+    <id>G-004-26</id>
+    <izena>Samsung Galaxy telefonoa</izena>
+    <deskribapena>Samsung Galaxy serie bat, pantaila pitzatua, kargagailurik gabe aurkitu da.</deskribapena>
+    <kategoria>Teknologia</kategoria>
+    <egoera>BILTEGIAN</egoera>
+    <sarreraData>2026-02-18</sarreraData>
+    <argazkia></argazkia>
+  </artikulua>
+  <artikulua>
+    <id>G-005-26</id>
+    <izena>Bufanda grisa artilezkoa</izena>
+    <deskribapena>Bufanda grisa, artile naturalez egina, mutur batean korapilo bat du.</deskribapena>
+    <kategoria>Arropa eta osagarriak</kategoria>
+    <egoera>BILTEGIAN</egoera>
+    <sarreraData>2026-03-05</sarreraData>
+    <argazkia></argazkia>
+  </artikulua>
+  <artikulua>
+    <id>G-006-26</id>
+    <izena>Zorro berdea dokumentuekin</izena>
+    <deskribapena>Plastikozko zorro berdea, barruan dokumentu batzuk eta folio batzuk ditu.</deskribapena>
+    <kategoria>Bestelakoak</kategoria>
+    <egoera>BILTEGIAN</egoera>
+    <sarreraData>2026-03-20</sarreraData>
+    <argazkia></argazkia>
+  </artikulua>
+  <artikulua>
+    <id>G-007-26</id>
+    <izena>Aterkia beltza</izena>
+    <deskribapena>Aterkia beltza, tamaina ertainekoa, helduleku makurtua du.</deskribapena>
+    <kategoria>Bestelakoak</kategoria>
+    <egoera>ITZULITA</egoera>
+    <sarreraData>2026-04-02</sarreraData>
+    <argazkia></argazkia>
+  </artikulua>
+</artikuluak>
