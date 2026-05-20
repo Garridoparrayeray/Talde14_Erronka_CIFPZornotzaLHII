@@ -120,6 +120,16 @@ public class BiltegiLokala {
      * DB-tik datuak kargatu eta kaxa eguneratzen du.
      * ModoKudeatzailea.detektatu()-k deitzen du online dagoenean, kaxa beti
      * datu errealak eduki ditzan.
+     *
+     * <p>
+     * {@code nextId} balioak {@code mapToInt} + {@code max()} bidez kalkulatzen
+     * dira: {@code stream().mapToInt(Obj::getId)} Stream&lt;Obj&gt; bat IntStream
+     * bihurtzen du (primitibo espezializatua), eta orduan {@code .max()} zuzenean
+     * erabili daiteke {@link java.util.OptionalInt} itzuliz. {@code orElse(0)}
+     * zerrenda hutsa bada 0 itzultzen du. Ondorioz {@code nextId = maxId + 1}
+     * ziurtatzen du offline-n sortutako IDek ez dutela DB-ko IDen kontra talkarik
+     * egiten.
+     * </p>
      */
     public static synchronized void sincronizatuDBtik() {
         try {
@@ -135,22 +145,37 @@ public class BiltegiLokala {
             List<Langilea> langileak = LangileaDAO.getGuztiak();
             if (!langileak.isEmpty()) {
                 poltsa.langileak = new ArrayList<>(langileak);
-                poltsa.langileNextId = langileak.stream()
-                        .mapToInt(Langilea::getLangileId).max().orElse(0) + 1;
+                int maxLangileId = 0;
+                for (Langilea l : langileak) {
+                    if (l.getLangileId() > maxLangileId) {
+                        maxLangileId = l.getLangileId();
+                    }
+                }
+                poltsa.langileNextId = maxLangileId + 1;
             }
 
             List<Kategoria> kategoriak = KategoriaDAO.getGuztiak();
             if (!kategoriak.isEmpty()) {
                 poltsa.kategoriak = new ArrayList<>(kategoriak);
-                poltsa.kategoriaNextId = kategoriak.stream()
-                        .mapToInt(Kategoria::getKategoriaId).max().orElse(0) + 1;
+                int maxKategoriaId = 0;
+                for (Kategoria k : kategoriak) {
+                    if (k.getKategoriaId() > maxKategoriaId) {
+                        maxKategoriaId = k.getKategoriaId();
+                    }
+                }
+                poltsa.kategoriaNextId = maxKategoriaId + 1;
             }
 
             List<Kokalekua> kokalekuak = KokalekuaDAO.getZerrenda();
             if (!kokalekuak.isEmpty()) {
                 poltsa.kokalekuak = new ArrayList<>(kokalekuak);
-                poltsa.kokalekuNextId = kokalekuak.stream()
-                        .mapToInt(Kokalekua::getKokalekuId).max().orElse(0) + 1;
+                int maxKokalekuId = 0;
+                for (Kokalekua k : kokalekuak) {
+                    if (k.getKokalekuId() > maxKokalekuId) {
+                        maxKokalekuId = k.getKokalekuId();
+                    }
+                }
+                poltsa.kokalekuNextId = maxKokalekuId + 1;
             }
 
             List<Artikulua> artikuluak = ArtikuluaDAO.getGuztiak();
@@ -159,8 +184,13 @@ public class BiltegiLokala {
             List<Erreklamazioa> erreklamazioak = ErreklamazioaDAO.getGuztiak();
             if (!erreklamazioak.isEmpty()) {
                 poltsa.erreklamazioak = new ArrayList<>(erreklamazioak);
-                poltsa.erreklamazioNextId = erreklamazioak.stream()
-                        .mapToInt(Erreklamazioa::getErreklamazioId).max().orElse(0) + 1;
+                int maxErreklamazioId = 0;
+                for (Erreklamazioa e : erreklamazioak) {
+                    if (e.getErreklamazioId() > maxErreklamazioId) {
+                        maxErreklamazioId = e.getErreklamazioId();
+                    }
+                }
+                poltsa.erreklamazioNextId = maxErreklamazioId + 1;
             }
 
             List<MugimenduLerroa> mugimenduak = MugimenduDAO.getGuztiak();
