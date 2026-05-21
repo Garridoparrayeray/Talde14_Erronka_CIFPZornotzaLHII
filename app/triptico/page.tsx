@@ -421,7 +421,7 @@ function PanelArchitecture() {
       </div>
 
       {/* Containers */}
-      <div className="mt-auto pt-6">
+      <div className="mt-5 pt-6">
         <div className="grid grid-cols-2 gap-2.5">
           <ContainerRow icon="db" title="erronka_db" sub="MariaDB 11 · 12 tablas · 5 SQL init" port=":3306" />
           <ContainerRow icon="desktop" title="erronka_desktop" sub="JavaFX + noVNC · jpackage nativo" port=":6080" />
