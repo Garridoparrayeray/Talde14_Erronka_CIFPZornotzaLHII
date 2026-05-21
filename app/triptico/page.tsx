@@ -294,7 +294,6 @@ function PanelBack() {
           <div className="text-[17px] tracking-[.18em] uppercase text-[#9590a8] font-semibold mt-4">Centro educativo</div>
           <div className="font-heading font-bold text-[28px] text-white tracking-[-0.02em] mt-2.5 leading-[1.1]">CIFP Zornotza LHII</div>
         </div>
-        <QRCode />
       </div>
     </div>
   )
