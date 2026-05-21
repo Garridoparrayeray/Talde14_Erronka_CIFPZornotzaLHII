@@ -493,60 +493,31 @@
   .zoom-wrap{ zoom: 0.68; }
 
   /* ============== PRINT ============== */
-  @page{
-    size: A4 landscape;
-    margin: 0;
-  }
+  @page{size:A4 landscape;margin:0}
   @media print{
-    html,body{
-      background:#fff !important;
-      padding:0 !important; margin:0 !important;
-      min-height:0 !important;
-      -webkit-print-color-adjust:exact !important;
-      print-color-adjust:exact !important;
-    }
-    .meta, .label-side{ display:none !important; }
-    .zoom-wrap{ zoom:1 !important; }
-    .stage{ gap:0 !important; display:block !important; }
+    *{-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important}
+    html,body{margin:0 !important;padding:0 !important;background:#fff !important;width:297mm !important;height:210mm !important;overflow:hidden !important}
+    .meta,.label-side{display:none !important}
+    .zoom-wrap{display:block !important;zoom:1 !important;width:297mm !important}
+    .stage{display:block !important;gap:0 !important;width:297mm !important}
     .print-page{
-      width: 100vw;
-      height: 100vh;
-      overflow: hidden;
-      page-break-after: always;
-      break-after: page;
-      background:#fff;
-      display:flex; align-items:center; justify-content:center;
-      box-sizing: border-box;
-      /* Safe printer margins on all sides */
-      padding: 6mm;
+      width:297mm !important;height:210mm !important;
+      overflow:hidden !important;
+      page-break-after:always;break-after:page;
+      display:block !important;
+      position:relative !important;
+      background:#fff !important;
     }
-    /* Outside (page 1): extra margin on the RIGHT edge (folded-in flap edge) */
-    .print-page.page-outside{
-      padding-right: 14mm;
-    }
-    /* Inside (page 2): mirror — extra margin on the LEFT edge so when the sheet
-       is flipped on its long edge for duplex, both physical edges have the same
-       safe printer margin and the tri-fold panels line up. */
-    .print-page.page-inside{
-      padding-left: 14mm;
-    }
-    .print-page:last-child{ page-break-after: auto; break-after: auto; }
+    .print-page:last-child{page-break-after:auto;break-after:auto}
     .print-page .spread{
-      zoom: 0.42;
-      width: 2200px !important;
-      height: 1700px !important;
-      box-shadow: none !important;
-      border-radius: 0 !important;
-      margin: 0 !important;
-      transform: none !important;
-      page-break-after: auto;
-      break-after: auto;
-      flex: none;
-    }
-    /* preserve color-heavy backgrounds */
-    .p-front, .p-back, .quickstart, .exec-note, .arch-box.db, .browser-mock .bar, .mockup .bar{
-      -webkit-print-color-adjust:exact !important;
-      print-color-adjust:exact !important;
+      position:absolute !important;
+      top:0 !important;left:0 !important;
+      width:2200px !important;height:1700px !important;
+      transform:scale(0.4075) !important;
+      transform-origin:top left !important;
+      zoom:1 !important;
+      box-shadow:none !important;
+      border-radius:0 !important;
     }
   }
 
