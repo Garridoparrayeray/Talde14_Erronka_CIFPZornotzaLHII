@@ -1,0 +1,83 @@
+services:
+  # 1. DATU BASEA
+  db:
+    image: mariadb:11
+    container_name: erronka_db
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: rootpw
+      MARIADB_DATABASE: erronka_galduak
+      MARIADB_USER: admin
+      MARIADB_PASSWORD: admin123
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./db/init:/docker-entrypoint-initdb.d:ro
+      - db_data:/var/lib/mysql
+    networks:
+      - erronka-net
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # 2. JAVA APLIKAZIOA (JavaFX noVNC bidez - http://localhost:6080/vnc.html)
+  java-app:
+    build: ./java-app
+    container_name: erronka_desktop
+    environment:
+      - DB_URL=${DB_URL}
+      - DB_USER=${DB_USER}
+      - DB_PASS=${DB_PASS}
+      - EXPORT_BIDEA=${EXPORT_BIDEA}
+      - IRUDIAK_BIDEA=${IRUDIAK_BIDEA}
+      - OFFLINE_DATA_PATH=/app/partekatutako_datuak
+    ports:
+      - "6080:6080"
+    volumes:
+      - ./partekatutako_datuak:/app/partekatutako_datuak
+      - ./artikulu_irudiak:/app/artikulu_irudiak
+      - ./logs:/root/erronka-bermeo/logs
+    networks:
+      - erronka-net
+    depends_on:
+      db:
+        condition: service_healthy
+        
+
+  # 3. WEBGUNEA
+  web:
+    image: nginx:alpine
+    container_name: erronka_web
+    ports:
+      - "8000:80"
+    volumes:
+      - ./frontend:/usr/share/nginx/html
+      - ./partekatutako_datuak:/usr/share/nginx/html/datuak:ro
+      - ./artikulu_irudiak:/usr/share/nginx/html/irudiak:ro
+    networks:
+      - erronka-net
+    depends_on:
+      - db
+
+  # 4. ADMINER
+  adminer:
+    image: adminer:latest
+    container_name: erronka_adminer
+    restart: unless-stopped
+    ports:
+      - "8081:8080"
+    environment:
+      ADMINER_DEFAULT_SERVER: db
+    depends_on:
+      - db
+    networks:
+      - erronka-net
+
+networks:
+  erronka-net:
+    driver: bridge
+
+volumes:
+  db_data:
