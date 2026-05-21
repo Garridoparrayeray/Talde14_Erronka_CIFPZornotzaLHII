@@ -858,7 +858,7 @@
           <span class="t">Bermeoko Udala — Galdutakoak · Panela</span>
         </div>
         <div class="img-frame">
-          <img src="assets/screen-dashboard.png" alt="JavaFX Panela" />
+          <img src="/images/screen-dashboard.png" alt="JavaFX Panela" />
         </div>
       </div>
 
@@ -903,7 +903,7 @@
           <div class="url">https://galduak.bermeo.eus/katalogoa</div>
         </div>
         <div class="img-frame">
-          <img src="assets/screen-reclamacion.png" alt="Galdutako objektua erreklamatu — formularioa" />
+          <img src="/images/screen-reclamacion.png" alt="Galdutako objektua erreklamatu — formularioa" />
         </div>
       </div>
 
@@ -932,51 +932,43 @@
 </div>
 </div>
 
+<style>
+  #fab{
+    position:fixed;bottom:28px;right:28px;z-index:9999;
+    background:#2A45D4;color:#fff;border:none;border-radius:999px;
+    padding:16px 28px;font-size:17px;font-weight:700;
+    font-family:'DM Sans','Helvetica Neue',Helvetica,Arial,sans-serif;
+    box-shadow:0 8px 30px rgba(42,69,212,.5);cursor:pointer;
+    display:flex;align-items:center;gap:10px;letter-spacing:-.01em;
+    transition:background .15s;
+  }
+  #fab:active{background:#1F33B0}
+  #fab svg{width:20px;height:20px;flex:none}
+  @media print{#fab{display:none!important}}
+</style>
+<button id="fab" onclick="window.print()">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+  </svg>
+  PDF deskargatu
+</button>
 <script>
-  // Responsive zoom — scale composition to viewport width (screen only)
   (function(){
-    const TARGET = 2200;
+    const TARGET=2200;
     function fit(){
-      const margin = 80;
-      const avail = Math.max(800, Math.min(window.innerWidth - margin*2, 1700));
-      const zoom = avail / TARGET;
-      document.querySelector('.zoom-wrap').style.zoom = zoom;
+      const margin=80;
+      const avail=Math.max(800,Math.min(window.innerWidth-margin*2,1700));
+      document.querySelector('.zoom-wrap').style.zoom=avail/TARGET;
     }
-    window.addEventListener('resize', fit);
-    fit();
+    window.addEventListener('resize',fit);fit();
   })();
-
-  // Print mode: wrap each spread in a page-sized box, then auto-print.
-  (function(){
-    // Wrap spreads so each gets its own printed page.
-    document.querySelectorAll('.spread').forEach(spread => {
-      const page = document.createElement('div');
-      page.className = 'print-page';
-      spread.parentNode.insertBefore(page, spread);
-      page.appendChild(spread);
-    });
-
-    function go(){
-      // Defer slightly to let layout settle
-      setTimeout(() => {
-        window.print();
-      }, 600);
-    }
-
-    if (document.fonts && document.fonts.ready) {
-      document.fonts.ready.then(() => {
-        // small extra wait for images
-        const imgs = Array.from(document.images).filter(i => !i.complete);
-        if (imgs.length === 0) return go();
-        Promise.all(imgs.map(i => new Promise(res => {
-          i.addEventListener('load', res, {once:true});
-          i.addEventListener('error', res, {once:true});
-        }))).then(go);
-      });
-    } else {
-      window.addEventListener('load', go);
-    }
-  })();
+  document.querySelectorAll('.spread').forEach(spread=>{
+    const page=document.createElement('div');
+    const isOutside=spread.dataset.side==='outside';
+    page.className='print-page '+(isOutside?'page-outside':'page-inside');
+    spread.parentNode.insertBefore(page,spread);
+    page.appendChild(spread);
+  });
 </script>
 
 </body>
