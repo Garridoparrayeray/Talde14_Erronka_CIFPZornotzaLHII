@@ -1,45 +1,15 @@
-# Maven
-target/
-dependency-reduced-pom.xml
-java-app/dependency-reduced-pom.xml
-*.class
-
-# Eclipse
-.classpath
-.project
-.settings/
-bin/
-
-# IntelliJ
-.idea/
-*.iml
-
-# VSCode
-.vscode/
-
-# OS
-.DS_Store
-Thumbs.db
+# v0 sandbox internal files
+__v0_runtime_loader.js
+__v0_devtools.tsx
+__v0_jsx-dev-runtime.ts
+.snowflake/
+.v0-trash/
+.vercel/
 
 # Environment variables
-.env
+.env*.local
 
-# Docker volumes locales
-db_data/
-artikulu_irudiak/*
-partekatutako_datuak/*.xml
-partekatutako_datuak/*.sql
-partekatutako_datuak/store.dat
-# Logs
-*.log
-logs/
-
-# Backups
-*.sql.bak
-copia_*.sql
-
-# Ejecutable Windows
-java-app/installer/*
-java-app/installer/artikulu_irudiak
-java-app/installer/Galdutakoak
-java-app/installer/partekatutako_datuak
+# Common ignores
+node_modules
+.next/
+.DS_Store
