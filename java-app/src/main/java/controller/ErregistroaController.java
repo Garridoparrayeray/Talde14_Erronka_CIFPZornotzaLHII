@@ -87,6 +87,17 @@ public class ErregistroaController implements Initializable {
 
         dpSarreraData.setValue(LocalDate.now());
         ezkutuErrorea();
+
+        if (chkIragankorra != null) {
+            chkIragankorra.selectedProperty().addListener((obs, old, berria) -> {
+                if (berria) {
+                    cbKokalekua.setValue(null);
+                    cbKokalekua.setDisable(true);
+                } else {
+                    cbKokalekua.setDisable(false);
+                }
+            });
+        }
     }
 
     /**

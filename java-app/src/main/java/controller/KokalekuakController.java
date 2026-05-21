@@ -97,12 +97,16 @@ public class KokalekuakController implements Initializable {
             return;
         }
 
+        if (sel.getArtikuluKopurua() > 0) {
+            UIKudeatzailea.erakutsiToast("Ezin da ezabatu: " + sel.getArtikuluKopurua() + " artikulu ditu esleituta.", false);
+            return;
+        }
         boolean ondo = KokalekuaDAO.ezabatu(sel.getKokalekuId());
         if (ondo) {
             kargatu();
             UIKudeatzailea.erakutsiToast("Kokalekua ezabatu da.", true);
         } else {
-            UIKudeatzailea.erakutsiToast("Ezin izan da kokalekua ezabatu. Agian objektuekin lotuta dago.", false);
+            UIKudeatzailea.erakutsiToast("Ezin izan da kokalekua ezabatu.", false);
         }
     }
 
@@ -140,11 +144,26 @@ public class KokalekuakController implements Initializable {
         grid.add(chkBha, 1, 2);
 
         UIKudeatzailea.erakutsiFormOverlay("Kokalekua editatu", grid, () -> {
-            boolean ondo = KokalekuaDAO.eguneratu(
-                    sel.getKokalekuId(),
-                    txtArmairua.getText().trim(),
-                    txtApala.getText().trim(),
-                    chkBha.isSelected());
+            String armairuaBerria = txtArmairua.getText().trim().toUpperCase();
+            String apalaBerria = txtApala.getText().trim();
+            if (armairuaBerria.isEmpty() || apalaBerria.isEmpty()) {
+                UIKudeatzailea.erakutsiToast("Armairua eta apala ezin dira hutsik egon.", false);
+                return;
+            }
+            boolean dagoeneko = false;
+            for (Kokalekua k : KokalekuaDAO.getZerrenda()) {
+                if (k.getKokalekuId() != sel.getKokalekuId()
+                        && k.getArmairua().equalsIgnoreCase(armairuaBerria)
+                        && k.getApala().equalsIgnoreCase(apalaBerria)) {
+                    dagoeneko = true;
+                    break;
+                }
+            }
+            if (dagoeneko) {
+                UIKudeatzailea.erakutsiToast("Kokalekua dagoeneko existitzen da: " + armairuaBerria + "-" + apalaBerria + ".", false);
+                return;
+            }
+            boolean ondo = KokalekuaDAO.eguneratu(sel.getKokalekuId(), armairuaBerria, apalaBerria, chkBha.isSelected());
             if (ondo) {
                 kargatu();
                 UIKudeatzailea.erakutsiToast("Kokalekua ondo eguneratu da.", true);

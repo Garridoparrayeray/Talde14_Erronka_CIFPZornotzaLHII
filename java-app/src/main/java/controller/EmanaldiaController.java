@@ -322,12 +322,15 @@ public class EmanaldiaController implements Initializable {
             idLangile = Sesio.getLangilea().getLangileId();
         }
 
+        if (archivoSinadura == null) {
+            erakutsiErrorea("Sinadura fitxategia derrigorrezkoa da. Hautatu dokumentu bat.");
+            return;
+        }
+
         String dokumentuBidea = null;
-        if (archivoSinadura != null) {
-            String kopia = kopiatuSinadura(archivoSinadura);
-            if (kopia != null) {
-                dokumentuBidea = kopia;
-            }
+        String kopia = kopiatuSinadura(archivoSinadura);
+        if (kopia != null) {
+            dokumentuBidea = kopia;
         }
 
         boolean erakundeaDa = rbErakundea != null && rbErakundea.isSelected();

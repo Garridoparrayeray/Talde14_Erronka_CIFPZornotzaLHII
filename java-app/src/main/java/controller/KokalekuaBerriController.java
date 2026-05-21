@@ -5,6 +5,7 @@ import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
 import dao.KokalekuaDAO;
+import model.Kokalekua;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.CheckBox;
@@ -54,6 +55,18 @@ public class KokalekuaBerriController implements Initializable {
 
         if (armairua.isEmpty() || apala.isEmpty()) {
             UIKudeatzailea.erakutsiFormularioErrorea(lblErrorea, "(*) Armairua eta apala bete behar dira.");
+            return;
+        }
+
+        boolean dagoeneko = false;
+        for (Kokalekua k : KokalekuaDAO.getZerrenda()) {
+            if (k.getArmairua().equalsIgnoreCase(armairua) && k.getApala().equalsIgnoreCase(apala)) {
+                dagoeneko = true;
+                break;
+            }
+        }
+        if (dagoeneko) {
+            UIKudeatzailea.erakutsiFormularioErrorea(lblErrorea, "Kokalekua dagoeneko existitzen da: " + armairua + "-" + apala + ".");
             return;
         }
 

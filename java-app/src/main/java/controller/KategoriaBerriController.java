@@ -49,12 +49,23 @@ public class KategoriaBerriController implements Initializable {
             return;
         }
 
+        boolean dagoeneko = false;
+        for (model.Kategoria k : KategoriaDAO.getGuztiak()) {
+            if (k.getIzena().equalsIgnoreCase(izena)) {
+                dagoeneko = true;
+                break;
+            }
+        }
+        if (dagoeneko) {
+            UIKudeatzailea.erakutsiFormularioErrorea(lblErrorea, "Kategoria hori dagoeneko existitzen da.");
+            return;
+        }
+
         boolean ok = KategoriaDAO.gehitu(izena);
         if (ok) {
             itxi();
         } else {
-            UIKudeatzailea.erakutsiFormularioErrorea(lblErrorea,
-                    "Errorea gordetzean. Baliteke izen hori dagoeneko existitzea.");
+            UIKudeatzailea.erakutsiFormularioErrorea(lblErrorea, "Errorea gordetzean. Egiaztatu datuak.");
         }
     }
 
