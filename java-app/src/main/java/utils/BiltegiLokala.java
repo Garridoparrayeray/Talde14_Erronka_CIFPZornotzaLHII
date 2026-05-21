@@ -435,7 +435,14 @@ public class BiltegiLokala {
      * @return true ezabatu bada, false IDa aurkitu ez bada
      */
     public static synchronized boolean langileaEzabatu(int id) {
-        boolean removed = poltsa.langileak.removeIf(l -> l.getLangileId() == id);
+        boolean removed = false;
+        for (int i = 0; i < poltsa.langileak.size(); i++) {
+            if (poltsa.langileak.get(i).getLangileId() == id) {
+                poltsa.langileak.remove(i);
+                removed = true;
+                break;
+            }
+        }
         if (removed) {
             gehituItxaronEragiketa("LANGILEA", "DELETE", new Object[] { id });
             gorde();
@@ -580,7 +587,14 @@ public class BiltegiLokala {
      * @return true ezabatu bada, false kodea aurkitu ez bada
      */
     public static synchronized boolean artikuluaEzabatu(String kodea) {
-        boolean removed = poltsa.artikuluak.removeIf(a -> a.getArtikuluKodea().equals(kodea));
+        boolean removed = false;
+        for (int i = 0; i < poltsa.artikuluak.size(); i++) {
+            if (poltsa.artikuluak.get(i).getArtikuluKodea().equals(kodea)) {
+                poltsa.artikuluak.remove(i);
+                removed = true;
+                break;
+            }
+        }
         if (removed) {
             gehituItxaronEragiketa("ARTIKULUA", "DELETE", new Object[] { kodea });
             gorde();
@@ -595,10 +609,12 @@ public class BiltegiLokala {
             cal.setTime(sarreraData);
             urteStr = String.format("%02d", cal.get(Calendar.YEAR) % 100);
         }
-        final String urte = urteStr;
-        long count = poltsa.artikuluak.stream()
-                .filter(a -> a.getArtikuluKodea().endsWith("-" + urte))
-                .count();
+        long count = 0;
+        for (Artikulua a : poltsa.artikuluak) {
+            if (a.getArtikuluKodea().endsWith("-" + urteStr)) {
+                count++;
+            }
+        }
         return String.format("G-%03d-%s", count + 1, urteStr);
     }
 
@@ -648,7 +664,14 @@ public class BiltegiLokala {
      * @return true ezabatu bada, false IDa aurkitu ez bada
      */
     public static synchronized boolean kategoriaEzabatu(int id) {
-        boolean removed = poltsa.kategoriak.removeIf(k -> k.getKategoriaId() == id);
+        boolean removed = false;
+        for (int i = 0; i < poltsa.kategoriak.size(); i++) {
+            if (poltsa.kategoriak.get(i).getKategoriaId() == id) {
+                poltsa.kategoriak.remove(i);
+                removed = true;
+                break;
+            }
+        }
         if (removed) {
             gehituItxaronEragiketa("KATEGORIA", "DELETE", new Object[] { id });
             gorde();
@@ -739,7 +762,14 @@ public class BiltegiLokala {
      * @return true ezabatu bada, false IDa aurkitu ez bada
      */
     public static synchronized boolean kokalekuaEzabatu(int id) {
-        boolean removed = poltsa.kokalekuak.removeIf(k -> k.getKokalekuId() == id);
+        boolean removed = false;
+        for (int i = 0; i < poltsa.kokalekuak.size(); i++) {
+            if (poltsa.kokalekuak.get(i).getKokalekuId() == id) {
+                poltsa.kokalekuak.remove(i);
+                removed = true;
+                break;
+            }
+        }
         if (removed) {
             gehituItxaronEragiketa("KOKALEKUA", "DELETE", new Object[] { id });
             gorde();
@@ -1100,7 +1130,15 @@ public class BiltegiLokala {
             }
             result.add(new KategoriaKopurua(k.getIzena(), kop));
         }
-        result.sort((a, b) -> b.getKopurua() - a.getKopurua());
+        for (int i = 0; i < result.size() - 1; i++) {
+            for (int j = i + 1; j < result.size(); j++) {
+                if (result.get(j).getKopurua() > result.get(i).getKopurua()) {
+                    KategoriaKopurua temp = result.get(i);
+                    result.set(i, result.get(j));
+                    result.set(j, temp);
+                }
+            }
+        }
         return result;
     }
 

@@ -16,6 +16,7 @@ RUN apt-get update && apt-get install -y \
     novnc websockify \
     dbus-x11 \
     dos2unix \
+    x11-apps \
     libgtk-3-0 libgdk-pixbuf2.0-0 \
     libx11-6 libxext6 libxrender1 libxtst6 libxi6 libgl1 \
     && rm -rf /var/lib/apt/lists/*
