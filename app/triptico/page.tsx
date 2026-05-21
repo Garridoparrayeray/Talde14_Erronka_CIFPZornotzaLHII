@@ -694,23 +694,13 @@ function DownloadIcon() {
 function QRCode() {
   return (
     <div className="w-[180px] h-[180px] bg-white rounded-[10px] p-3 flex items-center justify-center shrink-0">
-      <svg viewBox="0 0 29 29" shapeRendering="crispEdges" className="w-full h-full">
-        <rect width="29" height="29" fill="#fff"/>
-        <g fill="#0E1230">
-          <rect x="0" y="0" width="7" height="7"/>
-          <rect x="1" y="1" width="5" height="5" fill="#fff"/>
-          <rect x="2" y="2" width="3" height="3"/>
-          <rect x="22" y="0" width="7" height="7"/>
-          <rect x="23" y="1" width="5" height="5" fill="#fff"/>
-          <rect x="24" y="2" width="3" height="3"/>
-          <rect x="0" y="22" width="7" height="7"/>
-          <rect x="1" y="23" width="5" height="5" fill="#fff"/>
-          <rect x="2" y="24" width="3" height="3"/>
-          <rect x="9" y="0" width="1" height="1"/><rect x="11" y="0" width="1" height="1"/><rect x="13" y="0" width="2" height="1"/><rect x="16" y="0" width="1" height="1"/><rect x="19" y="0" width="1" height="1"/>
-          <rect x="9" y="2" width="2" height="1"/><rect x="13" y="2" width="1" height="1"/><rect x="15" y="2" width="2" height="1"/><rect x="19" y="2" width="2" height="1"/>
-          <rect x="10" y="4" width="1" height="1"/><rect x="12" y="4" width="2" height="1"/><rect x="16" y="4" width="1" height="1"/><rect x="18" y="4" width="1" height="1"/><rect x="20" y="4" width="1" height="1"/>
-        </g>
-      </svg>
+      <Image
+        src="/images/qr-code.png"
+        alt="QR Code"
+        width={150}
+        height={150}
+        className="w-full h-full object-contain"
+      />
     </div>
   )
 }
