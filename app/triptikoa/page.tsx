@@ -387,7 +387,7 @@ function PanelArchitecture() {
       </div>
 
       {/* Stats */}
-      <div className="flex gap-3.5 mt-4">
+      <div className="flex gap-3.5 mt-3">
         <Stat num={4} label="Edukiontzi" />
         <Stat num={12} label="Taula" />
         <Stat num={3} label="DB rol" />
@@ -395,8 +395,8 @@ function PanelArchitecture() {
       </div>
 
       {/* Tech stack */}
-      <div className="mt-5">
-        <div className="text-[17px] tracking-[.22em] uppercase text-[#5B628A] font-semibold mb-3">Teknologia-pila</div>
+      <div className="mt-3">
+        <div className="text-[17px] tracking-[.22em] uppercase text-[#5B628A] font-semibold mb-2">Teknologia-pila</div>
         <div className="flex gap-2 flex-wrap">
           <Chip><b className="text-[#2A45D4]">Java 21</b> · JavaFX</Chip>
           <Chip>Maven · jpackage</Chip>
@@ -411,8 +411,8 @@ function PanelArchitecture() {
       </div>
 
       {/* MVC */}
-      <div className="mt-5">
-        <div className="text-[17px] tracking-[.22em] uppercase text-[#5B628A] font-semibold mb-3.5">Patroia · MVC</div>
+      <div className="mt-3">
+        <div className="text-[17px] tracking-[.22em] uppercase text-[#5B628A] font-semibold mb-2">Patroia · MVC</div>
         <div className="grid grid-cols-3 gap-3 text-[16px]">
           <MVCBox title="Model" desc="Hartzailea abstraktoa, Jabea, Erakundea, Artikulua…" />
           <MVCBox title="View" desc="23 FXML pantaila + style.css." />
@@ -421,8 +421,8 @@ function PanelArchitecture() {
       </div>
 
       {/* Containers */}
-      <div className="mt-5 pt-6">
-        <div className="grid grid-cols-2 gap-2.5">
+      <div className="mt-auto pt-3">
+        <div className="grid grid-cols-2 gap-2">
           <ContainerRow icon="db" title="erronka_db" sub="MariaDB 11 · 12 taula · 5 SQL init" port=":3306" />
           <ContainerRow icon="desktop" title="erronka_desktop" sub="JavaFX + noVNC · jpackage natiboa" port=":6080" />
           <ContainerRow icon="web" title="erronka_web" sub="Nginx alpine · XML+XSLT+XPath" port=":8000" />
@@ -616,8 +616,8 @@ function MVCBox({ title, desc }: { title: string; desc: string }) {
 
 function ContainerRow({ icon, title, sub, port }: { icon: string; title: string; sub: string; port: string }) {
   return (
-    <div className="flex items-center gap-3.5 px-4 py-3.5 bg-white border border-[#DDD9CC] rounded-[12px]">
-      <div className="w-[52px] h-[52px] rounded-[10px] bg-[#E8ECFB] text-[#2A45D4] flex items-center justify-center shrink-0">
+    <div className="flex items-center gap-3.5 px-4 py-[14px] bg-white border border-[#DDD9CC] rounded-[12px]">
+      <div className="w-[44px] h-[44px] rounded-[10px] bg-[#E8ECFB] text-[#2A45D4] flex items-center justify-center shrink-0">
         <ContainerIcon type={icon} />
       </div>
       <div>
