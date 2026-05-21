@@ -43,7 +43,7 @@ export default function HomePage() {
         {/* Download buttons */}
         <div className="flex flex-col gap-3">
           <a
-            href="/triptikoa"
+            href="/triptikoa.html"
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center justify-center gap-3 px-6 py-4 rounded-xl bg-[#2A45D4] text-white font-semibold text-lg shadow-lg hover:bg-[#3652e6] transition-colors"
@@ -56,7 +56,7 @@ export default function HomePage() {
           </a>
 
           <a
-            href="/triptico"
+            href="/triptico-es.html"
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center justify-center gap-3 px-6 py-4 rounded-xl bg-white/10 text-white font-semibold text-lg border border-white/20 hover:bg-white/15 transition-colors"
