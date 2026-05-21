@@ -1,71 +1,86 @@
-import Link from "next/link"
+"use client"
+
 import Image from "next/image"
+import { Download } from "lucide-react"
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen bg-[#15141a] flex items-center justify-center py-16 px-6" style={{
+    <div className="min-h-screen bg-[#15141a] flex items-center justify-center p-6" style={{
       background: `
-        radial-gradient(1200px 800px at 20% 0%, #2a2a36 0%, transparent 60%),
-        radial-gradient(1000px 700px at 85% 100%, #221f2a 0%, transparent 55%),
+        radial-gradient(800px 500px at 30% 10%, #1f2240 0%, transparent 60%),
+        radial-gradient(600px 400px at 70% 90%, #1a1a2e 0%, transparent 50%),
         #15141a
       `
     }}>
-      <div className="max-w-[700px] w-full text-center">
+      <div className="w-full max-w-md text-center">
         {/* Logo */}
-        <div className="mb-10 flex justify-center">
-          <div className="bg-white rounded-2xl p-8 shadow-[0_30px_50px_-25px_rgba(0,0,0,.45)]">
+        <div className="mb-8 flex justify-center">
+          <div className="bg-white rounded-xl p-6 shadow-lg">
             <Image
               src="/images/logo-bermeoko-udala.png"
               alt="Bermeoko Udala"
-              width={320}
-              height={107}
-              className="w-full h-auto max-w-[320px] mx-auto block"
+              width={240}
+              height={80}
+              className="w-auto h-auto max-w-[240px]"
+              priority
             />
           </div>
         </div>
 
         {/* Title */}
-        <h1 className="font-heading font-bold text-[48px] md:text-[64px] tracking-tight text-white leading-[1.05] mb-4">
+        <h1 className="font-heading font-bold text-3xl md:text-4xl tracking-tight text-white mb-2">
           ERRONKA<span className="text-[#E2542C]">·</span>Triptikoa
         </h1>
-        <p className="text-[#9590a8] text-[20px] md:text-[24px] max-w-[520px] mx-auto leading-[1.5] mb-12">
-          Sistema integrado de gestión de objetos perdidos y encontrados
+        <p className="text-[#9590a8] text-base mb-8">
+          Galdu eta aurkituen kudeaketa-sistema
         </p>
 
-        {/* Language selection */}
-        <div className="text-[14px] tracking-[.2em] uppercase text-[#8a8576] mb-6">
-          Aukeratu hizkuntza · Elige idioma
-        </div>
+        {/* Language label */}
+        <p className="text-[12px] tracking-widest uppercase text-[#6b6780] mb-4">
+          Deskargatu triptikoa / Descargar tríptico
+        </p>
 
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Link 
+        {/* Download buttons */}
+        <div className="flex flex-col gap-3">
+          <a
             href="/triptikoa"
-            className="group flex items-center justify-center gap-4 px-8 py-5 rounded-[14px] bg-[#2A45D4] text-white font-heading font-bold text-[22px] tracking-[-0.01em] shadow-[0_20px_40px_-15px_rgba(42,69,212,.5)] hover:bg-[#3652e6] transition-colors"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center justify-center gap-3 px-6 py-4 rounded-xl bg-[#2A45D4] text-white font-semibold text-lg shadow-lg hover:bg-[#3652e6] transition-colors"
           >
-            <span className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center text-[16px] font-bold">
+            <span className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center text-sm font-bold">
               EU
             </span>
             Euskaraz
-          </Link>
-          
-          <Link 
+            <Download className="w-5 h-5 ml-auto opacity-60" />
+          </a>
+
+          <a
             href="/triptico"
-            className="group flex items-center justify-center gap-4 px-8 py-5 rounded-[14px] bg-white/[0.08] text-white font-heading font-bold text-[22px] tracking-[-0.01em] border border-white/[0.15] hover:bg-white/[0.12] transition-colors"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center justify-center gap-3 px-6 py-4 rounded-xl bg-white/10 text-white font-semibold text-lg border border-white/20 hover:bg-white/15 transition-colors"
           >
-            <span className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center text-[16px] font-bold">
+            <span className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center text-sm font-bold">
               ES
             </span>
-            En Castellano
-          </Link>
+            Castellano
+            <Download className="w-5 h-5 ml-auto opacity-60" />
+          </a>
         </div>
 
-        {/* Footer info */}
-        <div className="mt-16 pt-8 border-t border-white/[0.1] flex flex-col sm:flex-row items-center justify-between gap-4 text-[13px] tracking-[.12em] uppercase text-[#8a8576]">
-          <span>v 1.0 · 2026</span>
-          <span>1. DAW · CIFP Zornotza LHII</span>
+        {/* Instructions */}
+        <p className="mt-6 text-[13px] text-[#6b6780] leading-relaxed">
+          Ireki eta inprimatu PDF gisa gordetzeko.<br/>
+          Abre e imprime para guardar como PDF.
+        </p>
+
+        {/* Footer */}
+        <div className="mt-10 pt-6 border-t border-white/10 flex items-center justify-between text-[11px] tracking-widest uppercase text-[#6b6780]">
+          <span>v1.0 · 2026</span>
+          <span>CIFP Zornotza LHII</span>
         </div>
       </div>
-
     </div>
   )
 }
