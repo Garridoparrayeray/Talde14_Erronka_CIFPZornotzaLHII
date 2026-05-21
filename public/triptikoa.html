@@ -1,0 +1,975 @@
+<!doctype html>
+<html lang="eu">
+<head>
+<meta charset="utf-8" />
+<title>ERRONKA · Triptikoa</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --blue:#2A45D4;
+    --blue-2:#1F33B0;
+    --blue-soft:#E8ECFB;
+    --ink:#0E1230;
+    --ink-2:#1B2148;
+    --muted:#5B628A;
+    --paper:#F6F4EE;
+    --paper-2:#EFEDE5;
+    --card:#FFFFFF;
+    --line:#DDD9CC;
+    --accent:#E2542C;
+    --green:#1F8A5B;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:#1a1a22;color:var(--ink);font-family:'DM Sans','Helvetica Neue',Helvetica,Arial,sans-serif}
+  body{
+    background:
+      radial-gradient(1200px 800px at 20% 0%, #2a2a36 0%, transparent 60%),
+      radial-gradient(1000px 700px at 85% 100%, #221f2a 0%, transparent 55%),
+      #15141a;
+    min-height:100vh;
+    padding:64px 0 96px;
+  }
+
+  /* Page header on dark presentation surface */
+  .meta{
+    max-width:2200px;
+    margin:0 auto 36px;
+    padding:0 40px;
+    color:#cfc9bd;
+    display:flex; align-items:flex-end; justify-content:space-between; gap:24px;
+    font-family:'DM Sans','Helvetica Neue',Helvetica,Arial,sans-serif;
+  }
+  .meta .l{font-family:'Bricolage Grotesque','Helvetica Neue',Helvetica,Arial,sans-serif; font-weight:700; font-size:28px; letter-spacing:-.01em; color:#fff}
+  .meta .l b{color:var(--accent)}
+  .meta .r{font-size:13px; letter-spacing:.12em; text-transform:uppercase; color:#8a8576; text-align:right; line-height:1.6}
+  .meta .r span{color:#cfc9bd}
+
+  .stage{
+    display:flex; flex-direction:column; align-items:center; gap:56px;
+  }
+
+  /* SPREAD = one flat side of the trifold, 3 panels */
+  .spread{
+    width:2200px; height:1700px;
+    background:var(--paper);
+    box-shadow:
+      0 60px 80px -40px rgba(0,0,0,.55),
+      0 30px 40px -20px rgba(0,0,0,.4),
+      0 2px 0 rgba(255,255,255,.04) inset;
+    position:relative;
+    display:grid;
+    grid-template-columns:1fr 1fr 1fr;
+    overflow:hidden;
+    border-radius:2px;
+  }
+  /* subtle paper grain */
+  .spread::before{
+    content:""; position:absolute; inset:0; pointer-events:none;
+    background-image:
+      radial-gradient(rgba(0,0,0,.03) 1px, transparent 1px),
+      radial-gradient(rgba(255,255,255,.04) 1px, transparent 1px);
+    background-size: 3px 3px, 5px 5px;
+    background-position: 0 0, 1px 2px;
+    mix-blend-mode:multiply;
+    opacity:.7;
+  }
+  /* fold lines */
+  .spread::after{
+    content:""; position:absolute; inset:0; pointer-events:none;
+    background:
+      linear-gradient(to right, transparent calc(33.333% - .5px), rgba(0,0,0,.08) 33.333%, transparent calc(33.333% + .5px)),
+      linear-gradient(to right, transparent calc(66.666% - .5px), rgba(0,0,0,.08) 66.666%, transparent calc(66.666% + .5px));
+  }
+
+  .panel{
+    position:relative;
+    padding:64px 48px;
+    display:flex; flex-direction:column;
+    overflow:hidden;
+  }
+  .panel + .panel{border-left:1px dashed rgba(0,0,0,.0)}
+
+  /* utility */
+  .eyebrow{
+    font-family:'DM Sans','Helvetica Neue',Helvetica,Arial,sans-serif; font-weight:600; font-size:17px; letter-spacing:.22em; text-transform:uppercase;
+    color:var(--muted);
+  }
+  h1,h2,h3,h4{margin:0; font-family:'Bricolage Grotesque','Helvetica Neue',Helvetica,Arial,sans-serif; color:var(--ink); letter-spacing:-.02em; font-weight:700}
+  p{margin:0; color:var(--ink-2); line-height:1.5}
+  .mono{font-family:'JetBrains Mono', ui-monospace, monospace}
+  .pill{
+    display:inline-flex; align-items:center; gap:8px;
+    padding:6px 12px; border-radius:999px;
+    font-size:13px; font-weight:600; letter-spacing:.02em;
+    background:var(--blue-soft); color:var(--blue);
+  }
+  .pill .dot{width:6px; height:6px; border-radius:99px; background:var(--blue)}
+  .rule{height:1px; background:rgba(14,18,48,.12); width:100%}
+  .vrule{width:1px; background:rgba(14,18,48,.12); align-self:stretch}
+
+  /* ===================== OUTSIDE SPREAD ===================== */
+  /* Order when LAID FLAT (print): [Back cover | Inside flap | Front cover]
+     When folded: front cover faces you, back cover is on back, inside flap appears first when you open it. */
+
+  /* Panel: BACK COVER (left) */
+  .p-back{
+    background:linear-gradient(180deg, #11142F 0%, #0E1230 60%, #0A0E26 100%);
+    color:#EDEAE0;
+    padding:72px 56px;
+    justify-content:space-between;
+  }
+  .p-back .topbar{display:flex; align-items:center; justify-content:space-between; color:#9590a8; font-size:17px; letter-spacing:.22em; text-transform:uppercase; font-weight:600}
+  .p-back .topbar .dot{display:inline-block; width:10px; height:10px; background:var(--accent); border-radius:99px; margin-right:12px; vertical-align:middle}
+  .p-back .credits{margin-top:auto}
+  .p-back h3{color:#fff; font-size:56px; line-height:1.0; max-width:560px; margin-bottom:28px; letter-spacing:-.03em}
+  .p-back .team{display:grid; grid-template-columns:1fr; gap:18px; margin-top:36px}
+  .p-back .team .row{display:flex; flex-direction:column; gap:6px; padding:22px 26px; border:1px solid rgba(255,255,255,.12); border-radius:14px; background:rgba(255,255,255,.04)}
+  .p-back .team .name{font-weight:700; color:#fff; font-size:32px; letter-spacing:-.02em; font-family:'Bricolage Grotesque','Helvetica Neue',Helvetica,Arial,sans-serif; line-height:1.1}
+  .p-back .team .role{font-size:19px; color:#9590a8; letter-spacing:.01em; font-family:'JetBrains Mono'}
+  .p-back .school{
+    margin-top:44px; padding-top:36px; border-top:1px solid rgba(255,255,255,.12);
+    display:flex; align-items:center; justify-content:space-between; gap:24px; color:#9590a8;
+  }
+  .p-back .school .lbl{font-size:17px; letter-spacing:.18em; text-transform:uppercase; font-weight:600}
+  .p-back .school .val{color:#fff; font-family:'Bricolage Grotesque','Helvetica Neue',Helvetica,Arial,sans-serif; font-weight:700; font-size:28px; letter-spacing:-.02em; margin-top:10px; line-height:1.1}
+  .p-back .qr{
+    width:180px; height:180px; background:#fff; border-radius:10px; padding:12px;
+    display:flex; align-items:center; justify-content:center; flex:none;
+  }
+  .p-back .qr svg{width:100%; height:100%}
+  .p-back .repo{
+    margin-top:38px;
+    border:1px dashed rgba(255,255,255,.2);
+    border-radius:14px;
+    padding:26px 28px;
+    display:flex; flex-direction:column; gap:18px;
+  }
+  .p-back .repo .l{font-size:16px; color:#9590a8; letter-spacing:.22em; text-transform:uppercase; font-weight:600}
+  .p-back .repo .url-row{display:flex; gap:16px; align-items:center}
+  .p-back .repo .ico{
+    width:46px; height:46px; border-radius:10px; background:rgba(255,255,255,.06); display:flex; align-items:center; justify-content:center; color:#fff; flex:none;
+  }
+  .p-back .repo .ico svg{width:22px; height:22px}
+  .p-back .repo .t{font-family:'JetBrains Mono'; font-size:17px; color:#cfc9bd; word-break:break-all; line-height:1.45}
+  .p-back .repo .t b{color:#fff; font-weight:600}
+
+  /* Panel: INSIDE FLAP (middle of outside spread) */
+  .p-flap{
+    background:var(--paper-2);
+    padding:72px 60px;
+  }
+  .p-flap .head{display:flex; flex-direction:column; gap:18px; margin-bottom:28px}
+  .p-flap h2{font-size:56px; line-height:.98; letter-spacing:-.028em}
+  .p-flap p.lead{font-size:22px; color:var(--ink-2); max-width:540px; margin-top:8px; line-height:1.4}
+  .quickstart{
+    margin-top:30px;
+    background:#0E1230; color:#EDEAE0; border-radius:14px; padding:26px 28px;
+    box-shadow:0 20px 30px -20px rgba(0,0,0,.4);
+  }
+  .quickstart .label{display:flex; align-items:center; gap:10px; font-size:14px; letter-spacing:.2em; text-transform:uppercase; color:#9590a8; margin-bottom:16px}
+  .quickstart .cmd{font-family:'JetBrains Mono'; font-size:17px; line-height:1.75; color:#fff}
+  .quickstart .cmd .p{color:#7CE0A9}
+  .quickstart .cmd .c{color:#9590a8}
+  .step-list{margin-top:36px; display:flex; flex-direction:column; gap:22px}
+  .step{display:grid; grid-template-columns:44px 1fr; gap:18px; align-items:flex-start}
+  .step .n{
+    width:40px; height:40px; border-radius:99px; background:var(--blue); color:#fff;
+    display:flex; align-items:center; justify-content:center; font-family:'Bricolage Grotesque','Helvetica Neue',Helvetica,Arial,sans-serif; font-weight:700; font-size:20px;
+  }
+  .step h4{font-size:21px; margin-bottom:6px; letter-spacing:-.01em}
+  .step p{font-size:16px; color:var(--muted); line-height:1.5}
+  .creds{
+    margin-top:38px; background:#fff; border:1px solid var(--line); border-radius:14px; overflow:hidden;
+  }
+  .creds .h{
+    padding:18px 24px; background:var(--blue-soft); color:var(--blue); font-weight:700;
+    font-size:15px; letter-spacing:.16em; text-transform:uppercase;
+    display:flex; justify-content:space-between; align-items:center;
+  }
+  .creds table{width:100%; border-collapse:collapse; font-size:17px}
+  .creds td{padding:16px 24px; border-top:1px solid var(--line); color:var(--ink-2)}
+  .creds td.k{color:var(--muted); width:42%}
+  .creds td .mono{font-size:16px}
+
+  /* Panel: FRONT COVER (right) */
+  .p-front{
+    background:
+      radial-gradient(900px 600px at 100% 0%, rgba(255,255,255,.08), transparent 60%),
+      radial-gradient(700px 500px at 0% 100%, rgba(255,255,255,.05), transparent 60%),
+      linear-gradient(180deg, #2F4BE0 0%, #2A45D4 50%, #1F33B0 100%);
+    color:#fff;
+    padding:64px 60px 56px;
+    justify-content:space-between;
+  }
+  .p-front .top{
+    display:flex; align-items:flex-start; justify-content:space-between; gap:24px;
+  }
+  .badge-logo{
+    background:#fff; border-radius:10px; padding:10px 14px;
+    display:flex; align-items:center; gap:10px; color:var(--ink);
+    font-family:'Bricolage Grotesque','Helvetica Neue',Helvetica,Arial,sans-serif; font-weight:800; letter-spacing:-.02em;
+  }
+  .badge-logo .map{width:34px; height:42px; flex:none}
+  .badge-logo .t{line-height:1; font-size:14px}
+  .badge-logo .t b{display:block; font-size:18px}
+  .p-front .stamp{
+    border:1.5px solid rgba(255,255,255,.5); border-radius:99px;
+    padding:8px 14px; font-size:11px; letter-spacing:.2em; text-transform:uppercase;
+    color:#fff; font-weight:600;
+  }
+  .p-front .erronka{
+    font-family:'Bricolage Grotesque','Helvetica Neue',Helvetica,Arial,sans-serif;
+    font-weight:800; letter-spacing:-.055em; line-height:.86;
+    font-size:128px; margin-top:auto; color:#fff;
+    white-space:nowrap;
+  }
+  .logo-mark{
+    margin-top:auto;
+    display:block;
+    background:#fff;
+    border-radius:16px;
+    padding:48px 56px;
+    box-shadow:0 30px 50px -25px rgba(0,0,0,.45), 0 0 0 1px rgba(255,255,255,.18);
+  }
+  .logo-mark img{
+    display:block;
+    width:100%;
+    height:auto;
+    max-width:540px;
+    margin:0 auto;
+  }
+  .p-front .erronka .dot{color:var(--accent)}
+  .p-front .sub{
+    margin-top:18px; font-family:'Bricolage Grotesque','Helvetica Neue',Helvetica,Arial,sans-serif;
+    font-weight:500; font-size:30px; line-height:1.15; max-width:540px; letter-spacing:-.015em;
+  }
+  .p-front .tag{
+    margin-top:32px; display:flex; flex-direction:column; gap:14px;
+    font-size:14px; letter-spacing:.04em;
+  }
+  .p-front .tag .row{display:flex; gap:10px; align-items:center}
+  .p-front .tag .row .k{
+    font-size:11px; letter-spacing:.22em; text-transform:uppercase; color:rgba(255,255,255,.55); width:130px;
+  }
+  .p-front .tag .row .v{font-weight:600; color:#fff}
+  .p-front .foot{
+    margin-top:40px; padding-top:24px; border-top:1px solid rgba(255,255,255,.18);
+    display:flex; align-items:center; justify-content:space-between; font-size:12px; letter-spacing:.18em; text-transform:uppercase; color:rgba(255,255,255,.65);
+  }
+
+  /* ===================== INSIDE SPREAD ===================== */
+  /* Reads left → right when opened: Arkitektura | JavaFX | Web */
+
+  .panel.inside{background:var(--paper)}
+  .panel-head{
+    display:flex; flex-direction:column; gap:10px; margin-bottom:24px;
+  }
+  .panel-head .num{
+    font-family:'JetBrains Mono'; color:var(--muted); font-size:18px; letter-spacing:.18em;
+  }
+  .panel-head h2{font-size:68px; line-height:.98; letter-spacing:-.03em}
+  .panel-head .lead{color:var(--ink-2); font-size:24px; max-width:560px; margin-top:14px; line-height:1.4}
+
+  /* Architecture panel */
+  .arch-diagram{
+    margin-top:8px;
+    border:1px solid var(--line); border-radius:14px; background:#fff;
+    padding:24px; position:relative;
+  }
+  .arch-diagram .row{display:flex; align-items:stretch; gap:14px; justify-content:center}
+  .arch-box{
+    flex:1; padding:14px 14px 12px; border-radius:10px; border:1px solid var(--line); background:var(--paper);
+    text-align:center;
+  }
+  .arch-box.javafx{border-color:#A9B3F0; background:#EEF0FC}
+  .arch-box.web{border-color:#F6CFC0; background:#FBEEE6}
+  .arch-box .lbl{font-family:'Bricolage Grotesque','Helvetica Neue',Helvetica,Arial,sans-serif; font-weight:700; font-size:14px; color:var(--ink)}
+  .arch-box .sub{font-size:11px; color:var(--muted); margin-top:2px}
+  .arch-box .port{
+    margin-top:8px; font-family:'JetBrains Mono'; font-size:11px;
+    background:#fff; border:1px solid var(--line); border-radius:6px; padding:3px 8px; display:inline-block; color:var(--ink-2);
+  }
+  .arch-pipe{
+    text-align:center; margin:10px 0; color:var(--muted); font-family:'JetBrains Mono'; font-size:12px; line-height:1.1;
+  }
+  .arch-pipe .arrows{font-size:14px; color:var(--blue); letter-spacing:6px}
+  .arch-box.db{background:#0E1230; color:#fff; border-color:#0E1230}
+  .arch-box.db .lbl{color:#fff}
+  .arch-box.db .sub{color:#a09cb0}
+  .arch-box.db .port{background:rgba(255,255,255,.08); border-color:transparent; color:#fff}
+  .arch-box.adm{background:#fff; border-style:dashed}
+.containers{
+    margin-top:12px; /* Reducido de 24px a 12px */
+    display:grid; grid-template-columns:1fr 1fr; gap:10px;
+  }
+  .container-row{
+    display:flex; align-items:center; gap:14px; /* Reducido de 18px a 14px */
+    padding:14px 18px; /* Reducido de 18px 20px para ahorrar altura */
+    background:#fff; border:1px solid var(--line); border-radius:12px;
+  }
+  .container-row .ico{
+    width:52px; height:52px; border-radius:10px; background:var(--blue-soft); color:var(--blue);
+    display:flex; align-items:center; justify-content:center; flex:none;
+  }
+  .container-row .ico svg{width:26px; height:26px}
+  .container-row .meta-t{font-weight:700; font-size:20px; line-height:1.2; letter-spacing:-.01em}
+  .container-row .meta-s{font-size:15px; color:var(--muted); margin-top:4px}
+  .container-row .port{margin-left:auto; font-family:'JetBrains Mono'; font-size:15px; color:var(--ink-2); background:var(--paper-2); border-radius:6px; padding:6px 12px; font-weight:600}
+
+  .stack{
+    margin-top:22px;
+    display:flex; gap:8px; flex-wrap:wrap;
+  }
+  .stack .chip{
+    padding:12px 18px; border-radius:99px; background:#fff; border:1px solid var(--line);
+    font-size:18px; font-weight:600; color:var(--ink-2);
+  }
+  .stack .chip b{color:var(--blue)}
+
+  /* JavaFX panel — feature grid */
+  .features{
+    margin-top:8px;
+    display:grid; grid-template-columns:1fr 1fr; gap:14px;
+  }
+  .feat{
+    background:#fff; border:1px solid var(--line); border-radius:12px;
+    padding:18px;
+    display:flex; flex-direction:column; gap:6px;
+    position:relative;
+  }
+  .feat .ico{
+    width:34px; height:34px; border-radius:8px;
+    background:var(--blue); color:#fff;
+    display:flex; align-items:center; justify-content:center;
+    margin-bottom:6px;
+  }
+  .feat .ico svg{width:18px; height:18px}
+  .feat h4{font-size:16px; letter-spacing:-.01em}
+  .feat p{font-size:12.5px; color:var(--muted); line-height:1.45}
+  .feat.alt .ico{background:var(--ink); color:#fff}
+  .feat.warm .ico{background:var(--accent)}
+
+  /* Compact feature chip list (used when mockup is the hero) */
+  .feat-chips{
+    margin-top:8px;
+    display:grid; grid-template-columns:1fr 1fr; gap:8px 12px;
+  }
+  .fchip{
+    display:flex; align-items:center; gap:14px;
+    background:#fff; border:1px solid var(--line); border-radius:12px;
+    padding:18px 22px; font-size:22px; font-weight:600; color:var(--ink);
+    letter-spacing:-.01em;
+  }
+  .fchip .dot{
+    width:12px; height:12px; border-radius:99px; background:var(--blue); flex:none;
+  }
+  .fchip.alt .dot{background:var(--ink)}
+  .fchip.warm .dot{background:var(--accent)}
+
+  /* .exe / Docker note callout on JavaFX panel */
+  .exec-note{
+    margin-top:18px;
+    display:flex; gap:14px; align-items:flex-start;
+    background:#0E1230; color:#EDEAE0;
+    border-radius:12px; padding:16px 18px;
+    box-shadow:0 20px 30px -20px rgba(14,18,48,.4);
+  }
+  .exec-note-ico{
+    width:36px; height:36px; border-radius:8px; background:rgba(255,255,255,.08);
+    display:flex; align-items:center; justify-content:center; flex:none; color:#fff;
+  }
+  .exec-note-ico svg{width:18px; height:18px}
+  .exec-note-title{
+    font-family:'Bricolage Grotesque','Helvetica Neue',Helvetica,Arial,sans-serif;
+    font-weight:700; font-size:26px; color:#fff; letter-spacing:-.02em;
+    margin-bottom:10px;
+  }
+  .exec-note-text{font-size:19px; color:#cfc9bd; line-height:1.5}
+  .exec-note-text .mono{ font-size:17px }
+  .exec-note-ico{ width:52px; height:52px; border-radius:10px }
+  .exec-note-ico svg{ width:24px; height:24px }
+  .exec-note-text b{color:#fff}
+  .exec-note-text .mono{
+    font-family:'JetBrains Mono'; font-size:11.5px;
+    background:rgba(255,255,255,.08); padding:1px 6px; border-radius:4px;
+  }
+
+  .mockup{
+    margin-top:18px;
+    border-radius:12px; overflow:hidden;
+    background:#fff; border:1px solid var(--line);
+    box-shadow:0 30px 40px -30px rgba(14,18,48,.35);
+  }
+  .mockup.big{ margin-top:22px }
+  .mockup.big .img-frame{
+    position:relative; width:100%; overflow:hidden;
+    background:#f8f7f1;
+  }
+  .mockup.big .img-frame img{
+    position:static; display:block;
+    width:100%; height:auto;
+    transform:none;
+  }
+  .mockup .bar{
+    display:flex; align-items:center; gap:6px; padding:8px 12px; background:#f2efe7; border-bottom:1px solid var(--line);
+  }
+  .mockup .bar .d{width:10px; height:10px; border-radius:99px; background:#d3cfc1}
+  .mockup .bar .d:nth-child(1){background:#E07A65}
+  .mockup .bar .d:nth-child(2){background:#E8C26B}
+  .mockup .bar .d:nth-child(3){background:#7CC192}
+  .mockup .bar .t{margin-left:8px; font-size:11px; color:var(--muted); font-family:'JetBrains Mono'}
+  .mockup img{width:100%; display:block}
+
+  /* Web panel */
+  .web-feat-list{
+    margin-top:8px;
+    display:flex; flex-direction:column; gap:10px;
+  }
+  .web-feat{
+    display:flex; gap:14px; align-items:flex-start;
+    padding:14px 16px;
+    background:#fff; border:1px solid var(--line); border-radius:12px;
+  }
+  .web-feat .ico{
+    width:36px; height:36px; border-radius:8px; background:var(--paper-2); display:flex; align-items:center; justify-content:center; flex:none; color:var(--ink);
+  }
+  .web-feat h4{font-size:15px; margin-bottom:2px}
+  .web-feat p{font-size:12.5px; color:var(--muted)}
+  .browser-mock{
+    margin-top:16px; border-radius:12px; overflow:hidden;
+    background:#fff; border:1px solid var(--line);
+    box-shadow:0 30px 40px -30px rgba(14,18,48,.35);
+    position:relative;
+  }
+  .browser-mock .bar{
+    display:flex; align-items:center; gap:8px; padding:8px 12px; background:#f2efe7; border-bottom:1px solid var(--line);
+  }
+  .browser-mock .url{
+    flex:1; background:#fff; border:1px solid var(--line); border-radius:99px;
+    font-family:'JetBrains Mono'; font-size:11px; padding:4px 10px; color:var(--ink-2);
+  }
+  .browser-mock .body{
+    padding:18px; display:flex; gap:14px;
+  }
+  .browser-mock .body .left{flex:1.4; display:flex; flex-direction:column; gap:8px}
+  .browser-mock .body .right{flex:1; display:grid; grid-template-columns:1fr 1fr; gap:6px}
+  .browser-mock .h{font-family:'Bricolage Grotesque','Helvetica Neue',Helvetica,Arial,sans-serif; font-weight:700; font-size:18px; color:var(--ink); line-height:1.1}
+  .browser-mock .p{font-size:11px; color:var(--muted)}
+  .browser-mock .btn{font-size:11px; font-weight:700; color:#fff; background:var(--blue); border-radius:6px; padding:6px 10px; align-self:flex-start; margin-top:4px}
+  .browser-mock .card{
+    border:1px solid var(--line); border-radius:8px; padding:8px; aspect-ratio:1.1;
+    display:flex; flex-direction:column; gap:4px;
+  }
+  .browser-mock .card .ph{flex:1; background:linear-gradient(135deg,#E8ECFB,#F6F4EE); border-radius:5px}
+  .browser-mock .card .tag{font-size:9px; color:var(--muted); letter-spacing:.1em; text-transform:uppercase}
+  .browser-mock .card .t{font-size:11px; font-weight:700; color:var(--ink); line-height:1.1}
+
+  /* Big variant: shows a single screenshot instead of the card body */
+  .browser-mock.big{ margin-top:22px }
+  .browser-mock.big .img-frame{
+    position:relative; width:100%; overflow:hidden;
+    background:#f8f7f1;
+  }
+  .browser-mock.big .img-frame img{
+    position:static; display:block;
+    width:100%; height:auto;
+    transform:none;
+  }
+
+  /* spread labels (off-paper) */
+  .label-side{
+    position:relative;
+    width:2200px;
+    margin-bottom:-44px;
+    display:flex; align-items:center; gap:14px;
+    color:#cfc9bd; font-size:12px; letter-spacing:.24em; text-transform:uppercase;
+  }
+  .label-side .line{flex:1; height:1px; background:rgba(255,255,255,.12)}
+  .label-side b{color:#fff; font-family:'Bricolage Grotesque','Helvetica Neue',Helvetica,Arial,sans-serif; font-weight:700; letter-spacing:.16em}
+
+  /* zoom container — clean way to scale the whole composition */
+  .zoom-wrap{ zoom: 0.68; }
+
+  /* ============== PRINT ============== */
+  @page{size:A4 landscape;margin:0}
+  @media print{
+    *{-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important}
+    html,body{margin:0 !important;padding:0 !important;background:#fff !important;width:297mm !important;height:210mm !important;overflow:hidden !important}
+    .meta,.label-side{display:none !important}
+    .zoom-wrap{display:block !important;zoom:1 !important;width:297mm !important}
+    .stage{display:block !important;gap:0 !important;width:297mm !important}
+    .print-page{
+      width:297mm !important;height:210mm !important;
+      overflow:hidden !important;
+      page-break-after:always;break-after:page;
+      display:block !important;
+      position:relative !important;
+      background:#fff !important;
+    }
+    .print-page:last-child{page-break-after:auto;break-after:auto}
+    .print-page .spread{
+      position:absolute !important;
+      top:0 !important;left:0 !important;
+      width:2200px !important;height:1700px !important;
+      transform:scale(0.4075) !important;
+      transform-origin:top left !important;
+      zoom:1 !important;
+      box-shadow:none !important;
+      border-radius:0 !important;
+    }
+  }
+
+  /* Triangle / line decorations */
+  .deco-corner{
+    position:absolute; top:24px; right:24px;
+    font-family:'JetBrains Mono'; font-size:11px; color:var(--muted); letter-spacing:.18em;
+  }
+  .panel.inside > .pn-tag{
+    position:absolute; top:24px; right:24px;
+    font-family:'JetBrains Mono'; font-size:15px; color:var(--muted); letter-spacing:.18em;
+  }
+
+  /* numeric stats inline */
+  .stat-row{display:flex; gap:14px; margin-top:18px}
+  .stat{
+    background:#fff; border:1px solid var(--line); border-radius:10px;
+    padding:12px 14px; flex:1;
+  }
+  .stat .n{font-family:'Bricolage Grotesque','Helvetica Neue',Helvetica,Arial,sans-serif; font-weight:800; font-size:54px; color:var(--blue); line-height:1; letter-spacing:-.035em}
+  .stat .l{font-size:15px; letter-spacing:.18em; text-transform:uppercase; color:var(--muted); margin-top:10px}
+
+  /* CTA on front cover */
+  .cta-strip{
+    margin-top:30px;
+    background:rgba(255,255,255,.08); backdrop-filter:blur(2px);
+    border:1px solid rgba(255,255,255,.18);
+    border-radius:14px; padding:22px 26px;
+    display:flex; flex-direction:column; gap:8px;
+  }
+  .cta-strip .k{font-size:13px; letter-spacing:.22em; text-transform:uppercase; color:rgba(255,255,255,.7)}
+  .cta-strip .v{font-family:'JetBrains Mono'; font-size:18px; color:#fff}
+
+</style>
+</head>
+<body>
+
+<div class="meta">
+  <div class="l">ERRONKA<b>·</b>Triptikoa</div>
+  <div class="r">
+    <div>Bermeoko Udala · 2026</div>
+    <div><span>11 × 8.5 in · Tri-fold · CMYK ready</span></div>
+  </div>
+</div>
+
+<div class="zoom-wrap">
+<div class="stage">
+
+  <div class="label-side">
+    <b>Kanpoaldea</b><span>· Outside spread · Atzealdea · Solapa · Azala</span><div class="line"></div><span>v1.0</span>
+  </div>
+
+  <!-- ============ OUTSIDE SPREAD ============ -->
+  <section class="spread" data-side="outside">
+
+    <!-- Inside flap (LEFT when flat) -->
+    <div class="panel p-flap">
+      <div class="head">
+        <span class="pill"><span class="dot"></span>Solapa · Inside flap · 01</span>
+        <h2>Komando bakar batekin abian.</h2>
+        <p class="lead">Ireki Docker, kopiatu errepoa eta exekutatu. Bost minututan, JavaFX langileentzat eta web atari publikoa, biak hartzaile bera duen datu-base baten gainean.</p>
+      </div>
+
+      <div class="quickstart">
+        <div class="label"><span style="display:inline-block; width:6px; height:6px; background:#7CE0A9; border-radius:99px"></span>QUICKSTART · TERMINALA</div>
+        <div class="cmd">
+          <span class="c"># 1. Kopiatu eta sartu</span><br>
+          <span class="p">$</span> git clone &lt;repo&gt; erronka-bermeo<br>
+          <span class="p">$</span> cd erronka-bermeo<br>
+          <span class="c"># 2. Edukiontzi guztiak abian (db · java · web · adminer)</span><br>
+          <span class="p">$</span> docker compose up -d
+        </div>
+      </div>
+
+      <div class="step-list">
+        <div class="step">
+          <div class="n">1</div>
+          <div>
+            <h4>JavaFX nabigatzailetik</h4>
+            <p>localhost:6080/vnc.html — VcXsrv edo X server-ik gabe, noVNC bidez. Linux eta Windows berdin.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="n">2</div>
+          <div>
+            <h4>Web atari publikoa</h4>
+            <p>localhost:8000 — herritarrentzako katalogo responsive-a, XML+XSLT+XPath.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="n">3</div>
+          <div>
+            <h4>Datu-basea Adminer-ekin</h4>
+            <p>localhost:8081 — taula guztiak, triggerrak, gordetako prozedurak ikusgai.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="creds">
+        <div class="h"><span>Hasierako kredentzialak</span><span class="mono" style="font-family:'JetBrains Mono'; font-size:11px; color:var(--blue)">3 ROL</span></div>
+        <table>
+          <tr><td class="k">Administratzailea</td><td><span class="mono">admin</span> / <span class="mono">1234</span></td></tr>
+          <tr><td class="k">Langilea</td><td><span class="mono">langile1</span> / <span class="mono">1234</span></td></tr>
+          <tr><td class="k">Ikuslea</td><td><span class="mono">ikusle1</span> / <span class="mono">1234</span></td></tr>
+          <tr><td class="k">Adminer</td><td><span class="mono">admin</span> / <span class="mono">admin123</span></td></tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- Back cover (MIDDLE when flat) -->
+    <div class="panel p-back">
+      <div class="topbar"><span><span class="dot"></span>Atzealdea · Back cover</span><span>02</span></div>
+
+      <div style="margin-top:32px">
+        <h3>Hezkuntza-proiektua, bezeroaren benetako beharretik sortua.</h3>
+        <p style="color:#9590a8; margin-top:22px; max-width:560px; font-size:22px; line-height:1.5">
+          Erronka Bermeoko Udalarekin elkarlanean garatu da, herriko egiazko galera-aurkikuntza zerbitzua digitalizatzeko. Klase abstraktoa, MVC, dockerizazioa eta XML markatze-lengoaiak — guztia kode-base bakar batean.
+        </p>
+      </div>
+
+      <div class="repo">
+        <div class="l">Iturri-kodea · GitHub</div>
+        <div class="url-row">
+          <div class="ico">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.56 0-.27-.01-1.16-.02-2.1-3.2.69-3.88-1.36-3.88-1.36-.52-1.33-1.27-1.68-1.27-1.68-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.02 1.75 2.69 1.24 3.34.95.1-.74.4-1.24.73-1.53-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.28 1.18-3.08-.12-.29-.51-1.46.11-3.04 0 0 .96-.31 3.15 1.18.91-.25 1.89-.38 2.86-.39.97.01 1.95.14 2.86.39 2.19-1.49 3.15-1.18 3.15-1.18.62 1.58.23 2.75.11 3.04.73.8 1.18 1.82 1.18 3.08 0 4.42-2.69 5.39-5.26 5.68.41.36.78 1.06.78 2.14 0 1.55-.01 2.79-.01 3.17 0 .31.21.68.8.56C20.21 21.39 23.5 17.08 23.5 12 23.5 5.65 18.35.5 12 .5z"/></svg>
+          </div>
+          <div class="t">
+            github.com/<b>Garridoparrayeray</b>/<br>Talde14_Erronka_CIFPZornotzaLHII
+          </div>
+        </div>
+        <div class="url-row">
+          <div class="ico">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.56 0-.27-.01-1.16-.02-2.1-3.2.69-3.88-1.36-3.88-1.36-.52-1.33-1.27-1.68-1.27-1.68-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.02 1.75 2.69 1.24 3.34.95.1-.74.4-1.24.73-1.53-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.28 1.18-3.08-.12-.29-.51-1.46.11-3.04 0 0 .96-.31 3.15 1.18.91-.25 1.89-.38 2.86-.39.97.01 1.95.14 2.86.39 2.19-1.49 3.15-1.18 3.15-1.18.62 1.58.23 2.75.11 3.04.73.8 1.18 1.82 1.18 3.08 0 4.42-2.69 5.39-5.26 5.68.41.36.78 1.06.78 2.14 0 1.55-.01 2.79-.01 3.17 0 .31.21.68.8.56C20.21 21.39 23.5 17.08 23.5 12 23.5 5.65 18.35.5 12 .5z"/></svg>
+          </div>
+          <div class="t">
+            github.com/<b>CIFPZornotzaLHII</b>/<br>reto-Garridoparrayeray
+          </div>
+        </div>
+      </div>
+
+      <div class="credits">
+        <div style="font-size:17px; letter-spacing:.22em; text-transform:uppercase; color:#9590a8; font-weight:600">Garapen-taldea · 1. DAW</div>
+        <div class="team">
+          <div class="row">
+            <div class="name">Yeray Garrido</div>
+            <div class="role">yeraygarrido.dev</div>
+          </div>
+          <div class="row">
+            <div class="name">Eder Martin</div>
+            <div class="role">github.com/emartinmos</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="school">
+        <div>
+          <div class="lbl">Bezeroa</div>
+          <div class="val">Bermeoko Udala</div>
+          <div class="lbl" style="margin-top:18px">Ikastetxea</div>
+          <div class="val">CIFP Zornotza LHII</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Front cover (right) -->
+    <div class="panel p-front">
+      <div class="top">
+        <div class="badge-logo">
+          <svg class="map" viewBox="0 0 34 42" fill="none">
+            <path d="M5 4 L29 6 L31 18 L26 24 L28 34 L18 40 L8 36 L4 28 L7 18 L2 12 Z" fill="#0E1230" stroke="#0E1230" stroke-width="2" stroke-linejoin="round"/>
+          </svg>
+          <div class="t">
+            <span style="font-size:10px; letter-spacing:.22em; text-transform:uppercase; color:var(--muted); font-weight:600">Bezeroa</span>
+            <b>BERMEOKO UDALA</b>
+          </div>
+        </div>
+        <div class="stamp">03 · Azala</div>
+      </div>
+
+      <div>
+        <div style="font-family:'JetBrains Mono'; font-size:13px; color:rgba(255,255,255,.6); letter-spacing:.2em; text-transform:uppercase; margin-bottom:24px">Galduen eta aurkituen kudeaketa</div>
+        <div class="logo-mark">
+          <img src="/images/logo-bermeoko-udala.png" alt="Bermeoko Udala" />
+        </div>
+        <div class="sub" style="margin-top:36px">Bermeoko Udalaren galdu eta aurkituen kudeaketa-sistema integratua.</div>
+      </div>
+
+      <div class="foot">
+        <span>v 1.0 · 2026</span>
+        <span>1. DAW · CIFP Zornotza LHII</span>
+      </div>
+    </div>
+
+  </section>
+
+  <div class="label-side">
+    <b>Barrualdea</b><span>· Inside spread · Arkitektura · JavaFX · Web</span><div class="line"></div><span>Reads L→R</span>
+  </div>
+
+  <!-- ============ INSIDE SPREAD ============ -->
+  <section class="spread" data-side="inside">
+
+    <!-- ARKITEKTURA -->
+    <div class="panel inside">
+      <div class="pn-tag">04 · Sistema</div>
+      <div class="panel-head">
+        <span class="num">— 01 / Arkitektura</span>
+        <h2>Lau edukiontzi, datu-base partekatua.</h2>
+        <p class="lead">Ekosistema osoa Docker Compose-ren gainean: JavaFX back-office, web atari publikoa, MariaDB eta Adminer. XML fitxategien bidez komunikatzen dira.</p>
+      </div>
+
+      <div class="arch-diagram">
+        <div class="row">
+          <div class="arch-box javafx">
+            <div class="lbl">JavaFX App</div>
+            <div class="sub">Langileak · noVNC</div>
+            <div class="port">:6080</div>
+          </div>
+          <div class="arch-box web">
+            <div class="lbl">Web Portala</div>
+            <div class="sub">Herritarrak · nginx</div>
+            <div class="port">:8000</div>
+          </div>
+        </div>
+        <div class="arch-pipe">
+          <div class="arrows">↓ &nbsp; ↓</div>
+          <div style="margin-top:4px">artikuluak.xml · argazkiak</div>
+        </div>
+        <div class="row">
+          <div class="arch-box db">
+            <div class="lbl">MariaDB 11</div>
+            <div class="sub">erronka_galduak · 12 taula</div>
+            <div class="port">:3306</div>
+          </div>
+        </div>
+        <div class="arch-pipe">
+          <div class="arrows">↓</div>
+        </div>
+        <div class="row">
+          <div class="arch-box adm">
+            <div class="lbl">Adminer</div>
+            <div class="sub">DB-aren web UI</div>
+            <div class="port">:8081</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="stat-row">
+        <div class="stat"><div class="n">4</div><div class="l">Edukiontzi</div></div>
+        <div class="stat"><div class="n">12</div><div class="l">Taula</div></div>
+        <div class="stat"><div class="n">3</div><div class="l">DB rol</div></div>
+        <div class="stat"><div class="n">5</div><div class="l">SQL init</div></div>
+      </div>
+
+      <div style="margin-top:22px">
+        <div class="eyebrow" style="margin-bottom:12px">Teknologia-pila</div>
+        <div class="stack">
+          <span class="chip"><b>Java 21</b> · JavaFX</span>
+          <span class="chip">Maven · jpackage</span>
+          <span class="chip"><b>MariaDB</b> 11</span>
+          <span class="chip">Nginx alpine</span>
+          <span class="chip">Bootstrap 5</span>
+          <span class="chip">XML · XSD · DTD</span>
+          <span class="chip">XSLT · XPath · XQuery</span>
+          <span class="chip"><b>Docker</b> compose</span>
+          <span class="chip">noVNC</span>
+        </div>
+      </div>
+
+      <div style="margin-top:22px">
+        <div class="eyebrow" style="margin-bottom:14px">Patroia · MVC</div>
+        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; font-size:16px">
+          <div style="background:#fff; border:1px solid var(--line); border-radius:10px; padding:16px 18px">
+            <div style="color:var(--blue); font-weight:700; font-family:'Bricolage Grotesque','Helvetica Neue',Helvetica,Arial,sans-serif; font-size:22px; letter-spacing:-.01em">Model</div>
+            <div style="color:var(--muted); margin-top:6px; font-size:15px; line-height:1.4">Hartzailea abstraktoa, Jabea, Erakundea, Artikulua…</div>
+          </div>
+          <div style="background:#fff; border:1px solid var(--line); border-radius:10px; padding:16px 18px">
+            <div style="color:var(--blue); font-weight:700; font-family:'Bricolage Grotesque','Helvetica Neue',Helvetica,Arial,sans-serif; font-size:22px; letter-spacing:-.01em">View</div>
+            <div style="color:var(--muted); margin-top:6px; font-size:15px; line-height:1.4">23 FXML pantaila + style.css.</div>
+          </div>
+          <div style="background:#fff; border:1px solid var(--line); border-radius:10px; padding:16px 18px">
+            <div style="color:var(--blue); font-weight:700; font-family:'Bricolage Grotesque','Helvetica Neue',Helvetica,Arial,sans-serif; font-size:22px; letter-spacing:-.01em">Controller</div>
+            <div style="color:var(--muted); margin-top:6px; font-size:15px; line-height:1.4">23 FXML kontrolatzaile + DAO + utils.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DB / Audit container row to fill -->
+      <div style="margin-top:auto; padding-top:24px">
+        <div class="containers">
+          <div class="container-row">
+            <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v6c0 1.7 3.6 3 8 3s8-1.3 8-3V5M4 11v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/></svg></div>
+            <div><div class="meta-t">erronka_db</div><div class="meta-s">MariaDB 11 · 12 taula · 5 SQL init</div></div>
+            <div class="port">:3306</div>
+          </div>
+          <div class="container-row">
+            <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18"/></svg></div>
+            <div><div class="meta-t">erronka_desktop</div><div class="meta-s">JavaFX + noVNC · jpackage natiboa</div></div>
+            <div class="port">:6080</div>
+          </div>
+          <div class="container-row">
+            <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg></div>
+            <div><div class="meta-t">erronka_web</div><div class="meta-s">Nginx alpine · XML+XSLT+XPath</div></div>
+            <div class="port">:8000</div>
+          </div>
+          <div class="container-row">
+            <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16v12H4z"/><path d="M8 10h8M8 14h5"/></svg></div>
+            <div><div class="meta-t">erronka_adminer</div><div class="meta-s">DB-aren web UI · hutsetik konfiguratua</div></div>
+            <div class="port">:8081</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- JAVAFX -->
+    <div class="panel inside" style="background:var(--paper-2)">
+      <div class="pn-tag">05 · Back-office</div>
+      <div class="panel-head">
+        <span class="num">— 02 / JavaFX · Langileak</span>
+        <h2>Erregistrotik entregaraino, dena pantaila batean.</h2>
+        <p class="lead">Bederatzi modulu udaleko langileentzat. Docker barruan edo .exe natiboa, biak GitHub errepositoriotik.</p>
+      </div>
+
+      <div class="feat-chips">
+        <div class="fchip"><span class="dot"></span>Erregistroa</div>
+        <div class="fchip"><span class="dot"></span>Inbentarioa</div>
+        <div class="fchip"><span class="dot"></span>Emanaldia</div>
+        <div class="fchip"><span class="dot"></span>Erreklamazioak</div>
+        <div class="fchip warm"><span class="dot"></span>Iraungitakoak</div>
+        <div class="fchip"><span class="dot"></span>Auditoria</div>
+        <div class="fchip alt"><span class="dot"></span>Admin panela</div>
+        <div class="fchip"><span class="dot"></span>Offline modua</div>
+      </div>
+
+      <div class="mockup big">
+        <div class="bar">
+          <span class="d"></span><span class="d"></span><span class="d"></span>
+          <span class="t">Bermeoko Udala — Galdutakoak · Panela</span>
+        </div>
+        <div class="img-frame">
+          <img src="/images/screen-dashboard.png" alt="JavaFX Panela" />
+        </div>
+      </div>
+
+      <div class="exec-note">
+        <div class="exec-note-ico">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.56 0-.27-.01-1.16-.02-2.1-3.2.69-3.88-1.36-3.88-1.36-.52-1.33-1.27-1.68-1.27-1.68-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.02 1.75 2.69 1.24 3.34.95.1-.74.4-1.24.73-1.53-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.28 1.18-3.08-.12-.29-.51-1.46.11-3.04 0 0 .96-.31 3.15 1.18.91-.25 1.89-.38 2.86-.39.97.01 1.95.14 2.86.39 2.19-1.49 3.15-1.18 3.15-1.18.62 1.58.23 2.75.11 3.04.73.8 1.18 1.82 1.18 3.08 0 4.42-2.69 5.39-5.26 5.68.41.36.78 1.06.78 2.14 0 1.55-.01 2.79-.01 3.17 0 .31.21.68.8.56C20.21 21.39 23.5 17.08 23.5 12 23.5 5.65 18.35.5 12 .5z" fill="currentColor" stroke="none"/>
+          </svg>
+        </div>
+        <div class="exec-note-body">
+          <div class="exec-note-title">Docker gabe ere: .exe natiboa</div>
+          <div class="exec-note-text">GitHub errepositoriotik <span class="mono">Galdutakoak-1.0.exe</span> jaitsi daiteke — JVM barne darama, Java instalatu gabe exekutatzen da. <b>Datu-baserako Docker beharrezkoa da</b>, MariaDB-arekin konektatzeko (<span class="mono">localhost:3306</span>).</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- WEB -->
+    <div class="panel inside">
+      <div class="pn-tag">06 · Front-office</div>
+      <div class="panel-head">
+        <span class="num">— 03 / Web atari · Herritarrak</span>
+        <h2>Katalogoa eta erreklamazioak, denentzat eskuragarri.</h2>
+        <p class="lead" style="font-size:22px;">Herritarrek galdutako objektuak bilatzaile edo kategoria bidez aurkitzeko ataria. Irisgarritasun estandarrak betez eta Google Insights-en errendimendu ezin hobearekin diseinatua.</p>
+      </div>
+
+      <!-- Pasamos a 8 chips para cubrir toda la funcionalidad -->
+      <div class="feat-chips">
+        <div class="fchip"><span class="dot"></span>Bilatzailea + Iragazkiak</div>
+        <div class="fchip"><span class="dot"></span>Kontakturako Form-a</div>
+        <div class="fchip"><span class="dot"></span>Bi hizkuntzetan (EU/ES)</div>
+        <div class="fchip alt"><span class="dot"></span>Modu Iluna / Argia</div>
+        <div class="fchip"><span class="dot"></span>Vanilla JS (SPA)</div>
+        <div class="fchip"><span class="dot"></span>Irisgarritasuna</div>
+        <div class="fchip warm"><span class="dot"></span>Google Insights %100</div>
+      </div>
+
+      <div class="browser-mock big" style="margin-top:16px;">
+        <div class="bar">
+          <span class="d" style="background:#E07A65; width:9px; height:9px; border-radius:99px"></span>
+          <span class="d" style="background:#E8C26B; width:9px; height:9px; border-radius:99px"></span>
+          <span class="d" style="background:#7CC192; width:9px; height:9px; border-radius:99px"></span>
+          <div class="url">https://galduak.bermeo.eus/katalogoa</div>
+        </div>
+        <div class="img-frame">
+          <img src="/images/screen-reclamacion.png" alt="Galdutako objektua erreklamatu — formularioa" />
+        </div>
+      </div>
+
+      <!-- Caja de funcionalidad técnica Zero-Backend -->
+      <div class="exec-note" style="background:#1F8A5B; box-shadow:0 20px 30px -20px rgba(31,138,91,.4); margin-top:16px;">
+        <div class="exec-note-ico" style="background:rgba(255,255,255,.15);">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+          </svg>
+        </div>
+        <div class="exec-note-body">
+          <div class="exec-note-title" style="margin-bottom:6px">Zero-Backend: XML Sortzailea</div>
+<div class="exec-note-text" style="font-size:16px;">Erreklamazioa bidaltzean, JavaScript-ek datuak jaso eta <b>XML dinamiko bat sortzen du memorian</b>. <span class="mono" style="background:rgba(255,255,255,.15); color:#fff; padding:2px 6px; border-radius:4px; font-size:13px;">erreklamazioa.xml</span> hori langileek <b>Java aplikazioan inportatzeko</b> prestatuta dago, objektuen egoera erraz eguneratzeko.</div>        </div>
+      </div>
+
+      <div style="margin-top:auto; padding-top:18px; border-top:1px solid var(--line); display:flex; align-items:center; justify-content:space-between; gap:12px; font-family:'JetBrains Mono'; font-size:15px; color:var(--muted)">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span style="display:inline-block; width:12px; height:12px; border-radius:99px; background:var(--green)"></span>
+          <span>galduak.bermeo.eus · :8000</span>
+        </div>
+        <span style="font-size:13px; letter-spacing:.1em; text-transform:uppercase">HTML5 · CSS3 · JS</span>
+      </div>
+    </div>
+  </section>
+
+</div>
+</div>
+
+<style>
+  #fab{
+    position:fixed;bottom:28px;right:28px;z-index:9999;
+    background:#2A45D4;color:#fff;border:none;border-radius:999px;
+    padding:16px 28px;font-size:17px;font-weight:700;
+    font-family:'DM Sans','Helvetica Neue',Helvetica,Arial,sans-serif;
+    box-shadow:0 8px 30px rgba(42,69,212,.5);cursor:pointer;
+    display:flex;align-items:center;gap:10px;letter-spacing:-.01em;
+    transition:background .15s;
+  }
+  #fab:active{background:#1F33B0}
+  #fab svg{width:20px;height:20px;flex:none}
+  @media print{#fab{display:none!important}}
+</style>
+<button id="fab" onclick="window.print()">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+  </svg>
+  PDF deskargatu
+</button>
+<script>
+  (function(){
+    const TARGET=2200;
+    function fit(){
+      const margin=80;
+      const avail=Math.max(800,Math.min(window.innerWidth-margin*2,1700));
+      document.querySelector('.zoom-wrap').style.zoom=avail/TARGET;
+    }
+    window.addEventListener('resize',fit);fit();
+  })();
+  document.querySelectorAll('.spread').forEach(spread=>{
+    const page=document.createElement('div');
+    const isOutside=spread.dataset.side==='outside';
+    page.className='print-page '+(isOutside?'page-outside':'page-inside');
+    spread.parentNode.insertBefore(page,spread);
+    page.appendChild(spread);
+  });
+</script>
+
+</body>
+</html>
