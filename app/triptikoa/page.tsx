@@ -620,9 +620,9 @@ function ContainerRow({ icon, title, sub, port }: { icon: string; title: string;
       <div className="w-[44px] h-[44px] rounded-[10px] bg-[#E8ECFB] text-[#2A45D4] flex items-center justify-center shrink-0">
         <ContainerIcon type={icon} />
       </div>
-      <div>
-        <div className="font-bold text-[20px] leading-[1.2] tracking-[-0.01em] text-[#0E1230]">{title}</div>
-        <div className="text-[15px] text-[#5B628A] mt-1">{sub}</div>
+      <div className="min-w-0">
+        <div className="font-bold text-[20px] leading-[1.2] tracking-[-0.01em] text-[#0E1230] whitespace-nowrap">{title}</div>
+        <div className="text-[14px] text-[#5B628A] mt-1 whitespace-nowrap">{sub}</div>
       </div>
       <div className="ml-auto font-mono text-[15px] text-[#1B2148] bg-[#EFEDE5] rounded-[6px] px-3 py-1.5 font-semibold">
         {port}
