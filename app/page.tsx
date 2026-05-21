@@ -66,11 +66,6 @@ export default function HomePage() {
         </div>
       </div>
 
-      <style jsx global>{`
-        .font-heading {
-          font-family: var(--font-bricolage), 'Helvetica Neue', Helvetica, Arial, sans-serif;
-        }
-      `}</style>
     </div>
   )
 }
